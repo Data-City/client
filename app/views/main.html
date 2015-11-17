@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title> DataCity</title>
+	<title>DataCity</title>
 	<style type="text/css">
 	   body { background: #e3e3e3  !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
 	</style>
   </head>
-  
+ 
   <body>
 	
 	<div class = "container">
@@ -17,34 +17,26 @@
 		<label class="radio-inline"><input type="radio" name="uploadRadio" onchange="uploadWechseln()">Datensatz auswählen</label>
 	</div>
 	
-	<div id="uploadAusgabe">
-	</div>
+	<div id="uploadAusgabe"></div>
 	
-	<div id="upload" style="display: none;">
-		<div class="container bg-1">
+	<div id="upload" class="container" style="display: none;">
 			<h3>2. Schritt: (Absoluten) Pfad eingeben:</h3>
 			<input class="form-control" id="ex2" type="text" placeholder="C://...">
-		</div>
 	
-		<div class="container">
 			<button type="button" class="btn btn-default">
 				<span class="glyphicon glyphicon-search"></span> Durchsuchen...
 			</button>
-			<button type="button" class="btn btn-default" onclick='document.getElementById("metadatenAuswahl").style="display: inline;"'>Datei hochladen</button>
-		</div>
+			<button type="button" class="btn btn-default" onclick="">Datei hochladen</button>
 	</div>
 	
-	<div id="datensatzAnzeigen" style="display: none;">
-		<div class="container">
+	<div id="datensatzAnzeigen" style="display: none;" class="container">
 			<h3>2. Schritt: Einen bereits hochgeladenen Datensatz auswählen</h3>
 			<p>Hier sollte man dann später einen von vielen Datensätzen auswählen können.
-		</div>
-		<div class="container">
-			<button type="button" class="btn btn-default" onclick='document.getElementById("metadatenAuswahl").style="display: inline;"'>Provisorischer Button zum Anzeigen lassen</button>
-		</div>
+			<br>
+			<button type="button" class="btn btn-default" onclick="">Datensatz verwenden</button>
 	</div>
 	
-	<div id ="metadatenAuswahl" style="display: none;">
+	<div id ="metadatenAuswahl">
 		
 		<div class="container">
 			<h3>3. Schritt: Parameter eingeben [For-Schleife mit JavaScript für alle Parameter, die eingelesen wurden?]</h3>
@@ -155,13 +147,7 @@
 		<div class = "container">
 			<h3>Ausgabe:</h3>
 			<p id="ausgabe"></p>
-		</div>
-		
-		<div class = "container">
-			<h3>TESTING:</h3>
-			<p id="test"></p>
-		</div>
-		
+		</div>		
 	</div>
 	
   </body>

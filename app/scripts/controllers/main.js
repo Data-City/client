@@ -8,15 +8,28 @@
  * Controller of the datacityApp
  */
  
- //Von Yeoman automatisch erstellte Funktions 
-angular.module('datacityApp')
-  .controller('MainCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+ //Angular Test; Yeoman Tutorial
+angular.module('mytodoApp')
+  .controller('MainCtrl', function ($scope) {
+    $scope.todos = ['Item 1', 'Item 2', 'Item 3'];
+    $scope.addTodo = function () {
+      $scope.todos.push($scope.todo);
+      $scope.todo = '';
+    };
+    $scope.removeTodo = function (index) {
+      $scope.todos.splice(index, 1);
+    };
   });
+  
+  //metadaten repeaten
+	var App = angular.module('App', []);
+
+	App.controller('TodoCtrl', function($scope, $http) {
+	  $http.get('dataCity.json')
+		   .then(function(res){
+			  $scope.todos = res.data;                
+			});
+	});
   
 function uploadWechseln(){
 	var uploadAusgewaehlt;
@@ -30,7 +43,6 @@ function uploadWechseln(){
 	}
 	
 	upload.innerHTML = "<div class='container'>" + ausgabe + "</div>";
-	document.getElementById("metadatenAuswahl").style="display: none;"
 }
 
 function ausgabe(){	
