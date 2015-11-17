@@ -1,23 +1,168 @@
-<div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
-</div>
-
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    Mein erster Commit!
-  </p>
-
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
-
-  <h4>Karma</h4>
-  <p>Spectacular Test Runner for JavaScript.</p>
-</div>
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> DataCity</title>
+	<style type="text/css">
+	   body { background: #e3e3e3  !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+	</style>
+  </head>
+  
+  <body>
+	
+	<div class = "container">
+		<h3>1. Schritt: Eine Auswahlart auswählen</h3><br>
+		<label class="radio-inline"><input type="radio" name="uploadRadio" onchange="uploadWechseln()" id="uploadRadio">Datei hochladen</label>
+		<label class="radio-inline"><input type="radio" name="uploadRadio" onchange="uploadWechseln()">Datensatz auswählen</label>
+	</div>
+	
+	<div id="uploadAusgabe">
+	</div>
+	
+	<div id="upload" style="display: none;">
+		<div class="container bg-1">
+			<h3>2. Schritt: (Absoluten) Pfad eingeben:</h3>
+			<input class="form-control" id="ex2" type="text" placeholder="C://...">
+		</div>
+	
+		<div class="container">
+			<button type="button" class="btn btn-default">
+				<span class="glyphicon glyphicon-search"></span> Durchsuchen...
+			</button>
+			<button type="button" class="btn btn-default" onclick='document.getElementById("metadatenAuswahl").style="display: inline;"'>Datei hochladen</button>
+		</div>
+	</div>
+	
+	<div id="datensatzAnzeigen" style="display: none;">
+		<div class="container">
+			<h3>2. Schritt: Einen bereits hochgeladenen Datensatz auswählen</h3>
+			<p>Hier sollte man dann später einen von vielen Datensätzen auswählen können.
+		</div>
+		<div class="container">
+			<button type="button" class="btn btn-default" onclick='document.getElementById("metadatenAuswahl").style="display: inline;"'>Provisorischer Button zum Anzeigen lassen</button>
+		</div>
+	</div>
+	
+	<div id ="metadatenAuswahl" style="display: none;">
+		
+		<div class="container">
+			<h3>3. Schritt: Parameter eingeben [For-Schleife mit JavaScript für alle Parameter, die eingelesen wurden?]</h3>
+		</div>
+		
+		<div class = "container">
+		 <div class="col-sm-4">
+		  <label for="sel1">Fläche:</label>
+		  <select class="form-control" id="flaecheselektieren">
+			<option>1</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+		  </select>
+		</div>
+		</div>
+		
+		<div class = "container">
+		 <div class="col-sm-4">
+		  <label for="sel1">Höhe:</label>
+		  <select class="form-control" id="hoeheselektieren">
+			<option>1</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+		  </select>
+		</div>
+		</div>
+		
+		<div class = "container">
+			 <div class="col-sm-4">
+			  <label for="sel1">Farbe:</label>
+			  <select class="form-control" id="farbeselektieren">
+				<option>1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+			  </select>
+			</div>
+			<div class="col-sm-4">
+			<br><br>
+				<label class="radio-inline"><input type="radio" name="farbenRadio" id="farbenRadio1" checked>Aufsteigend</label>
+				<label class="radio-inline"><input type="radio" name="farbenRadio" id="farbenRadio2">Absteigend</label>
+			</div>
+		</div>
+		
+		<br><br>
+		
+		<div class="container">
+			<p>Erstmal optional, weil noch nicht geklärt ist, wie diese ausgelesen werden</p>
+		</div>
+		
+		<div class = "container">
+		 <div class="col-sm-4">
+		  <label for="sel1">Gruppierungen:</label>
+		  <select class="form-control" id="gruppierung">
+			<option>1</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+		  </select>
+		</div>
+		<div class="col-sm-8">
+			<br>[Hier muss abgefragt werden, ob die Spalte Integer, Boolean oder String ist. Boolean und String können einfach abgefragt werden (JavaScript -> typeof; 2. Reihe einlesen) <br> 
+				Für Integer kann der Nutzer die Anzahl der Blöcke einstellen (oder Standardwert)? -> quadratisch?]
+		</div>
+		</div>
+		
+		<div class = "container">
+		 <div class="col-sm-4">
+		  <label for="sel1">Verbindungen:</label>
+		  <select class="form-control" id="verbindung">
+			<option>1</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+		  </select>
+		</div>
+		<div class="col-sm-8">
+			<br>[Es ist noch unklar, wie genau der Input bei den Verbindungen dargestellt wird]
+		</div>
+		</div>
+		
+		<div class = "container">
+		<div class="col-sm-4">
+		<label>Winkel einstellen:</label>
+			<div id="slider">
+				<input class="bar" type="range" min="0" max="360" step="1" id="winkelInput" value="0" onchange="winkelOutput.value=value.concat('°')"/>
+				<output id="winkelOutput">0°</output>
+			</div>
+		</div>
+		</div>
+		
+		<div class = "container">
+		<div class="col-sm-4">
+		<label>Granularität einstellen:</label>
+			<div id="slider">
+				<input class="bar" type="range" min="0" max="100" step="1" id="granularInput" value="0" onchange="granularOutput.value=value.concat('%')"/>
+				<output id="granularOutput">0%</output>
+			</div>
+		</div>
+		</div>
+		
+		<div class = "container">
+		<button type="button" class="btn btn-default" onclick="ausgabe()">Ausgabe anzeigen</button>
+		</div>
+		
+		<div class = "container">
+			<h3>Ausgabe:</h3>
+			<p id="ausgabe"></p>
+		</div>
+		
+		<div class = "container">
+			<h3>TESTING:</h3>
+			<p id="test"></p>
+		</div>
+		
+	</div>
+	
+  </body>
+</html>
