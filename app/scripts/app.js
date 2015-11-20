@@ -31,6 +31,21 @@ angular
         controller: 'AboutCtrl',
         controllerAs: 'about'
       })
+      .when('/datasets', {
+        templateUrl: 'views/datasets.html',
+        controller: 'DatasetsCtrl',
+        controllerAs: 'datasets'
+      })
+      .when('/views', {
+        templateUrl: 'views/views.html',
+        controller: 'ViewsCtrl',
+        controllerAs: 'views'
+      })
+      .when('/city', {
+        templateUrl: 'views/city.html',
+        controller: 'CityCtrl',
+        controllerAs: 'city'
+      })
       .otherwise({
         redirectTo: '/'
       });

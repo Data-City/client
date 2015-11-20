@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name datacityApp.controller:AboutCtrl
+ * @name datacityApp.controller:DatasetsCtrl
  * @description
- * # AboutCtrl
+ * # DatasetsCtrl
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-  .controller('AboutCtrl', function () {
+  .controller('DatasetsCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
