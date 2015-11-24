@@ -8,42 +8,14 @@
  * Controller of the datacityApp
  */
  
- //Angular Test; Yeoman Tutorial
-angular.module('datacityApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.todos = ['Item 1', 'Item 2', 'Item 3'];
-    $scope.addTodo = function () {
-      $scope.todos.push($scope.todo);
-      $scope.todo = '';
-    };
-    $scope.removeTodo = function (index) {
-      $scope.todos.splice(index, 1);
-    };
-  });
-  
-  //metadaten repeaten
-	var App = angular.module('App', []);
+var App = angular.module('datacityApp');
 
-	App.controller('TodoCtrl', function($scope, $http) {
-	  $http.get('dataCity.json')
-		   .then(function(res){
-			  $scope.todos = res.data;                
-			});
-	});
-  
-function uploadWechseln(){
-	var uploadAusgewaehlt;
-	var ausgabe = "";
-	var upload = document.getElementById("uploadAusgabe");
-	
-	if (document.getElementById("uploadRadio").checked === true) {
-		ausgabe = document.getElementById("upload").innerHTML;
-	} else {
-		ausgabe = document.getElementById("datensatzAnzeigen").innerHTML;
-	}
-	
-	upload.innerHTML = "<div class='container'>" + ausgabe + "</div>";
-}
+App.controller('MainCtrl', function($scope, $http) {
+  $http.get('beispiel-metadaten.json')
+       .then(function(res){
+          $scope.metadaten = res.data;                
+        });
+});
 
 function ausgabe(){	
 	var ausgabe = document.getElementById("ausgabe");
