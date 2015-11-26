@@ -33,14 +33,17 @@
               <span class="icon-bar"></span>
             </button>
 
-            <a class="navbar-brand" href="#/">DataCity</a>
+            <div class="navbar-brand">DataCity</div>
           </div>
 
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Hochladen</a></li>
-              <li><a ng-href="#">[Benutzerverwaltung?]</a></li>
+              <li class="active"><a href="#/login">Login</a></li>
+              <li><a ng-href="#/data">Datensätze</a></li>
+              <li><a ng-href="#/views">Ansichten</a></li>
               <li><a ng-href="#/city">Stadt</a></li>
+              <li><a ng-href="#/admin">Einstellungen</a></li>
+              
             </ul>
           </div>
         </div>
@@ -90,6 +93,10 @@
         <script src="scripts/controllers/views.js"></script>
         <script src="scripts/controllers/city.js"></script>
         <script src="scripts/directives/hbar.js"></script>
+        <script src="scripts/directives/chooseexistingview.js"></script>
+        <script src="scripts/controllers/data.js"></script>
+        <script src="scripts/controllers/admin.js"></script>
+        <script src="scripts/controllers/login.js"></script>
         <!-- endbuild -->
 </body>
 </html>

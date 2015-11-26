@@ -48,6 +48,26 @@ angular
         controller: 'CityCtrl',
         controllerAs: 'city'
       })
+      .when('/data', {
+        templateUrl: 'views/data.html',
+        controller: 'DataCtrl',
+        controllerAs: 'data'
+      })
+      .when('/views', {
+        templateUrl: 'views/views.html',
+        controller: 'ViewsCtrl',
+        controllerAs: 'views'
+      })
+      .when('/admin', {
+        templateUrl: 'views/admin.html',
+        controller: 'AdminCtrl',
+        controllerAs: 'admin'
+      })
+      .when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl',
+        controllerAs: 'login'
+      })
       .otherwise({
         redirectTo: '/'
       });

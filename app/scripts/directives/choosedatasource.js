@@ -21,11 +21,16 @@ angular.module('datacityApp')
                 Bestehenden Datensatz verwenden
             </label><br/>
             <label>
+                <input type="radio" ng-model="dataSource" value="existingView">
+                Bestehende Ansicht verwenden
+            </label><br/>
+            <label>
                 <input type="radio" ng-model="dataSource" value="uploadCSVFile">
                 CSV-Datei hochladen
             </label><br/>
           <chooseexistingmongodbcollection ng-show="dataSource == 'existingCollection'"></chooseexistingmongodbcollection>
 	        <uploadformdatasourcefile ng-show="dataSource == 'uploadCSVFile'"></uploadformdatasourcefile>
+          <chooseexistingview ng-show="dataSource == 'existingView'"></chooseexistingview>
           </div>
          </div>
           
