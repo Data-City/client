@@ -22,7 +22,7 @@ angular
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
+        templateUrl: 'views/data.html',
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
@@ -50,8 +50,8 @@ angular
       })
       .when('/data', {
         templateUrl: 'views/data.html',
-        controller: 'DataCtrl',
-        controllerAs: 'data'
+        controller: 'MainCtrl',
+        controllerAs: 'main'
       })
       .when('/views', {
         templateUrl: 'views/views.html',
@@ -69,6 +69,6 @@ angular
         controllerAs: 'login'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/data'
       });
   });

@@ -11,6 +11,24 @@
 var App = angular.module('datacityApp');
 
 App.controller('MainCtrl', function($scope, $http) {
+	var exampleData = {
+		1 : {
+			name: "Geburtenrate in Hessen",
+			creator: "Max Mustermann",
+			createdAt: "25.11.2015 11:25 Uhr"
+		},
+		2 : {
+			name: "Apache Log Files",
+			creator: "Viktor Verwalter",
+			createdAt: "16.03.2013 15:48 Uhr"
+		},
+		3 : {
+			name: "User SQL Export",
+			creator: "Renate Ritter",
+			createdAt: "28.04.2014 19:57 Uhr"
+		},
+	};
+	var data = exampleData;
 });
 
 function ausgabe(){	
