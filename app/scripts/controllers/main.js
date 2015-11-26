@@ -11,10 +11,6 @@
 var App = angular.module('datacityApp');
 
 App.controller('MainCtrl', function($scope, $http) {
-  $http.get('beispiel-metadaten.json')
-       .then(function(res){
-          $scope.metadaten = res.data;                
-        });
 });
 
 function ausgabe(){	

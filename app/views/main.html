@@ -1,14 +1,4 @@
-<div ng-controller="MainCtrl">
-  <ul>
-  	<li>bashidvhasbdhh</li>
-    <li ng-repeat="eintrag in metadaten">
-      {{eintrag.name}} - <em>{{eintrag.typ}}</em>
-    </li>
-  </ul>
-</div>
-
-
-
+<choosedatasource></choosedatasource>
 <div class ="container">
 	<h3>Einen Datensatz auswählen:</h3>
  	<div class="btn-group"> <!--  ng-repeat="sets in datasets" -->
@@ -31,7 +21,7 @@
 <div class="container">
 	<h3>Eine .csv-Datei hochladen:</h3>
 		<input name="Datei" type="file" size="50" accept="csv/*">
-	<button type="button" class="btn btn-default" onclick="">Datei hochladen</button>
+		<button type="button" class="btn btn-default" onclick="">Datei hochladen</button>
 </div>
 
 <hr style="width: 100%; color: black; height: 1px; background-color:black;" />

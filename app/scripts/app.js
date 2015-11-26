@@ -26,6 +26,7 @@ angular
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
+      /*
       .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl',
@@ -41,6 +42,7 @@ angular
         controller: 'ViewsCtrl',
         controllerAs: 'views'
       })
+      */
       .when('/city', {
         templateUrl: 'views/city.html',
         controller: 'CityCtrl',
