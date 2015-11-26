@@ -1,28 +1,11 @@
 <choosedatasource></choosedatasource>
-<div class ="container">
-	<h3>Einen Datensatz auswählen:</h3>
- 	<div class="btn-group"> <!--  ng-repeat="sets in datasets" -->
-  		<button type="button" class="btn btn-default btn-sm">Datensatz 1</button>
-    	<button class="btn btn-danger btn-sm" ng-click="removeTodo($index)" aria-label="Remove">X</button>
-	</div>
- 	<div class="btn-group">
-  		<button type="button" class="btn btn-default btn-sm">Datensatz 2</button>
-    	<button class="btn btn-danger btn-sm" ng-click="removeTodo($index)" aria-label="Remove">X</button>
-	</div>
-	 	<div class="btn-group">
-  		<button type="button" class="btn btn-default btn-sm">...</button>
-    	<button class="btn btn-danger btn-sm" ng-click="removeTodo($index)" aria-label="Remove">X</button>
-	</div>
-	[Nach Auswahl eines Datensatzes werden die Parameter und Ansichten aktualisiert; Sicherheitsabfrage beim Löschen]
-</div>
+<chooseexistingmongodbcollection ng-show="dataSource == 'existingCollection'"></chooseexistingmongodbcollection>
+<uploadformdatasourcefile ng-show="dataSource == 'uploadCSVFile'"></uploadformdatasourcefile>
+
 
 <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
 
-<div class="container">
-	<h3>Eine .csv-Datei hochladen:</h3>
-		<input name="Datei" type="file" size="50" accept="csv/*">
-		<button type="button" class="btn btn-default" onclick="">Datei hochladen</button>
-</div>
+
 
 <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
 

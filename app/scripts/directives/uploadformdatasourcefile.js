@@ -9,7 +9,12 @@
 angular.module('datacityApp')
   .directive('uploadformdatasourcefile', function () {
     return {
-      template: '<div><p>Mit diesem Element wird das Upload-Formular gezeichnet. Es soll mit ng-show (oder ng-hide) nur angezeigt werden, wenn der entsprechende Punkt bei der Auswahl gewählt wurde.</P></div>',
+      template: `
+        <div class="container">
+	        <h3>Eine .csv-Datei hochladen:</h3>
+		      <input name="Datei" type="file" size="50" accept="csv/*">
+		      <button type="button" class="btn btn-default" onclick="">Datei hochladen</button>
+        </div>`,
       restrict: 'E',
       /*
       link: function postLink(scope, element, attrs) {

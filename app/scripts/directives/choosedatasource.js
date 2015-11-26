@@ -13,7 +13,7 @@ angular.module('datacityApp')
       template: '<div><form name="dataSourceForm"><label><input type="radio" ng-model="dataSource" value="existingCollection">
                       Bestehenden Datensatz verwenden</label><br/>
                     <label>
-                      <input type="radio" ng-model="dataSource" ng-value="newCSVFile">
+                      <input type="radio" ng-model="dataSource" ng-value="uploadCSVFile">
                       CSV-Datei hochladen
                     </label><br/>
                  </div><h3>{{dataSource}}</h3>',
