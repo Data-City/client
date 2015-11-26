@@ -1,1 +1,129 @@
-<p>This is the views view.</p>
+<div class="container">
+	Die aktuelle Ansicht speichern unter: <input type="text">
+	<button type="button" class="btn btn-default" onclick="">Ansicht speichern</button>
+</div>
+
+<div class="container">
+	<h3>Parameter eingeben:</h3>
+</div>
+
+<div class = "container">
+ <div class="col-sm-4">
+  <label for="sel1">Name:</label>
+  <select class="form-control" id="gruppierung">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+	<option>4</option>
+  </select>
+</div>
+
+<div class = "container">
+ <div class="col-sm-4">
+  <label for="sel1">Flächeninhalt:</label>
+  <select class="form-control" id="flaecheselektieren">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+	<option>4</option>
+  </select>
+</div>
+</div>
+
+<div class = "container">
+ <div class="col-sm-4">
+  <label for="sel1">Höhe:</label>
+  <select class="form-control" id="hoeheselektieren">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+	<option>4</option>
+  </select>
+</div>
+</div>
+
+<div class = "container">
+ <div class="col-sm-4">
+  <label for="sel1">Gruppierungen:</label>
+  <select class="form-control" id="gruppierung">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+	<option>4</option>
+  </select>
+</div>
+<div class="col-sm-8">
+	<br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin]
+</div>
+</div>
+
+<h3>Ab hier muss alles in späteren Instanzen eingefügt werden!</h3>
+
+<div class = "container">
+	 <div class="col-sm-4">
+	  <label for="sel1">Farbe:</label>
+	  <select class="form-control" id="farbeselektieren">
+		<option>1</option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+	  </select>
+	</div>
+	<div class="col-sm-4">
+	<br><br>
+		<label class="radio-inline"><input type="radio" name="farbenRadio" id="farbenRadio1" checked>Aufsteigend</label>
+		<label class="radio-inline"><input type="radio" name="farbenRadio" id="farbenRadio2">Absteigend</label>
+	</div>
+</div>
+
+<br><br>
+
+<div class = "container">
+ <div class="col-sm-4">
+  <label for="sel1">Gruppierungen:</label>
+  <select class="form-control" id="gruppierung">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+	<option>4</option>
+  </select>
+</div>
+<div class="col-sm-8">
+	<br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin]
+</div>
+</div>
+
+<div class = "container">
+ <div class="col-sm-4">
+  <label for="sel1">Verbindungen:</label>
+  <select class="form-control" id="verbindung">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+	<option>4</option>
+  </select>
+</div>
+<div class="col-sm-8">
+	<br>[Es ist noch unklar, wie genau der Input bei den Verbindungen dargestellt wird]
+</div>
+</div>
+
+<div class = "container">
+<div class="col-sm-4">
+<label>Winkel einstellen:</label>
+	<div id="slider">
+		<input class="bar" type="range" min="0" max="360" step="1" id="winkelInput" value="0" onchange="winkelOutput.value=value.concat('°')"/>
+		<output id="winkelOutput">0°</output>
+	</div>
+</div>
+</div>
+
+<div class = "container">
+<div class="col-sm-4">
+<label>Granularität einstellen:</label>
+	<div id="slider">
+		<input class="bar" type="range" min="0" max="100" step="1" id="granularInput" value="0" onchange="granularOutput.value=value.concat('%')"/>
+		<output id="granularOutput">0%</output>
+	</div>
+</div>
+</div>
