@@ -24,7 +24,9 @@ angular.module('datacityApp')
             <button type="button" class="btn btn-default btn-sm">...</button>
             <button class="btn btn-danger btn-sm" ng-click="removeTodo($index)" aria-label="Remove">X</button>
           </div>
+    <!--
     [Nach Auswahl eines Datensatzes werden die Parameter und Ansichten aktualisiert; Sicherheitsabfrage beim Löschen]
+    -->
     </div>
       `,
       restrict: 'E',
