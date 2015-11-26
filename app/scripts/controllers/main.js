@@ -21,18 +21,22 @@ App.controller('MainCtrl', function($scope, $http) {
 		showUploadForm : false
 	};
 	
+	
 	var exampleData = {
 		1 : {
+			id: 1,
 			name: "Geburtenrate in Hessen",
 			creator: "Max Mustermann",
 			createdAt: "25.11.2015 11:25 Uhr"
 		},
 		2 : {
+			id: 2,
 			name: "Apache Log Files",
 			creator: "Viktor Verwalter",
 			createdAt: "16.03.2013 15:48 Uhr"
 		},
 		3 : {
+			id: 3,
 			name: "User SQL Export",
 			creator: "Renate Ritter",
 			createdAt: "28.04.2014 19:57 Uhr"
