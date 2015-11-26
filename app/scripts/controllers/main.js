@@ -11,6 +11,12 @@
 var App = angular.module('datacityApp');
 
 App.controller('MainCtrl', function($scope, $http) {
+	$(".nav a").on("click", function()	{
+		$(".nav").find(".active").removeClass("active");
+		$(this).parent().addClass("active");
+	});
+
+	
 	var exampleData = {
 		1 : {
 			name: "Geburtenrate in Hessen",
@@ -28,7 +34,7 @@ App.controller('MainCtrl', function($scope, $http) {
 			createdAt: "28.04.2014 19:57 Uhr"
 		},
 	};
-	var data = exampleData;
+	$scope.data = exampleData;
 });
 
 function ausgabe(){	
