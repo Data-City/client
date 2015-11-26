@@ -16,6 +16,10 @@ App.controller('MainCtrl', function($scope, $http) {
 		$(this).parent().addClass("active");
 	});
 
+	// DataView Vars
+	$scope.dataView = {
+		showUploadForm : false
+	};
 	
 	var exampleData = {
 		1 : {

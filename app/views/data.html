@@ -1,1 +1,35 @@
-<p>This is the data view.</p>
+<div ng-app="datacityApp" ng-controller="MainCtrl">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Datensätze</h3>
+    </div>
+    <div class="panel-body">
+      <table class="table">
+        <tr>
+          <th>Name</th>
+          <th>Erstellt von</th>
+          <th>Erstellt am</th>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr ng-repeat="collection in data">
+          <td>{{collection.name}}</td>
+          <td>{{collection.creator}}</td>
+          <td>{{collection.createdAt}}</td>
+          <td><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></td>
+          <td><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></td>
+        </tr>
+      </table>
+      <button type="button" class="btn btn-default" ng-click="dataView.showUploadForm = !dataView.showUploadForm">
+        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> CSV-Datei hochladen
+      </button>
+    </div>
+  </div>
+  <div class="panel panel-default" ng-show="dataView.showUploadForm">
+    <div class="panel-heading">
+      <h3 class="panel-title">Datensatz hochladen</h3>
+    </div>
+    <div class="panel-body">
+      <uploadformdatasourcefile></uploadformdatasourcefile>
+    </div>
+</div>
