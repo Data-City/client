@@ -20,8 +20,7 @@ App.controller('MainCtrl', function($scope, $http) {
 	$scope.dataView = {
 		showUploadForm : false
 	};
-	
-	
+		
 	var exampleData = {
 		1 : {
 			id: 1,

@@ -20,9 +20,14 @@
           <td><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></td>
         </tr>
       </table>
-      <button type="button" class="btn btn-default" ng-click="dataView.showUploadForm = !dataView.showUploadForm">
+      <button type="button" class="btn btn-default pull-right" ng-click="dataView.showUploadForm = !dataView.showUploadForm">
         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> CSV-Datei hochladen
       </button>
+      <div class="pull-left">
+        Legende: <br />
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Löschen <br />
+        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Ansichten verwalten <br />
+      </div>
     </div>
   </div>
   <div class="panel panel-default" ng-show="dataView.showUploadForm">
