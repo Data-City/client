@@ -1,3 +1,52 @@
+<div ng-app="datacityApp" ng-controller="MainCtrl">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Ansichten</h3>
+    </div>
+    <div class="panel-body">
+      <table class="table">
+        <tr>
+          <th>Name</th>
+		  <th>Datensatz</th>
+          <th>Erstellt von</th>
+          <th>Erstellt am</th>
+          <th>Optionen</th>
+        </tr>
+        <tr ng-repeat="view in views" ng-click="viewView.setChosenView(view.id);">
+          <td>{{view.name}}</td>
+		  <td>{{collections[view.collectionID].name}}</td>
+          <td>{{view.creator}}</td>
+          <td>{{view.createdAt}}</td>
+		  <td>
+			<div class="btn-group btn-group-sm" role="group" aria-label="...">
+  				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+  				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+  				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
+			</div>
+		  </td>
+        </tr>
+      </table>
+      <button type="button" class="btn btn-default pull-right" ng-click="dataView.showUploadForm = !dataView.showUploadForm">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
+      </button>
+      <div class="pull-left">
+        Legende: <br />
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Löschen <br />
+        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Ansichten verwalten <br />
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default" ng-show="chosenView">
+    <div class="panel-heading">
+      <h3 class="panel-title">Ansicht bearbeiten: {{views[chosenView].name}}</h3>
+    </div>
+    <div class="panel-body">
+    </div>
+  </div>
+</div>
+
+
+
 <div class="container">
 	Die aktuelle Ansicht speichern unter: <input type="text">
 	<button type="button" class="btn btn-default" onclick="">Ansicht speichern</button>

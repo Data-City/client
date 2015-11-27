@@ -20,13 +20,64 @@ App.controller('MainCtrl', function($scope, $http) {
 	$scope.dataView = {
 		showUploadForm : false
 	};
+	
+	$scope.viewView = {
+		setChosenView : function(id) {
+			if($scope.chosenView == id) {
+				$scope.chosenView = null;
+			} else {
+				$scope.chosenView = id;
+			}
+		}
+	}
+	
+	$scope.chosenCollection = null;
+	$scope.chosenView = null;
+	
+	var exampleViews = {
+		1: {
+			id: 1,
+			name: "GebRate1",
+			collectionID: 1,
+			creator: "Steffen Statistiker",
+			createdAd: "26.11.2015 17:25 Uhr"
+		}
+	};
+	
+	$scope.views = exampleViews;
 		
 	var exampleData = {
 		1 : {
 			id: 1,
 			name: "Geburtenrate in Hessen",
 			creator: "Max Mustermann",
-			createdAt: "25.11.2015 11:25 Uhr"
+			createdAt: "25.11.2015 11:25 Uhr",
+			attributes: {
+				1: {
+					name: "Stadt",
+					type: "String"
+				},
+				2: {
+					name: "Jahr",
+					type: "int"
+				},
+				3: {
+					name: "Geburten (absolut)",
+					type: "int"
+				},
+				4: {
+					name: "Veränderung zum Vorjahr in Prozent",
+					type: "double"
+				}
+			},
+			values: {
+				1: {
+					Stadt: "Wiesbaden",
+					Jahr: 1990,
+					Absolut: 345,
+					Diff: 1.08
+				},
+			}
 		},
 		2 : {
 			id: 2,
@@ -42,6 +93,7 @@ App.controller('MainCtrl', function($scope, $http) {
 		},
 	};
 	$scope.data = exampleData;
+	
 });
 
 function ausgabe(){	
