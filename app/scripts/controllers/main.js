@@ -31,6 +31,35 @@ App.controller('MainCtrl', function($scope, $http) {
 		}
 	}
 	
+	$scope.numberOfViews = function() {
+			var count = Object.keys($scope.views).length;
+			return count;
+	};
+	
+	$scope.username = "Kalle Ölsand";
+	
+	$scope.createNewView = function(chooseViewAfter) {
+		var nextID = $scope.numberOfViews() + 1;
+		var d = new Date();
+		$scope.views[nextID] = {
+			id: nextID,
+			name: 'Neue Ansicht',
+			collectionID: null,
+			creator: $scope.username,
+			createdAt: d.toLocaleDateString() 
+		}
+		if(typeof chooseViewAfter !== 'undefined') {
+			$scope.viewView.setChosenView(nextID);
+		}
+	};
+	
+	$scope.deleteView = function(id) {
+		delete $scope.views[id];
+		if($scope.chosenView == id) {
+			$scope.chosenView = null;
+		}
+	}
+	
 	$scope.chosenCollection = null;
 	$scope.chosenView = null;
 	
@@ -40,7 +69,7 @@ App.controller('MainCtrl', function($scope, $http) {
 			name: "GebRate1",
 			collectionID: 1,
 			creator: "Steffen Statistiker",
-			createdAd: "26.11.2015 17:25 Uhr"
+			createdAt: "26.11.2015 17:25 Uhr"
 		}
 	};
 	
