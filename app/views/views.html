@@ -36,12 +36,19 @@
 				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
 			</div>
 		</div>
-		<div class="panel-body">
-			<div class="col-md-4">
+		<div class="panel-body">			
+			<div class="col-md-3">
 				<div class="row">Name</div>
+				<div class="row">Datensatz</div>
 			</div>
-			<div class="col-md-8">
+			<div class="col-md-9">
 				<div class="row" editable-text="views[chosenView].name">{{views[chosenView].name}}</div>
+				<div class="row">
+					<select name="chooseCollection" ng-model="views[chosenView].collectionID">
+						<option value="">Bitte wählen Sie einen Datensatz!</option>
+						<option ng-repeat="collection in data" value="{{collection.id}}">{{collection.name}}</option>
+					</select> <br>
+				</div>
 			</div>
 		</div>
 	</div>
