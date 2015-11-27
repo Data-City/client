@@ -17,8 +17,12 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'xeditable'
   ])
+  .run(["editableOptions", function(editableOptions) {
+  editableOptions.theme = 'bs3';
+  }])
   .config(["$routeProvider", function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -95,13 +99,93 @@ App.controller('MainCtrl', ["$scope", "$http", function($scope, $http) {
 	$scope.dataView = {
 		showUploadForm : false
 	};
+	
+	$scope.viewView = {
+		setChosenView : function(id) {
+			if($scope.chosenView == id) {
+				$scope.chosenView = null;
+			} else {
+				$scope.chosenView = id;
+			}
+		}
+	}
+	
+	$scope.numberOfViews = function() {
+			var count = Object.keys($scope.views).length;
+			return count;
+	};
+	
+	$scope.username = "Kalle Ölsand";
+	
+	$scope.createNewView = function(chooseViewAfter) {
+		var nextID = $scope.numberOfViews() + 1;
+		var d = new Date();
+		$scope.views[nextID] = {
+			id: nextID,
+			name: 'Neue Ansicht',
+			collectionID: null,
+			creator: $scope.username,
+			createdAt: d.toLocaleDateString() 
+		}
+		if(typeof chooseViewAfter !== 'undefined') {
+			$scope.viewView.setChosenView(nextID);
+		}
+	};
+	
+	$scope.deleteView = function(id) {
+		delete $scope.views[id];
+		if($scope.chosenView == id) {
+			$scope.chosenView = null;
+		}
+	}
+	
+	$scope.chosenCollection = null;
+	$scope.chosenView = null;
+	
+	var exampleViews = {
+		1: {
+			id: 1,
+			name: "GebRate1",
+			collectionID: 1,
+			creator: "Steffen Statistiker",
+			createdAt: "26.11.2015 17:25 Uhr"
+		}
+	};
+	
+	$scope.views = exampleViews;
 		
 	var exampleData = {
 		1 : {
 			id: 1,
 			name: "Geburtenrate in Hessen",
 			creator: "Max Mustermann",
-			createdAt: "25.11.2015 11:25 Uhr"
+			createdAt: "25.11.2015 11:25 Uhr",
+			attributes: {
+				1: {
+					name: "Stadt",
+					type: "String"
+				},
+				2: {
+					name: "Jahr",
+					type: "int"
+				},
+				3: {
+					name: "Geburten (absolut)",
+					type: "int"
+				},
+				4: {
+					name: "Veränderung zum Vorjahr in Prozent",
+					type: "double"
+				}
+			},
+			values: {
+				1: {
+					Stadt: "Wiesbaden",
+					Jahr: 1990,
+					Absolut: 345,
+					Diff: 1.08
+				},
+			}
 		},
 		2 : {
 			id: 2,
@@ -117,6 +201,7 @@ App.controller('MainCtrl', ["$scope", "$http", function($scope, $http) {
 		},
 	};
 	$scope.data = exampleData;
+	
 }]);
 
 function ausgabe(){	
@@ -392,6 +477,25 @@ angular.module('datacityApp')
     ];
   });
 
+'use strict';
+
+/**
+ * @ngdoc directive
+ * @name datacityApp.directive:tableofviews
+ * @description
+ * # tableofviews
+ */
+angular.module('datacityApp')
+  .directive('tableofviews', function () {
+    return {
+      template: '<div></div>',
+      restrict: 'E',
+      link: function postLink(scope, element, attrs) {
+        element.text('this is the tableofviews directive');
+      }
+    };
+  });
+
 angular.module('datacityApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -421,7 +525,7 @@ angular.module('datacityApp').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('views/views.html',
-    "<div class=\"container\"> Die aktuelle Ansicht speichern unter: <input type=\"text\"> <button type=\"button\" class=\"btn btn-default\" onclick=\"\">Ansicht speichern</button> </div> <div class=\"container\"> <h3>Parameter eingeben:</h3> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Name:</label> <select class=\"form-control\" id=\"gruppierung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Flächeninhalt:</label> <select class=\"form-control\" id=\"flaecheselektieren\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Höhe:</label> <select class=\"form-control\" id=\"hoeheselektieren\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> </div> <h3>Ab hier muss alles in späteren Instanzen eingefügt werden!</h3> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Gruppierungen:</label> <select class=\"form-control\" id=\"gruppierung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-8\"> <br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Farbe:</label> <select class=\"form-control\" id=\"farbeselektieren\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-4\"> <br><br> <label class=\"radio-inline\"><input type=\"radio\" name=\"farbenRadio\" id=\"farbenRadio1\" checked>Aufsteigend</label> <label class=\"radio-inline\"><input type=\"radio\" name=\"farbenRadio\" id=\"farbenRadio2\">Absteigend</label> </div> </div> <br><br> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Gruppierungen:</label> <select class=\"form-control\" id=\"gruppierung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-8\"> <br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Verbindungen:</label> <select class=\"form-control\" id=\"verbindung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-8\"> <br>[Es ist noch unklar, wie genau der Input bei den Verbindungen dargestellt wird] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label>Winkel einstellen:</label> <div id=\"slider\"> <input class=\"bar\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" id=\"winkelInput\" value=\"0\" onchange=\"winkelOutput.value=value.concat('°')\"> <output id=\"winkelOutput\">0°</output> </div> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label>Granularität einstellen:</label> <div id=\"slider\"> <input class=\"bar\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" id=\"granularInput\" value=\"0\" onchange=\"granularOutput.value=value.concat('%')\"> <output id=\"granularOutput\">0%</output> </div> </div> </div>"
+    "<div ng-app=\"datacityApp\" ng-controller=\"MainCtrl\"> <div class=\"panel panel-default\"> <div class=\"panel-heading\"> <h3 class=\"panel-title\">Ansichten</h3> </div> <div class=\"panel-body\"> <table class=\"table\"> <tr> <th>Name</th> <th>Datensatz</th> <th>Erstellt von</th> <th>Erstellt am</th> </tr> <tr ng-repeat=\"view in views\" ng-click=\"viewView.setChosenView(view.id);\"> <td>{{view.name}}</td> <td>{{data[view.collectionID].name}}</td> <td>{{view.creator}}</td> <td>{{view.createdAt}}</td> </tr> <tr ng-hide=\"numberOfViews() > 0\"> <td colspan=\"4\" align=\"center\">Keine Ansichten vorhanden!</td> </tr> </table> <button type=\"button\" class=\"btn btn-default pull-right\" ng-click=\"createNewView(true);\"> <span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span> Neue Ansicht erstellen </button> </div> </div> <div class=\"panel panel-default\" ng-show=\"chosenView\"> <div class=\"panel-heading\"> Ansicht bearbeiten: {{views[chosenView].name}} <div class=\"btn-group btn-group-xs pull-right\" role=\"group\" aria-label=\"...\"> <button type=\"button\" class=\"btn btn-default\" ng-click=\"deleteView(chosenView);\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></button> <button type=\"button\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></button> <button type=\"button\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-download-alt\" aria-hidden=\"true\"></span></button> </div> </div> <div class=\"panel-body\"> <div class=\"col-md-4\"> <div class=\"row\">Name</div> </div> <div class=\"col-md-8\"> <div class=\"row\" editable-text=\"views[chosenView].name\">{{views[chosenView].name}}</div> </div> </div> </div> </div> <div class=\"container\"> Die aktuelle Ansicht speichern unter: <input type=\"text\"> <button type=\"button\" class=\"btn btn-default\" onclick=\"\">Ansicht speichern</button> </div> <div class=\"container\"> <h3>Parameter eingeben:</h3> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Name:</label> <select class=\"form-control\" id=\"gruppierung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Flächeninhalt:</label> <select class=\"form-control\" id=\"flaecheselektieren\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Höhe:</label> <select class=\"form-control\" id=\"hoeheselektieren\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> </div> <h3>Ab hier muss alles in späteren Instanzen eingefügt werden!</h3> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Gruppierungen:</label> <select class=\"form-control\" id=\"gruppierung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-8\"> <br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Farbe:</label> <select class=\"form-control\" id=\"farbeselektieren\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-4\"> <br> <br> <label class=\"radio-inline\"> <input type=\"radio\" name=\"farbenRadio\" id=\"farbenRadio1\" checked>Aufsteigend</label> <label class=\"radio-inline\"> <input type=\"radio\" name=\"farbenRadio\" id=\"farbenRadio2\">Absteigend</label> </div> </div> <br> <br> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Gruppierungen:</label> <select class=\"form-control\" id=\"gruppierung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-8\"> <br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Verbindungen:</label> <select class=\"form-control\" id=\"verbindung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-8\"> <br>[Es ist noch unklar, wie genau der Input bei den Verbindungen dargestellt wird] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label>Winkel einstellen:</label> <div id=\"slider\"> <input class=\"bar\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" id=\"winkelInput\" value=\"0\" onchange=\"winkelOutput.value=value.concat('°')\"> <output id=\"winkelOutput\">0°</output> </div> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label>Granularität einstellen:</label> <div id=\"slider\"> <input class=\"bar\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" id=\"granularInput\" value=\"0\" onchange=\"granularOutput.value=value.concat('%')\"> <output id=\"granularOutput\">0%</output> </div> </div> </div>"
   );
 
 }]);
