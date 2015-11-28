@@ -34,34 +34,27 @@
 				<button type="button" class="btn btn-default" ng-click="deleteView(chosenView);"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
 				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button>
 			</div>
 		</div>
 		<div class="panel-body">
-			<div class="col-md-3">
-				<div class="row">Name</div>
-				<div class="row">Datensatz</div>
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon2">Name</span>
+				<input type="text" class="form-control" placeholder="{{views[chosenView].name}}" ng-model="views[chosenView].name">
+			</div> <br />
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon2">Datensatz</span>
+				<select class="form-control">
+					<option value="">Bitte wählen Sie einen Datensatz</option>
+					<option ng-repeat="collection in data" value="{{collection.id}}">{{collection.name}}</option>
+				</select>
 			</div>
-			<div class="col-md-9">
-				<div class="row" editable-text="views[chosenView].name">{{views[chosenView].name}}</div>
-				<div class="row">
-					<select name="chooseCollection" ng-model="views[chosenView].collectionID">
-						<option value="">Bitte wählen Sie einen Datensatz!</option>
-						<option ng-repeat="collection in data" value="{{collection.id}}">{{collection.name}}</option>
-					</select>
-					<br>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 </div>
-
-
-
-<div class="container">
-	Die aktuelle Ansicht speichern unter:
-	<input type="text">
-	<button type="button" class="btn btn-default" onclick="">Ansicht speichern</button>
 </div>
+
 
 <div class="container">
 	<h3>Parameter eingeben:</h3>
