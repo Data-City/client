@@ -17,12 +17,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch',
-    'xeditable'
+    'ngTouch'
   ])
-  .run(function(editableOptions) {
-  editableOptions.theme = 'bs3';
-  })
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

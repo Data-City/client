@@ -41,60 +41,48 @@
 			<div class="input-group">
 				<span class="input-group-addon" id="basic-addon2">Name</span>
 				<input type="text" class="form-control" placeholder="{{views[chosenView].name}}" ng-model="views[chosenView].name">
-			</div> <br />
+			</div>
+			<br />
 			<div class="input-group">
 				<span class="input-group-addon" id="basic-addon2">Datensatz</span>
-				<select class="form-control">
-					<option value="">Bitte wählen Sie einen Datensatz</option>
-					<option ng-repeat="collection in data" value="{{collection.id}}">{{collection.name}}</option>
+				<select class="form-control" ng-model="views[chosenView].collectionID" ng-options="collection.id as collection.name for collection in data">
 				</select>
 			</div>
-			
+			<br />
+			<div ng-show="views[chosenView].collectionID">
+				<h4>Dimensionen festlegen</h4>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon2">Name</span>
+					<select class="form-control" ng-model="views[chosenView].dimensions.name.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes">
+					</select>
+				</div>
+				<br />
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon2">Fläche</span>
+					<select class="form-control" ng-model="views[chosenView].dimensions.area.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes">
+					</select>
+				</div>
+				<br />
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon2">Höhe</span>
+					<select class="form-control" ng-model="views[chosenView].dimensions.height.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes">
+					</select>
+				</div>
+				<br />
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon2">Farbe</span>
+					<select class="form-control" ng-model="views[chosenView].dimensions.color.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes">
+					</select>
+				</div>
+				<br />
+			</div>
+
 		</div>
 	</div>
 </div>
 </div>
 
 
-<div class="container">
-	<h3>Parameter eingeben:</h3>
-</div>
-
-<div class="container">
-	<div class="col-sm-4">
-		<label for="sel1">Name:</label>
-		<select class="form-control" id="gruppierung">
-			<option>1</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-		</select>
-	</div>
-</div>
-
-<div class="container">
-	<div class="col-sm-4">
-		<label for="sel1">Flächeninhalt:</label>
-		<select class="form-control" id="flaecheselektieren">
-			<option>1</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-		</select>
-	</div>
-</div>
-
-<div class="container">
-	<div class="col-sm-4">
-		<label for="sel1">Höhe:</label>
-		<select class="form-control" id="hoeheselektieren">
-			<option>1</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-		</select>
-	</div>
-</div>
 
 <h3>Ab hier muss alles in späteren Instanzen eingefügt werden!</h3>
 

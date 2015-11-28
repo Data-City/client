@@ -69,7 +69,21 @@ App.controller('MainCtrl', function($scope, $http) {
 			name: "GebRate1",
 			collectionID: 1,
 			creator: "Steffen Statistiker",
-			createdAt: "26.11.2015 17:25 Uhr"
+			createdAt: "26.11.2015 17:25 Uhr",
+			dimensions: {
+				name: {
+					attr: null	
+				},
+				area: {
+					attr: null
+				},
+				height: {
+					attr: null
+				},
+				color: {
+					attr: null
+				}
+			}
 		}
 	};
 	
