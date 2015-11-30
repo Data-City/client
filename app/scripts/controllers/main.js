@@ -66,8 +66,8 @@ App.controller('MainCtrl', function($scope, $http) {
 	var exampleViews = {
 		1: {
 			id: 1,
-			name: "GebRate1",
-			collectionID: 1,
+			name: "XGebRate1",
+			collectionID: 1, //Geburtenrate in Hessen
 			creator: "Steffen Statistiker",
 			createdAt: "26.11.2015 17:25 Uhr",
 			dimensions: {
@@ -81,6 +81,42 @@ App.controller('MainCtrl', function($scope, $http) {
 					attr: null
 				},
 				color: {
+					attr: null
+				}
+			}
+		},
+		2: {
+			id: 2,
+			name: "Logfile vom DD.MM.YYYY",
+			collectionID: 2, //Apache Log Files
+			creator: "Benedikt Rumtreiber",
+			createdAt: "30.11.2015 16:40 Uhr",
+			dimensions: {
+				name: {
+					attr: null	
+				},
+				area: {
+					attr: null
+				},
+				height: {
+					attr: null
+				}
+			}
+		},
+		3: {
+			id: 3,
+			name: "Export vom DD.MM.YYYY",
+			collectionID: 3, //User SQL Export
+			creator: "Benedikt Rumtreiber",
+			createdAt: "30.11.2015 16:41 Uhr",
+			dimensions: {
+				name: {
+					attr: null	
+				},
+				area: {
+					attr: null
+				},
+				height: {
 					attr: null
 				}
 			}
@@ -119,20 +155,52 @@ App.controller('MainCtrl', function($scope, $http) {
 					Jahr: 1990,
 					Absolut: 345,
 					Diff: 1.08
-				},
+				}
 			}
 		},
 		2 : {
 			id: 2,
 			name: "Apache Log Files",
 			creator: "Viktor Verwalter",
-			createdAt: "16.03.2013 15:48 Uhr"
+			createdAt: "16.03.2013 15:48 Uhr",
+			attributes: {
+				1: {
+					name: "Name",
+					type: "String"
+				},
+				2: {
+					name: "Datum",
+					type: "int"
+				},
+				3: {
+					name: "Anzahl Zeilen",
+					type: "int"
+				},
+				4: {
+					name: "Fehler?",
+					type: "boolean"
+				}
+			}
 		},
 		3 : {
 			id: 3,
 			name: "User SQL Export",
 			creator: "Renate Ritter",
-			createdAt: "28.04.2014 19:57 Uhr"
+			createdAt: "28.04.2014 19:57 Uhr",
+			attributes: {
+				1: {
+					name: "Benutzer",
+					type: "String"
+				},
+				2: {
+					name: "Anzahl Datensätze",
+					type: "int"
+				},
+				3: {
+					name: "Date",
+					type: "String"
+				},
+			}
 		},
 	};
 	$scope.data = exampleData;
