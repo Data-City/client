@@ -10,16 +10,25 @@
           <th>Erstellt von</th>
           <th>Erstellt am</th>
           <th></th>
-          <th></th>
         </tr>
-        <tr ng-repeat="collection in data">
+        <tr ng-repeat="collection in data"  ng-click="dataset.setChosenDataset(collection.id)">
           <td>{{collection.name}}</td>
           <td>{{collection.creator}}</td>
           <td>{{collection.createdAt}}</td>
-          <td><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></td>
-          <td><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></td>
+          <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)"></span></td>
         </tr>
       </table>
+
+
+
+
+      <p>Ausgewählter Datensatz - id: {{chosenDataset}}</p>
+
+      <p>Ausgewählter Datensatz - Name: {{data[chosenDataset].name}}</p>
+
+
+
+
       <button type="button" class="btn btn-default pull-right" ng-click="dataView.showUploadForm = !dataView.showUploadForm">
         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> CSV-Datei hochladen
       </button>
