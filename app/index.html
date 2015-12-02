@@ -23,16 +23,14 @@
     <!-- Add your site or application content here -->
     <div class="header">
       <div class="navbar navbar-inverse" role="navigation">
-        <div class="container">
-          <div class="navbar-header">
 
+          <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-
             <div class="navbar-brand">DataCity</div>
           </div>
 
@@ -42,11 +40,13 @@
               <li class="active"><a ng-href="#/data">Datensätze</a></li>
               <li><a ng-href="#/views">Ansichten</a></li>
               <li><a ng-href="#/city">Stadt</a></li>
-              <li><a ng-href="#/admin">Einstellungen</a></li>
-              
+              <li><a ng-href="#/admin">Einstellungen</a></li> 
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#/login">Eingeloggt als <i>{{username}}</i></a></li>
             </ul>
           </div>
-        </div>
       </div>
     </div>
 

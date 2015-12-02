@@ -1,4 +1,7 @@
 <div ng-app="datacityApp" ng-controller="MainCtrl">
+
+	<h3>Ausgewählter Datensatz: <u>{{data[chosenDataset].name}}</u></h3>
+
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h3 class="panel-title">Ansichten</h3>
@@ -11,6 +14,8 @@
 					<th>Erstellt von</th>
 					<th>Erstellt am</th>
 				</tr>
+				<!-- <tr ng-repeat="view in views | filterBy:'creator'" ng-click="viewView.setChosenView(view.id);"> Funktionert nicht-->
+				<!-- <tr ng-repeat="view in views | filterBy: 'Benedikt Rumtreiber'" ng-click="viewView.setChosenView(view.id);"> Selbst das nicht-->
 				<tr ng-repeat="view in views" ng-click="viewView.setChosenView(view.id);">
 					<td>{{view.name}}</td>
 					<td>{{data[view.collectionID].name}}</td>
@@ -21,12 +26,13 @@
 					<td colspan="4" align="center">Keine Ansichten vorhanden!</td>
 				</tr>
 			</table>
-			<button type="button" class="btn btn-default pull-right" ng-click="createNewView(true);">
-				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
-			</button>
 		</div>
+		<button type="button" class="btn btn-default pull-right" ng-click="createNewView(true);">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
+		</button>
 	</div>
 
+	<br>
 	<div class="panel panel-default" ng-show="chosenView">
 		<div class="panel-heading">
 			Ansicht bearbeiten: {{views[chosenView].name}}
@@ -39,139 +45,156 @@
 		</div>
 		<div class="panel-body">
 			<div class="input-group">
-				<span class="input-group-addon" id="basic-addon2">Name</span>
+				<span class="input-group-addon">Name</span>
 				<input type="text" class="form-control" placeholder="{{views[chosenView].name}}" ng-model="views[chosenView].name">
 			</div>
 			<br />
+			<!-- Wird nicht mehr benötigt, wenn man nur einen Datensatz betrachtet
 			<div class="input-group">
-				<span class="input-group-addon" id="basic-addon2">Datensatz</span>
+				<span class="input-group-addon">Datensatz</span>
 				<select class="form-control" ng-model="views[chosenView].collectionID" ng-options="collection.id as collection.name for collection in data">
 				</select>
 			</div>
 			<br />
+			-->
 			<div ng-show="views[chosenView].collectionID">
 				<h4>Dimensionen festlegen</h4>
 				<div class="input-group">
-					<span class="input-group-addon" id="basic-addon2">Name</span>
+					<span class="input-group-addon">Name</span>
 					<select class="form-control" ng-model="views[chosenView].dimensions.name.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes">
 					</select>
 				</div>
 				<br />
 				<div class="input-group">
-					<span class="input-group-addon" id="basic-addon2">Fläche</span>
+					<span class="input-group-addon">Fläche</span>
 					<select class="form-control" ng-model="views[chosenView].dimensions.area.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes">
 					</select>
 				</div>
 				<br />
 				<div class="input-group">
-					<span class="input-group-addon" id="basic-addon2">Höhe</span>
-					<select class="form-control" ng-model="views[chosenView].dimensions.height.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes">
+					<span class="input-group-addon">Höhe</span>
+					<select class="form-control" ng-model="views[chosenView].dimensions.height.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes" ng-change="views[chosenView].dimensions.height.attr = value">
 					</select>
 				</div>
 				<br />
+				<!-- Kann noch nicht visualisiert werden
 				<div class="input-group">
-					<span class="input-group-addon" id="basic-addon2">Farbe</span>
+					<span class="input-group-addon">Farbe</span>
 					<select class="form-control" ng-model="views[chosenView].dimensions.color.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes">
 					</select>
 				</div>
 				<br />
+				-->
 			</div>
 
 		</div>
 	</div>
-</div>
-</div>
 
+	<h3>Test {{views[chosenView].dimensions.name.attr}}</h3>
 
+	<div class="container" ng-repeat="set in data">
+		<div class="col-sm-4">
+			<label>{{set.name}}</label>
+	        <select class="form-control">
+	         	<option ng-repeat="collection in set.attributes">{{collection.name}} - {{collection.type}}</option>
+	        </select>
+    	</div>
+    </div>	
 
-<h3>Ab hier muss alles in späteren Instanzen eingefügt werden!</h3>
+----------- Hier wird der Datensatz "Geburtenrate in Hessen" benutzt -----------------
 
-<div class="container">
-	<div class="col-sm-4">
-		<label for="sel1">Gruppierungen:</label>
-		<select class="form-control" id="gruppierung">
-			<option>1</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-		</select>
-	</div>
-	<div class="col-sm-8">
-		<br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin]
-	</div>
-</div>
-
-<div class="container">
-	<div class="col-sm-4">
-		<label for="sel1">Farbe:</label>
-		<select class="form-control" id="farbeselektieren">
-			<option>1</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-		</select>
-	</div>
-	<div class="col-sm-4">
-		<br>
-		<br>
-		<label class="radio-inline">
-			<input type="radio" name="farbenRadio" id="farbenRadio1" checked>Aufsteigend</label>
-		<label class="radio-inline">
-			<input type="radio" name="farbenRadio" id="farbenRadio2">Absteigend</label>
-	</div>
-</div>
-
-<br>
-<br>
-
-<div class="container">
-	<div class="col-sm-4">
-		<label for="sel1">Gruppierungen:</label>
-		<select class="form-control" id="gruppierung">
-			<option>1</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-		</select>
-	</div>
-	<div class="col-sm-8">
-		<br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin]
-	</div>
-</div>
-
-<div class="container">
-	<div class="col-sm-4">
-		<label for="sel1">Verbindungen:</label>
-		<select class="form-control" id="verbindung">
-			<option>1</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-		</select>
-	</div>
-	<div class="col-sm-8">
-		<br>[Es ist noch unklar, wie genau der Input bei den Verbindungen dargestellt wird]
-	</div>
-</div>
-
-<div class="container">
-	<div class="col-sm-4">
-		<label>Winkel einstellen:</label>
-		<div id="slider">
-			<input class="bar" type="range" min="0" max="360" step="1" id="winkelInput" value="0" onchange="winkelOutput.value=value.concat('°')"
-			/>
-			<output id="winkelOutput">0°</output>
+	<div class="container">
+		<div class="col-sm-4">
+			<label for="sel1">Name:</label>
+			<select class="form-control" id="name">
+				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
+			</select>
 		</div>
 	</div>
-</div>
 
-<div class="container">
-	<div class="col-sm-4">
-		<label>Granularität einstellen:</label>
-		<div id="slider">
-			<input class="bar" type="range" min="0" max="100" step="1" id="granularInput" value="0" onchange="granularOutput.value=value.concat('%')"
-			/>
-			<output id="granularOutput">0%</output>
+	<div class="container">
+		<div class="col-sm-4">
+			<label for="sel1">Flächeninhalt:</label>
+			<select class="form-control" id="area">
+				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="col-sm-4">
+			<label for="sel1">Höhe:</label>
+			<select class="form-control" id="height">
+				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
+			</select>
+		</div>
+	</div>
+
+	<h3>Ab hier muss alles in späteren Instanzen eingefügt werden!</h3>
+
+	<div class="container">
+		<div class="col-sm-4">
+			<label for="sel1">Farbe:</label>
+			<select class="form-control" id="farbeselektieren">
+				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
+			</select>
+		</div>
+		<div class="col-sm-4">
+			<br>
+			<br>
+			<label class="radio-inline">
+				<input type="radio" name="farbenRadio" id="farbenRadio1" checked>Aufsteigend</label>
+			<label class="radio-inline">
+				<input type="radio" name="farbenRadio" id="farbenRadio2">Absteigend</label>
+		</div>
+	</div>
+
+	<br>
+	<br>
+
+	<div class="container">
+		<div class="col-sm-4">
+			<label for="sel1">Gruppierungen:</label>
+			<select class="form-control" id="gruppierung">
+				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
+			</select>
+		</div>
+		<div class="col-sm-8">
+			<br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin]
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="col-sm-4">
+			<label for="sel1">Verbindungen:</label>
+			<select class="form-control" id="verbindung">
+				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
+			</select>
+		</div>
+		<div class="col-sm-8">
+			<br>[Es ist noch unklar, wie genau der Input bei den Verbindungen dargestellt wird]
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="col-sm-4">
+			<label>Winkel einstellen:</label>
+			<div id="slider">
+				<input class="bar" type="range" min="0" max="360" step="1" id="winkelInput" value="0" onchange="winkelOutput.value=value.concat('°')"
+				/>
+				<output id="winkelOutput">0°</output>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="col-sm-4">
+			<label>Granularität einstellen:</label>
+			<div id="slider">
+				<input class="bar" type="range" min="0" max="100" step="1" id="granularInput" value="0" onchange="granularOutput.value=value.concat('%')"
+				/>
+				<output id="granularOutput">0%</output>
+			</div>
 		</div>
 	</div>
 </div>

@@ -17,12 +17,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch',
-    'xeditable'
+    'ngTouch'
   ])
-  .run(["editableOptions", function(editableOptions) {
-  editableOptions.theme = 'bs3';
-  }])
   .config(["$routeProvider", function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -89,11 +85,60 @@ angular
  
 var App = angular.module('datacityApp');
 
-App.controller('MainCtrl', ["$scope", "$http", function($scope, $http) {
+/*
+App.controller('MainCtrl', ['$scope', '$rootScope',function ($scope, $rootScope) {
+	        console.log($rootScope.mySetting);
+	    }
+	]);
+*/
+
+//Die richtige Seite in der Navbar wird angezeigt
+App.controller('MainCtrl', ["$scope", "$http", "$rootScope", function($scope, $http, $rootScope) {
 	$(".nav a").on("click", function()	{
 		$(".nav").find(".active").removeClass("active");
 		$(this).parent().addClass("active");
 	});
+
+	// Zeilen auswählen Tabelle
+	$scope.selectRow = function(id){
+		if (id == $rootScope.dataset) {
+			return success;
+		} else {
+			return success;
+		}
+	}
+
+	//Initialisierung
+	if ($rootScope.username == null){
+		$rootScope.username = "Kalle Ölsand";
+	} 
+
+	if ($rootScope.chosenDataset == null){
+		$rootScope.chosenDataset = 1;
+	} 
+
+	// Login
+	$scope.login = function(usernameInput){
+		$rootScope.username = usernameInput;
+	}
+
+	// Dataset Vars
+	$rootScope.dataset = {
+		setChosenDataset : function(id) {
+			$rootScope.chosenDataset = id;
+		}
+	}
+
+
+
+	$scope.deleteDataset = function(id) {
+		delete $scope.data[id];
+		if($rootScope.chosenDataset == id) {
+			$rootScope.chosenDataset = null;
+		}
+	}
+	
+
 
 	// DataView Vars
 	$scope.dataView = {
@@ -115,16 +160,14 @@ App.controller('MainCtrl', ["$scope", "$http", function($scope, $http) {
 			return count;
 	};
 	
-	$scope.username = "Kalle Ölsand";
-	
 	$scope.createNewView = function(chooseViewAfter) {
 		var nextID = $scope.numberOfViews() + 1;
 		var d = new Date();
 		$scope.views[nextID] = {
 			id: nextID,
 			name: 'Neue Ansicht',
-			collectionID: null,
-			creator: $scope.username,
+			collectionID: $rootScope.chosenDataset,
+			creator: $rootScope.username,
 			createdAt: d.toLocaleDateString() 
 		}
 		if(typeof chooseViewAfter !== 'undefined') {
@@ -141,17 +184,59 @@ App.controller('MainCtrl', ["$scope", "$http", function($scope, $http) {
 	
 	$scope.chosenCollection = null;
 	$scope.chosenView = null;
-	
+
 	var exampleViews = {
 		1: {
 			id: 1,
 			name: "GebRate1",
-			collectionID: 1,
+			collectionID: 1, //Geburtenrate in Hessen
 			creator: "Steffen Statistiker",
-			createdAt: "26.11.2015 17:25 Uhr"
+			createdAt: "26.11.2015 17:25 Uhr",
+			dimensions: {
+				name: "",
+				area: "",
+				height: "",
+				color: ""
+			}
+		},
+		2: {
+			id: 2,
+			name: "Logfile vom 24.12.2015",
+			collectionID: 2, //Apache Log Files
+			creator: "Benedikt Rumtreiber",
+			createdAt: "30.11.2015 16:40 Uhr",
+			dimensions: {
+				name: {
+					attr: null	
+				},
+				area: {
+					attr: null
+				},
+				height: {
+					attr: null
+				}
+			}
+		},
+		3: {
+			id: 3,
+			name: "Export vom 1.1.1994",
+			collectionID: 3, //User SQL Export
+			creator: "Benedikt Rumtreiber",
+			createdAt: "30.11.2015 16:41 Uhr",
+			dimensions: {
+				name: {
+					attr: null	
+				},
+				area: {
+					attr: null
+				},
+				height: {
+					attr: null
+				}
+			}
 		}
 	};
-	
+
 	$scope.views = exampleViews;
 		
 	var exampleData = {
@@ -184,20 +269,52 @@ App.controller('MainCtrl', ["$scope", "$http", function($scope, $http) {
 					Jahr: 1990,
 					Absolut: 345,
 					Diff: 1.08
-				},
+				}
 			}
 		},
 		2 : {
 			id: 2,
 			name: "Apache Log Files",
 			creator: "Viktor Verwalter",
-			createdAt: "16.03.2013 15:48 Uhr"
+			createdAt: "16.03.2013 15:48 Uhr",
+			attributes: {
+				1: {
+					name: "Name",
+					type: "String"
+				},
+				2: {
+					name: "Datum",
+					type: "int"
+				},
+				3: {
+					name: "Anzahl Zeilen",
+					type: "int"
+				},
+				4: {
+					name: "Fehler?",
+					type: "boolean"
+				}
+			}
 		},
 		3 : {
 			id: 3,
 			name: "User SQL Export",
 			creator: "Renate Ritter",
-			createdAt: "28.04.2014 19:57 Uhr"
+			createdAt: "28.04.2014 19:57 Uhr",
+			attributes: {
+				1: {
+					name: "Benutzer",
+					type: "String"
+				},
+				2: {
+					name: "Anzahl Datensätze",
+					type: "int"
+				},
+				3: {
+					name: "Datum",
+					type: "String"
+				},
+			}
 		},
 	};
 	$scope.data = exampleData;
@@ -510,12 +627,12 @@ angular.module('datacityApp').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('views/data.html',
-    "<div ng-app=\"datacityApp\" ng-controller=\"MainCtrl\"> <div class=\"panel panel-default\"> <div class=\"panel-heading\"> <h3 class=\"panel-title\">Datensätze</h3> </div> <div class=\"panel-body\"> <table class=\"table\"> <tr> <th>Name</th> <th>Erstellt von</th> <th>Erstellt am</th> <th></th> <th></th> </tr> <tr ng-repeat=\"collection in data\"> <td>{{collection.name}}</td> <td>{{collection.creator}}</td> <td>{{collection.createdAt}}</td> <td><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></td> <td><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></td> </tr> </table> <button type=\"button\" class=\"btn btn-default pull-right\" ng-click=\"dataView.showUploadForm = !dataView.showUploadForm\"> <span class=\"glyphicon glyphicon-upload\" aria-hidden=\"true\"></span> CSV-Datei hochladen </button> <div class=\"pull-left\"> Legende: <br> <span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span> Löschen <br> <span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span> Ansichten verwalten <br> </div> </div> </div> <div class=\"panel panel-default\" ng-show=\"dataView.showUploadForm\"> <div class=\"panel-heading\"> <h3 class=\"panel-title\">Datensatz hochladen</h3> </div> <div class=\"panel-body\"> <uploadformdatasourcefile></uploadformdatasourcefile> </div> </div></div>"
+    "<div ng-app=\"datacityApp\" ng-controller=\"MainCtrl\"> <div class=\"panel panel-default\"> <div class=\"panel-heading\"> <h3 class=\"panel-title\">Datensätze</h3> </div> <div class=\"panel-body\"> <table class=\"table\"> <tr> <th>Name</th> <th>Erstellt von</th> <th>Erstellt am</th> <th></th> </tr> <tr ng-repeat=\"collection in data\" ng-click=\"dataset.setChosenDataset(collection.id)\"> <td>{{collection.name}}</td> <td>{{collection.creator}}</td> <td>{{collection.createdAt}}</td> <td><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\" ng-click=\"deleteDataset(collection.id)\"></span></td> </tr> </table> <p>Ausgewählter Datensatz - id: {{chosenDataset}}</p> <p>Ausgewählter Datensatz - Name: {{data[chosenDataset].name}}</p> <button type=\"button\" class=\"btn btn-default pull-right\" ng-click=\"dataView.showUploadForm = !dataView.showUploadForm\"> <span class=\"glyphicon glyphicon-upload\" aria-hidden=\"true\"></span> CSV-Datei hochladen </button> <div class=\"pull-left\"> Legende: <br> <span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span> Löschen <br> <span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span> Ansichten verwalten <br> </div> </div> </div> <div class=\"panel panel-default\" ng-show=\"dataView.showUploadForm\"> <div class=\"panel-heading\"> <h3 class=\"panel-title\">Datensatz hochladen</h3> </div> <div class=\"panel-body\"> <uploadformdatasourcefile></uploadformdatasourcefile> </div> </div></div>"
   );
 
 
   $templateCache.put('views/login.html',
-    "<p>This is the login view.</p>"
+    "<div ng-app=\"datacityApp\" ng-controller=\"MainCtrl\"> <form role=\"form\"> <div class=\"form-group\"> <label for=\"email\">Username:</label> <input type=\"text\" class=\"form-control\" ng-model=\"usernameInput\"> </div> <div class=\"form-group\"> <label for=\"pwd\">Password: [noch keine Funktion]</label> <input type=\"password\" class=\"form-control\"> </div> <button type=\"submit\" class=\"btn btn-default\" ng-click=\"login(usernameInput)\">Einloggen</button> </form> </div>"
   );
 
 
@@ -525,7 +642,35 @@ angular.module('datacityApp').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('views/views.html',
-    "<div ng-app=\"datacityApp\" ng-controller=\"MainCtrl\"> <div class=\"panel panel-default\"> <div class=\"panel-heading\"> <h3 class=\"panel-title\">Ansichten</h3> </div> <div class=\"panel-body\"> <table class=\"table\"> <tr> <th>Name</th> <th>Datensatz</th> <th>Erstellt von</th> <th>Erstellt am</th> </tr> <tr ng-repeat=\"view in views\" ng-click=\"viewView.setChosenView(view.id);\"> <td>{{view.name}}</td> <td>{{data[view.collectionID].name}}</td> <td>{{view.creator}}</td> <td>{{view.createdAt}}</td> </tr> <tr ng-hide=\"numberOfViews() > 0\"> <td colspan=\"4\" align=\"center\">Keine Ansichten vorhanden!</td> </tr> </table> <button type=\"button\" class=\"btn btn-default pull-right\" ng-click=\"createNewView(true);\"> <span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span> Neue Ansicht erstellen </button> </div> </div> <div class=\"panel panel-default\" ng-show=\"chosenView\"> <div class=\"panel-heading\"> Ansicht bearbeiten: {{views[chosenView].name}} <div class=\"btn-group btn-group-xs pull-right\" role=\"group\" aria-label=\"...\"> <button type=\"button\" class=\"btn btn-default\" ng-click=\"deleteView(chosenView);\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></button> <button type=\"button\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></button> <button type=\"button\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-download-alt\" aria-hidden=\"true\"></span></button> </div> </div> <div class=\"panel-body\"> <div class=\"col-md-4\"> <div class=\"row\">Name</div> </div> <div class=\"col-md-8\"> <div class=\"row\" editable-text=\"views[chosenView].name\">{{views[chosenView].name}}</div> </div> </div> </div> </div> <div class=\"container\"> Die aktuelle Ansicht speichern unter: <input type=\"text\"> <button type=\"button\" class=\"btn btn-default\" onclick=\"\">Ansicht speichern</button> </div> <div class=\"container\"> <h3>Parameter eingeben:</h3> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Name:</label> <select class=\"form-control\" id=\"gruppierung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Flächeninhalt:</label> <select class=\"form-control\" id=\"flaecheselektieren\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Höhe:</label> <select class=\"form-control\" id=\"hoeheselektieren\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> </div> <h3>Ab hier muss alles in späteren Instanzen eingefügt werden!</h3> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Gruppierungen:</label> <select class=\"form-control\" id=\"gruppierung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-8\"> <br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Farbe:</label> <select class=\"form-control\" id=\"farbeselektieren\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-4\"> <br> <br> <label class=\"radio-inline\"> <input type=\"radio\" name=\"farbenRadio\" id=\"farbenRadio1\" checked>Aufsteigend</label> <label class=\"radio-inline\"> <input type=\"radio\" name=\"farbenRadio\" id=\"farbenRadio2\">Absteigend</label> </div> </div> <br> <br> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Gruppierungen:</label> <select class=\"form-control\" id=\"gruppierung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-8\"> <br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Verbindungen:</label> <select class=\"form-control\" id=\"verbindung\"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> </select> </div> <div class=\"col-sm-8\"> <br>[Es ist noch unklar, wie genau der Input bei den Verbindungen dargestellt wird] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label>Winkel einstellen:</label> <div id=\"slider\"> <input class=\"bar\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" id=\"winkelInput\" value=\"0\" onchange=\"winkelOutput.value=value.concat('°')\"> <output id=\"winkelOutput\">0°</output> </div> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label>Granularität einstellen:</label> <div id=\"slider\"> <input class=\"bar\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" id=\"granularInput\" value=\"0\" onchange=\"granularOutput.value=value.concat('%')\"> <output id=\"granularOutput\">0%</output> </div> </div> </div>"
+    "<div ng-app=\"datacityApp\" ng-controller=\"MainCtrl\"> <h3>Ausgewählter Datensatz: <u>{{data[chosenDataset].name}}</u></h3> <div class=\"panel panel-default\"> <div class=\"panel-heading\"> <h3 class=\"panel-title\">Ansichten</h3> </div> <div class=\"panel-body\"> <table class=\"table\"> <tr> <th>Name</th> <th>Datensatz</th> <th>Erstellt von</th> <th>Erstellt am</th> </tr> <!-- <tr ng-repeat=\"view in views | filterBy:'creator'\" ng-click=\"viewView.setChosenView(view.id);\"> Funktionert nicht--> <!-- <tr ng-repeat=\"view in views | filterBy: 'Benedikt Rumtreiber'\" ng-click=\"viewView.setChosenView(view.id);\"> Selbst das nicht--> <tr ng-repeat=\"view in views\" ng-click=\"viewView.setChosenView(view.id);\"> <td>{{view.name}}</td> <td>{{data[view.collectionID].name}}</td> <td>{{view.creator}}</td> <td>{{view.createdAt}}</td> </tr> <tr ng-hide=\"numberOfViews() > 0\"> <td colspan=\"4\" align=\"center\">Keine Ansichten vorhanden!</td> </tr> </table> </div> <button type=\"button\" class=\"btn btn-default pull-right\" ng-click=\"createNewView(true);\"> <span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span> Neue Ansicht erstellen </button> </div> <br> <div class=\"panel panel-default\" ng-show=\"chosenView\"> <div class=\"panel-heading\"> Ansicht bearbeiten: {{views[chosenView].name}} <div class=\"btn-group btn-group-xs pull-right\" role=\"group\" aria-label=\"...\"> <button type=\"button\" class=\"btn btn-default\" ng-click=\"deleteView(chosenView);\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></button> <button type=\"button\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></button> <button type=\"button\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-download-alt\" aria-hidden=\"true\"></span></button> <button type=\"button\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-copy\" aria-hidden=\"true\"></span></button> </div> </div> <div class=\"panel-body\"> <div class=\"input-group\"> <span class=\"input-group-addon\">Name</span> <input type=\"text\" class=\"form-control\" placeholder=\"{{views[chosenView].name}}\" ng-model=\"views[chosenView].name\"> </div> <br> <!-- Wird nicht mehr benötigt, wenn man nur einen Datensatz betrachtet\r" +
+    "\n" +
+    "\t\t\t<div class=\"input-group\">\r" +
+    "\n" +
+    "\t\t\t\t<span class=\"input-group-addon\">Datensatz</span>\r" +
+    "\n" +
+    "\t\t\t\t<select class=\"form-control\" ng-model=\"views[chosenView].collectionID\" ng-options=\"collection.id as collection.name for collection in data\">\r" +
+    "\n" +
+    "\t\t\t\t</select>\r" +
+    "\n" +
+    "\t\t\t</div>\r" +
+    "\n" +
+    "\t\t\t<br />\r" +
+    "\n" +
+    "\t\t\t--> <div ng-show=\"views[chosenView].collectionID\"> <h4>Dimensionen festlegen</h4> <div class=\"input-group\"> <span class=\"input-group-addon\">Name</span> <select class=\"form-control\" ng-model=\"views[chosenView].dimensions.name.attr\" ng-options=\"attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes\"> </select> </div> <br> <div class=\"input-group\"> <span class=\"input-group-addon\">Fläche</span> <select class=\"form-control\" ng-model=\"views[chosenView].dimensions.area.attr\" ng-options=\"attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes\"> </select> </div> <br> <div class=\"input-group\"> <span class=\"input-group-addon\">Höhe</span> <select class=\"form-control\" ng-model=\"views[chosenView].dimensions.height.attr\" ng-options=\"attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes\" ng-change=\"views[chosenView].dimensions.height.attr = value\"> </select> </div> <br> <!-- Kann noch nicht visualisiert werden\r" +
+    "\n" +
+    "\t\t\t\t<div class=\"input-group\">\r" +
+    "\n" +
+    "\t\t\t\t\t<span class=\"input-group-addon\">Farbe</span>\r" +
+    "\n" +
+    "\t\t\t\t\t<select class=\"form-control\" ng-model=\"views[chosenView].dimensions.color.attr\" ng-options=\"attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes\">\r" +
+    "\n" +
+    "\t\t\t\t\t</select>\r" +
+    "\n" +
+    "\t\t\t\t</div>\r" +
+    "\n" +
+    "\t\t\t\t<br />\r" +
+    "\n" +
+    "\t\t\t\t--> </div> </div> </div> <h3>Test {{views[chosenView].dimensions.name.attr}}</h3> <div class=\"container\" ng-repeat=\"set in data\"> <div class=\"col-sm-4\"> <label>{{set.name}}</label> <select class=\"form-control\"> <option ng-repeat=\"collection in set.attributes\">{{collection.name}} - {{collection.type}}</option> </select> </div> </div> ----------- Hier wird der Datensatz \"Geburtenrate in Hessen\" benutzt ----------------- <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Name:</label> <select class=\"form-control\" id=\"name\"> <option ng-repeat=\"collection in data[1].attributes\">{{collection.name}}</option> </select> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Flächeninhalt:</label> <select class=\"form-control\" id=\"area\"> <option ng-repeat=\"collection in data[1].attributes\">{{collection.name}}</option> </select> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Höhe:</label> <select class=\"form-control\" id=\"height\"> <option ng-repeat=\"collection in data[1].attributes\">{{collection.name}}</option> </select> </div> </div> <h3>Ab hier muss alles in späteren Instanzen eingefügt werden!</h3> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Farbe:</label> <select class=\"form-control\" id=\"farbeselektieren\"> <option ng-repeat=\"collection in data[1].attributes\">{{collection.name}}</option> </select> </div> <div class=\"col-sm-4\"> <br> <br> <label class=\"radio-inline\"> <input type=\"radio\" name=\"farbenRadio\" id=\"farbenRadio1\" checked>Aufsteigend</label> <label class=\"radio-inline\"> <input type=\"radio\" name=\"farbenRadio\" id=\"farbenRadio2\">Absteigend</label> </div> </div> <br> <br> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Gruppierungen:</label> <select class=\"form-control\" id=\"gruppierung\"> <option ng-repeat=\"collection in data[1].attributes\">{{collection.name}}</option> </select> </div> <div class=\"col-sm-8\"> <br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label for=\"sel1\">Verbindungen:</label> <select class=\"form-control\" id=\"verbindung\"> <option ng-repeat=\"collection in data[1].attributes\">{{collection.name}}</option> </select> </div> <div class=\"col-sm-8\"> <br>[Es ist noch unklar, wie genau der Input bei den Verbindungen dargestellt wird] </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label>Winkel einstellen:</label> <div id=\"slider\"> <input class=\"bar\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" id=\"winkelInput\" value=\"0\" onchange=\"winkelOutput.value=value.concat('°')\"> <output id=\"winkelOutput\">0°</output> </div> </div> </div> <div class=\"container\"> <div class=\"col-sm-4\"> <label>Granularität einstellen:</label> <div id=\"slider\"> <input class=\"bar\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" id=\"granularInput\" value=\"0\" onchange=\"granularOutput.value=value.concat('%')\"> <output id=\"granularOutput\">0%</output> </div> </div> </div> </div>"
   );
 
 }]);
