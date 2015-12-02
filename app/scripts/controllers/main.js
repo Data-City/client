@@ -7,7 +7,7 @@
  * # MainCtrl
  * Controller of the datacityApp
  */
- 
+
 var App = angular.module('datacityApp');
 
 /*
@@ -18,14 +18,14 @@ App.controller('MainCtrl', ['$scope', '$rootScope',function ($scope, $rootScope)
 */
 
 //Die richtige Seite in der Navbar wird angezeigt
-App.controller('MainCtrl', function($scope, $http, $rootScope) {
-	$(".nav a").on("click", function()	{
+App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
+	$(".nav a").on("click", function () {
 		$(".nav").find(".active").removeClass("active");
 		$(this).parent().addClass("active");
 	});
 
 	// Zeilen auswählen Tabelle
-	$scope.selectRow = function(id){
+	$scope.selectRow = function (id) {
 		if (id == $rootScope.dataset) {
 			return success;
 		} else {
@@ -34,31 +34,35 @@ App.controller('MainCtrl', function($scope, $http, $rootScope) {
 	}
 
 	//Initialisierung
-	if ($rootScope.username == null){
+	if ($rootScope.username == null) {
 		$rootScope.username = "Kalle Ölsand";
-	} 
-
-	if ($rootScope.chosenDataset == null){
-		$rootScope.chosenDataset = 1;
-	} 
+	}
 
 	// Login
-	$scope.login = function(usernameInput){
+	$scope.login = function (usernameInput) {
 		$rootScope.username = usernameInput;
 	}
 
+
+
 	// Dataset Vars
-	$rootScope.dataset = {
-		setChosenDataset : function(id) {
-			$rootScope.chosenDataset = id;
+	$scope.chosenCollection = null;
+
+	$scope.setChosenCollection = function (id) {
+		$log.info("ID: " + id);
+		if ($scope.chosenCollection === $scope.collections[id]) {
+			$scope.chosenCollection = null;
+		} else {
+			$log.info($scope.collections);
+			$scope.chosenCollection = $scope.collections[id];
 		}
+		$log.info($scope.chosenCollection);
 	}
 
 
-
-	$scope.deleteDataset = function(id) {
+	$scope.deleteDataset = function (id) {
 		delete $scope.data[id];
-		if($rootScope.chosenDataset == id) {
+		if ($rootScope.chosenDataset == id) {
 			$rootScope.chosenDataset = null;
 		}
 	}
@@ -67,25 +71,25 @@ App.controller('MainCtrl', function($scope, $http, $rootScope) {
 
 	// DataView Vars
 	$scope.dataView = {
-		showUploadForm : false
+		showUploadForm: false
 	};
-	
+
 	$scope.viewView = {
-		setChosenView : function(id) {
-			if($scope.chosenView == id) {
+		setChosenView: function (id) {
+			if ($scope.chosenView == id) {
 				$scope.chosenView = null;
 			} else {
 				$scope.chosenView = id;
 			}
 		}
 	}
-	
-	$scope.numberOfViews = function() {
-			var count = Object.keys($scope.views).length;
-			return count;
+
+	$scope.numberOfViews = function () {
+		var count = Object.keys($scope.views).length;
+		return count;
 	};
-	
-	$scope.createNewView = function(chooseViewAfter) {
+
+	$scope.createNewView = function (chooseViewAfter) {
 		var nextID = $scope.numberOfViews() + 1;
 		var d = new Date();
 		$scope.views[nextID] = {
@@ -93,20 +97,20 @@ App.controller('MainCtrl', function($scope, $http, $rootScope) {
 			name: 'Neue Ansicht',
 			collectionID: $rootScope.chosenDataset,
 			creator: $rootScope.username,
-			createdAt: d.toLocaleDateString() 
+			createdAt: d.toLocaleDateString()
 		}
-		if(typeof chooseViewAfter !== 'undefined') {
+		if (typeof chooseViewAfter !== 'undefined') {
 			$scope.viewView.setChosenView(nextID);
 		}
 	};
-	
-	$scope.deleteView = function(id) {
+
+	$scope.deleteView = function (id) {
 		delete $scope.views[id];
-		if($scope.chosenView == id) {
+		if ($scope.chosenView == id) {
 			$scope.chosenView = null;
 		}
 	}
-	
+
 	$scope.chosenCollection = null;
 	$scope.chosenView = null;
 
@@ -132,7 +136,7 @@ App.controller('MainCtrl', function($scope, $http, $rootScope) {
 			createdAt: "30.11.2015 16:40 Uhr",
 			dimensions: {
 				name: {
-					attr: null	
+					attr: null
 				},
 				area: {
 					attr: null
@@ -150,7 +154,7 @@ App.controller('MainCtrl', function($scope, $http, $rootScope) {
 			createdAt: "30.11.2015 16:41 Uhr",
 			dimensions: {
 				name: {
-					attr: null	
+					attr: null
 				},
 				area: {
 					attr: null
@@ -164,6 +168,8 @@ App.controller('MainCtrl', function($scope, $http, $rootScope) {
 
 	$scope.views = exampleViews;
 		
+		
+	/*
 	var exampleData = {
 		1 : {
 			id: 1,
@@ -242,5 +248,25 @@ App.controller('MainCtrl', function($scope, $http, $rootScope) {
 			}
 		},
 	};
-	$scope.data = exampleData;
+	*/
+	$scope.data = null;
+
+
+	var database = "prelife";
+	var username = "a";
+	var password = "a";
+
+
+	getCollections(database, username, password, $http, function (response) {
+		$log.info(response);
+		$scope.collections = response;
+		$scope.numberOfCollections = Object.keys(response).length;
+	});
+
+
+	$scope.formatTimeString = function (timeString) {
+		var d = new Date(timeString);
+		return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+	}
+
 });

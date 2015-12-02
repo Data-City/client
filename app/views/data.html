@@ -7,24 +7,24 @@
       <table class="table">
         <tr>
           <th>Name</th>
-          <th>Erstellt von</th>
-          <th>Erstellt am</th>
+          <th>Erstellt</th>
+          <th>Geändert</th>
           <th></th>
         </tr>
-        <tr ng-repeat="collection in data"  ng-click="dataset.setChosenDataset(collection.id)">
-          <td>{{collection.name}}</td>
-          <td>{{collection.creator}}</td>
-          <td>{{collection.createdAt}}</td>
+        <tr ng-repeat="collection in collections"  ng-click="setChosenCollection(collection._id)">
+          <td>{{collection._id}}</td>
+          <td>{{formatTimeString(collection._created_on)}}</td>
+          <td>{{formatTimeString(collection._lastupdated_on)}}</td>
           <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)"></span></td>
         </tr>
       </table>
 
+      <div ng-show="chosenCollection" class="well">
+        {{chosenCollection._id}}
+      </div>
 
 
-
-      <p>Ausgewählter Datensatz - id: {{chosenDataset}}</p>
-
-      <p>Ausgewählter Datensatz - Name: {{data[chosenDataset].name}}</p>
+      
 
 
 
