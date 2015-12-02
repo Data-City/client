@@ -1,7 +1,0 @@
-metadaten([
-{"name": "Anzahl Codezeilen", typ: "number",},
-{"name": "Anzahl Methoden", typ: "number",},
-{"name": "XYZ", typ: "string",},
-{"name": "...", typ: "boolean",}
-//Hier noch mehr Metadaten
-])
