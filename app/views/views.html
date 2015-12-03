@@ -49,7 +49,7 @@
 		<div class="panel-heading">
 			Ansicht bearbeiten: {{chosenView.name}}
 			<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
-				<button type="button" class="btn btn-default" ng-click="deleteView(chosenView);"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteModal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
 				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
 				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button>
@@ -97,7 +97,29 @@
 
 		</div>
 	</div>
+	
+	<!-- Modal -->
+	<div id="deleteModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-sm">
+
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-body">
+	        <p>Möchten Sie die Ansicht "{{chosenView.name}}" wirklich löschen?</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
 </div>
+
+
+
+
 <!--
 
 	
