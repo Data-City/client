@@ -29,11 +29,17 @@ angular.module('datacityApp')
     $scope.getViews = function () {
       getViews(database, collection, username, password, $http, function (response) {
         $scope.views = response.data._embedded['rh:doc'];
-        if ($scope.views.length) {
+        if ($scope.views && $scope.views.length) {
           $scope.numberOfViews = $scope.views.length;
         }
       });
     }
+    
+    $scope.updateView = function() {
+      updateView($scope.chosenView, username, password, $http, function(response){
+        $scope.getViews();
+      });
+    } 
 
     $scope.setChosenView = function (view) {
       if ($scope.chosenView === view) {

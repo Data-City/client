@@ -56,7 +56,7 @@
 		<div class="panel-body">
 			<div class="input-group">
 				<span class="input-group-addon">Name</span>
-				<input type="text" class="form-control" placeholder="{{views[chosenView].name}}" ng-model="views[chosenView].name">
+				<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
 			</div>
 			<br />
 			<div>

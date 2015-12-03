@@ -74,9 +74,20 @@ var deleteView = function (doc, username, password, $http, func) {
 	var config = {headers:  {
         "If-Match": doc._etag.$oid}
     };
-	var url = BASEURL + ANSICHTEN + '/' + doc._id //+ '?id_type=STRING';
+	var url = BASEURL + ANSICHTEN + '/' + doc._id
 	
 	$http.delete(url, config).then(function(response){
+		func(response);
+	});
+}
+
+var updateView = function (view, username, password, $http, func) {
+	var config = {headers:  {
+        "If-Match": view._etag.$oid}
+    };
+	var url = BASEURL + ANSICHTEN + '/' + view._id 
+	
+	$http.patch(url, view, config).then(function(response){
 		func(response);
 	});
 }
