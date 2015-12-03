@@ -18,15 +18,19 @@
 					<th>Datensatz</th>
 					<th>Erstellt von</th>
 					<th>Erstellt am</th>
+					<th>Geändert von</th>
+					<th>Geändert am</th>
 				</tr>
 				<!-- <tr ng-repeat="view in views | filterBy:'creator'" ng-click="viewView.setChosenView(view.id);"> Funktionert nicht-->
 				<!-- <tr ng-repeat="view in views | filterBy: 'Benedikt Rumtreiber'" ng-click="viewView.setChosenView(view.id);"> Selbst das nicht-->
 
-				<tr ng-repeat="view in views" ng-click="viewView.setChosenView(view.id);">
+				<tr ng-repeat="view in views" ng-click="setChosenView(view);">
 					<td>{{view.name}}</td>
-					<td>{{data[view.collectionID].name}}</td>
+					<td>{{view.collID}}</td>
 					<td>{{view.creator}}</td>
-					<td>{{view.createdAt}}</td>
+					<td>{{jstimeToFormatedTime(view.timeOfCreation)}}</td>
+					<td>{{view.lastModifiedBy}}</td>
+					<td>{{jstimeToFormatedTime(view.timeOfLastModification)}}</td>
 				</tr>
 				<tr ng-hide="numberOfViews > 0">
 					<td colspan="4" align="center">Keine Ansichten vorhanden!</td>
@@ -37,44 +41,11 @@
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
 		</button>
 	</div>
-</div>
-<!--
-
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3 class="panel-title">Ansichten</h3>
-		</div>
-		<div class="panel-body">
-			<table class="table">
-				<tr>
-					<th>Name</th>
-					<th>Datensatz</th>
-					<th>Erstellt von</th>
-					<th>Erstellt am</th>
-				</tr>
-				<!-- <tr ng-repeat="view in views | filterBy:'creator'" ng-click="viewView.setChosenView(view.id);"> Funktionert nicht-->
-<!-- <tr ng-repeat="view in views | filterBy: 'Benedikt Rumtreiber'" ng-click="viewView.setChosenView(view.id);"> Selbst das nicht-->
-<!--
-				<tr ng-repeat="view in views" ng-click="viewView.setChosenView(view.id);">
-					<td>{{view.name}}</td>
-					<td>{{data[view.collectionID].name}}</td>
-					<td>{{view.creator}}</td>
-					<td>{{view.createdAt}}</td>
-				</tr>
-				<tr ng-hide="numberOfViews() > 0">
-					<td colspan="4" align="center">Keine Ansichten vorhanden!</td>
-				</tr>
-			</table>
-		</div>
-		<button type="button" class="btn btn-default pull-right" ng-click="createNewView(true);">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
-		</button>
-	</div>
-
+	
 	<br>
 	<div class="panel panel-default" ng-show="chosenView">
 		<div class="panel-heading">
-			Ansicht bearbeiten: {{views[chosenView].name}}
+			Ansicht bearbeiten: {{chosenView.name}}
 			<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
 				<button type="button" class="btn btn-default" ng-click="deleteView(chosenView);"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
@@ -95,8 +66,8 @@
 				</select>
 			</div>
 			<br />
-			
-			<div ng-show="views[chosenView].collectionID">
+			-->
+			<div>
 				<h4>Dimensionen festlegen</h4>
 				<div class="input-group">
 					<span class="input-group-addon">Name</span>
@@ -116,7 +87,7 @@
 					</select>
 				</div>
 				<br />
-				<!-- Kann noch nicht visualisiert werden
+				<!-- Kann noch nicht visualisiert werden -->
 				<div class="input-group">
 					<span class="input-group-addon">Farbe</span>
 					<select class="form-control" ng-model="views[chosenView].dimensions.color.attr" ng-options="attr.id as attr.name for attr in data[views[chosenView].collectionID].attributes">
@@ -128,6 +99,10 @@
 
 		</div>
 	</div>
+</div>
+<!--
+
+	
 
 	<h3>Test {{views[chosenView].dimensions.name.attr}}</h3>
 

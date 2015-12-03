@@ -18,6 +18,7 @@ angular.module('datacityApp')
     $scope.collID = null;
     $scope.views = null;
     $scope.numberOfViews = null;
+    $scope.chosenView = null;
 
     var username = "a";
     var password = "a";
@@ -32,37 +33,32 @@ angular.module('datacityApp')
       });
     }
 
+    $scope.setChosenView = function (view) {
+      if ($scope.chosenView === view) {
+        $scope.chosenView = null;
+      } else {
+        $scope.chosenView = view;
+      }
+      $log.info($scope.chosenView);
+    }
+
     // Initialization
     if ($routeParams.collID) {
       $scope.collID = $routeParams.collID;
       $scope.getViews();
     }
-    
-    
-    
-    /*
-    function View() { }
-    View.prototype.name = "Neue Ansicht";
-    View.prototype.collID = $scope.collID;
-    View.prototype.creator = username;
-    View.prototype.timeOfCreation = Date.now();
-    View.prototype.lastModifiedBy = null;
-    View.prototype.timeOfLastModification = View.prototype.timeOfCreation;
-    View.prototype.dimensions = {
-      hoehe: null,
-      flaeche: null,
-      farbe: null,
-      district: null
+
+    $scope.deleteView = function(view) {
+      
     };
-    */
 
     function View() {
       this.name = "Neue Ansicht";
       this.collID = $scope.collID;
       this.creator = username;
       this.timeOfCreation = Date.now();
-      this.lastModifiedBy = null;
-      this.timeOfLastModification = View.prototype.timeOfCreation;
+      this.lastModifiedBy = username;
+      this.timeOfLastModification = this.timeOfCreation;
       this.dimensions = {
         hoehe: null,
         flaeche: null,
@@ -80,4 +76,10 @@ angular.module('datacityApp')
         $scope.getViews();
       });
     };
+
+
+    $scope.jstimeToFormatedTime = function (jstime) {
+      var d = new Date(jstime);
+      return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    }
   });

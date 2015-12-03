@@ -68,3 +68,8 @@ var getNumberOfViews = function (database, collection, username, password, $http
 	});
 };
 
+var jstimeToFormatedTime = function(jstime) {
+	
+	var d = new Date(jstime);
+	return d.toLocaleDateString + " " + d.toLocaleTimeString;
+}
