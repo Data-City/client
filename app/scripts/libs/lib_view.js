@@ -1,9 +1,10 @@
-var test = function (a, b) {
-	return a + b;
-}
+'use strict';
 
 // Basis-URL zu RESTHeart
 var BASEURL = "https://pegenau.com:16392";
+var setAuthHeader = function (username, password, $http) {
+	$http.defaults.headers.common['Authorization'] = "Basic " + btoa(username + ":" + password);
+};
 
 var getCollections = function (database, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
@@ -50,6 +51,3 @@ var getNumberOfViews = function (database, collection, username, password, $http
 	});
 };
 
-var setAuthHeader = function (username, password, $http) {
-	$http.defaults.headers.common['Authorization'] = "Basic " + btoa(username + ":" + password);
-}
