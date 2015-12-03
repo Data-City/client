@@ -46,14 +46,13 @@
   <!-- Modal -->
   <div id="deleteModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-sm">
-
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-body">
-          <p>Möchten Sie die Ansicht "{{chosenView.name}}" wirklich löschen?</p>
+          <p>Möchten Sie den Datensatz "{{chosenCollection.name}}" wirklich löschen?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="deleteCollection(chosenCollection)">Ja</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
         </div>
       </div>
