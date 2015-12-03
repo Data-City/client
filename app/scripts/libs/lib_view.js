@@ -25,6 +25,16 @@ var getViews = function(database, collection, username, password, $http, func) {
 	);
 };
 
+var getViewsByColID = function(database, collection, colID, username, password, $http, func) {
+	setAuthHeader(username, password, $http);
+	
+	$http.get(BASEURL + "/" + database + "/" + collection).then(
+		function (response) {
+			func(response);
+		}
+	);
+};
+
 var getCollection = function(database, collection, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
 	

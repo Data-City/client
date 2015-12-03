@@ -53,7 +53,12 @@ angular
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
-      .when('/views', {
+      .when('/views/', {
+        templateUrl: 'views/views.html',
+        controller: 'ViewsCtrl',
+        controllerAs: 'views'
+      })
+      .when('/views/:collID', {
         templateUrl: 'views/views.html',
         controller: 'ViewsCtrl',
         controllerAs: 'views'

@@ -1,6 +1,13 @@
-<div ng-app="datacityApp" ng-controller="MainCtrl">
+<div ng-app="datacityApp" ng-controller="ViewsCtrl">
 
-	<h3>Ausgewählter Datensatz: <u>{{data[chosenDataset].name}}</u></h3>
+	<div class="alert alert-danger" role="alert" ng-hide="collID">
+		<h3>Kein Datensatz gewählt!</h3>
+	</div>
+	<div ng-show="collID">
+		<h3>Ausgewählter Datensatz: {{getIdOfCollection(chosenCollection)}}</h3>
+	</div>
+</div>
+<!--
 
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -15,7 +22,8 @@
 					<th>Erstellt am</th>
 				</tr>
 				<!-- <tr ng-repeat="view in views | filterBy:'creator'" ng-click="viewView.setChosenView(view.id);"> Funktionert nicht-->
-				<!-- <tr ng-repeat="view in views | filterBy: 'Benedikt Rumtreiber'" ng-click="viewView.setChosenView(view.id);"> Selbst das nicht-->
+<!-- <tr ng-repeat="view in views | filterBy: 'Benedikt Rumtreiber'" ng-click="viewView.setChosenView(view.id);"> Selbst das nicht-->
+<!--
 				<tr ng-repeat="view in views" ng-click="viewView.setChosenView(view.id);">
 					<td>{{view.name}}</td>
 					<td>{{data[view.collectionID].name}}</td>
@@ -56,7 +64,7 @@
 				</select>
 			</div>
 			<br />
-			-->
+			
 			<div ng-show="views[chosenView].collectionID">
 				<h4>Dimensionen festlegen</h4>
 				<div class="input-group">
@@ -84,7 +92,7 @@
 					</select>
 				</div>
 				<br />
-				-->
+				
 			</div>
 
 		</div>
@@ -208,3 +216,5 @@
 			<p id="ausgabe"></p>
 		</div>		
 	</div>
+	
+-->
