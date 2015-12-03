@@ -25,6 +25,13 @@ var getViews = function(database, collection, username, password, $http, func) {
 	);
 };
 
+/**
+ * Counts the elements in obj
+ */
+var count = function(obj) {
+	return Object.keys(obj).length;
+}
+
 var getViewsByColID = function(database, collection, colID, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
 	

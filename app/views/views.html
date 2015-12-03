@@ -4,7 +4,38 @@
 		<h3>Kein Datensatz gewählt!</h3>
 	</div>
 	<div ng-show="collID">
-		<h3>Ausgewählter Datensatz: {{getIdOfCollection(chosenCollection)}}</h3>
+		<h3>Ausgewählter Datensatz: {{collID}}</h3>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title">Ansichten</h3>
+		</div>
+		<div class="panel-body">
+			<table class="table">
+				<tr>
+					<th>Name</th>
+					<th>Datensatz</th>
+					<th>Erstellt von</th>
+					<th>Erstellt am</th>
+				</tr>
+				<!-- <tr ng-repeat="view in views | filterBy:'creator'" ng-click="viewView.setChosenView(view.id);"> Funktionert nicht-->
+				<!-- <tr ng-repeat="view in views | filterBy: 'Benedikt Rumtreiber'" ng-click="viewView.setChosenView(view.id);"> Selbst das nicht-->
+
+				<tr ng-repeat="view in views" ng-click="viewView.setChosenView(view.id);">
+					<td>{{view.name}}</td>
+					<td>{{data[view.collectionID].name}}</td>
+					<td>{{view.creator}}</td>
+					<td>{{view.createdAt}}</td>
+				</tr>
+				<tr ng-hide="numberOfViews > 0">
+					<td colspan="4" align="center">Keine Ansichten vorhanden!</td>
+				</tr>
+			</table>
+		</div>
+		<button type="button" class="btn btn-default pull-right" ng-click="newView();">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
+		</button>
 	</div>
 </div>
 <!--
