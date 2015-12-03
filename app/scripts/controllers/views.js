@@ -19,6 +19,8 @@ angular.module('datacityApp')
     $scope.views = null;
     $scope.numberOfViews = null;
     $scope.chosenView = null;
+    $scope.collection = null;
+    $scope.attributesOfCollection = null;
 
     var username = "a";
     var password = "a";
@@ -26,26 +28,55 @@ angular.module('datacityApp')
     var collection = "ansichten";
     var baseurl = "https://pegenau.com:16392";
 
-    $scope.getViews = function () {
+    $scope.getViews = function (func) {
       getViews(database, collection, username, password, $http, function (response) {
         $scope.views = response.data._embedded['rh:doc'];
         if ($scope.views && $scope.views.length) {
           $scope.numberOfViews = $scope.views.length;
+          if (func) {
+            func($scope.views);
+          }
         }
       });
     }
-    
-    $scope.updateView = function() {
-      updateView($scope.chosenView, username, password, $http, function(response){
-        $scope.getViews();
+
+    $scope.updateView = function () {
+      updateView($scope.chosenView, username, password, $http, function (response) {
+        var id = $scope.chosenView._id;
+        $scope.chosenView = null;
+        $scope.getViews(function (views) {
+          for (var arrayIndex in views) {
+            $log.info(views[arrayIndex]);
+            if (views[arrayIndex]._id === id) {
+              $scope.setChosenView(views[arrayIndex]);
+            }
+          }
+        });
       });
-    } 
+    }
 
     $scope.setChosenView = function (view) {
       if ($scope.chosenView === view) {
         $scope.chosenView = null;
+        $scope.collection = null;
+        $scope.attributesOfCollection = null;
       } else {
         $scope.chosenView = view;
+        getCollection("prelife", $scope.chosenView.collID, username, password, $http, function (resp) {
+          $scope.collection = resp;
+          $log.info($scope.collection);
+
+          var firstDocument = $scope.collection.data._embedded['rh:doc'][0];
+          var attrs = [];
+          for (var key in firstDocument) {
+            if (!key.startsWith('_', 0)) {
+              attrs.push(key);
+            }
+          }
+          $scope.attributesOfCollection = attrs;
+          $log.info(attrs);
+        });
+
       }
       $log.info($scope.chosenView);
     }
