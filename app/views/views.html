@@ -26,7 +26,7 @@
 				<!-- <tr ng-repeat="view in views | filterBy:'creator'" ng-click="viewView.setChosenView(view.id);"> Funktionert nicht-->
 				<!-- <tr ng-repeat="view in views | filterBy: 'Benedikt Rumtreiber'" ng-click="viewView.setChosenView(view.id);"> Selbst das nicht-->
 
-				<tr ng-repeat="view in views" ng-click="setChosenView(view);">
+				<tr ng-repeat="view in views | filter:collID" ng-click="setChosenView(view);">
 					<td>{{view.name}}</td>
 					<td>{{view.collID}}</td>
 					<td>{{view.creator}}</td>
@@ -97,18 +97,17 @@
 
 		</div>
 	</div>
-	
+
 	<!-- Modal -->
 	<div id="deleteModal" class="modal fade" role="dialog">
 	  <div class="modal-dialog modal-sm">
-
 	    <!-- Modal content-->
 	    <div class="modal-content">
 	      <div class="modal-body">
 	        <p>Möchten Sie die Ansicht "{{chosenView.name}}" wirklich löschen?</p>
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
+	        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
 	      </div>
 	    </div>
@@ -135,7 +134,7 @@
     	</div>
     </div>	
 
------------ Hier wird der Datensatz "Geburtenrate in Hessen" benutzt -----------------
+<h1> Hier wird der Datensatz "Geburtenrate in Hessen" benutzt </h1>
 
 	<div class="container">
 		<div class="col-sm-4">
