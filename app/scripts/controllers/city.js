@@ -14,15 +14,4 @@ angular.module('datacityApp')
       'AngularJS',
       'Karma'
     ];
-
-    $scope.json = null;
-
-    $scope.loadCollections = function () {
-      getCollections("prelife", "a", "a", $http, function (response) {
-        $scope.json = response;
-        $log.info(response);
-      });
-    };
-
-
   });
