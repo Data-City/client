@@ -33,17 +33,21 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 		}
 	}
 
+	/*
 	//Initialisierung
 	if ($rootScope.username == null) {
 		$rootScope.username = "Kalle Ölsand";
 	}
+	*/
 
 	// Login
 	$scope.login = function (usernameInput) {
 		$rootScope.username = usernameInput;
 	}
 
-
+	$scope.logout = function () {
+		$rootScope.username = null;
+	}
 
 	// Dataset Vars
 	$scope.chosenCollection = null;
@@ -63,17 +67,12 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 		return collection ? collection.data._id : null;
 	}
 
-
-
-
 	$scope.deleteDataset = function (id) {
 		delete $scope.data[id];
 		if ($rootScope.chosenDataset == id) {
 			$rootScope.chosenDataset = null;
 		}
 	}
-	
-
 
 	// DataView Vars
 	$scope.dataView = {
@@ -112,9 +111,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 
 	$scope.deleteView = function (id) {
 		delete $scope.views[id];
-		if ($scope.chosenView == id) {
-			$scope.chosenView = null;
-		}
+		$scope.chosenView = null;
 	}
 
 	$scope.chosenCollection = null;

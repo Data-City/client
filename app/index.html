@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="datacityApp" ng-controller="MainCtrl">
   <head>
     <meta charset="utf-8">
     <title>DataCity</title>
@@ -39,12 +39,17 @@
               <li><a href="#/login">Login</a></li>
               <li class="active"><a ng-href="#/data">Datensätze</a></li>
               <li><a ng-href="#/city">Stadt</a></li>
-              <li><a ng-href="#/admin">Einstellungen</a></li> 
               <li><a ng-href="https://pegenau.com:16392/" target="_blank">SSL erlauben</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#/login">Eingeloggt als <i>{{username}}</i></a></li>
+                <li><a href="#/admin"><i>{{username}}</i></a></li>
+                <li>
+                  <button type="submit" class="btn btn-link" ng-click="logout()" ng-hide="username==null">
+                    <span class="glyphicon glyphicon-log-out"></span> Log out
+                  </button>
+                  <a ng-href="#/login" ng-show="username==null"><span class="glyphicon glyphicon-log-in"></span> Login</a>                  
+                </li>
             </ul>
           </div>
       </div>
