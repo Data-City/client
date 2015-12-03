@@ -119,6 +119,26 @@ angular.module('datacityApp')
       });
     };
 
+    function ViewCopy(collID) {
+      this.name = collID.name + " (Kopie)";
+      this.collID = $scope.collID;
+      this.creator = username;
+      this.timeOfCreation = Date.now();
+      this.lastModifiedBy = username;
+      this.timeOfLastModification = this.timeOfCreation;
+      this.dimensions = collID.dimensions;
+    }
+
+    $scope.copyView = function (collID) {
+
+      var newView = new ViewCopy(collID);
+      $log.info(newView);
+      var url = baseurl + '/einstellungen/ansichten/' + newView.timeOfCreation;
+      $http.put(url, newView).then(function (response) {
+        $scope.getViews();
+      });
+    };
+
 
     $scope.jstimeToFormatedTime = function (jstime) {
       var d = new Date(jstime);
