@@ -14,7 +14,6 @@ var getCollections = function (database, username, password, $http, func) {
 		}
 		);
 };
-
 var getViews = function(database, collection, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
 	
@@ -23,7 +22,17 @@ var getViews = function(database, collection, username, password, $http, func) {
 			func(response);
 		}
 	);
-}
+};
+
+var getCollection = function(database, collection, username, password, $http, func) {
+	setAuthHeader(username, password, $http);
+	
+	$http.get(BASEURL + "/" + database + "/" + collection).then(
+		function (response) {
+			func(response);
+		}
+	);
+};
 
 
 var getNumberOfCollections = function (database, username, password, $http, func) {

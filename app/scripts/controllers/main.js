@@ -49,15 +49,21 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	$scope.chosenCollection = null;
 
 	$scope.setChosenCollection = function (id) {
-		$log.info("ID: " + id);
-		if ($scope.chosenCollection === $scope.collections[id]) {
-			$scope.chosenCollection = null;
-		} else {
-			$log.info($scope.collections);
-			$scope.chosenCollection = $scope.collections[id];
-		}
-		$log.info($scope.chosenCollection);
+		getCollection(database, id, username, password, $http, function (response) {
+			if ($scope.chosenCollection === response) {
+				$scope.chosenCollection = null;
+			} else {
+				$scope.chosenCollection = response;
+			}
+			$log.info($scope.chosenCollection.data._id);
+		});
 	}
+
+	$scope.getIdOfCollection = function (collection) {
+		return collection ? collection.data._id : null;
+	}
+
+
 
 
 	$scope.deleteDataset = function (id) {
@@ -258,7 +264,6 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 
 
 	getCollections(database, username, password, $http, function (response) {
-		$log.info(response);
 		$scope.collections = response;
 		$scope.numberOfCollections = Object.keys(response).length;
 	});
