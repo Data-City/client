@@ -29,7 +29,9 @@ angular.module('datacityApp')
     $scope.getViews = function () {
       getViews(database, collection, username, password, $http, function (response) {
         $scope.views = response.data._embedded['rh:doc'];
-        $scope.numberOfViews = $scope.views.length;
+        if ($scope.views.length) {
+          $scope.numberOfViews = $scope.views.length;
+        }
       });
     }
 
@@ -48,8 +50,11 @@ angular.module('datacityApp')
       $scope.getViews();
     }
 
-    $scope.deleteView = function(view) {
-      
+    $scope.deleteView = function (view) {
+      deleteView(view, username, password, $http, function (response) {
+        console.log(response);
+        $scope.getViews();
+      });
     };
 
     function View() {

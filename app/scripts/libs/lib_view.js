@@ -2,6 +2,8 @@
 
 // Basis-URL zu RESTHeart
 var BASEURL = "https://pegenau.com:16392";
+var ANSICHTEN = "/einstellungen/ansichten"
+
 var setAuthHeader = function (username, password, $http) {
 	$http.defaults.headers.common['Authorization'] = "Basic " + btoa(username + ":" + password);
 };
@@ -15,41 +17,41 @@ var getCollections = function (database, username, password, $http, func) {
 		}
 		);
 };
-var getViews = function(database, collection, username, password, $http, func) {
+var getViews = function (database, collection, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
-	
+
 	$http.get(BASEURL + "/" + database + "/" + collection).then(
 		function (response) {
 			func(response);
 		}
-	);
+		);
 };
 
 /**
  * Counts the elements in obj
  */
-var count = function(obj) {
+var count = function (obj) {
 	return Object.keys(obj).length;
 }
 
-var getViewsByColID = function(database, collection, colID, username, password, $http, func) {
+var getViewsByColID = function (database, collection, colID, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
-	
+
 	$http.get(BASEURL + "/" + database + "/" + collection).then(
 		function (response) {
 			func(response);
 		}
-	);
+		);
 };
 
-var getCollection = function(database, collection, username, password, $http, func) {
+var getCollection = function (database, collection, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
-	
+
 	$http.get(BASEURL + "/" + database + "/" + collection).then(
 		function (response) {
 			func(response);
 		}
-	);
+		);
 };
 
 
@@ -68,8 +70,13 @@ var getNumberOfViews = function (database, collection, username, password, $http
 	});
 };
 
-var jstimeToFormatedTime = function(jstime) {
+var deleteView = function (doc, username, password, $http, func) {
+	var config = {headers:  {
+        "If-Match": doc._etag.$oid}
+    };
+	var url = BASEURL + ANSICHTEN + '/' + doc._id //+ '?id_type=STRING';
 	
-	var d = new Date(jstime);
-	return d.toLocaleDateString + " " + d.toLocaleTimeString;
+	$http.delete(url, config).then(function(response){
+		func(response);
+	});
 }

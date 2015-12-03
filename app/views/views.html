@@ -33,7 +33,7 @@
 					<td>{{jstimeToFormatedTime(view.timeOfLastModification)}}</td>
 				</tr>
 				<tr ng-hide="numberOfViews > 0">
-					<td colspan="4" align="center">Keine Ansichten vorhanden!</td>
+					<td colspan="6" align="center">Keine Ansichten vorhanden!</td>
 				</tr>
 			</table>
 		</div>
@@ -59,14 +59,6 @@
 				<input type="text" class="form-control" placeholder="{{views[chosenView].name}}" ng-model="views[chosenView].name">
 			</div>
 			<br />
-			<!-- Wird nicht mehr benötigt, wenn man nur einen Datensatz betrachtet
-			<div class="input-group">
-				<span class="input-group-addon">Datensatz</span>
-				<select class="form-control" ng-model="views[chosenView].collectionID" ng-options="collection.id as collection.name for collection in data">
-				</select>
-			</div>
-			<br />
-			-->
 			<div>
 				<h4>Dimensionen festlegen</h4>
 				<div class="input-group">
