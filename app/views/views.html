@@ -65,33 +65,34 @@
 				<h4>Dimensionen festlegen</h4>
 				<div class="input-group">
 					<span class="input-group-addon">Name des Gebäudes</span>
-					<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection"  ng-change="updateView();">
+					<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection">
 					</select>
 				</div>
 				<br />
 				<div class="input-group">
 					<span class="input-group-addon">Fläche</span>
-					<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection"  ng-change="updateView();">
+					<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection">
 					</select>
 				</div>
 				<br />
 				<div class="input-group">
 					<span class="input-group-addon">Höhe</span>
-					<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection"  ng-change="updateView();">
+					<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection">
 					</select>
 				</div>
 				<br />
 				<div class="input-group">
 					<span class="input-group-addon">Farbe</span>
-					<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection"  ng-change="updateView();">
+					<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection">
 					</select>
 				</div>
 				<br />
 				<div class="input-group">
 					<span class="input-group-addon">District</span>
-					<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection"  ng-change="updateView();">
+					<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection">
 					</select>
 				</div>
+				<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
 			</div>
 
 		</div>
