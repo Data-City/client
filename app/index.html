@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="datacityApp" ng-controller="MainCtrl">
+<html ng-app="datacityApp">
   <head>
     <meta charset="utf-8">
     <title>DataCity</title>
@@ -42,7 +42,7 @@
               <li><a ng-href="https://pegenau.com:16392/" target="_blank">SSL erlauben</a></li>
             </ul>
 
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" ng-controller="MainCtrl">
                 <li ng-hide="username == null"><a href="#/admin"><i>Eingeloggt als {{username}}</i></a></li>
                 <li>
                   <button type="submit" class="btn btn-link" ng-click="logout()" ng-hide="username==null">
