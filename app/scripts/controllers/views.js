@@ -102,6 +102,7 @@ angular.module('datacityApp')
         console.log(response);
         $scope.getViews();
       });
+      $scope.chosenView = null;
     };
 
     $scope.newView = function (collID) {
