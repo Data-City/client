@@ -33,14 +33,6 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 		}
 	}
 
-	/*
-	//Initialisierung
-	if ($rootScope.username == null) {
-		$rootScope.username = "Kalle Ölsand";
-	}
-	*/
-
-	// Login
 	$scope.login = function (usernameInput) {
 		$rootScope.username = usernameInput;
 	}

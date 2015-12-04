@@ -39,7 +39,6 @@
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
 		</button>
 	</div>
-	
 	<br>
 	<!--- Was ist schöner ?
 	<div class="panel panel-default" ng-show ="chosenView != null"> -->
@@ -48,10 +47,18 @@
 			Ansicht bearbeiten: {{chosenView.name}}
 			<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
 				<!-- Reihenfolge der beiden "data-toggle"'s nicht verändern! Funktioniert nur so! -->
-				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteViewModal" data-toggle="tooltip" title="Löschen" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
-				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Was soll hier hin?"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
-				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
-				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteViewModal" data-toggle="tooltip" title="Löschen" >
+					<span class="glyphicon glyphicon-trash" aria-hidden="true"></span><
+				/button>
+				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Was soll hier hin?">
+					<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+				</button>
+				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download">
+					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+				</button>
+				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)">
+					<span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+				</button>
 			</div>
 		</div>
 		<div class="panel-body">
@@ -110,135 +117,6 @@
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
 	      </div>
 	    </div>
-
 	  </div>
 	</div>
 </div>
-
-
-
-
-<!--
-
-	
-
-	<h3>Test {{views[chosenView].dimensions.name.attr}}</h3>
-
-	<div class="container" ng-repeat="set in data">
-		<div class="col-sm-4">
-			<label>{{set.name}}</label>
-	        <select class="form-control">
-	         	<option ng-repeat="collection in set.attributes">{{collection.name}} - {{collection.type}}</option>
-	        </select>
-    	</div>
-    </div>	
-
-<h1> Hier wird der Datensatz "Geburtenrate in Hessen" benutzt </h1>
-
-	<div class="container">
-		<div class="col-sm-4">
-			<label for="sel1">Name:</label>
-			<select class="form-control" id="name">
-				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
-			</select>
-		</div>
-	</div>
-
-	<div class="container">
-		<div class="col-sm-4">
-			<label for="sel1">Flächeninhalt:</label>
-			<select class="form-control" id="area">
-				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
-			</select>
-		</div>
-	</div>
-
-	<div class="container">
-		<div class="col-sm-4">
-			<label for="sel1">Höhe:</label>
-			<select class="form-control" id="height">
-				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
-			</select>
-		</div>
-	</div>
-
-	<h3>Ab hier muss alles in späteren Instanzen eingefügt werden!</h3>
-
-	<div class="container">
-		<div class="col-sm-4">
-			<label for="sel1">Farbe:</label>
-			<select class="form-control" id="farbeselektieren">
-				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
-			</select>
-		</div>
-		<div class="col-sm-4">
-			<br>
-			<br>
-			<label class="radio-inline">
-				<input type="radio" name="farbenRadio" id="farbenRadio1" checked>Aufsteigend</label>
-			<label class="radio-inline">
-				<input type="radio" name="farbenRadio" id="farbenRadio2">Absteigend</label>
-		</div>
-	</div>
-
-	<br>
-	<br>
-
-	<div class="container">
-		<div class="col-sm-4">
-			<label for="sel1">Gruppierungen:</label>
-			<select class="form-control" id="gruppierung">
-				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
-			</select>
-		</div>
-		<div class="col-sm-8">
-			<br>[Hier muss noch nach Abfrage des Typs bei Integer ein Eingabefeld hin]
-		</div>
-	</div>
-
-	<div class="container">
-		<div class="col-sm-4">
-			<label for="sel1">Verbindungen:</label>
-			<select class="form-control" id="verbindung">
-				<option ng-repeat="collection in data[1].attributes">{{collection.name}}</option>
-			</select>
-		</div>
-		<div class="col-sm-8">
-			<br>[Es ist noch unklar, wie genau der Input bei den Verbindungen dargestellt wird]
-		</div>
-	</div>
-
-	<div class="container">
-		<div class="col-sm-4">
-			<label>Winkel einstellen:</label>
-			<div id="slider">
-				<input class="bar" type="range" min="0" max="360" step="1" id="winkelInput" value="0" onchange="winkelOutput.value=value.concat('°')"
-				/>
-				<output id="winkelOutput">0°</output>
-			</div>
-		</div>
-	</div>
-
-	<div class="container">
-		<div class="col-sm-4">
-			<label>Granularität einstellen:</label>
-			<div id="slider">
-				<input class="bar" type="range" min="0" max="100" step="1" id="granularInput" value="0" onchange="granularOutput.value=value.concat('%')"
-				/>
-				<output id="granularOutput">0%</output>
-			</div>
-		</div>
-	</div>
-</div>
-
-		<div class = "container">
-		<button type="button" class="btn btn-default" onclick="ausgabe()">Ausgabe anzeigen</button>
-		</div>
-		
-		<div class = "container">
-			<h3>Ausgabe:</h3>
-			<p id="ausgabe"></p>
-		</div>		
-	</div>
-	
--->
