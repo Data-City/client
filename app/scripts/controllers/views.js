@@ -117,6 +117,7 @@ angular.module('datacityApp')
       $http.put(url, newView).then(function (response) {
         $scope.getViews();
       });
+      $scope.setChosenView(newView);
     };
 
     function ViewCopy(collID) {
