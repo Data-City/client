@@ -49,10 +49,11 @@
 		<div class="panel-heading">
 			Ansicht bearbeiten: {{chosenView.name}}
 			<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
-				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteModal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
-				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
-				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
-				<button type="button" class="btn btn-default" ng-click="copyView(chosenView)"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button>
+				<a href="#" data-toggle="tooltip" data-placement="top" title="Hooray!">Hover</a>
+				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Löschen" data-toggle="modal" data-target="#deleteViewModal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Was soll hier hin?"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button>
 			</div>
 		</div>
 		<div class="panel-body">
@@ -99,7 +100,7 @@
 	</div>
 
 	<!-- Modal -->
-	<div id="deleteModal" class="modal fade" role="dialog">
+	<div id="deleteViewModal" class="modal fade" role="dialog">
 	  <div class="modal-dialog modal-sm">
 	    <!-- Modal content-->
 	    <div class="modal-content">

@@ -15,7 +15,9 @@
           <td>{{collection._id}}</td>
           <td>{{formatTimeString(collection._created_on)}}</td>
           <td>{{formatTimeString(collection._lastupdated_on)}}</td>
-          <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)"></span></td>
+          <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)" data-toggle="tooltip" title="Löschen"></span></td>
+          <!--  Erst nochmal draußen, weil es blöd wäre, jetzt schon einen Datensatz zu löschen, ohne einen hinzufügen zu können
+          <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)" data-toggle="modal" data-target="#deleteCollectionModal"></span></td> -->
         </tr>
       </table>
 
@@ -26,13 +28,6 @@
       <button type="button" class="btn btn-default pull-right" ng-click="dataView.showUploadForm = !dataView.showUploadForm">
         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> CSV-Datei hochladen
       </button>
-      <div class="pull-left">
-        Legende: <br />
-        <!--  Erst nochmal draußen, weil es blöd wäre, jetzt schon einen Datensatz zu löschen, ohne einen hinzufügen zu können
-        <span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="modal" data-target="#deleteModal"></span> Löschen <br /> -->
-         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Löschen <br />
-        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Ansichten verwalten <br />
-      </div>
     </div>
   </div>
   <div class="panel panel-default" ng-show="dataView.showUploadForm">
@@ -44,7 +39,7 @@
   </div>
 
   <!-- Modal -->
-  <div id="deleteModal" class="modal fade" role="dialog">
+  <div id="deleteCollectionModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-sm">
       <!-- Modal content-->
       <div class="modal-content">
