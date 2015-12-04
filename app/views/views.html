@@ -22,10 +22,6 @@
 					<th>Geändert von</th>
 					<th>Geändert am</th>
 				</tr>
-
-				<!-- <tr ng-repeat="view in views | filterBy:'creator'" ng-click="viewView.setChosenView(view.id);"> Funktionert nicht-->
-				<!-- <tr ng-repeat="view in views | filterBy: 'Benedikt Rumtreiber'" ng-click="viewView.setChosenView(view.id);"> Selbst das nicht-->
-
 				<tr ng-repeat="view in views | filter:collID" ng-click="setChosenView(view);">
 					<td>{{view.name}}</td>
 					<td>{{view.collID}}</td>
@@ -46,7 +42,7 @@
 	
 	<br>
 	<!--- Was ist schöner ?
-	<div class="panel panel-default" ng-hide="chosenView == null"> -->
+	<div class="panel panel-default" ng-show ="chosenView != null"> -->
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			Ansicht bearbeiten: {{chosenView.name}}
