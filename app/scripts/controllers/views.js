@@ -9,11 +9,21 @@
  */
 angular.module('datacityApp')
   .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http) {
-    View.prototype.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+
+    function View() {
+      this.name = "Neue Ansicht";
+      this.collID = $scope.collID;
+      this.creator = username;
+      this.timeOfCreation = Date.now();
+      this.lastModifiedBy = username;
+      this.timeOfLastModification = this.timeOfCreation;
+      this.dimensions = {
+        hoehe: null,
+        flaeche: null,
+        farbe: null,
+        district: null
+      };
+    }
 
     $scope.collID = null;
     $scope.views = null;
@@ -38,7 +48,7 @@ angular.module('datacityApp')
           }
         }
       });
-    }
+    };
 
     $scope.updateView = function () {
       updateView($scope.chosenView, username, password, $http, function (response) {
@@ -53,7 +63,7 @@ angular.module('datacityApp')
           }
         });
       });
-    }
+    };
 
     $scope.setChosenView = function (view) {
       if ($scope.chosenView === view) {
@@ -79,7 +89,7 @@ angular.module('datacityApp')
 
       }
       $log.info($scope.chosenView);
-    }
+    };
 
     // Initialization
     if ($routeParams.collID) {
@@ -94,26 +104,12 @@ angular.module('datacityApp')
       });
     };
 
-    function View() {
-      this.name = "Neue Ansicht";
-      this.collID = $scope.collID;
-      this.creator = username;
-      this.timeOfCreation = Date.now();
-      this.lastModifiedBy = username;
-      this.timeOfLastModification = this.timeOfCreation;
-      this.dimensions = {
-        hoehe: null,
-        flaeche: null,
-        farbe: null,
-        district: null
-      }
-    }
-
     $scope.newView = function (collID) {
 
       var newView = new View();
       $log.info(newView);
       var url = baseurl + '/einstellungen/ansichten/' + newView.timeOfCreation;
+      //jshint: respones is defined but never used
       $http.put(url, newView).then(function (response) {
         $scope.getViews();
       });
@@ -135,6 +131,7 @@ angular.module('datacityApp')
       var newView = new ViewCopy(collID);
       $log.info(newView);
       var url = baseurl + '/einstellungen/ansichten/' + newView.timeOfCreation;
+       //jshint: respones is defined but never used
       $http.put(url, newView).then(function (response) {
         $scope.getViews();
       });
@@ -144,5 +141,5 @@ angular.module('datacityApp')
     $scope.jstimeToFormatedTime = function (jstime) {
       var d = new Date(jstime);
       return d.toLocaleDateString() + " " + d.toLocaleTimeString();
-    }
+    };
   });

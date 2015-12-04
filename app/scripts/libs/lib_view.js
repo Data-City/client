@@ -2,7 +2,7 @@
 
 // Basis-URL zu RESTHeart
 var BASEURL = "https://pegenau.com:16392";
-var ANSICHTEN = "/einstellungen/ansichten"
+var ANSICHTEN = "/einstellungen/ansichten";
 
 var setAuthHeader = function (username, password, $http) {
 	$http.defaults.headers.common['Authorization'] = "Basic " + btoa(username + ":" + password);
@@ -30,10 +30,13 @@ var getViews = function (database, collection, username, password, $http, func) 
 /**
  * Counts the elements in obj
  */
+
+ //jshint: count is defined but never used
 var count = function (obj) {
 	return Object.keys(obj).length;
-}
+};
 
+//jshint: is defined but never used
 var getViewsByColID = function (database, collection, colID, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
 
@@ -44,6 +47,7 @@ var getViewsByColID = function (database, collection, colID, username, password,
 		);
 };
 
+//jshint: is defined but never used
 var getCollection = function (database, collection, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
 
@@ -54,7 +58,7 @@ var getCollection = function (database, collection, username, password, $http, f
 		);
 };
 
-
+//jshint: is defined but never used
 var getNumberOfCollections = function (database, username, password, $http, func) {
 	getCollections(database, username, password, $http, function (response) {
 		var count = Object.keys(response).length;
@@ -62,7 +66,7 @@ var getNumberOfCollections = function (database, username, password, $http, func
 	});
 };
 
-
+//jshint: is defined but never used
 var getNumberOfViews = function (database, collection, username, password, $http, func) {
 	getViews(database, collection, username, password, $http, function (response) {
 		var count = Object.keys(response).length;
@@ -70,24 +74,26 @@ var getNumberOfViews = function (database, collection, username, password, $http
 	});
 };
 
+//jshint: is defined but never used
 var deleteView = function (doc, username, password, $http, func) {
 	var config = {headers:  {
         "If-Match": doc._etag.$oid}
     };
-	var url = BASEURL + ANSICHTEN + '/' + doc._id
+	var url = BASEURL + ANSICHTEN + '/' + doc._id;
 	
 	$http.delete(url, config).then(function(response){
 		func(response);
 	});
-}
+};
 
+//jshint: is defined but never used
 var updateView = function (view, username, password, $http, func) {
 	var config = {headers:  {
         "If-Match": view._etag.$oid}
     };
-	var url = BASEURL + ANSICHTEN + '/' + view._id 
+	var url = BASEURL + ANSICHTEN + '/' + view._id;
 	
 	$http.patch(url, view, config).then(function(response){
 		func(response);
 	});
-}
+};

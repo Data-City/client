@@ -19,16 +19,17 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 
 	$scope.login = function (usernameInput) {
 		$rootScope.username = usernameInput;
-	}
+	};
 
 	$scope.logout = function () {
 		$rootScope.username = null;
-	}
+	};
 
 	// Dataset Vars
 	$scope.chosenCollection = null;
 
 	$scope.setChosenCollection = function (id) {
+		// jshint: getcollection is not defined
 		getCollection(database, id, username, password, $http, function (response) {
 			if ($scope.chosenCollection === response) {
 				$scope.chosenCollection = null;
@@ -37,23 +38,24 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 			}
 			$log.info($scope.chosenCollection.data._id);
 		});
-	}
+	};
 
 	$scope.getIdOfCollection = function (collection) {
 		return collection ? collection.data._id : null;
-	}
+	};
 
 	$scope.deleteDataset = function (id) {
 		delete $scope.data[id];
-		if ($rootScope.chosenDataset == id) {
+		if ($rootScope.chosenDataset === id) {
 			$rootScope.chosenDataset = null;
 		}
-	}
+	};
 
 	var database = "prelife";
 	var username = "a";
 	var password = "a";
 
+	// jshint: getcollections is not defined
 	getCollections(database, username, password, $http, function (response) {
 		$scope.collections = response;
 		$scope.numberOfCollections = Object.keys(response).length;
@@ -63,6 +65,5 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	$scope.formatTimeString = function (timeString) {
 		var d = new Date(timeString);
 		return d.toLocaleDateString() + " " + d.toLocaleTimeString();
-	}
-
+	};
 });
