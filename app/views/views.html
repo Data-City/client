@@ -49,8 +49,8 @@
 		<div class="panel-heading">
 			Ansicht bearbeiten: {{chosenView.name}}
 			<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
-				<a href="#" data-toggle="tooltip" data-placement="top" title="Hooray!">Hover</a>
-				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Löschen" data-toggle="modal" data-target="#deleteViewModal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+				<!-- Reihenfolge der beiden "data-toggle"'s nicht verändern! Funktioniert nur so! -->
+				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteViewModal" data-toggle="tooltip" title="Löschen" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Was soll hier hin?"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
 				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
 				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button>
