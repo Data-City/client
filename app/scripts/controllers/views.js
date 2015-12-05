@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint -W117 */
 /**
  * @ngdoc function
  * @name datacityApp.controller:ViewsCtrl

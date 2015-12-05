@@ -1,11 +1,11 @@
 'use strict';
-
+/*jshint -W117 */
 // Basis-URL zu RESTHeart
 var BASEURL = "https://pegenau.com:16392";
 var ANSICHTEN = "/einstellungen/ansichten";
 
 var setAuthHeader = function (username, password, $http) {
-	$http.defaults.headers.common['Authorization'] = "Basic " + btoa(username + ":" + password);
+	$http.defaults.headers.common.Authorization = "Basic " + btoa(username + ":" + password);
 };
 
 var getCollections = function (database, username, password, $http, func) {
