@@ -12,9 +12,4 @@ describe('lib_view Tests', function () {
     scope = $rootScope.$new();
   }));
 
-  it('sollte eine Addition durchführen', inject(function ($compile) {
-    expect(addition(3,4)).toBe(7);
-    expect(addition(4,7)).toBe(3);
-    //expect(element.text()).toBe('this is the choosedatasource directive');
-  }));
 });
