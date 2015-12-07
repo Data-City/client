@@ -58,7 +58,6 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	var database = "prelife";
 	var username = $rootScope.username;
 	var password = $rootScope.password;
-	$rootScope.loggedIn = false;
 
 	// jshint: getcollections is not defined
 	getCollections(database, username, password, $http, function (response) {
