@@ -20,6 +20,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	$scope.login = function (usernameInput, passwordInput) {
 		$rootScope.username = usernameInput;
 		$rootScope.password = passwordInput;
+		$rootScope.loggedIn = true;
 	};
 
 	$scope.logout = function () {
@@ -63,7 +64,6 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	getCollections(database, username, password, $http, function (response) {
 		$scope.collections = response;
 		$scope.numberOfCollections = Object.keys(response).length;
-		$rootScope.loggedIn = true;
 	});
 
 
