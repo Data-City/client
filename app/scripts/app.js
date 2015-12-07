@@ -45,8 +45,8 @@ angular
       */
       .when('/city', {
         templateUrl: 'views/city.html',
-        controller: 'CityCtrl',
-        controllerAs: 'city'
+        controller: 'ViewsCtrl',
+        controllerAs: 'views'
       })
       .when('/data', {
         templateUrl: 'views/data.html',

@@ -8,7 +8,7 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-  .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http) {
+  .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope) {
 
     function View() {
       this.name = "Neue Ansicht";
@@ -24,13 +24,21 @@ angular.module('datacityApp')
         district: null
       };
     }
-
+    $scope.collection = null;
     $scope.collID = null;
     $scope.views = null;
     $scope.numberOfViews = null;
     $scope.chosenView = null;
     $scope.collection = null;
     $scope.attributesOfCollection = null;
+    
+    $scope.setDataForCity = function(collection, view, divID) {
+      $scope.collection = collection;
+      $scope.view = view;
+      $scope.divID = divID;
+      
+      drawCity(collection, view, divID);
+    };
 
     /* Funktioniert nicht, weil die rootScope nur im MainCtrl existiert
     var username = $rootScope.username;
