@@ -24,6 +24,8 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 
 	$scope.logout = function () {
 		$rootScope.username = null;
+		$rootScope.loggedIn = false;
+		$scope.$apply();
 	};
 
 	// Dataset Vars
@@ -55,11 +57,13 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	var database = "prelife";
 	var username = $rootScope.username;
 	var password = $rootScope.password;
+	$rootScope.loggedIn = false;
 
 	// jshint: getcollections is not defined
 	getCollections(database, username, password, $http, function (response) {
 		$scope.collections = response;
 		$scope.numberOfCollections = Object.keys(response).length;
+		$rootScope.loggedIn = true;
 	});
 
 
