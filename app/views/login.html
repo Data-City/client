@@ -1,13 +1,13 @@
 <div ng-app="datacityApp" ng-controller="MainCtrl">
 	<form role="form">
   		<div class="form-group">
-    		<label for="email">Username:</label>
-    		<input type="text" class="form-control" ng-model="usernameInput">
+    		<label>Username:</label>
+    		<input type="text" value="a" class="form-control" ng-model="usernameInput" placeholder="a">
   		</div>
   		<div class="form-group">
     		<label for="pwd">Password: [noch keine Funktion]</label>
-    		<input type="password" class="form-control">
+    		<input type="password" class="form-control" ng-model="passwordInput" placeholder="a">
   		</div>
-		<button type="submit" class="btn btn-default" ng-click="login(usernameInput)">Einloggen</button>
+		<button type="submit" class="btn btn-default" ng-click="login(usernameInput, passwordInput)">Einloggen</button>
 	</form>
 </div>

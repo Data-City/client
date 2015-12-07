@@ -17,8 +17,9 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 		$(this).parent().addClass("active");
 	});
 
-	$scope.login = function (usernameInput) {
+	$scope.login = function (usernameInput, passwordInput) {
 		$rootScope.username = usernameInput;
+		$rootScope.password = passwordInput;
 	};
 
 	$scope.logout = function () {
@@ -52,8 +53,8 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	};
 
 	var database = "prelife";
-	var username = "a";
-	var password = "a";
+	var username = $rootScope.username;
+	var password = $rootScope.password;
 
 	// jshint: getcollections is not defined
 	getCollections(database, username, password, $http, function (response) {

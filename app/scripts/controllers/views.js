@@ -32,6 +32,10 @@ angular.module('datacityApp')
     $scope.collection = null;
     $scope.attributesOfCollection = null;
 
+    /* Funktioniert nicht, weil die rootScope nur im MainCtrl existiert
+    var username = $rootScope.username;
+    var password = $rootScope.password;
+    */
     var username = "a";
     var password = "a";
     var database = "einstellungen";
