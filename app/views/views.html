@@ -46,9 +46,7 @@
 	<p>Collection: {{collection}}</p>
 
 	<p>chosenView: {{chosenView}}</p>
-	-->
-
-
+-->
 	<!--- Was ist schöner ?
 	<div class="panel panel-default" ng-show ="chosenView != null"> -->
 	<div class="panel panel-default">
@@ -58,9 +56,6 @@
 				<!-- Reihenfolge der beiden "data-toggle"'s nicht verändern! Funktioniert nur so! -->
 				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteViewModal" data-toggle="tooltip" title="Löschen" >
 					<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-				</button>
-				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Stadt anzeigen" ng-click="setDataForCity(collection,chosenView,'Stadt');">
-					<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
 				</button>
 				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download" ng-click="download()">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
@@ -98,16 +93,17 @@
 				<br />
 				<div class="input-group">
 					<span class="input-group-addon">Farbe</span>
-					<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection">
+					<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection" disabled>
 					</select>
 				</div>
 				<br />
 				<div class="input-group">
 					<span class="input-group-addon">District</span>
-					<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection">
+					<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection" disabled>
 					</select>
 				</div>
 				<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
+				<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');">Stadt anzeigen</button>
 			</div>
 
 		</div>
