@@ -40,6 +40,15 @@
 		</button>
 	</div>
 	<br>
+
+	
+<!--	
+	<p>Collection: {{collection}}</p>
+
+	<p>chosenView: {{chosenView}}</p>
+	-->
+
+
 	<!--- Was ist schöner ?
 	<div class="panel panel-default" ng-show ="chosenView != null"> -->
 	<div class="panel panel-default">
@@ -53,14 +62,14 @@
 				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Stadt anzeigen" ng-click="setDataForCity(collection,chosenView,'Stadt');">
 					<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
 				</button>
-				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download">
+				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download" ng-click="download()">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 				</button>
 				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)">
 					<span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
 				</button>
 			</div>
-		</div>
+		</div>		
 		<div class="panel-body">
 			<div class="input-group">
 				<span class="input-group-addon">Name</span>
