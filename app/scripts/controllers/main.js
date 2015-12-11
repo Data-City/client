@@ -29,9 +29,10 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 		$scope.$apply();
 	};
 
-	// Dataset Vars
+	// Der ausgewählte (angeklickte) Datensatz
 	$scope.chosenCollection = null;
 
+	//Auswählen eines neuen Datensatzes
 	$scope.setChosenCollection = function (id) {
 		// jshint: getcollection is not defined
 		getCollection(database, id, username, password, $http, function (response) {
@@ -48,6 +49,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 		return collection ? collection.data._id : null;
 	};
 
+	//Einen Datensatz löschen
 	$scope.deleteDataset = function (id) {
 		delete $scope.data[id];
 		if ($rootScope.chosenDataset === id) {
@@ -65,12 +67,13 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 		$scope.numberOfCollections = Object.keys(response).length;
 	});
 
-
+	//Eine schönere Anzeige des Datums
 	$scope.formatTimeString = function (timeString) {
 		var d = new Date(timeString);
 		return d.toLocaleDateString() + " " + d.toLocaleTimeString();
 	};
 
+	//Ab hier: Noch nicht funktionierender JSON-Download. Nötig?
 	$scope.download = function () {
 		var data = {a:1, b:2, c:3};
 		var json = JSON.stringify(data);

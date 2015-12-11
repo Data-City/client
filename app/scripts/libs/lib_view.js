@@ -4,10 +4,12 @@
 var BASEURL = "https://pegenau.com:16392";
 var ANSICHTEN = "/einstellungen/ansichten";
 
+//Authorisierung
 var setAuthHeader = function (username, password, $http) {
 	$http.defaults.headers.common.Authorization = "Basic " + btoa(username + ":" + password);
 };
 
+//Holt sich alle Datensätze
 var getCollections = function (database, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
 
@@ -17,6 +19,8 @@ var getCollections = function (database, username, password, $http, func) {
 		}
 		);
 };
+
+//Holt sich alle Ansichten
 var getViews = function (database, collection, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
 

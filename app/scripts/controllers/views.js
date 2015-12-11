@@ -10,6 +10,7 @@
 angular.module('datacityApp')
   .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope) {
 
+    //Konstruktor für eine Ansicht
     function View() {
       this.name = "Neue Ansicht";
       this.collID = $scope.collID;
@@ -44,12 +45,15 @@ angular.module('datacityApp')
     var username = $rootScope.username;
     var password = $rootScope.password;
     */
+    
+    //Standardeinstellungen
     var username = "a";
     var password = "a";
     var database = "einstellungen";
     var collection = "ansichten";
     var baseurl = "https://pegenau.com:16392";
 
+    //Die Ansichten ausgeben
     $scope.getViews = function (func) {
       getViews(database, collection, username, password, $http, function (response) {
         $scope.views = response.data._embedded['rh:doc'];
@@ -62,6 +66,7 @@ angular.module('datacityApp')
       });
     };
 
+    //Eine Ansicht aktualisieren
     $scope.updateView = function () {
       updateView($scope.chosenView, username, password, $http, function (response) {
         var id = $scope.chosenView._id;
@@ -77,6 +82,7 @@ angular.module('datacityApp')
       });
     };
 
+    //Eine Ansicht auswählen
     $scope.setChosenView = function (view) {
       if ($scope.chosenView === view) {
         $scope.chosenView = null;
@@ -103,12 +109,13 @@ angular.module('datacityApp')
       $log.info($scope.chosenView);
     };
 
-    // Initialization
+    // Initialisierung
     if ($routeParams.collID) {
       $scope.collID = $routeParams.collID;
       $scope.getViews();
     }
 
+    //Eine Ansicht löschen
     $scope.deleteView = function (view) {
       deleteView(view, username, password, $http, function (response) {
         console.log(response);
@@ -117,18 +124,19 @@ angular.module('datacityApp')
       $scope.chosenView = null;
     };
 
+    //Eine neue Sicht erstellen
     $scope.newView = function (collID) {
-
       var newView = new View();
       $log.info(newView);
       var url = baseurl + '/einstellungen/ansichten/' + newView.timeOfCreation;
-      //jshint: respones is defined but never used
       $http.put(url, newView).then(function (response) {
         $scope.getViews();
+        console.log(response);
       });
       $scope.setChosenView(newView);
     };
 
+    //Konsturktor für eine Kopie einer neuen Ansicht
     function ViewCopy(collID) {
       this.name = collID.name + " (Kopie)";
       this.collID = $scope.collID;
@@ -139,18 +147,18 @@ angular.module('datacityApp')
       this.dimensions = collID.dimensions;
     }
 
+    //Eine Kopie erstellt
     $scope.copyView = function (collID) {
-
       var newView = new ViewCopy(collID);
       $log.info(newView);
       var url = baseurl + '/einstellungen/ansichten/' + newView.timeOfCreation;
-       //jshint: respones is defined but never used
       $http.put(url, newView).then(function (response) {
         $scope.getViews();
+        console.log(response);
       });
     };
 
-
+    //Schönere Darstellung der Zeit
     $scope.jstimeToFormatedTime = function (jstime) {
       var d = new Date(jstime);
       return d.toLocaleDateString() + " " + d.toLocaleTimeString();

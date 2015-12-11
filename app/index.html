@@ -20,10 +20,11 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <!-- Add your site or application content here -->
+    <!-- Navigations-Leiste am oberen Bildschirmrand -->
     <div class="header">
       <div class="navbar navbar-inverse" role="navigation">
         
+          <!-- Anweisungen, falls der Bildschirm extrem klein wird (Smartphone) -->
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
               <span class="sr-only">Toggle navigation</span>
@@ -34,16 +35,15 @@
             <div class="navbar-brand">DataCity</div>
           </div>
 
+          <!-- Normale Anzeige oben links -->
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
             <ul class="nav navbar-nav">
-              <li><a href="#/login">Login</a></li>
-              <li class="active"><a ng-href="#/data">Datensätze</a></li>
-              <!-- Wird für die Präsentation nicht benötigt
-                <li><a ng-href="#/city">Stadt</a></li> -->
+              <li class="active"><a ng-href="#/data">Datensätze</a></li>>
             </ul>
 
+            <!-- Login/Logout oben rechts -->
             <ul class="nav navbar-nav navbar-right" ng-controller="MainCtrl">
-                <li ng-hide="username == null"><a href="#/admin"><i>Eingeloggt als {{username}}</i></a></li>
+                <li ng-hide="username == null"><a href="#/admin">Eingeloggt als <i>{{username}}</i></a></li>
                 <li>
                   <button type="submit" class="btn btn-link" ng-click="logout()" ng-hide="username==null">
                     <span class="glyphicon glyphicon-log-out"></span> Log out

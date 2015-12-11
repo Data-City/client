@@ -1,13 +1,16 @@
 <div ng-app="datacityApp" ng-controller="MainCtrl">
 
+  <!-- Fehlerausgabe, falls man nicht eingeloggt ist -->
   <div class="alert alert-danger" role="alert" ng-hide="loggedIn">
     <h3>Sie sind nicht eingeloggt!</h3>
   </div>
 
+  <!-- Panel zur Anzeige der Datensätze -->
   <div class="panel panel-default" ng-show="loggedIn">
     <div class="panel-heading">
       <h3 class="panel-title">Datensätze</h3>
     </div>
+    <!-- Tabelle für die Datensätze -->
     <div class="panel-body">
       <table class="table">
         <tr>
@@ -21,15 +24,17 @@
           <td>{{formatTimeString(collection._created_on)}}</td>
           <td>{{formatTimeString(collection._lastupdated_on)}}</td>
           <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)" data-toggle="tooltip" title="Löschen"></span></td>
-          <!--  Erst nochmal draußen, weil es blöd wäre, jetzt schon einen Datensatz zu löschen, ohne einen hinzufügen zu können
-          <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)" data-toggle="modal" data-target="#deleteCollectionModal"></span></td> -->
+          <!--  
+            Erst nochmal draußen, weil es blöd wäre, jetzt schon einen Datensatz zu löschen, ohne einen hinzufügen zu können
+          <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)" data-toggle="modal" data-target="#deleteCollectionModal"></span></td>
+          -->
         </tr>
       </table>
-
+        <!-- provisorisches Weiterlinken zu einem Datensatz -->
       <div ng-show="chosenCollection" class="well">
         <a href="#/views/{{getIdOfCollection(chosenCollection)}}">{{getIdOfCollection(chosenCollection)}}</a>
       </div>
-
+      <!-- Upload-Formular -->
       <button type="button" class="btn btn-default pull-right" ng-click="dataView.showUploadForm = !dataView.showUploadForm">
         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> CSV-Datei hochladen
       </button>
@@ -40,10 +45,17 @@
     <h3 class="panel-title">Datensatz hochladen</h3>
   </div>
   <div class="panel-body">
-    <uploadformdatasourcefile></uploadformdatasourcefile>
+    <!-- Wird nicht mehr als einmal benötigt, kann also hier komplett rein  
+      <uploadformdatasourcefile></uploadformdatasourcefile>
+      -->
+    '<div class="container">' +
+      '<h3>Eine .csv-Datei hochladen:</h3>' + 
+      '<input name="Datei" type="file" size="50" accept="csv/*">' +
+      '<button type="button" class="btn btn-default" onclick="">Datei hochladen</button>' +
+    '</div>'
   </div>
 
-  <!-- Modal -->
+  <!-- Modal: Popup für's Löschen -->
   <div id="deleteCollectionModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-sm">
       <!-- Modal content-->
