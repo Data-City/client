@@ -1,3 +1,8 @@
+/* Die globalen Funktionen kommen von lib_view /*
+/* global getCollection */
+/* global getViews */
+/* global updateView */
+/* global drawCity */
 'use strict';
 /*jshint -W117 */
 /**
