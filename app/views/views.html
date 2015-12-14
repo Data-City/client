@@ -70,38 +70,85 @@
 				<span class="input-group-addon">Name</span>
 				<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
 			</div>
-			<br />
+					
 			<div>
-				<h4>Dimensionen festlegen</h4>
-				<div class="input-group">
-					<span class="input-group-addon">Name des Gebäudes</span>
-					<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection">
-					</select>
-				</div>
-				<br />
-				<div class="input-group">
-					<span class="input-group-addon">Fläche</span>
-					<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection">
-					</select>
-				</div>
-				<br />
-				<div class="input-group">
-					<span class="input-group-addon">Höhe</span>
-					<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection">
-					</select>
-				</div>
-				<br />
-				<div class="input-group">
-					<span class="input-group-addon">Farbe</span>
-					<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection" disabled>
-					</select>
-				</div>
-				<br />
-				<div class="input-group">
-					<span class="input-group-addon">District</span>
-					<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection" disabled>
-					</select>
-				</div>
+				<table class="table">				
+					<tr>
+						<th>
+							<h4>Dimensionen des Gebäudes festlegen</h4>
+						</th>
+						<th>
+							<div class="checkbox">
+								<label><input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
+							</div>
+						</th>
+					</tr>
+					
+					<tr>
+						<td>
+							<div class="input-group">
+								<span class="input-group-addon">Name</span>
+								<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection">
+								</select>
+							</div>
+						</td>
+						<td ng-show="selfName">
+							<input type="text" class="form-control">
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<div class="input-group">
+								<span class="input-group-addon">Fläche</span>
+								<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection">
+								</select>
+							</div>
+						</td>
+						
+						<td ng-show="selfName">
+							<input type="text" class="form-control">
+						</td>
+					</tr>
+						<td>
+							<div class="input-group">
+								<span class="input-group-addon">Höhe</span>
+								<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection">
+								</select>
+							</div>
+						</td>
+						<td ng-show="selfName">
+							<input type="text" class="form-control">
+						</td>						
+					</tr>
+					
+					<tr>
+						<td>
+							<div class="input-group">
+								<span class="input-group-addon">Farbe</span>
+								<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection" disabled>
+								</select>
+							</div>
+						</td>
+						<td ng-show="selfName">
+							<input type="text" class="form-control">
+						</td>						
+					</tr>
+					
+					<tr>
+						<td>
+							<div class="input-group">
+								<span class="input-group-addon">District</span>
+								<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection" disabled>
+								</select>
+							</div>
+						</td>
+						<td ng-show="selfName">
+							<input type="text" class="form-control">
+						</td>
+					</tr>
+				</table>
+				
 				<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
 				<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');">Stadt anzeigen</button>
 			</div>
