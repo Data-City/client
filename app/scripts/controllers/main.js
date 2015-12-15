@@ -32,6 +32,10 @@ App.service('sharedLogin', function() {
 		login: function(usernameInput, passwordInput) {
             username = usernameInput;
 			password = passwordInput;
+        },
+		logout: function() {
+            username = "";
+			password = "";
         }
     };
 });
