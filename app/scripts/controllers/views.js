@@ -13,7 +13,7 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-  .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope) {
+  .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin) {
 
     //Konstruktor für eine Ansicht
     function View() {
@@ -52,8 +52,8 @@ angular.module('datacityApp')
     */
     
     //Standardeinstellungen
-    var username = "a";
-    var password = "a";
+    var username = sharedLogin.getUsername();
+    var password = sharedLogin.getPassword();
     var database = "einstellungen";
     var collection = "ansichten";
     var baseurl = "https://pegenau.com:16392";

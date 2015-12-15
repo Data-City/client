@@ -10,17 +10,38 @@
 
 var App = angular.module('datacityApp');
 
+//Der Service hilft, um die Logindaten über alle Controller hinweg zu realisieren
+App.service('sharedLogin', function() {
+    var username = "a";
+    var password = "a";
+    
+    return {
+        getUsername: function() {
+            return username;
+        },
+        getPassword: function() {
+            return password;
+        },
+		login: function(usernameInput, passwordInput) {
+            username = usernameInput;
+			password = passwordInput;
+        }
+    };
+});
+
 //Die richtige Seite in der Navbar wird angezeigt
-App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
+App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogin) {
 	$(".nav a").on("click", function () {
 		$(".nav").find(".active").removeClass("active");
 		$(this).parent().addClass("active");
 	});
 
 	$scope.login = function (usernameInput, passwordInput) {
-		$rootScope.username = usernameInput;
-		$rootScope.password = passwordInput;
+		sharedLogin.login(usernameInput, passwordInput);
 		$rootScope.loggedIn = true;
+		console.log("asbhdbasbh");
+		console.log(usernameInput);
+		console.log(sharedLogin.getUsername());
 	};
 
 	$scope.logout = function () {
@@ -58,8 +79,8 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	};
 
 	var database = "prelife";
-	var username = $rootScope.username;
-	var password = $rootScope.password;
+	var username = sharedLogin.getUsername();
+	var password = sharedLogin.getPassword();
 
 	// jshint: getcollections is not defined
 	getCollections(database, username, password, $http, function (response) {
@@ -74,6 +95,8 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	};
 
 	//Ab hier: Noch nicht funktionierender JSON-Download. Nötig?
+	
+	/*
 	$scope.download = function () {
 		var data = {a:1, b:2, c:3};
 		var json = JSON.stringify(data);
@@ -91,6 +114,8 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log) {
 	$scope.downloadJSON = function () {
 
 	};
+	
+	*/
 
 	/*
 	var data = {a:1, b:2, c:3};
