@@ -12,9 +12,16 @@ var App = angular.module('datacityApp');
 
 //Der Service hilft, um die Logindaten über alle Controller hinweg zu realisieren
 App.service('sharedLogin', function() {
-    var username = "a";
+	/*
+    var username;
+    var password;
+    */
+	
+	//Aus Testzwecken ist man immer eingeloggt
+	var username = "a";
     var password = "a";
-    
+	//Später wieder raus nehmen
+	
     return {
         getUsername: function() {
             return username;
@@ -36,12 +43,18 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 		$(this).parent().addClass("active");
 	});
 
+	//Aus Testzwecken sollte man immer eingeloggt sein
+	$rootScope.loggedIn = true;
+	//Später wieder raus nehmen
+	
 	$scope.login = function (usernameInput, passwordInput) {
+		//Wird für die "Eingeloggt als xxx"-Anzeige benötigt
+		$rootScope.username = usernameInput;
+		$rootScope.password = passwordInput;
+		
+		//Führt den Service zum Login aus
 		sharedLogin.login(usernameInput, passwordInput);
 		$rootScope.loggedIn = true;
-		console.log("asbhdbasbh");
-		console.log(usernameInput);
-		console.log(sharedLogin.getUsername());
 	};
 
 	$scope.logout = function () {
