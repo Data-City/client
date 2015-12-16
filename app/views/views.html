@@ -96,6 +96,9 @@
 							<td ng-show="selfName">
 								<input type="text" class="form-control">
 							</td>
+							<td>
+								?
+							</td>
 						</tr>
 						
 						<tr>
@@ -109,7 +112,12 @@
 							<td ng-show="selfName">
 								<input type="text" class="form-control">
 							</td>
+							<td>
+								Doppelter Slider von Max bis Min (...|.......|...)
+							</td>
 						</tr>
+						
+						<tr>
 							<td>
 								<div class="input-group">
 									<span class="input-group-addon">Höhe</span>
@@ -118,7 +126,10 @@
 							</td>
 							<td ng-show="selfName">
 								<input type="text" class="form-control">
-							</td>						
+							</td>	
+							<td>
+								Doppelter Slider von Max bis Min
+							</td>					
 						</tr>
 						
 						<tr>
@@ -142,12 +153,15 @@
 						<tr>
 							<td>
 								<div class="input-group">
-									<span class="input-group-addon">District</span>
+									<span class="input-group-addon">Block</span>
 									<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection"></select>
 								</div>
 							</td>
 							<td ng-show="selfName">
 								<input type="text" class="form-control">
+							</td>
+							<td>
+								Block-Auswahlmöglichkeiten hier
 							</td>
 						</tr>
 					</table>
