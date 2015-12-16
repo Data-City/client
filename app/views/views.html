@@ -6,34 +6,41 @@
 		<h3>Kein Datensatz gewählt!</h3>
 	</div>
 	<div ng-show="collID">
-		<h3>Ausgewählter Datensatz: {{collID}}</h3>
+		<h3>Ausgewählter Datensatz: <i>{{collID}}</i></h3>
 	</div>
-	<div class="panel panel-default">
+	
+	<div class="panel panel-default" id="views">		
 		<div class="panel-heading">
-			<h3 class="panel-title">Ansichten</h3>
-		</div>
-		<div class="panel-body">
-			<table class="table">
-				<tr>
-					<th>Name</th>
-					<th>Datensatz</th>
-					<th>Erstellt von</th>
-					<th>Erstellt am</th>
-					<th>Geändert von</th>
-					<th>Geändert am</th>
-				</tr>
-				<tr ng-repeat="view in views | filter:collID" ng-click="setChosenView(view);">
-					<td>{{view.name}}</td>
-					<td>{{view.collID}}</td>
-					<td>{{view.creator}}</td>
-					<td>{{jstimeToFormatedTime(view.timeOfCreation)}}</td>
-					<td>{{view.lastModifiedBy}}</td>
-					<td>{{jstimeToFormatedTime(view.timeOfLastModification)}}</td>
-				</tr>
-				<tr ng-hide="numberOfViews > 0">
-					<td colspan="6" align="center">Keine Ansichten vorhanden!</td>
-				</tr>
-			</table>
+			<h4 class="panel-title">
+				<a href="javascript:;" data-toggle="collapse" data-parent="#views" data-target="#collapseViews">
+					Ansichten
+				</a>
+			</h4>
+		</div>	
+		<div id="collapseViews" class="panel-collapse collapse in">
+			<div class="panel-body">
+				<table class="table">
+					<tr>
+						<th>Name</th>
+						<th>Datensatz</th>
+						<th>Erstellt von</th>
+						<th>Erstellt am</th>
+						<th>Geändert von</th>
+						<th>Geändert am</th>
+					</tr>
+					<tr ng-repeat="view in views | filter:collID" ng-click="setChosenView(view);">
+						<td>{{view.name}}</td>
+						<td>{{view.collID}}</td>
+						<td>{{view.creator}}</td>
+						<td>{{jstimeToFormatedTime(view.timeOfCreation)}}</td>
+						<td>{{view.lastModifiedBy}}</td>
+						<td>{{jstimeToFormatedTime(view.timeOfLastModification)}}</td>
+					</tr>
+					<tr ng-hide="numberOfViews > 0">
+						<td colspan="6" align="center">Keine Ansichten vorhanden!</td>
+					</tr>
+				</table>
+			</div>
 		</div>
 		<button type="button" class="btn btn-default pull-right" ng-click="newView();">
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
@@ -41,118 +48,114 @@
 	</div>
 	<br>
 
-	
-<!--	
-	<p>Collection: {{collection}}</p>
-
-	<p>chosenView: {{chosenView}}</p>
--->
-	<!--- Was ist schöner ?
-	<div class="panel panel-default" ng-show ="chosenView != null"> -->
-	<div class="panel panel-default">
+	<div class="panel panel-default" id="dimensions">
 		<div class="panel-heading">
-			Ansicht bearbeiten: {{chosenView.name}}
-			<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
-				<!-- Reihenfolge der beiden "data-toggle"'s nicht verändern! Funktioniert nur so! -->
-				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteViewModal" data-toggle="tooltip" title="Löschen" >
-					<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-				</button>
-				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download" ng-click="download()">
-					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-				</button>
-				<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)">
-					<span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
-				</button>
-			</div>
-		</div>		
-		<div class="panel-body">
-			<div class="input-group">
-				<span class="input-group-addon">Name</span>
-				<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
-			</div>
-					
-			<div>
-				<table class="table">				
-					<tr>
-						<th>
-							<h4>Dimensionen des Gebäudes festlegen</h4>
-						</th>
-						<th>
-							<div class="checkbox">
-								<label><input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
-							</div>
-						</th>
-					</tr>
-					
-					<tr>
-						<td>
-							<div class="input-group">
-								<span class="input-group-addon">Name</span>
-								<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection">
-								</select>
-							</div>
-						</td>
-						<td ng-show="selfName">
-							<input type="text" class="form-control">
-						</td>
-					</tr>
-					
-					<tr>
-						<td>
-							<div class="input-group">
-								<span class="input-group-addon">Fläche</span>
-								<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection">
-								</select>
-							</div>
-						</td>
-						
-						<td ng-show="selfName">
-							<input type="text" class="form-control">
-						</td>
-					</tr>
-						<td>
-							<div class="input-group">
-								<span class="input-group-addon">Höhe</span>
-								<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection">
-								</select>
-							</div>
-						</td>
-						<td ng-show="selfName">
-							<input type="text" class="form-control">
-						</td>						
-					</tr>
-					
-					<tr>
-						<td>
-							<div class="input-group">
-								<span class="input-group-addon">Farbe</span>
-								<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection" disabled>
-								</select>
-							</div>
-						</td>
-						<td ng-show="selfName">
-							<input type="text" class="form-control">
-						</td>						
-					</tr>
-					
-					<tr>
-						<td>
-							<div class="input-group">
-								<span class="input-group-addon">District</span>
-								<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection" disabled>
-								</select>
-							</div>
-						</td>
-						<td ng-show="selfName">
-							<input type="text" class="form-control">
-						</td>
-					</tr>
-				</table>
+			<h4 class="panel-title">
+				<a href="javascript:;" data-toggle="collapse" data-parent="#dimensions" data-target="#collapseDimensions">
+					Ansicht bearbeiten: {{chosenView.name}}
+				</a>
 				
-				<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
-				<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');">Stadt anzeigen</button>
+				<!-- Die Bearbeitungs-Icons -->
+				<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
+					<!-- Reihenfolge der beiden "data-toggle"'s nicht verändern! Funktioniert nur so! -->
+					<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteViewModal" data-toggle="tooltip" title="Löschen" >
+						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+					</button>
+					<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download" ng-click="download()">
+						<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+					</button>
+					<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)">
+						<span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+					</button>
+				</div>
+			</h4>
+		</div>	
+		
+		<div id="collapseDimensions" class="panel-collapse collapse in">
+			<div class="panel-body">	
+				<div>
+					<table class="table">				
+						<tr>
+							<th>
+								<h4>Dimensionen des Gebäudes festlegen</h4>
+							</th>
+							<th>
+								<div class="checkbox">
+									<label><input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
+								</div>
+							</th>
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group">
+									<span class="input-group-addon">Name</span>
+									<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection">
+									</select>
+								</div>
+							</td>
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group">
+									<span class="input-group-addon">Fläche</span>
+									<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection">
+									</select>
+								</div>
+							</td>
+							
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>
+						</tr>
+							<td>
+								<div class="input-group">
+									<span class="input-group-addon">Höhe</span>
+									<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection">
+									</select>
+								</div>
+							</td>
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>						
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group">
+									<span class="input-group-addon">Farbe</span>
+									<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection">
+									</select>
+								</div>
+							</td>
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>					
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group">
+									<span class="input-group-addon">District</span>
+									<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection">
+									</select>
+								</div>
+							</td>
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>
+						</tr>
+					</table>
+					
+					<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
+					<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');">Stadt anzeigen</button>
+				</div>
+	
 			</div>
-
 		</div>
 	</div>
 
