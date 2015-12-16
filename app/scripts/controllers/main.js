@@ -66,7 +66,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 		$rootScope.loggedIn = false;
 		$scope.$apply();
 	};
-
+	
 	// Der ausgewählte (angeklickte) Datensatz
 	$scope.chosenCollection = null;
 
@@ -88,6 +88,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 	};
 
 	//Einen Datensatz löschen
+	//Die zugehörigen Ansichten sollten auch gelöscht werden!!
 	$scope.deleteDataset = function (id) {
 		delete $scope.data[id];
 		if ($rootScope.chosenDataset === id) {
