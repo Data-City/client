@@ -42,13 +42,13 @@
             </ul>
 
             <!-- Login/Logout oben rechts -->
-            <ul class="nav navbar-nav navbar-right" ng-controller="MainCtrl">
-                <li ng-hide="username == null"><a href="#/admin">Eingeloggt als <i>{{username}}</i></a></li>
+            <ul class="nav navbar-nav navbar-right" ng-controller="LoginCtrl">
+                <li ng-show="loggedIn"><a href="#/admin">Eingeloggt als <i>{{username}}</i></a></li>
                 <li>
-                  <button type="submit" class="btn btn-link" ng-click="logout()" ng-hide="username==null">
+                  <button type="submit" class="btn btn-link" ng-click="logout()" ng-show="loggedIn">
                     <span class="glyphicon glyphicon-log-out"></span> Log out
                   </button>
-                  <a ng-href="#/login" ng-show="username==null"><span class="glyphicon glyphicon-log-in"></span> Login</a>                  
+                  <a ng-href="#/login" ng-hide="loggedIn"><span class="glyphicon glyphicon-log-in"></span> Login</a>                  
                 </li>
             </ul>
           </div>

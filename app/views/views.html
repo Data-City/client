@@ -1,194 +1,202 @@
 <div ng-app="datacityApp" ng-controller="ViewsCtrl">
-
-<a ng-href="#/data"><i class=" glyphicon glyphicon-chevron-left"></i>Einen Datensatz auswählen</a>
-
-	<div class="alert alert-danger" role="alert" ng-hide="collID">
-		<h3>Kein Datensatz gewählt!</h3>
-	</div>
-	<div ng-show="collID">
-		<h3>Ausgewählter Datensatz: <i>{{collID}}</i></h3>
-	</div>
 	
-	<div class="panel panel-default" id="views">		
-		<div class="panel-heading">
-			<h4 class="panel-title">
-				<a href="javascript:;" data-toggle="collapse" data-parent="#views" data-target="#collapseViews">
-					Ansichten
-				</a>
-			</h4>
-		</div>	
-		<div id="collapseViews" class="panel-collapse collapse in">
-			<div class="panel-body">
-				<table class="table">
-					<tr>
-						<th>Name</th>
-						<th>Datensatz</th>
-						<th>Erstellt von</th>
-						<th>Erstellt am</th>
-						<th>Geändert von</th>
-						<th>Geändert am</th>
-					</tr>
-					<tr ng-repeat="view in views | filter:collID" ng-click="setChosenView(view);">
-						<td>{{view.name}}</td>
-						<td>{{view.collID}}</td>
-						<td>{{view.creator}}</td>
-						<td>{{jstimeToFormatedTime(view.timeOfCreation)}}</td>
-						<td>{{view.lastModifiedBy}}</td>
-						<td>{{jstimeToFormatedTime(view.timeOfLastModification)}}</td>
-					</tr>
-					<tr ng-hide="numberOfViews > 0">
-						<td colspan="6" align="center">Keine Ansichten vorhanden!</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<button type="button" class="btn btn-default pull-right" ng-click="newView();">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
-		</button>
+	<!-- Fehlerausgabe, falls man nicht eingeloggt ist -->
+	<div class="alert alert-danger" role="alert" ng-hide="loggedIn">
+		<h3>Sie sind nicht eingeloggt!</h3>
 	</div>
-	<br>
 
-	<div class="panel panel-default" id="dimensions">
-		<div class="panel-heading">
-			<h4 class="panel-title">
-				<a href="javascript:;" data-toggle="collapse" data-parent="#dimensions" data-target="#collapseDimensions">
-					Ansicht bearbeiten: {{chosenView.name}}
-				</a>
-				
-				<!-- Die Bearbeitungs-Icons -->
-				<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
-					<!-- Reihenfolge der beiden "data-toggle"'s nicht verändern! Funktioniert nur so! -->
-					<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteViewModal" data-toggle="tooltip" title="Löschen" >
-						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-					</button>
-					<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download" ng-click="download()">
-						<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-					</button>
-					<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)">
-						<span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
-					</button>
-				</div>
-			</h4>
-		</div>	
+	<div ng-show="loggedIn">
+		<a ng-href="#/data"><i class=" glyphicon glyphicon-chevron-left"></i>Einen Datensatz auswählen</a>
+	
+		<div class="alert alert-danger" role="alert" ng-hide="collID">
+			<h3>Kein Datensatz gewählt!</h3>
+		</div>
+		<div ng-show="collID">
+			<h3>Ausgewählter Datensatz: <i>{{collID}}</i></h3>
+		</div>
 		
-		<div id="collapseDimensions" class="panel-collapse collapse in">
-			<div class="panel-body">	
-				<div>
-					<table class="table">				
+		<div class="panel panel-default" id="views">		
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a href="javascript:;" data-toggle="collapse" data-parent="#views" data-target="#collapseViews">
+						Ansichten
+					</a>
+				</h4>
+			</div>	
+			<div id="collapseViews" class="panel-collapse collapse in">
+				<div class="panel-body">
+					<table class="table">
 						<tr>
-							<th>
-								<h4>Dimensionen des Gebäudes festlegen</h4>
-							</th>
-							<th>
-								<div class="checkbox">
-									<label><input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
-								</div>
-							</th>
+							<th>Name</th>
+							<th>Datensatz</th>
+							<th>Erstellt von</th>
+							<th>Erstellt am</th>
+							<th>Geändert von</th>
+							<th>Geändert am</th>
 						</tr>
-						
-						<tr>
-							<td>
-								<div class="input-group">
-									<span class="input-group-addon">Name</span>
-									<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection"></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								?
-							</td>
+						<tr ng-repeat="view in views | filter:collID" ng-click="setChosenView(view);">
+							<td>{{view.name}}</td>
+							<td>{{view.collID}}</td>
+							<td>{{view.creator}}</td>
+							<td>{{jstimeToFormatedTime(view.timeOfCreation)}}</td>
+							<td>{{view.lastModifiedBy}}</td>
+							<td>{{jstimeToFormatedTime(view.timeOfLastModification)}}</td>
 						</tr>
-						
-						<tr>
-							<td>
-								<div class="input-group">
-									<span class="input-group-addon">Fläche</span>
-									<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection"></select>
-									
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								Doppelter Slider von Max bis Min (...|.......|...)
-							</td>
-						</tr>
-						
-						<tr>
-							<td>
-								<div class="input-group">
-									<span class="input-group-addon">Höhe</span>
-									<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection"></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>	
-							<td>
-								Doppelter Slider von Max bis Min
-							</td>					
-						</tr>
-						
-						<tr>
-							<td>
-								<div class="input-group">
-									<span class="input-group-addon">Farbe</span>
-									<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection"></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>	
-							<td>
-								<input class="bar" type="range" min="0" max="100" step="1" value="0" onchange="colourOutput.value=value.concat('%')"/>
-								<!-- Wird nicht mehr benötigt, da fließender Übergang
-								<abbr title="Wert, ab dem eine neue Farbe angezeigt wird">
-									<output id="colourOutput">0%</output>
-								</abbr>
-								-->
-							</td>				
-						</tr>
-						
-						<tr>
-							<td>
-								<div class="input-group">
-									<span class="input-group-addon">Block</span>
-									<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection"></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								Block-Auswahlmöglichkeiten hier
-							</td>
+						<tr ng-hide="numberOfViews > 0">
+							<td colspan="6" align="center">Keine Ansichten vorhanden!</td>
 						</tr>
 					</table>
-					
-					<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
-					<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');">Stadt anzeigen</button>
 				</div>
+			</div>
+			<button type="button" class="btn btn-default pull-right" ng-click="newView();">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
+			</button>
+		</div>
+		<br>
 	
+		<div class="panel panel-default" id="dimensions">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a href="javascript:;" data-toggle="collapse" data-parent="#dimensions" data-target="#collapseDimensions">
+						Ansicht bearbeiten: {{chosenView.name}}
+					</a>
+					
+					<!-- Die Bearbeitungs-Icons -->
+					<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
+						<!-- Reihenfolge der beiden "data-toggle"'s nicht verändern! Funktioniert nur so! -->
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteViewModal" data-toggle="tooltip" title="Löschen" >
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</button>
+						<button type="button" class="btn btn-default" data-toggle="tooltip" title="Download" ng-click="download()">
+							<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+						</button>
+						<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)">
+							<span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+						</button>
+					</div>
+				</h4>
+			</div>	
+			
+			<div id="collapseDimensions" class="panel-collapse collapse in">
+				<div class="panel-body">	
+					<div>
+						<table class="table">				
+							<tr>
+								<th>
+									<h4>Dimensionen des Gebäudes festlegen</h4>
+								</th>
+								<th>
+									<div class="checkbox">
+										<label><input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
+									</div>
+								</th>
+							</tr>
+							
+							<tr>
+								<td>
+									<div class="input-group">
+										<span class="input-group-addon">Name</span>
+										<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection"></select>
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>
+								<td>
+									?
+								</td>
+							</tr>
+							
+							<tr>
+								<td>
+									<div class="input-group">
+										<span class="input-group-addon">Fläche</span>
+										<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection"></select>
+										
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>
+								<td>
+									Doppelter Slider von Max bis Min (...|.......|...)
+								</td>
+							</tr>
+							
+							<tr>
+								<td>
+									<div class="input-group">
+										<span class="input-group-addon">Höhe</span>
+										<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection"></select>
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>	
+								<td>
+									Doppelter Slider von Max bis Min
+								</td>					
+							</tr>
+							
+							<tr>
+								<td>
+									<div class="input-group">
+										<span class="input-group-addon">Farbe</span>
+										<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection"></select>
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>	
+								<td>
+									<input class="bar" type="range" min="0" max="100" step="1" value="0" onchange="colourOutput.value=value.concat('%')"/>
+									<!-- Wird nicht mehr benötigt, da fließender Übergang
+									<abbr title="Wert, ab dem eine neue Farbe angezeigt wird">
+										<output id="colourOutput">0%</output>
+									</abbr>
+									-->
+								</td>				
+							</tr>
+							
+							<tr>
+								<td>
+									<div class="input-group">
+										<span class="input-group-addon">Block</span>
+										<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection"></select>
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>
+								<td>
+									Block-Auswahlmöglichkeiten hier
+								</td>
+							</tr>
+						</table>
+						
+						<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
+						<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');">Stadt anzeigen</button>
+					</div>
+		
+				</div>
 			</div>
 		</div>
-	</div>
-
-	<!-- Modal -->
-	<div id="deleteViewModal" class="modal fade" role="dialog">
-	  <div class="modal-dialog modal-sm">
-	    <!-- Modal content-->
-	    <div class="modal-content">
-	      <div class="modal-body">
-	        <p>Möchten Sie die Ansicht "{{chosenView.name}}" wirklich löschen?</p>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
-	      </div>
-	    </div>
-	  </div>
+	
+		<!-- Modal -->
+		<div id="deleteViewModal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-sm">
+			<!-- Modal content-->
+			<div class="modal-content">
+			<div class="modal-body">
+				<p>Möchten Sie die Ansicht "{{chosenView.name}}" wirklich löschen?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+			</div>
+			</div>
+		</div>
+		</div>
+	
 	</div>
 </div>
