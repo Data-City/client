@@ -30,20 +30,18 @@
           -->
         </tr>
       </table>
-        <!-- provisorisches Weiterlinken zu einem Datensatz -->
-      <div ng-show="chosenCollection" class="well">
-        <a href="#/views/{{getIdOfCollection(chosenCollection)}}">{{getIdOfCollection(chosenCollection)}}</a>
-      </div>
-      <!-- Upload-Formular -->
+      
       <button type="button" class="btn btn-default pull-right" ng-click="dataView.showUploadForm = !dataView.showUploadForm">
         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> CSV-Datei hochladen
       </button>
     </div>
   </div>
+  
+  <!-- Upload-Formular -->
   <div class="panel panel-default" ng-show="dataView.showUploadForm">
-  <div class="panel-heading">
-    <h3 class="panel-title">Datensatz hochladen</h3>
-  </div>
+    <div class="panel-heading">
+      <h3 class="panel-title">Datensatz hochladen</h3>
+    </div>
   <div class="panel-body">
     <!-- Wird nicht mehr als einmal benötigt, kann also hier komplett rein  
       <uploadformdatasourcefile></uploadformdatasourcefile>

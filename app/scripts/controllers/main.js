@@ -30,6 +30,9 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 				$scope.chosenCollection = response;
 			}
 			$log.info($scope.chosenCollection.data._id);
+			
+			//Direkte Weiterlung zum Datensatz
+			window.location="#/views/" + $scope.chosenCollection.data._id;
 		});
 	};
 
