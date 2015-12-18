@@ -5,7 +5,7 @@
 		<h3>Sie sind nicht eingeloggt!</h3>
 	</div>
 
-	<div ng-show="loggedIn">
+	<div ng-show="loggedIn" id="collapseAll" class="panel-collapse collapse in">
 		<a ng-href="#/data"><i class=" glyphicon glyphicon-chevron-left"></i>Einen Datensatz auswählen</a>
 	
 		<div class="alert alert-danger" role="alert" ng-hide="collID">
@@ -18,12 +18,9 @@
 		<div class="panel panel-default" id="views">		
 			<div class="panel-heading">
 				<h4 class="panel-title">
-					<a href="javascript:;" data-toggle="collapse" data-parent="#views" data-target="#collapseViews">
-						Ansichten
-					</a>
+					Ansichten
 				</h4>
 			</div>	
-			<div id="collapseViews" class="panel-collapse collapse in">
 				<div class="panel-body">
 					<table class="table">
 						<tr>
@@ -47,7 +44,6 @@
 						</tr>
 					</table>
 				</div>
-			</div>
 			<button type="button" class="btn btn-default pull-right" ng-click="newView();">
 				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Ansicht erstellen
 			</button>
@@ -57,9 +53,7 @@
 		<div class="panel panel-default" id="dimensions">
 			<div class="panel-heading">
 				<h4 class="panel-title">
-					<a href="javascript:;" data-toggle="collapse" data-parent="#dimensions" data-target="#collapseDimensions">
-						Ansicht bearbeiten: {{chosenView.name}}
-					</a>
+					Ansicht bearbeiten: {{chosenView.name}}
 					
 					<!-- Die Bearbeitungs-Icons -->
 					<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
@@ -77,11 +71,10 @@
 				</h4>
 			</div>	
 			
-			<div id="collapseDimensions" class="panel-collapse collapse in">
-				<div class="panel-body">	
-								<div class="input-group">
-				<span class="input-group-addon">Name</span>
-				<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
+			<div class="panel-body">	
+							<div class="input-group">
+			<span class="input-group-addon">Name</span>
+			<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
 			</div>
 					<div>
 						<table class="table">				
@@ -181,28 +174,34 @@
 						<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
 						<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');" onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
 					</div>
-		
 				</div>
-			</div>
 		</div>
 	
 		<!-- Modal -->
 		<div id="deleteViewModal" class="modal fade" role="dialog">
-		<div class="modal-dialog modal-sm">
-			<!-- Modal content-->
-			<div class="modal-content">
-			<div class="modal-body">
-				<p>Möchten Sie die Ansicht "{{chosenView.name}}" wirklich löschen?</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
-			</div>
+			<div class="modal-dialog modal-sm">
+				<!-- Modal content-->
+				<div class="modal-content">
+				<div class="modal-body">
+					<p>Möchten Sie die Ansicht "{{chosenView.name}}" wirklich löschen?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+				</div>
+				</div>
 			</div>
 		</div>
-		</div>
+	</div>
 	
+	<!-- Ein- und Ausklappen der Auswahlmöglichkeiten -->
+	<div class="text-center">
+		<a href="javascript:;" data-toggle="collapse" data-parent="#collapseAll" data-target="#collapseAll" ng-click="showEverything=!showEverything">
+			<span class="glyphicon glyphicon-chevron-up" aria-hidden="true" ng-hide="showEverything"></span>
+			<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"  ng-show="showEverything"></span>
+		</a>
 	</div>
 </div>
 
+<!-- Hier wird die Stadt rein gezeichnet -->
 <div id="WebGLCanvas">
