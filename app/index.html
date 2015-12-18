@@ -44,10 +44,8 @@
             <!-- Login/Logout oben rechts -->
             <ul class="nav navbar-nav navbar-right" ng-controller="LoginCtrl">
                 <li ng-show="loggedIn"><a href="#/admin">Eingeloggt als <i>{{username}}</i></a></li>
-                <li>
-                  <button type="submit" class="btn btn-link" ng-click="logout()" ng-show="loggedIn">
-                    <span class="glyphicon glyphicon-log-out"></span> Log out
-                  </button>
+                <li>                  
+                  <a ng-href="#/login" ng-show="loggedIn" ng-click="logout();"><span class="glyphicon glyphicon-log-in"></span> Logout</a>                  
                   <a ng-href="#/login" ng-hide="loggedIn"><span class="glyphicon glyphicon-log-in"></span> Login</a>                  
                 </li>
             </ul>
