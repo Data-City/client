@@ -73,6 +73,11 @@ angular
         controller: 'LoginCtrl',
         controllerAs: 'login'
       })
+      .when('/playground', {
+        templateUrl: 'views/playground.html',
+        controller: 'PlaygroundCtrl',
+        controllerAs: 'playground'
+      })
       .otherwise({
         redirectTo: '/data'
       });
