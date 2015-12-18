@@ -24,9 +24,9 @@ angular.module('datacityApp')
       this.lastModifiedBy = username;
       this.timeOfLastModification = this.timeOfCreation;
       this.dimensions = {
-        hoehe: null,
-        flaeche: null,
-        farbe: null,
+        height: null,
+        area: null,
+        color: null,
         district: null
       };
     }
