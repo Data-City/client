@@ -102,7 +102,7 @@ angular.module('datacityApp')
           var firstDocument = $scope.collection.data._embedded['rh:doc'][0];
           var attrs = [];
           for (var key in firstDocument) {
-            if (!key.startsWith('_', 0)) {
+            if (key[0] !== '_') {
               attrs.push(key);
             }
           }
