@@ -63,6 +63,8 @@ App.controller('LoginCtrl', function ($scope, $rootScope, $log, sharedLogin) {
 		//Führt den Service zum Login aus
 		sharedLogin.login(usernameInput, passwordInput);
         $scope.refreshRootScope();
+        //Direkte Weiterlung zu den Datensätzen
+		window.location="#/data";
 	};
 
 	$scope.logout = function () {
