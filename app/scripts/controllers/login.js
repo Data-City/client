@@ -62,15 +62,15 @@ App.controller('LoginCtrl', function ($scope, $rootScope, $log, sharedLogin) {
 	$scope.login = function (usernameInput, passwordInput) {
 		//Führt den Service zum Login aus
 		sharedLogin.login(usernameInput, passwordInput);
-        $scope.aktualisereRootScope();
+        $scope.refreshRootScope();
 	};
 
 	$scope.logout = function () {
         sharedLogin.logout();
-        $scope.aktualisereRootScope();
+        $scope.refreshRootScope();
 	};
     
-    $scope.aktualisereRootScope = function () {
+    $scope.refreshRootScope = function () {
         $rootScope.loggedIn = sharedLogin.getLoggedIn();
         $rootScope.username = sharedLogin.getUsername(); 
     };
