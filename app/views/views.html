@@ -73,7 +73,7 @@
 			
 			<div class="panel-body">	
 							<div class="input-group">
-			<span class="input-group-addon">Name</span>
+			<span class="input-group-addon">Name der Ansicht</span>
 			<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
 			</div>
 					<div>
@@ -91,7 +91,7 @@
 							
 							<tr>
 								<td>
-									<div class="input-group">
+									<div class="input-group" title="Hier kann jeder beliebige Datentyp sein">
 										<span class="input-group-addon">Name</span>
 										<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection"></select>
 									</div>
@@ -106,7 +106,7 @@
 							
 							<tr>
 								<td>
-									<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt">
+									<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern">
 										<span class="input-group-addon">Fläche</span>
 										<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection"></select>
 									</div>
@@ -121,7 +121,7 @@
 							
 							<tr>
 								<td>
-									<div class="input-group">
+									<div class="input-group" title="Nur sinnvoll mit Nummern">
 										<span class="input-group-addon">Höhe</span>
 										<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection"></select>
 									</div>
@@ -136,7 +136,7 @@
 							
 							<tr>
 								<td>
-									<div class="input-group">
+									<div class="input-group" title="Nur sinnvoll mit Nummern, da fließender Übergang von Blau zu weiß">
 										<span class="input-group-addon">Farbe</span>
 										<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection"></select>
 									</div>
@@ -157,7 +157,7 @@
 							
 							<tr>
 								<td>
-									<div class="input-group">
+									<div class="input-group" title="Später sollen hier alle Datentypen möglich sein. Vorerst aber nur Strings">
 										<span class="input-group-addon">Block</span>
 										<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection"></select>
 									</div>
@@ -178,18 +178,18 @@
 				</div>
 		</div>
 	
-		<!-- Modal -->
+		<!-- Modal: "Popup", ob eine Ansicht gelöscht werden soll -->
 		<div id="deleteViewModal" class="modal fade" role="dialog">
 			<div class="modal-dialog modal-sm">
 				<!-- Modal content-->
 				<div class="modal-content">
-				<div class="modal-body">
-					<p>Möchten Sie die Ansicht "{{chosenView.name}}" wirklich löschen?</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
-				</div>
+					<div class="modal-body">
+						<p>Möchten Sie die Ansicht "{{chosenView.name}}" wirklich löschen?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteView(chosenView)">Ja</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+					</div>
 				</div>
 			</div>
 		</div>

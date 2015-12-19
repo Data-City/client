@@ -17,7 +17,7 @@ var getCollections = function (database, username, password, $http, func) {
 		function (response) {
 			func(response.data._embedded['rh:coll']);
 		}
-		);
+	);
 };
 
 //Holt sich alle Ansichten
@@ -28,19 +28,17 @@ var getViews = function (database, collection, username, password, $http, func) 
 		function (response) {
 			func(response);
 		}
-		);
+	);
 };
 
 /**
  * Counts the elements in obj
  */
 
- //jshint: count is defined but never used
 var count = function (obj) {
 	return Object.keys(obj).length;
 };
 
-//jshint: is defined but never used
 var getViewsByColID = function (database, collection, colID, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
 
@@ -48,10 +46,9 @@ var getViewsByColID = function (database, collection, colID, username, password,
 		function (response) {
 			func(response);
 		}
-		);
+	);
 };
 
-//jshint: is defined but never used
 var getCollection = function (database, collection, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
 
@@ -59,10 +56,9 @@ var getCollection = function (database, collection, username, password, $http, f
 		function (response) {
 			func(response);
 		}
-		);
+	);
 };
 
-//jshint: is defined but never used
 var getNumberOfCollections = function (database, username, password, $http, func) {
 	getCollections(database, username, password, $http, function (response) {
 		var count = Object.keys(response).length;
@@ -70,7 +66,6 @@ var getNumberOfCollections = function (database, username, password, $http, func
 	});
 };
 
-//jshint: is defined but never used
 var getNumberOfViews = function (database, collection, username, password, $http, func) {
 	getViews(database, collection, username, password, $http, function (response) {
 		var count = Object.keys(response).length;
@@ -78,7 +73,6 @@ var getNumberOfViews = function (database, collection, username, password, $http
 	});
 };
 
-//jshint: is defined but never used
 var deleteView = function (doc, username, password, $http, func) {
 	var config = {headers:  {
         "If-Match": doc._etag.$oid}
@@ -90,7 +84,6 @@ var deleteView = function (doc, username, password, $http, func) {
 	});
 };
 
-//jshint: is defined but never used
 var updateView = function (view, username, password, $http, func) {
 	var config = {headers:  {
         "If-Match": view._etag.$oid}
@@ -110,5 +103,5 @@ var getURL = function (url, config, username, password, $http, func) {
 		function (response) {
 			func(response);
 		}
-		);
+	);
 };

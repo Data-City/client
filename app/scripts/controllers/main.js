@@ -22,7 +22,6 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 
 	//Auswählen eines neuen Datensatzes
 	$scope.setChosenCollection = function (id) {
-		// jshint: getcollection is not defined
 		getCollection(database, id, username, password, $http, function (response) {
 			if ($scope.chosenCollection === response) {
 				$scope.chosenCollection = null;
@@ -53,7 +52,6 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 	var username = sharedLogin.getUsername();
 	var password = sharedLogin.getPassword();
 
-	// jshint: getcollections is not defined
 	getCollections(database, username, password, $http, function (response) {
 		$scope.collections = response;
 		$scope.numberOfCollections = Object.keys(response).length;
