@@ -106,10 +106,9 @@
 							
 							<tr>
 								<td>
-									<div class="input-group">
+									<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt">
 										<span class="input-group-addon">Fläche</span>
 										<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection"></select>
-										
 									</div>
 								</td>
 								<td ng-show="selfName">
@@ -167,7 +166,8 @@
 									<input type="text" class="form-control">
 								</td>
 								<td>
-									Block-Auswahlmöglichkeiten hier
+									<input type="text" class="form-control" ng-model="partOfString" placeholder="Teil-String"
+									title="Dieser Teil-String sortiert alle Datensätze in Blöcke ein. Alle Unterschiede nach diesem String werden in einen eigenen Block eifenen Block platziert.">
 								</td>
 							</tr>
 						</table>
