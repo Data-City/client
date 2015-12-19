@@ -72,110 +72,113 @@
 			</div>	
 			
 			<div class="panel-body">	
-							<div class="input-group">
-			<span class="input-group-addon">Name der Ansicht</span>
-			<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
-			</div>
-					<div>
-						<table class="table">				
-							<tr>
-								<th>
-									<h4>Dimensionen des Gebäudes festlegen</h4>
-								</th>
-								<th>
-									<div class="checkbox">
-										<label><input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
-									</div>
-								</th>
-							</tr>
-							
-							<tr>
-								<td>
-									<div class="input-group" title="Hier kann jeder beliebige Datentyp sein">
-										<span class="input-group-addon">Name</span>
-										<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection"></select>
-									</div>
-								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>
-								<td>
-									?
-								</td>
-							</tr>
-							
-							<tr>
-								<td>
-									<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern">
-										<span class="input-group-addon">Fläche</span>
-										<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection"></select>
-									</div>
-								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>
-								<td>
-									Doppelter Slider von Max bis Min (...|.......|...)
-								</td>
-							</tr>
-							
-							<tr>
-								<td>
-									<div class="input-group" title="Nur sinnvoll mit Nummern">
-										<span class="input-group-addon">Höhe</span>
-										<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection"></select>
-									</div>
-								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>	
-								<td>
-									Doppelter Slider von Max bis Min
-								</td>					
-							</tr>
-							
-							<tr>
-								<td>
-									<div class="input-group" title="Nur sinnvoll mit Nummern, da fließender Übergang von Blau zu weiß">
-										<span class="input-group-addon">Farbe</span>
-										<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection"></select>
-									</div>
-								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>	
-								<td>
-									?
-									<!-- Wird nicht mehr benötigt, da fließender Übergang
-									<input class="bar" type="range" min="0" max="100" step="1" value="0" onchange="colourOutput.value=value.concat('%')"/>
-									<abbr title="Wert, ab dem eine neue Farbe angezeigt wird">
-										<output id="colourOutput">0%</output>
-									</abbr>
-									-->
-								</td>				
-							</tr>
-							
-							<tr>
-								<td>
-									<div class="input-group" title="Später sollen hier alle Datentypen möglich sein. Vorerst aber nur Strings">
-										<span class="input-group-addon">Block</span>
-										<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection"></select>
-									</div>
-								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>
-								<td>
-									<input type="text" class="form-control" ng-model="partOfString" placeholder="Teil-String"
-									title="Dieser Teil-String sortiert alle Datensätze in Blöcke ein. Alle Unterschiede nach diesem String werden in einen eigenen Block eifenen Block platziert.">
-								</td>
-							</tr>
-						</table>
-						
-						<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
-						<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');" onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
-					</div>
+				<div class="input-group">
+					<span class="input-group-addon">Name der Ansicht</span>
+					<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
 				</div>
+				<div>
+					<table class="table">				
+						<tr>
+							<th>
+								<h4>Dimensionen des Gebäudes festlegen</h4>
+							</th>
+							<th>
+								<div class="checkbox">
+									<label><input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
+								</div>
+							</th>
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group" title="Hier kann jeder beliebige Datentyp sein">
+									<span class="input-group-addon">Name</span>
+									<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection"></select>
+								</div>
+							</td>
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>
+							<td>
+								?
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern">
+									<span class="input-group-addon">Fläche</span>
+									<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection"></select>
+								</div>
+							</td>
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>
+							<td>
+								Doppelter Slider von Max bis Min (...|.......|...)
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group" title="Nur sinnvoll mit Nummern">
+									<span class="input-group-addon">Höhe</span>
+									<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection"></select>
+								</div>
+							</td>
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>	
+							<td>
+								Doppelter Slider von Max bis Min
+							</td>					
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group" title="Nur sinnvoll mit Nummern, da fließender Übergang von Blau zu weiß">
+									<span class="input-group-addon">Farbe</span>
+									<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection"></select>
+								</div>
+							</td>
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>	
+							<td>
+								?
+								<!-- Wird nicht mehr benötigt, da fließender Übergang
+								<input class="bar" type="range" min="0" max="100" step="1" value="0" onchange="colourOutput.value=value.concat('%')"/>
+								<abbr title="Wert, ab dem eine neue Farbe angezeigt wird">
+									<output id="colourOutput">0%</output>
+								</abbr>
+								-->
+							</td>				
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group" title="Später sollen hier alle Datentypen möglich sein. Vorerst aber nur Strings">
+									<span class="input-group-addon">Block</span>
+									<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr for attr in attributesOfCollection"></select>
+								</div>
+							</td>
+							<td ng-show="selfName">
+								<input type="text" class="form-control">
+							</td>
+							<td>
+								<input type="text" class="form-control" ng-model="partOfString" placeholder="Teil-String"
+								title="Dieser Teil-String sortiert alle Datensätze in Blöcke ein. Alle Unterschiede nach diesem String werden in einen eigenen Block eifenen Block platziert.">
+							</td>
+							<td>
+								<button type="submit" class="btn btn-default" ng-click="filter">Test-Button</button>
+							</td>
+						</tr>
+					</table>
+					
+					<button type="button" class="btn btn-default" ng-click="updateView();">Änderungen speichern</button>
+					<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');" onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
+				</div>
+			</div>
 		</div>
 	
 		<!-- Modal: "Popup", ob eine Ansicht gelöscht werden soll -->
