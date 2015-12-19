@@ -30,6 +30,7 @@ angular.module('datacityApp')
         district: null
       };
     }
+    
     $scope.collection = null;
     $scope.collID = null;
     $scope.views = null;
