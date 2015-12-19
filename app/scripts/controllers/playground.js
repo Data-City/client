@@ -21,7 +21,7 @@ angular.module('datacityApp')
     var url = '/prelife/beispiel';
     
     $scope.results = null;
-    $scope.attributes = [];
+    $scope.attributes = [    ];
     
     var func = function(response) {
       $log.info(response);
