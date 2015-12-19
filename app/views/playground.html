@@ -1,1 +1,13 @@
-<p>This is the playground view.</p>
+<div>
+	<h3>Ergebnisse</h3>
+	<table class="table">
+		<thead>
+			<tr>
+				<th ng-repeat="attr in attributes">{{attr}}</th>
+			</tr>
+		</thead>
+		<tr ng-repeat="result in results">
+			<td ng-repeat="attr in attributes">{{result[attr]}}</td>
+		</tr>
+	</table>
+</div>
