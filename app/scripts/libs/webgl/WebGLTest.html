@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Boxes für R+V</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+	</head>
+
+	<body>
+		<p id="demo"></p>
+		<script src="js/three.min.js"></script>
+		<script src="js/TrackballControls.js"></script>
+		<script src='js/dat.gui.min.js'></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/Detector.js"></script>
+		
+		<script src="gebaeude.js"></script>
+		<script src="Stadtteil.js"></script>
+		<script src="gui.js"></script>
+		<script src="webglDaten.js"></script>
+		<script src="ClientWebGL.js"></script>
+		<script src="mouse.js"></script>
+		<script>
+		
+		
+		var camera, scene, renderer, controls, control, raycaster, gui;
+		var WebGlBoxArray = [];
+		var GebaeudeArrayWieBoxen = [];
+		var mouse = new THREE.Vector2(), INTERSECTED, SELECTED;
+			
+			// ***************************** Ende Variablen, Anfang Skript ***********************************
+			
+			//spuckt eine Fehlermeldung aus, falls der Browser WebGL nicht unterstuetzt
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			
+			
+			init();
+			
+			window.addEventListener( 'resize', function () {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}, false );
+			
+			animate();
+			
+			// **************************** Ende Skript, Anfang Methoden **************************************
+			
+			/*
+			Initialisiert das Bild, d.h. es zeichnet, bestimmt Kameraposition, Lichtquellen, malt Boxen
+			*/
+			function init() {
+				// Erstelle das Menue oben rechts
+				if( Detector.webgl ){
+					setMenue(getLegende(), gui);
+				}
+
+				// Erstelle einen neuen Renderer
+				renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor(0x222222);
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+							
+				//Hinzufügen von dem renderer-Element zu unserem HTML-Dokument
+				document.body.appendChild( renderer.domElement );
+
+				scene = new THREE.Scene();
+
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+				camera.position.set( 0, 10, 30 );
+							
+				//Lichtquellen setzen
+				setLight(scene);
+							
+				var district = getDaten();
+							
+				// diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
+				setzeBoxen(district);
+							
+				//zeichnen nun auch die Stadt
+				drawStadt(district, scene, camera, WebGlBoxArray, GebaeudeArrayWieBoxen);
+							
+				raycaster = new THREE.Raycaster();
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+							
+				//Zum Zoomen, Drehen, Verschieben
+				setControls(district.breite);
+			}
+			
+	
+			/*
+			schaut regelmäßig, ob was passiert und updatet und zeichnet neu
+			*/
+			function animate() {
+				// schaut, ob was passiert ist
+				requestAnimationFrame( animate );
+				// update
+				control.update();
+				controls.update();
+				//malt neu
+				render();
+			}
+
+
+
+
+		</script>
+
+	</body>
+
+</html>

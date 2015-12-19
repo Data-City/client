@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<title>Boxes für R+V</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+	</head>
+
+	<body>
+		<p id="demo"></p>
+		<p id="blub"></p>
+		<script src="js/three.min.js"></script>
+		<script src="js/TrackballControls.js"></script>
+		<script src='js/dat.gui.min.js'></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/Detector.js"></script>
+		
+		<script src="gebaeude.js"></script>
+		<script src="Stadtteil.js"></script>
+		<script src="gui.js"></script>
+		<script src="beispiel.js"> //hierdrin habe ich die abzubildenden Dateien abgespeichert zum Testen und habe es nicht hochgeladen. Aber die Dateien habt ihr ja
+			</script> 
+		<script src="ClientWebGL.js"></script>
+		<script src="mouse.js"></script>
+		<script>
+			//kriegt die ganzen Daten, die abzubilden sind, kriegt die Zuordnungen und kriegt den Namen vom Div-Element, mit dem ich nichts anfangen kann...
+			drawCity(dieDatei(), dieZuordnungen(), "stadt");
+			//die Methode "dieDatei()" und die Methode "dieZuordnungen" sind Getter für die Daten und die Zuordnungen, 
+			// also die geben mir die JSON-Objekte, die ihr auch habt. Diese beiden Methoden koennt ihr aber nirgends aufrufen, denn sie sind in beispiel.js drin....
+			//aber die JSON-Objekte habt ihr ja auch
+		</script>
+
+	</body>
+
+</html>
