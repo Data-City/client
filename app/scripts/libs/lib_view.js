@@ -137,8 +137,12 @@ var getProperties = function (row) {
 	var attrs = [];
     for (var key in row) {
         if (key[0] !== '_') {
-          //$log.info("Key: " + key + "\tValue: " + row[key] +  "\tType: " + getType(row[key]));
-          attrs[key] = getType(row[key]);
+			var info = {
+				'name': key,
+				'type': getType(row[key]),
+			}
+			attrs.push(info);
         }
       }
+return attrs;
 };

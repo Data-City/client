@@ -1,13 +1,15 @@
-<div>
+<div ng-app="datacityApp" ng-controller="PlaygroundCtrl" class="container">
 	<h3>Ergebnisse</h3>
 	<table class="table">
 		<thead>
 			<tr>
-				<th ng-repeat="attr in attributes">{{attr}}</th>
+				<th ng-repeat="attr in attributes">{{attr.name}} ({{attr.type}})</th>
 			</tr>
 		</thead>
-		<tr ng-repeat="result in results">
-			<td ng-repeat="attr in attributes">{{result[attr]}}</td>
-		</tr>
+		<tbody>
+			<tr ng-repeat="result in results">
+				<td ng-repeat="attr in attributes">{{result[attr.name]}}</td>
+				</tr>
+		</tbody>
 	</table>
 </div>

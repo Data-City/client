@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint -W117 */
 /**
  * @ngdoc function
  * @name datacityApp.controller:PlaygroundCtrl
@@ -21,30 +21,22 @@ angular.module('datacityApp')
     var url = '/prelife/beispiel';
 
     $scope.results = null;
-    $scope.attributes = [];
+    $scope.attributes = null;
 
     var func = function (response) {
-      //$log.info(response);
-      //$log.info(response.data._embedded['rh:doc']);
       $scope.results = response.data._embedded['rh:doc'];
-
-      var allAttributes = Object.keys($scope.results[0]);
-
-      for (var attr in allAttributes) {
-        if (attr.charAt(0) !== '_') {
-          $scope.attributes.push(attr);
-        }
-      }
-
+      $scope.attributes = getProperties($scope.results[0]);
+      $log.info(response.data._embedded);
     };
 
     var config = {
+      /*
       filter: {
         'Package': {
           '$regex': '(?i)^de.ruv.baustein*'
         }
-      }
+      }*/
     };
-    /*jshint -W117 */
+    
     getURL(url, config, username, password, $http, func);
   });
