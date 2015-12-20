@@ -9,45 +9,6 @@
  */
 
 var App = angular.module('datacityApp');
-
-//Der Service hilft, um die Logindaten über alle Controller hinweg zu realisieren
-App.service('sharedLogin', function() {
-    
-    // Aus Testzwecken ist man immer eingeloggt
-	var username = "a";
-    var password = "a";
-	// */
-    
-    /* SPÄTER WIEDER REIN NEHMEN!!!
-    //var username;
-    //var password;
-    !!!!!!!!!!!*/
-    
-    var loggedIn = false;
-
-    return {
-        getUsername: function() {
-            return username;
-        },
-        getPassword: function() {
-            return password;
-        },
-		login: function(usernameInput, passwordInput) {
-            username = usernameInput;
-            password = passwordInput;
-            loggedIn = true;
-        },
-		logout: function() {
-            username = "";
-			password = "";
-			loggedIn = false;
-        },
-		getLoggedIn: function() {
-			return loggedIn;
-		}
-    };
-});
-
 App.controller('LoginCtrl', function ($scope, $rootScope, $log, sharedLogin) {
     
     /* SPÄTER WIEDER REIN NEHMEN!!!
