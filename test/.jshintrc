@@ -9,7 +9,7 @@
   "noarg": true,
   "node": true,
   "strict": true,
-  //"undef": true,
+  "undef": true,
   //"unused": true,
   "globals": {
     "angular": false,
