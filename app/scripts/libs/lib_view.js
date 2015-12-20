@@ -108,3 +108,37 @@ var getURL = function (url, config, username, password, $http, func) {
 		}
 	);
 };
+
+/**
+ * Gibt es Datentyp des uebergebenen Datums zurueck
+ * 
+ * Beispiele:
+ * "w"	=>	string
+ * 3	=>	number
+ * 3.14	=>	number
+ * null	=>	null
+ * ""	=>	null
+ * true	=>	boolean
+ */
+var getType = function (thing) {
+	if(thing === null) {
+		return "null";
+	} else if (thing === "") {
+		return "null";
+	}
+	return typeof(thing);
+};
+
+
+/**
+ * Erzeugt ein Array aller Attribute, die nicht mit "_" beginnen und ihrem Typ
+ */
+var getProperties = function (row) {
+	var attrs = [];
+    for (var key in row) {
+        if (key[0] !== '_') {
+          //$log.info("Key: " + key + "\tValue: " + row[key] +  "\tType: " + getType(row[key]));
+          attrs[key] = getType(row[key]);
+        }
+      }
+};

@@ -26,5 +26,15 @@ describe('lib_view Tests', function () {
     obj.a.push("aa");
     expect(count(obj)).toBe(3);
   });
+  
+  it('should return the right datatype', function() {
+    expect(getType("Hello World")).toBe("string");
+    expect(getType(3)).toBe("number");
+    expect(getType(3.1415)).toBe("number");
+    expect(getType(true)).toBe("boolean");
+    expect(getType([])).toBe("object");
+    expect(getType(null)).toBe("null");
+    expect(getType("")).toBe("null");    
+  });
 
 });

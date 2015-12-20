@@ -24,13 +24,13 @@ angular.module('datacityApp')
     $scope.attributes = [];
 
     var func = function (response) {
-      $log.info(response);
+      //$log.info(response);
       //$log.info(response.data._embedded['rh:doc']);
       $scope.results = response.data._embedded['rh:doc'];
 
       var allAttributes = Object.keys($scope.results[0]);
 
-      for (attr in allAttributes) {
+      for (var attr in allAttributes) {
         if (attr.charAt(0) !== '_') {
           $scope.attributes.push(attr);
         }
@@ -45,6 +45,6 @@ angular.module('datacityApp')
         }
       }
     };
-
+    /*jshint -W117 */
     getURL(url, config, username, password, $http, func);
   });

@@ -30,7 +30,7 @@ angular.module('datacityApp')
         district: null
       };
     }
-    
+
     $scope.collection = null;
     $scope.collID = null;
     $scope.views = null;
@@ -38,12 +38,12 @@ angular.module('datacityApp')
     $scope.chosenView = null;
     $scope.collection = null;
     $scope.attributesOfCollection = null;
-    
-    $scope.setDataForCity = function(collection, view, divID) {
+
+    $scope.setDataForCity = function (collection, view, divID) {
       $scope.collection = collection;
       $scope.view = view;
       $scope.divID = divID;
-      
+
       drawCity(collection, view, divID);
     };
 
@@ -88,6 +88,22 @@ angular.module('datacityApp')
       });
     };
 
+    var getType = function (thing) {
+      return typeof(thing);
+    };
+
+    var getProperties = function (row) {
+      var attrs = [];
+      for (var key in row) {
+        if (key[0] !== '_') {
+          $log.info("Key: " + key + "\tValue: " + row[key] +  "\tType: " + getType(row[key]));
+          attrs[key] = getType(row[key]);
+        }
+      }
+      $log.info("Properties:");
+      $log.info(attrs);
+    };
+
     //Eine Ansicht auswählen
     $scope.setChosenView = function (view) {
       if ($scope.chosenView === view) {
@@ -107,6 +123,9 @@ angular.module('datacityApp')
               attrs.push(key);
             }
           }
+
+          getProperties(firstDocument);
+
           $scope.attributesOfCollection = attrs;
           $log.info(attrs);
         });
