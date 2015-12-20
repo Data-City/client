@@ -6,18 +6,27 @@ describe('Controller: ViewsCtrl', function () {
   beforeEach(module('datacityApp'));
 
   var ViewsCtrl,
-    scope;
+    $scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
+    $scope = $rootScope.$new();
     ViewsCtrl = $controller('ViewsCtrl', {
-      $scope: scope
+      $scope: $scope
       // place here mocked dependencies
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    //expect(ViewsCtrl.awesomeThings.length).toBe(3);
+  it('should format a jstime nicely', function () {
+    var jstime = 1450611200996;
+    expect($scope.jstimeToFormatedTime(jstime)).toBe("20.12.2015 12:33:20");
+
   });
+  /*
+    //Schönere Darstellung der Zeit
+    $scope.jstimeToFormatedTime = function (jstime) {
+      var d = new Date(jstime);
+      return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    };
+    */
 });
