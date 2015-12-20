@@ -38,8 +38,51 @@ function getLegende(){
 	return legende;
 }
 
+function ersteDatei(){
+	var toReturn =  {"data" : { "_embedded" : { "rh:doc" : [ 
+		{"Package" : "geb1" , "Klassen" :50  , "Methoden" :5000  , "Zeilen" :73  , "Verzweigungen" : "" },
+		{"Package" : "geb2" , "Klassen" :10  , "Methoden" :20  , "Zeilen" :186  , "Verzweigungen" : "" },
+		{"Package" : "geb3" , "Klassen" :30  , "Methoden" :50  , "Zeilen" :45  , "Verzweigungen" : "" },
+		{"Package" : "geb4" , "Klassen" :50  , "Methoden" :30  , "Zeilen" : 156 , "Verzweigungen" : "" },
+		{"Package" : "geb5" , "Klassen" :10  , "Methoden" :10  , "Zeilen" : 67 , "Verzweigungen" : "" },
+		{"Package" : "geb6" , "Klassen" :10  , "Methoden" :10  , "Zeilen" : 54 , "Verzweigungen" : "" },
+		{"Package" : "geb7" , "Klassen" :20  , "Methoden" :20  , "Zeilen" : 31 , "Verzweigungen" : "" },
+		{"Package" : "geb8" , "Klassen" :20  , "Methoden" :10  , "Zeilen" : 7 , "Verzweigungen" : "" },
+		{"Package" : "geb9" , "Klassen" :50  , "Methoden" :30  , "Zeilen" :76  , "Verzweigungen" : "" },
+		{"Package" : "geb10" , "Klassen": 8  , "Methoden" :28 , "Zeilen" :12 , "Verzweigungen" : "" }]}}
+	};
+	return toReturn;
+}
 
+function zweiteDatei(){
+	var toReturn = {"data" : { "_embedded" : { "rh:doc" : [
+		{"Package" : "geb11" , "Klassen" :55  , "Methoden" :19  , "Zeilen" :45  , "Verzweigungen" : "" },
+		{"Package" : "geb12" , "Klassen" :51  , "Methoden" :10  , "Zeilen" :48  , "Verzweigungen" : "" },
+		{"Package" : "geb13" , "Klassen" :35  , "Methoden" :67  , "Zeilen" : 15 , "Verzweigungen" : "" },
+		{"Package" : "geb14" , "Klassen" :23  , "Methoden" :7  , "Zeilen" :68  , "Verzweigungen" : "" },
+		{"Package" : "geb15" , "Klassen" :12  , "Methoden" :32  , "Zeilen" : 32 , "Verzweigungen" : "" },
+		{"Package" : "geb16" , "Klassen" :12  , "Methoden" :43  , "Zeilen" : 76 , "Verzweigungen" : "" },
+		{"Package" : "geb17" , "Klassen" :7  , "Methoden" : 23 , "Zeilen" : 100 , "Verzweigungen" : "" },
+		{"Package" : "geb18" , "Klassen" :5  , "Methoden" : 12 , "Zeilen" : 109 , "Verzweigungen" : "" },
+		{"Package" : "geb19" , "Klassen" :2  , "Methoden" : 65 , "Zeilen" :2  , "Verzweigungen" : "" },
+		{"Package" : "geb20" , "Klassen" :2  , "Methoden" : 10 , "Zeilen" :73  , "Verzweigungen" : "" }
+		]}}
+	};
+	return toReturn;
+}
 
+function beispielZuordnungen(){
+	var zuordnungen = { 
+		"dimensions" : { 
+			"hoehe" : "Methoden" , 
+			"flaeche" : "Klassen" , 
+			"farbe" : "Zeilen" , 
+			"district" : "Verzweigungen" , 
+			"name" : "Package"
+		}
+	};
+	return zuordnungen;
+}
 
 
 
