@@ -1,5 +1,5 @@
 'use strict';
-
+/* jshint strict: false, -W117 */
 describe('lib_view Tests', function () {
 
   // load the directive's module
