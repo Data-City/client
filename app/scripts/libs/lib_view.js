@@ -36,6 +36,9 @@ var getViews = function (database, collection, username, password, $http, func) 
  */
 
 var count = function (obj) {
+	if(obj === null) {
+		return 0;
+	}
 	return Object.keys(obj).length;
 };
 
