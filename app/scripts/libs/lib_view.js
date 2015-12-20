@@ -99,14 +99,22 @@ var updateView = function (view, username, password, $http, func) {
 };
 
 //Holt beliebige URL ab Base URL, Beispiel /database/collection
-var getURL = function (url, config, username, password, $http, func) {
+var getURL = function (url, parameters, username, password, $http, func) {
 	setAuthHeader(username, password, $http);
-
+	/*
 	$http.get(BASEURL + url, config).then(
 		function (response) {
 			func(response);
 		}
 	);
+	*/
+	var req = {
+		method: 'GET',
+		url: BASEURL + url,
+		params: parameters,
+	}
+	
+	$http(req).then(func);
 };
 
 /**

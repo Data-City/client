@@ -28,14 +28,20 @@ angular.module('datacityApp')
       $scope.attributes = getProperties($scope.results[0]);
       $log.info(response.data._embedded);
     };
-
     var config = {
-      /*
+      keys: {
+        'Zeilen': 1,
+      },    /*  
       filter: {
+        /*
         'Package': {
           '$regex': '(?i)^de.ruv.baustein*'
         }
-      }*/
+        
+        'Zeilen': {
+          '$gt': 30,
+        }
+        ,*/
     };
     
     getURL(url, config, username, password, $http, func);
