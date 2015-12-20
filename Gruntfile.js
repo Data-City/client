@@ -8,6 +8,8 @@
 // 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
+  // jsdoc
+  grunt.loadNpmTasks('grunt-jsdoc');
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
@@ -27,6 +29,14 @@ module.exports = function (grunt) {
 
   // Define the configuration for all the tasks
   grunt.initConfig({
+    jsdoc : {
+        dist : {
+            src: ['app/scripts/{,*/}*.js', 'test/{,*/}*.js'],
+            options: {
+                destination: 'doc'
+            }
+        }
+    },
 
     // Project settings
     yeoman: appConfig,
@@ -438,7 +448,8 @@ module.exports = function (grunt) {
       'concurrent:server',
       'postcss:server',
       'connect:livereload',
-      'watch'
+      'jsdoc',
+      'watch',
     ]);
   });
 
@@ -478,6 +489,7 @@ module.exports = function (grunt) {
     'newer:jshint',
     'newer:jscs',
     'test',
-    'build'
+    'build',
+    'jsdoc'
   ]);
 };
