@@ -79,9 +79,10 @@ angular.module('datacityApp')
         $scope.chosenView = null;
         $scope.getViews(function (views) {
           for (var arrayIndex in views) {
-            $log.info(views[arrayIndex]);
             if (views[arrayIndex]._id === id) {
               $scope.setChosenView(views[arrayIndex]);
+              views[arrayIndex].lastModifiedBy = username;
+              views[arrayIndex].timeOfLastModification = Date.now();
             }
           }
         });
