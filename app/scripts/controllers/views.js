@@ -201,4 +201,19 @@ angular.module('datacityApp')
       var d = new Date(jstime);
       return d.toLocaleDateString() + " " + d.toLocaleTimeString();
     };
+    
+    $scope.downloadJSON = function () {
+        var data = $scope.chosenView;
+        var json = JSON.stringify(data);
+        var blob = new Blob([json], {type: "application/json"});
+        var url  = URL.createObjectURL(blob);
+
+        var a = document.createElement('a');
+        a.download    = "chosenView.json";
+        a.href        = url;
+        a.textContent = "chosenView.json";
+
+        document.getElementById('content').appendChild(a);
+    };
+    
   });
