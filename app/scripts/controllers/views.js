@@ -88,10 +88,6 @@ angular.module('datacityApp')
       });
     };
 
-    var getType = function (thing) {
-      return typeof(thing);
-    };
-
     var getProperties = function (row) {
       var attrs = [];
       for (var key in row) {
@@ -101,8 +97,24 @@ angular.module('datacityApp')
         }
       }
       $log.info("Properties:");
-      $log.info(attrs);
+      $log.info(attrs[key]);
     };
+
+    var getType = function (thing) {
+      return typeof(thing);
+    };
+    
+    $scope.validate = function (attribute, typeToValidate) {          
+      getCollection("prelife", $scope.chosenView.collID, username, password, $http, function (resp) {
+        if(typeof $scope.collection.data._embedded['rh:doc'][0][attribute] === typeToValidate){
+          //console.log("Eingabewert OK");
+        }else{
+          //console.log("Eingabewert ist nicht OK");
+          window.alert("In dieses Feld dürfen nur Eingaben vom Typ " + typeToValidate);
+        }
+      });
+    };
+
 
     //Eine Ansicht auswählen
     $scope.setChosenView = function (view) {
@@ -127,7 +139,7 @@ angular.module('datacityApp')
           getProperties(firstDocument);
 
           $scope.attributesOfCollection = attrs;
-          $log.info(attrs);
+          $log.info("Attributes of Collection: " + attrs);
         });
 
       }

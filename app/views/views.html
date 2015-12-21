@@ -91,7 +91,7 @@
 						
 						<tr>
 							<td>
-								<div class="input-group" title="Hier kann jeder beliebige Datentyp sein">
+								<div class="input-group" title="Hier kann jeder beliebige Datentyp sein.">
 									<span class="input-group-addon">Name</span>
 									<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr for attr in attributesOfCollection"></select>
 								</div>
@@ -106,9 +106,10 @@
 						
 						<tr>
 							<td>
-								<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern">
+								<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern als Eingabe.">
 									<span class="input-group-addon">Fläche</span>
-									<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection"></select>
+									<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr for attr in attributesOfCollection"
+                                    ng-change="validate(chosenView.dimensions.flaeche, 'number')"></select>
 								</div>
 							</td>
 							<td ng-show="selfName">
@@ -121,9 +122,10 @@
 						
 						<tr>
 							<td>
-								<div class="input-group" title="Nur sinnvoll mit Nummern">
+								<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe.">
 									<span class="input-group-addon">Höhe</span>
-									<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection"></select>
+									<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr for attr in attributesOfCollection"
+                                    ng-change="validate(chosenView.dimensions.hoehe, 'number')"></select>
 								</div>
 							</td>
 							<td ng-show="selfName">
@@ -136,9 +138,10 @@
 						
 						<tr>
 							<td>
-								<div class="input-group" title="Nur sinnvoll mit Nummern, da fließender Übergang von Blau zu weiß">
+								<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe, da fließender Übergang von Blau zu weiß">
 									<span class="input-group-addon">Farbe</span>
-									<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection"></select>
+									<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr for attr in attributesOfCollection"
+                                    ng-change="validate(chosenView.dimensions.farbe, 'number')"></select>
 								</div>
 							</td>
 							<td ng-show="selfName">
