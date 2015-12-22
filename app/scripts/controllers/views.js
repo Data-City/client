@@ -123,12 +123,14 @@ angular.module('datacityApp')
      * @param attribute Name der Spalte
      * @param typeToValidate String des Typs, der die Spalte haben soll (string, number, ...)
      */
-    $scope.validate = function (attribute, typeToValidate) {          
-        if($scope.getFirstValidEntry(attribute) === typeToValidate){
-          //console.log("Eingabewert OK");
+    $scope.validate = function (attribute, typeToValidate) {     
+        var type = $scope.getFirstValidEntry(attribute);
+        
+        if(type === typeToValidate){
+            //console.log("Eingabewert OK");
         }else{
-          //console.log("Eingabewert ist nicht OK");
-          window.alert("In dieses Feld dürfen nur Eingaben vom Typ " + typeToValidate);
+            //console.log("Eingabewert ist nicht OK");
+            window.alert("In dieses Feld dürfen nur Eingaben vom Typ " + typeToValidate);
         }
     };
     
@@ -139,20 +141,15 @@ angular.module('datacityApp')
      * @return: Rückgabewert des ersten Eintrags
      */
     $scope.getFirstValidEntry = function (attribute) {
-        console.log("Attribute: " + attribute);
-        getCollection("prelife", $scope.chosenView.collID, username, password, $http, function (resp) {
-            var data = $scope.collection.data;
-            //console.log(data);                
-            for (var key in data._embedded['rh:doc']) {
-                if (data._embedded['rh:doc'][key][attribute] !== "") {
-                    //console.log("Erster richtiger Eintrag: " + data._embedded['rh:doc'][key][attribute]);
-                    //console.log("Vom Typ: " + typeof data._embedded['rh:doc'][key][attribute]);
-                    return data._embedded['rh:doc'][key][attribute];
-                }
+        var data = $scope.collection.data;
+              
+        for (var key in data._embedded['rh:doc']) {
+            if (data._embedded['rh:doc'][key][attribute] !== "") {
+                return typeof data._embedded['rh:doc'][key][attribute];
             }
-            window.alert("Die ausgewählte Spalte ist leer!");
-            return null;
-        });
+        }
+        window.alert("Die ausgewählte Spalte ist leer!");
+        return null;
     };
     
     /**
