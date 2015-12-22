@@ -213,7 +213,7 @@ angular.module('datacityApp')
         a.href        = url;
         a.textContent = "chosenView.json";
 
-        document.getElementById('content').appendChild(a);
+        document.getElementById('jsonDownload').appendChild(a);
     };
     
   });
