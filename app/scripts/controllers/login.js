@@ -20,6 +20,12 @@ App.controller('LoginCtrl', function ($scope, $rootScope, $log, sharedLogin) {
     $rootScope.loggedIn = true;
     $rootScope.username = "a";    
 	
+    /**
+     * Loggt den Nutzer ein, falls die Daten korrekt sind
+     * 
+     * @param usernameInput Der eingegebene Benutzername
+     * @param passwordInput Das eingegebene Passwort
+     */
 	$scope.login = function (usernameInput, passwordInput) {
 		//Führt den Service zum Login aus
 		sharedLogin.login(usernameInput, passwordInput);
@@ -28,11 +34,17 @@ App.controller('LoginCtrl', function ($scope, $rootScope, $log, sharedLogin) {
 		window.location="#/data";
 	};
 
+    /**
+     * Loggt den Nutzer aus
+     */
 	$scope.logout = function () {
         sharedLogin.logout();
         $scope.refreshRootScope();
 	};
     
+    /**
+     * Aktualisiert die Anzeige
+     */
     $scope.refreshRootScope = function () {
         $rootScope.loggedIn = sharedLogin.getLoggedIn();
         $rootScope.username = sharedLogin.getUsername(); 

@@ -15,8 +15,10 @@
 angular.module('datacityApp')
   .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin) {
 
-    //Konstruktor für eine Ansicht
-    function View() {
+    /**
+     *  Konstruktor für eine Ansicht
+     */
+     function View() {
       this.name = "Neue Ansicht";
       this.collID = $scope.collID;
       this.creator = username;
@@ -39,6 +41,9 @@ angular.module('datacityApp')
     $scope.collection = null;
     $scope.attributesOfCollection = null;
 
+    /**
+     * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
+     */
     $scope.setDataForCity = function (collection, view, divID) {
       $scope.collection = collection;
       $scope.view = view;
@@ -46,11 +51,6 @@ angular.module('datacityApp')
 
       drawCity(collection, view, divID);
     };
-
-    /* Funktioniert nicht, weil die rootScope nur im MainCtrl existiert
-    var username = $rootScope.username;
-    var password = $rootScope.password;
-    */
     
     //Standardeinstellungen
     var username = sharedLogin.getUsername();
@@ -59,7 +59,9 @@ angular.module('datacityApp')
     var collection = "ansichten";
     var baseurl = "https://pegenau.com:16392";
 
-    //Die Ansichten ausgeben
+    /**
+     * Gibt die Ansichten aus
+     */
     $scope.getViews = function (func) {
       getViews(database, collection, username, password, $http, function (response) {
         $scope.views = response.data._embedded['rh:doc'];
@@ -72,7 +74,10 @@ angular.module('datacityApp')
       });
     };
 
-    //Eine Ansicht aktualisieren
+    /**
+     * Aktualisiert die Ansicht
+     * Wird für die live-Änderung der Namensänderung einer Ansicht benötigt
+     */
     $scope.updateView = function () {
       updateView($scope.chosenView, username, password, $http, function (response) {
         var id = $scope.chosenView._id;
@@ -89,6 +94,9 @@ angular.module('datacityApp')
       });
     };
 
+    /** 
+     * @row den Namen der Spalte
+     */
     var getProperties = function (row) {
       var attrs = [];
       for (var key in row) {
@@ -100,11 +108,21 @@ angular.module('datacityApp')
       $log.info("Properties:");
       $log.info(attrs[key]);
     };
-
+    
+    /**
+     * @param thing Das übergebene Objekt
+     * @return Den Typen vom Objekt/Parameter
+     */
     var getType = function (thing) {
       return typeof(thing);
     };
     
+    /**
+     * Gibt eine Warnung aus, falls die Spalte einen anderen Datentyp hat als sie haben sollte
+     * 
+     * @param attribute Name der Spalte
+     * @param typeToValidate String des Typs, der die Spalte haben soll (string, number, ...)
+     */
     $scope.validate = function (attribute, typeToValidate) {          
         if($scope.getFirstValidEntry(attribute) === typeToValidate){
           //console.log("Eingabewert OK");
@@ -117,7 +135,8 @@ angular.module('datacityApp')
     /**
      * Sucht den ersten Eintrag in der Spalte und gibt dessen Typ zurück
      * 
-     * @attribute: Name der Spalte
+     * @param attribute: Name der Spalte
+     * @return: Rückgabewert des ersten Eintrags
      */
     $scope.getFirstValidEntry = function (attribute) {
         console.log("Attribute: " + attribute);
@@ -135,8 +154,10 @@ angular.module('datacityApp')
             return null;
         });
     };
-
-    //Eine Ansicht auswählen
+    
+    /**
+     * Wählt bei Klick auf eine Ansicht diese aus
+     */
     $scope.setChosenView = function (view) {
       if ($scope.chosenView === view) {
         $scope.chosenView = null;
@@ -148,15 +169,15 @@ angular.module('datacityApp')
           $scope.collection = resp;
           $log.info($scope.collection);
 
-          var firstDocument = $scope.collection.data._embedded['rh:doc'][0];
+          var firstEntry = $scope.collection.data._embedded['rh:doc'][0];
           var attrs = [];
-          for (var key in firstDocument) {
+          for (var key in firstEntry) {
             if (key[0] !== '_') {
               attrs.push(key);
             }
           }
 
-          getProperties(firstDocument);
+          getProperties(firstEntry);
 
           $scope.attributesOfCollection = attrs;
           $log.info("Attributes of Collection: " + attrs);
@@ -166,13 +187,20 @@ angular.module('datacityApp')
       $log.info($scope.chosenView);
     };
 
-    // Initialisierung
+    /**
+     * Initialisierung
+     */
     if ($routeParams.collID) {
       $scope.collID = $routeParams.collID;
       $scope.getViews();
     }
 
-    //Eine Ansicht löschen
+    /**
+     * löscht eine Ansicht
+     * 
+     * @param view Die Ansicht, die gelöscht werden soll
+     */
+
     $scope.deleteView = function (view) {
       deleteView(view, username, password, $http, function (response) {
         console.log(response);
@@ -181,7 +209,11 @@ angular.module('datacityApp')
       $scope.chosenView = null;
     };
 
-    //Eine neue Sicht erstellen
+    /**
+     * Erstellt eine neue Ansicht zu einem Datensatz
+     * 
+     * @param collID Die ID des Datensatzes, zu dem die Ansicht hinzugefügt werden soll
+     */
     $scope.newView = function (collID) {
       var newView = new View();
       $log.info(newView);
@@ -193,7 +225,10 @@ angular.module('datacityApp')
       $scope.setChosenView(newView);
     };
 
-    //Konsturktor für eine Kopie einer neuen Ansicht
+    /**
+     * Konsturktor für eine Kopie einer neuen Ansicht
+     * Übernimmt die ausgewählten Dimensionsn der alten Ansicht, jedoch mit anderen Namen, Ersteller, Datum etc
+     */
     function ViewCopy(collID) {
       this.name = collID.name + " (Kopie)";
       this.collID = $scope.collID;
@@ -204,7 +239,11 @@ angular.module('datacityApp')
       this.dimensions = collID.dimensions;
     }
 
-    //Eine Kopie erstellt
+    /**
+     * Erstellt eine Kopie der Ansicht, welche ausgewählt ist
+     * 
+     * @param collID Die ID des Datensatzes, der ausgewählt ist
+     */
     $scope.copyView = function (collID) {
       var newView = new ViewCopy(collID);
       $log.info(newView);
@@ -215,12 +254,18 @@ angular.module('datacityApp')
       });
     };
 
-    //Schönere Darstellung der Zeit
+    /**
+     * @param jstime JavaScriptTime
+     * @return Schönere Darstellung der Zeit
+     */
     $scope.jstimeToFormatedTime = function (jstime) {
       var d = new Date(jstime);
       return d.toLocaleDateString() + " " + d.toLocaleTimeString();
     };
     
+    /**
+     * Erzeugt einen Text zum Download der ausgewählten Ansicht als JSON-Datei
+     */
     $scope.downloadJSON = function () {
         var data = $scope.chosenView;
         var json = JSON.stringify(data);

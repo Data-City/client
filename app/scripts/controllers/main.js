@@ -10,7 +10,9 @@
 
 var App = angular.module('datacityApp');
 
-//Die richtige Seite in der Navbar wird angezeigt
+/**
+ * Die richtige Seite wird in der Navbar hervorgehoben
+ */
 App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogin) {
 	$(".nav a").on("click", function () {
 		$(".nav").find(".active").removeClass("active");
@@ -20,7 +22,12 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 	// Der ausgewählte (angeklickte) Datensatz
 	$scope.chosenCollection = null;
 
-	//Auswählen eines neuen Datensatzes
+    /**
+     * Auswählen eines neuen Datensatzes
+     * Wenn der Datensatz bereits ausgewählt ist, wird er nicht mehr ausgewählt (deselected...)
+     * 
+     * @param id ID eines Datensatzes, der ausgewählt werden soll
+     */
 	$scope.setChosenCollection = function (id) {
 		getCollection(database, id, username, password, $http, function (response) {
 			if ($scope.chosenCollection === response) {
@@ -39,8 +46,13 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 		return collection ? collection.data._id : null;
 	};
 
-	//Einen Datensatz löschen
-	//Die zugehörigen Ansichten sollten auch gelöscht werden!!
+    /**
+     * Einen Datensatz löschen
+     * 
+     * @param id ID des Datensatzes, der gelöscht werden soll
+     */
+
+	//Die zugehörigen Ansichten sollten auch gelöscht werden!! ------> funktioniert noch nicht
 	$scope.deleteDataset = function (id) {
 		delete $scope.data[id];
 		if ($rootScope.chosenDataset === id) {
@@ -52,65 +64,19 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 	var username = sharedLogin.getUsername();
 	var password = sharedLogin.getPassword();
 
+    /**
+     * Verbindung zur Datenbank, der die Datensätze abfragt
+     */
 	getCollections(database, username, password, $http, function (response) {
 		$scope.collections = response;
 		$scope.numberOfCollections = Object.keys(response).length;
 	});
 
-	//Eine schönere Anzeige des Datums
+    /**
+     * @return Eine schönere Anzeige des Datums
+     */
 	$scope.formatTimeString = function (timeString) {
 		var d = new Date(timeString);
 		return d.toLocaleDateString() + " " + d.toLocaleTimeString();
 	};
-
-	//Ab hier: Noch nicht funktionierender JSON-Download. Nötig?
-	
-	/*
-	$scope.download = function () {
-		var data = {a:1, b:2, c:3};
-		var json = JSON.stringify(data);
-		var blob = new Blob([json], {type: "application/json"});
-		var url  = URL.createObjectURL(blob);
-
-		var a = document.createElement('a');
-		a.download    = "backup.json";	//Dateiname
-		a.href        = url;
-		a.textContent = "Download backup.json";	//Anzeigetext
-
-		document.getElementById('test').appendChild(a);
-	};
-
-	$scope.downloadJSON = function () {
-
-	};
-	
-	*/
-
-	/*
-	var data = {a:1, b:2, c:3};
-	var json = JSON.stringify(data);
-	var blob = new Blob([json], {type: "application/json"});
-	var url  = URL.createObjectURL(blob);
-
-	var a = document.createElement('a');
-	a.download    = "backup.json";
-	a.href        = url;
-	a.textContent = "Download backup.json";
-	
-	document.getElementById('content').appendChild(a);
-	*/
-
-/*
-	$scope.someFunction = function() {
-		document.getElementById('content').innerHTML("test");
-	});
-*/
-
 });
-
-/*
-var obj = {a: 123, b: "4 5 6"};
-var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
-
-$('<a href="data:' + data + '" download="data.json">download JSON</a>').appendTo('#content');
-*/
