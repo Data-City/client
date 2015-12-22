@@ -106,16 +106,35 @@ angular.module('datacityApp')
     };
     
     $scope.validate = function (attribute, typeToValidate) {          
-      getCollection("prelife", $scope.chosenView.collID, username, password, $http, function (resp) {
-        if(typeof $scope.collection.data._embedded['rh:doc'][0][attribute] === typeToValidate){
+        if($scope.getFirstValidEntry(attribute) === typeToValidate){
           //console.log("Eingabewert OK");
         }else{
           //console.log("Eingabewert ist nicht OK");
           window.alert("In dieses Feld dürfen nur Eingaben vom Typ " + typeToValidate);
         }
-      });
     };
-
+    
+    /**
+     * Sucht den ersten Eintrag in der Spalte und gibt dessen Typ zurück
+     * 
+     * @attribute: Name der Spalte
+     */
+    $scope.getFirstValidEntry = function (attribute) {
+        console.log("Attribute: " + attribute);
+        getCollection("prelife", $scope.chosenView.collID, username, password, $http, function (resp) {
+            var data = $scope.collection.data;
+            //console.log(data);                
+            for (var key in data._embedded['rh:doc']) {
+                if (data._embedded['rh:doc'][key][attribute] !== "") {
+                    //console.log("Erster richtiger Eintrag: " + data._embedded['rh:doc'][key][attribute]);
+                    //console.log("Vom Typ: " + typeof data._embedded['rh:doc'][key][attribute]);
+                    return data._embedded['rh:doc'][key][attribute];
+                }
+            }
+            window.alert("Die ausgewählte Spalte ist leer!");
+            return null;
+        });
+    };
 
     //Eine Ansicht auswählen
     $scope.setChosenView = function (view) {
