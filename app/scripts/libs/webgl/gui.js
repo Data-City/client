@@ -146,13 +146,27 @@ function onDocumentMouseDown( event ) {
 	}
 
 }
+
+//Eine Methode, um den Abstand von einem DivElement zum linken bzw. oberen Rand des Fensters zu bekommen
+//@params: ein DivElement
+//@return: JSON, sodass man mit JSON.left den Abstand zum linken Rand in px bekommt
+//			bzw. mit JSON.top den Abstand zum oberen Rand
+function getScrollDistance(divElement) {
+    var rect = divElement.getBoundingClientRect();
+    
+    return {
+        left: rect.left,
+        top: rect.top
+    };
+}
 		
 //berechnet die Position von der Maus	
 function onDocumentMouseMove( event ) {
 	
 	event.preventDefault(); 
+	var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
 
-	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1 + (rect.left / window.innerWidth)*2;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 + (rect.top / window.innerHeight)*2;
+	
 }

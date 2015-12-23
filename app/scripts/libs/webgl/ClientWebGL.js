@@ -111,6 +111,7 @@ function init(nameOfdivElement) {
 	//Hinzufügen von dem renderer-Element zu unserem HTML-Dokument
 	var domElement = document.getElementById(nameOfdivElement);
 	document.body.appendChild( renderer.domElement );
+	renderer.domElement.id = "WebGLCanvas";
 
 	scene = new THREE.Scene();
 
