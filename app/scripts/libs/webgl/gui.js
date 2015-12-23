@@ -166,7 +166,7 @@ function onDocumentMouseMove( event ) {
 	event.preventDefault(); 
 	var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
 
-	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1 + (rect.left / window.innerWidth)*2;
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1 - (rect.left / window.innerWidth)*2;
 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 + (rect.top / window.innerHeight)*2;
 	
 }
