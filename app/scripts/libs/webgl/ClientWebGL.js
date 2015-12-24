@@ -11,6 +11,10 @@ var extrema = { //enthaelt die Extremwerte aus den Daten nach Aufruf von addCity
 	minHeigth : Number.MAX_VALUE,
 	minColor : Number.MAX_VALUE
 };
+/*//		nodesOfStreetsSortByXCoord: JSON, durch das man mit X Koordinaten auf alle moeglichen existierenden Z-Koordinaten der Knoten bekommt
+//	 	nodesOfStreetsSortByZCoord: JSON, durch das man mit Y Koordinaten auf alle moeglichen existierenden X-Koordinaten der Knoten bekommt
+var nodesOfStreetsSortByXCoord = {};
+var nodesOfStreetsSortByZCoord = {};*/
 
 
 // wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
@@ -33,6 +37,7 @@ function drawCity(data, association, nameOfDivElement){
 				
 	//zeichnen nun auch die Stadt
 	addCityToScene(mainDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema);
+	addStreetsToScene(mainDistrict, scene);
 	
 	// Erstelle das Menue oben rechts
 	if( Detector.webgl ){

@@ -58,6 +58,7 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, n
 //			arrayOfWebGLBoxes: Array, bestehend aus allen bisher gezeichneten THREE.BoxGeometry's
 //			arrayOfBuildingsAsWebGLBoxes: Array, bestehend aus allen bisher gezeichneten Gebaeuden in der gleichen Reihenfolge wie arrayOfWebGLBoxes
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
+
 function setMenue(legende, scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema, control, controls){
 	var gui = new dat.GUI({
 		width : 375
@@ -104,7 +105,7 @@ var update = function() {
 //			arrayOfBuildingsAsWebGLBoxes: Array, bestehend aus allen bisher gezeichneten Gebaeuden in der gleichen Reihenfolge wie arrayOfWebGLBoxes
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
 function scale(value, aString, scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema){
-	removeAllObjects(scene);
+	removeAllObjects(scene, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes);
 	setLight(scene);
 	if(value){
 		var scalingMethod = scaleLogarithmically;
@@ -124,6 +125,7 @@ function scale(value, aString, scene, aDistrict, camera, arrayOfWebGLBoxes, arra
 	setMainDistrict(aDistrict);
 	scalingExtrema(extrema, aString);
 	addCityToScene(aDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema);
+	addStreetsToScene(aDistrict, scene);
 	updateControls(Math.max(aDistrict.width, extrema.maxHeight));
 }
 
@@ -187,9 +189,11 @@ function scaleLinearly(aDistrict, i, j, aString){
 
 //Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen
 //@params: scene: die Scene, auf der alle Objekte geloescht werden soll
-function removeAllObjects(scene){
+function removeAllObjects(scene, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes){
 	for( var i = scene.children.length - 1; i >= 0; i--) {
 		scene.remove(scene.children[i]);
 	}
+	 arrayOfWebGLBoxes = [];
+	 arrayOfBuildingsAsWebGLBoxes =[];
 }
 					

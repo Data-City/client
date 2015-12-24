@@ -1,6 +1,7 @@
-var gap = 2; //Abstand zwischen den Gebaeuden
+var gap = 3; //Abstand zwischen den Gebaeuden
 
 var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, buildingInZDirection, lastMaxWidth, width, startToBuildInXDirection;
+var nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord;
 
 // Eine Art Konstruktor fuer ein Gebaeude
 //@params: aName: Name von dem Gebaeude
@@ -20,7 +21,8 @@ function building(aName, aWidth, aHeight, aColor){
 		name: aName,
 		originalheight: aHeight,
 		originalwidth: aWidth,
-		originalcolor:aColor
+		originalcolor:aColor,
+		posOfNextStreetNode:[0,0]
 	};
 	return aBuilding;
 };
@@ -35,24 +37,85 @@ function district(arrayOfBuildings){
 		height:1,
 		width:1,
 		centerPosition:[1/2,-1/2,1/2],
-		buildings:arrayOfBuildings};
+		buildings:arrayOfBuildings,
+		posOfNextStreetNode:[0,0],
+		edges : []};
 	return aDistrict;
 };
+
+
+//Konstruktor für eine gerichtete Kante
+//@params: startpoint: Der Punkt als Array [x,z], bei dem die Kante startet
+//			endpoint: Der Punkt als Array [x,z], bei dem die Kante endet
+function edge(startpoint, endpoint){
+	var anEdge = {
+		endPointA: startpoint,
+		endPointB: endpoint,
+		center: [(startpoint[0]+endpoint[0])/2, (startpoint[1]+endpoint[1])/2],
+		height: 0,
+		xWidth: Math.abs(startpoint[0]-endpoint[0])+1,
+		zWidth: Math.abs(startpoint[1]-endpoint[1])+1,
+		weight: 0.01};
+	return anEdge;
+};
+
+// sortiert zu jedem key in nodesOfStreetsSortByXCoord und nodesOfStreetsSortByZCoord das zugehoerige Array absteigend 
+//@params: nodesOfStreetsSortByXCoord: JSON, durch das man mit X Koordinaten auf alle moeglichen existierenden Z-Koordinaten der Knoten bekommt
+//	 	nodesOfStreetsSortByZCoord: JSON, durch das man mit Y Koordinaten auf alle moeglichen existierenden X-Koordinaten der Knoten bekommt
+function sortNodesOfStreets(){
+	for(var x in nodesOfStreetsSortByXCoord){
+		nodesOfStreetsSortByXCoord[x].sort(function(a, b){return a-b});
+	}
+	for(var x in nodesOfStreetsSortByZCoord){
+		nodesOfStreetsSortByZCoord[x].sort(function(a, b){return a-b});
+	}
+}
+
+//erstellt ein Array aus Kanten
+//@return: arrayOfEdges: ein Array bestehend aus allen Kanten
+function createEdges(){
+	var arrayOfEdges = [];
+	for(var x in nodesOfStreetsSortByXCoord){
+		for(var i=0; i<nodesOfStreetsSortByXCoord[x].length-1; i++){
+			arrayOfEdges.push(edge([parseFloat(x), nodesOfStreetsSortByXCoord[x][i]], [parseFloat(x), nodesOfStreetsSortByXCoord[x][i+1]]));
+			arrayOfEdges.push(edge([parseFloat(x), nodesOfStreetsSortByXCoord[x][i+1]], [parseFloat(x), nodesOfStreetsSortByXCoord[x][i]]));
+		}
+	}
+	for(var x in nodesOfStreetsSortByZCoord){
+		for(var i=0; i<nodesOfStreetsSortByZCoord[x].length-1; i++){
+			arrayOfEdges.push(edge([nodesOfStreetsSortByZCoord[x][i], parseFloat(x)], [nodesOfStreetsSortByZCoord[x][i+1], parseFloat(x)]));
+			arrayOfEdges.push(edge([nodesOfStreetsSortByZCoord[x][i+1], parseFloat(x)], [nodesOfStreetsSortByZCoord[x][i], parseFloat(x)]));
+		}
+	}
+	return arrayOfEdges;
+}
 
 
 //Methode, um fuer jedes Stadtteil die einzelnen Gebaeude zu positionieren und die Stadtteile auch zu positionieren
 //@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
 function setMainDistrict(mainDistrict){
+	nodesOfStreetsSortByXCoord={};
+	nodesOfStreetsSortByZCoord={};
 	var districtarray = mainDistrict.buildings;
 	//setze die Gebaeuder erst mal fuer jedes Stadtteil separat, um die Breite der Districts zu kriegen
 	for(var i=0;i<mainDistrict.buildings.length;i++){
 		setOneDistrict(mainDistrict.buildings[i]);
+		sortNodesOfStreets();
+		mainDistrict.buildings[i].edges = createEdges();
 	}
-
+	
 	//verwende dieselbe Methode fuer die districts
 	setOneDistrict(mainDistrict);
 	
 	//und anschließend verschiebe die Gebaeude entsprechend ihrer districts
+	shiftTheCity(mainDistrict);
+}
+
+
+// Diese Methode verschiebt die Stadt so, dass die Mitte vom Main-District bzw. der Rotationspunkt im Koordinatenursprung ist
+//@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
+function shiftTheCity(mainDistrict){
+	var districtarray = mainDistrict.buildings;
 	var shiftX = 0;
 	var shiftZ = 0;
 	
@@ -71,8 +134,19 @@ function setMainDistrict(mainDistrict){
 		for(var j=0;j<districtarray[i].buildings.length;j++){
 			districtarray[i].buildings[j].centerPosition[0]=districtarray[i].buildings[j].centerPosition[0]+shiftX;
 			districtarray[i].buildings[j].centerPosition[2]=districtarray[i].buildings[j].centerPosition[2]+shiftZ;
+			districtarray[i].buildings[j].posOfNextStreetNode[0]=districtarray[i].buildings[j].posOfNextStreetNode[0]+shiftX;
+			districtarray[i].buildings[j].posOfNextStreetNode[1]=districtarray[i].buildings[j].posOfNextStreetNode[1]+shiftZ;
+		}
+		for(var j=0; j<districtarray[i].edges.length; j++){
+			districtarray[i].edges[j].endPointA[0] = districtarray[i].edges[j].endPointA[0]+shiftX;
+			districtarray[i].edges[j].endPointA[1] = districtarray[i].edges[j].endPointA[1]+shiftZ;
+			districtarray[i].edges[j].endPointB[0] = districtarray[i].edges[j].endPointB[0]+shiftX;
+			districtarray[i].edges[j].endPointB[1] = districtarray[i].edges[j].endPointB[1]+shiftZ;
+			districtarray[i].edges[j].center[0] = districtarray[i].edges[j].center[0]+shiftX;
+			districtarray[i].edges[j].center[1] = districtarray[i].edges[j].center[1]+shiftZ;
 		}
 	}
+	
 }
 
 
@@ -93,7 +167,6 @@ function sortBuildings(aDistrict){
 // Sie berechnet fuer die Gebaeude von einem Stadtteil die Position und speichert sie in buildings.centerPosition
 // anschließend wird noch das Stadtteil vergroessert, damit alle Gebaeude auf das Stadtteil draufpassen
 //@params: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
-
 function setOneDistrict(aDistrict){
 	
 	aDistrict = sortBuildings(aDistrict);//zunaechst muessen wir das gebaudearray sortieren absteigend nach der Breite der Boxen
@@ -130,6 +203,7 @@ function setOneDistrict(aDistrict){
 				}
 			}
 		}
+		setTheFiveStreetNodes(i);
 	}
 	
 	aDistrict.width = width;
@@ -158,7 +232,47 @@ function setFirstBuilding(aDistrict){
 	if(arrayOfBuildings.length>1){
 		extension = arrayOfBuildings[1].width+gap;
 	}
+	setTheFiveStreetNodes(0);
 }
+
+
+// Diese Methode fuegt den JSON-Objekten nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord, welchee die Positionen der Strassenkreuzungen bzw. Knoten speichern,
+// die mit dem i-ten Gebaeude erstellt werden muessen
+//@param: i: die Position des Gebaeudes, mit dem die Knoten erstellt werden sollen, aus dem array arrayOfBuildings
+function setTheFiveStreetNodes(i){
+	var toAdd = arrayOfBuildings[i].width/2 + gap/2;
+	var centerPos = arrayOfBuildings[i].centerPosition;
+	arrayOfBuildings[i].posOfNextStreetNode = [centerPos[0], centerPos[2]+toAdd];
+	
+	//addANode(nodesOfStreetsSortByXCoord, centerPos[0], centerPos[2]+toAdd);
+	addANode(nodesOfStreetsSortByXCoord, centerPos[0]+toAdd, centerPos[2]+toAdd);
+	addANode(nodesOfStreetsSortByXCoord, centerPos[0]+toAdd, centerPos[2]-toAdd);
+	addANode(nodesOfStreetsSortByXCoord, centerPos[0]-toAdd, centerPos[2]+toAdd);
+	addANode(nodesOfStreetsSortByXCoord, centerPos[0]-toAdd, centerPos[2]-toAdd);
+	
+	//addANode(nodesOfStreetsSortByZCoord, centerPos[2]+toAdd, centerPos[0]);
+	addANode(nodesOfStreetsSortByZCoord, centerPos[2]+toAdd, centerPos[0]+toAdd);
+	addANode(nodesOfStreetsSortByZCoord, centerPos[2]+toAdd, centerPos[0]-toAdd);
+	addANode(nodesOfStreetsSortByZCoord, centerPos[2]-toAdd, centerPos[0]+toAdd);
+	addANode(nodesOfStreetsSortByZCoord, centerPos[2]-toAdd, centerPos[0]-toAdd);
+}
+
+
+// Diese Methode fuegt dem Array, welches dem Wert von aJSON an der Stelle theKey ist, den Wert theValue hinzu
+//@params: aJSON: ein JSON-Objekt der Form {key: Array}
+//		theKey: Key, mit dem man auf JSON zugreifen will
+//		theValue: der Wert, den man einfuegen moechte
+function addANode(aJSON, theKey, theValue){
+	if(aJSON[theKey]!=undefined){
+		if(aJSON[theKey].indexOf(theValue)==-1){
+			(aJSON[theKey]).push(theValue);
+		}
+	}
+	else{
+		aJSON[theKey] = [theValue];
+	}
+}
+
 
 
 //Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
@@ -176,6 +290,7 @@ function continueBuildingInXDirection(i){
 	extension = arrayOfBuildings[i].width+gap;
 	startToBuildInZDirection = gap;
 	startToBuildInXDirection = startToBuildInXDirection-arrayOfBuildings[i].width-gap;
+	
 }
 
 //Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
@@ -197,24 +312,27 @@ function buildANewBuildingRowOnTheRightInZDirection(i){
 //Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
 //wenn wir gerade in Z-Richtung bauen und noch nicht am Rand angekommen sind
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
-function continueBuildingNormallyInZDirection(i){
+function continueBuildingNormallyInZDirection(i, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord){
 	arrayOfBuildings[i].centerPosition = [maxWidth+(1/2)*arrayOfBuildings[i].width,
 		(arrayOfBuildings[i].height)/2,
 		startToBuildInZDirection+(1/2)*arrayOfBuildings[i].width];			
 	startToBuildInZDirection = startToBuildInZDirection+arrayOfBuildings[i].width+gap;
 	width = Math.max(startToBuildInZDirection, maxWidth+extension, maxDepth);
+
 }
 
 
 //Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
 //wenn wir gerade in X-Richtung bauen (nach links) und noch nicht am Rand angekommen sind
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
+
 function continueBuildingNormallyInXDirection(i){
 	arrayOfBuildings[i].centerPosition = [startToBuildInXDirection-(1/2)*arrayOfBuildings[i].width,
 					(arrayOfBuildings[i].height)/2, 
 					maxDepth+(1/2)*arrayOfBuildings[i].width];
 	width = Math.max(maxDepth+extension, maxWidth);
 	startToBuildInXDirection = startToBuildInXDirection-arrayOfBuildings[i].width-gap;
+
 }
 
 
@@ -233,6 +351,7 @@ function buildAgainDownOnTheRightInZDirection(i){
 	buildingInZDirection = true;
 	lastMaxWidth = maxWidth-2*gap;
 	width = Math.max(maxWidth+extension, maxDepth);
+	
 }
 
 
@@ -249,4 +368,5 @@ function buildANewRowOnTheTopInXDirection(i){
 						maxDepth+(1/2)*arrayOfBuildings[i].width];
 	startToBuildInXDirection = startToBuildInXDirection-arrayOfBuildings[i].width-gap;
 	width = Math.max(maxWidth, maxDepth+extension);
+
 }

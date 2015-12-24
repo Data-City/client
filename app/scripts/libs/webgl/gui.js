@@ -86,6 +86,38 @@ function addCityToScene(mainDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfB
 
 
 
+
+//Methode, um die Stadt auf die WebGL-scene zu zeichnen, wenn wir die Daten bekommen haben
+//@params:	mainDistrict: das Stadtteil, das der unteren Grundflaeche entspricht mit allen zu zeichnenden Stadtteilen und Gebaeuden
+//			scene: die scene, der man die Zeichnungen hinzufuegen moechte
+function addStreetsToScene(mainDistrict, scene){
+	var streetMaterial = getMaterial(0xA4A4A4);
+	var aEdge;
+	for(var i=0;i<mainDistrict.buildings.length;i++){
+		for(var j=0; j<mainDistrict.buildings[i].edges.length;j++){
+			aEdge = mainDistrict.buildings[i].edges[j];
+			var geometry = new THREE.BoxGeometry(aEdge.xWidth, aEdge.weight, aEdge.zWidth);
+			var street = new THREE.Mesh(geometry, streetMaterial);
+			street.position.x = aEdge.center[0];
+			street.position.y = 0;
+			street.position.z = aEdge.center[1];
+			scene.add(street);
+		}
+		for(var j=0; j<mainDistrict.buildings[i].buildings.length;j++){
+			aEdge = mainDistrict.buildings[i].buildings[j];
+			var geometry = new THREE.BoxGeometry(1, 0.01, 1);
+			var street = new THREE.Mesh(geometry, streetMaterial);
+			street.position.x = aEdge.posOfNextStreetNode[0];
+			street.position.y = 0;
+			street.position.z = aEdge.posOfNextStreetNode[1]-1;
+			scene.add(street);
+		}
+	}
+};
+
+
+
+
 //Methode zum Bestimmen der Farbe aus dem Farbwert (bisher noch nicht genutzt)
 //@params: extrema: das JSON-Objekt, das die Extremwerte der Daten enthaelt
 //			colorValue: der Wert, fuer den man die Farbe berechnen moechte
