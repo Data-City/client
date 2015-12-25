@@ -43,7 +43,7 @@ function drawCity(data, association, nameOfDivElement){
 	if( Detector.webgl ){
 		setMenue(association["dimensions"], scene, mainDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema, control, controls);
 	}
-	
+	//console.log(arrayOfBuildingsAsWebGLBoxes);
 	updateControls(Math.max(mainDistrict.width, extrema.maxHeight));	
 	animate();
 }
