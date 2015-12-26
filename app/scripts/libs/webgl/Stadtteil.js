@@ -1,4 +1,4 @@
-var gap = 3; //Abstand zwischen den Gebaeuden
+var gap = 5; //Abstand zwischen den Gebaeuden
 
 var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, buildingInZDirection, lastMaxWidth, width, startToBuildInXDirection;
 var nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord;
@@ -10,6 +10,7 @@ var nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord;
 //		aColor: Farbe von dem Gebaeude
 //@return: ein Javascript-Objekt vom Typ Gebaeude bzw. building
 function building(aName, aWidth, aHeight, aColor){
+	var anEdge = edge([0,0], [0,0], true);
 	var aBuilding = {
 		//es wird 1.5 addiert, damit Gebaeude mit urspruenglich 0 Hoehe auch gezeichnet werden
 		// und beim logarithmieren auch nicht verschwinden
@@ -22,7 +23,8 @@ function building(aName, aWidth, aHeight, aColor){
 		originalheight: aHeight,
 		originalwidth: aWidth,
 		originalcolor:aColor,
-		posOfNextStreetNode:[0,0]
+		posOfNextStreetNode:[0,0],
+		nextEdge: anEdge
 	};
 	return aBuilding;
 };
@@ -33,12 +35,14 @@ function building(aName, aWidth, aHeight, aColor){
 //							oder nur Stadtteilen (d.h. JSON-Objekte district)
 //@return: ein Javascript-Objekt vom Typ stadtteil bzw. district
 function district(arrayOfBuildings){
+	var anEdge = edge([0,0], [0,0], true);
 	var aDistrict = {
 		height:1,
 		width:1,
 		centerPosition:[1/2,-1/2,1/2],
 		buildings:arrayOfBuildings,
 		posOfNextStreetNode:[0,0],
+		nextEdge: anEdge,
 		edges : []};
 	return aDistrict;
 };
@@ -47,7 +51,7 @@ function district(arrayOfBuildings){
 //Konstruktor für eine gerichtete Kante
 //@params: startpoint: Der Punkt als Array [x,z], bei dem die Kante startet
 //			endpoint: Der Punkt als Array [x,z], bei dem die Kante endet
-function edge(startpoint, endpoint){
+function edge(startpoint, endpoint, isAHorzintalEdge){
 	var anEdge = {
 		endPointA: startpoint,
 		endPointB: endpoint,
@@ -55,7 +59,9 @@ function edge(startpoint, endpoint){
 		height: 0,
 		xWidth: Math.abs(startpoint[0]-endpoint[0])+1,
 		zWidth: Math.abs(startpoint[1]-endpoint[1])+1,
-		weight: 0.01};
+		incomingWeight: 1,
+		outcomingWeight: 1,
+		isHorizontalEdge: isAHorzintalEdge};
 	return anEdge;
 };
 
@@ -77,15 +83,18 @@ function createEdges(){
 	var arrayOfEdges = [];
 	for(var x in nodesOfStreetsSortByXCoord){
 		for(var i=0; i<nodesOfStreetsSortByXCoord[x].length-1; i++){
-			arrayOfEdges.push(edge([parseFloat(x), nodesOfStreetsSortByXCoord[x][i]], [parseFloat(x), nodesOfStreetsSortByXCoord[x][i+1]]));
-			arrayOfEdges.push(edge([parseFloat(x), nodesOfStreetsSortByXCoord[x][i+1]], [parseFloat(x), nodesOfStreetsSortByXCoord[x][i]]));
+			arrayOfEdges.push(edge([parseFloat(x), nodesOfStreetsSortByXCoord[x][i]], [parseFloat(x), nodesOfStreetsSortByXCoord[x][i+1]], false));
 		}
 	}
 	for(var x in nodesOfStreetsSortByZCoord){
 		for(var i=0; i<nodesOfStreetsSortByZCoord[x].length-1; i++){
-			arrayOfEdges.push(edge([nodesOfStreetsSortByZCoord[x][i], parseFloat(x)], [nodesOfStreetsSortByZCoord[x][i+1], parseFloat(x)]));
-			arrayOfEdges.push(edge([nodesOfStreetsSortByZCoord[x][i+1], parseFloat(x)], [nodesOfStreetsSortByZCoord[x][i], parseFloat(x)]));
+			arrayOfEdges.push(edge([nodesOfStreetsSortByZCoord[x][i], parseFloat(x)], [nodesOfStreetsSortByZCoord[x][i+1], parseFloat(x)], true));
 		}
+	}
+	var h;
+	for(var x in arrayOfBuildings){
+		h = arrayOfBuildings[x].posOfNextStreetNode;
+		arrayOfBuildings[x].nextEdge = edge([h[0], h[1]], [h[0],arrayOfBuildings[x].centerPosition[2]+arrayOfBuildings[x].width/2], false);
 	}
 	return arrayOfEdges;
 }
@@ -132,25 +141,53 @@ function shiftTheCity(mainDistrict){
 		
 		//verschiebe jedes Gebaeude in diesem Stadtteil
 		for(var j=0;j<districtarray[i].buildings.length;j++){
-			districtarray[i].buildings[j].centerPosition[0]=districtarray[i].buildings[j].centerPosition[0]+shiftX;
-			districtarray[i].buildings[j].centerPosition[2]=districtarray[i].buildings[j].centerPosition[2]+shiftZ;
-			districtarray[i].buildings[j].posOfNextStreetNode[0]=districtarray[i].buildings[j].posOfNextStreetNode[0]+shiftX;
-			districtarray[i].buildings[j].posOfNextStreetNode[1]=districtarray[i].buildings[j].posOfNextStreetNode[1]+shiftZ;
+			shiftBuilding(districtarray, i, j, shiftX, shiftZ);
 		}
 		for(var j=0; j<districtarray[i].edges.length; j++){
-			districtarray[i].edges[j].endPointA[0] = districtarray[i].edges[j].endPointA[0]+shiftX;
-			districtarray[i].edges[j].endPointA[1] = districtarray[i].edges[j].endPointA[1]+shiftZ;
-			districtarray[i].edges[j].endPointB[0] = districtarray[i].edges[j].endPointB[0]+shiftX;
-			districtarray[i].edges[j].endPointB[1] = districtarray[i].edges[j].endPointB[1]+shiftZ;
-			districtarray[i].edges[j].center[0] = districtarray[i].edges[j].center[0]+shiftX;
-			districtarray[i].edges[j].center[1] = districtarray[i].edges[j].center[1]+shiftZ;
+			shiftEdges(districtarray, i, j, shiftX, shiftZ);
 		}
 	}
 	
 }
 
 
-//Hilfsmethode zum sortieren der Gebaeude nach Breite absteigend
+//Hilfsmethode zum Verschieben der Gebaeuden
+//@params: districtarray: ein Districtarray
+//			i: das i-te District im districtarray
+//			j: die j-te Edge vom i-ten District
+//			shiftX: verschiebe das Gebaeude um shiftX in x-Richtung
+//			shiftZ: verschiebe das Gebaeude um shiftZ in z-Richtung
+function shiftBuilding(districtarray, i, j, shiftX, shiftZ){
+	//Verschiebe Position des Gebaeudes
+	districtarray[i].buildings[j].centerPosition[0]=districtarray[i].buildings[j].centerPosition[0]+shiftX;
+	districtarray[i].buildings[j].centerPosition[2]=districtarray[i].buildings[j].centerPosition[2]+shiftZ;
+	// Verschiebe Position vom Streetnode
+	districtarray[i].buildings[j].posOfNextStreetNode[0]=districtarray[i].buildings[j].posOfNextStreetNode[0]+shiftX;
+	districtarray[i].buildings[j].posOfNextStreetNode[1]=districtarray[i].buildings[j].posOfNextStreetNode[1]+shiftZ;
+	// Verschiebe Position von der anliegenden Strasse
+	districtarray[i].buildings[j].nextEdge.center[0] = districtarray[i].buildings[j].nextEdge.center[0]+shiftX;
+	districtarray[i].buildings[j].nextEdge.center[1] = districtarray[i].buildings[j].nextEdge.center[1]+shiftZ;
+}
+
+
+//Hilfsmethode zum Verschieben der Edges
+//@params: districtarray: ein Districtarray
+//			i: das i-te District im districtarray
+//			j: die j-te Edge vom i-ten District
+//			shiftX: verschiebe die Edge um shiftX in x-Richtung
+//			shiftZ: verschiebe die Edge um shiftZ in z-Richtung
+function shiftEdges(districtarray, i, j, shiftX, shiftZ){
+	districtarray[i].edges[j].endPointA[0] = districtarray[i].edges[j].endPointA[0]+shiftX;
+	districtarray[i].edges[j].endPointA[1] = districtarray[i].edges[j].endPointA[1]+shiftZ;
+	districtarray[i].edges[j].endPointB[0] = districtarray[i].edges[j].endPointB[0]+shiftX;
+	districtarray[i].edges[j].endPointB[1] = districtarray[i].edges[j].endPointB[1]+shiftZ;
+	districtarray[i].edges[j].center[0] = districtarray[i].edges[j].center[0]+shiftX;
+	districtarray[i].edges[j].center[1] = districtarray[i].edges[j].center[1]+shiftZ;
+}
+
+
+
+//Hilfsmethode zum Sortieren der Gebaeude nach Breite absteigend
 //@params: aDistrict: das Stadtteil, dessen Gebaeude sortiert werden sollen
 //@return: das district mit einem sortierten Gebaeudearray
 function sortBuildings(aDistrict){

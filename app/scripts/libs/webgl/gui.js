@@ -1,3 +1,5 @@
+var streetMaterial = getMaterial(0xA4A4A4);
+
 //Hilfsmethode, um eine WebGL-Box zu malen
 //@params: aBuilding: ein JSON-Objekt vom Typ Gebaeude/building, das gezeichnet werden soll
 //			material: ein Material von THREE.js, das auf das Gebaeude drauf soll
@@ -124,10 +126,11 @@ function addStreetsToScene(mainDistrict, scene){
 
 //zeichnet eine Kante auf die WebGLCanvas
 //@param aEdge: die Kante, die gezeichnet werden soll
+//		material: Material der Strasse
 //		scene: die Scene, auf die die Strasse gepackt werden soll
-function drawEdge(aEdge,scene){
+function drawEdge(aEdge, scene){
 	drawEachEdge(aEdge, true, scene);
-	//drawEachEdge(aEdge, false, scene);
+	drawEachEdge(aEdge, false, scene);
 }
 
 
@@ -138,36 +141,37 @@ function drawEdge(aEdge,scene){
 //			isIncoming: Boolean, true, wenn es eine eingehende Strasse ist, sonst false
 //			scene: die scene, auf die die Strasse gepackt werden soll
 function drawEachEdge(aEdge, isIncoming, scene){
-	if(isIncoming){
-		var material = getMaterial(0xA4A4A4);
-	}
-	else{
-		var material = getMaterial(0x585858);
-	}
-	
-	var geometry = new THREE.BoxGeometry(aEdge.xWidth, aEdge.incomingWeight, aEdge.zWidth);
-	var street = new THREE.Mesh(geometry, material);
-	street.position.y = 0;
-	
+
 	if(aEdge.isHorizontalEdge){
-		street.position.x = aEdge.center[0];
 		if(isIncoming){
-			street.position.z = aEdge.center[1];//+0.5;
+			var geometry = new THREE.BoxGeometry(aEdge.xWidth+1+0.05, 0.01, aEdge.incomingWeight);
+			var street = new THREE.Mesh(geometry, streetMaterial);
+			street.position.z = aEdge.center[1]+aEdge.incomingWeight/2+0.05;
+			street.position.x = aEdge.center[0]+aEdge.incomingWeight/2-0.5;
 		}
 		else{
-			street.position.z = aEdge.center[1];//-0.5;
+			var geometry = new THREE.BoxGeometry(aEdge.xWidth+1+0.05, 0.01, aEdge.outcomingWeight);
+			var street = new THREE.Mesh(geometry, streetMaterial);
+			street.position.z = aEdge.center[1]-aEdge.incomingWeight/2-0.05;
+			street.position.x = aEdge.center[0]-aEdge.incomingWeight/2+0.5;
 		}
 	}
 	else{
-		street.position.z = aEdge.center[1];
 		if(isIncoming){
-			street.position.x = aEdge.center[0];//+0.5;
+			var geometry = new THREE.BoxGeometry(aEdge.incomingWeight, 0.01, aEdge.zWidth+1+0.05);
+			var street = new THREE.Mesh(geometry, streetMaterial);
+			street.position.x = aEdge.center[0]+aEdge.incomingWeight/2+0.05;
+			street.position.z = aEdge.center[1]+aEdge.incomingWeight/2-0.5;
 		}
 		else{
-			street.position.x = aEdge.center[0];//-0.5;
+			var geometry = new THREE.BoxGeometry(aEdge.outcomingWeight, 0.01, aEdge.zWidth+1+0.05);
+			var street = new THREE.Mesh(geometry, streetMaterial);
+			street.position.x = aEdge.center[0]-aEdge.incomingWeight/2-0.05;
+			street.position.z = aEdge.center[1]-aEdge.incomingWeight/2+0.5;
 		}
+		
 	}
-	
+	street.position.y = 0;
 	scene.add(street);
 }
 
@@ -194,8 +198,7 @@ function render() {
 			INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); //von dem Objekt nehme vom Material die Farbe und setze sie
 	}
 	
-	if (intersects.length > 0) { //wenn der Strahl mindestens 1 Objekt schneidet
-
+	if (intersects.length > 0 && intersects[0].object.material!=streetMaterial) { //wenn der Strahl mindestens 1 Objekt schneidet
 		INTERSECTED = intersects[0].object; //INTERSECTED sei nun das erste Objekt, das geschnitten wurde
 		INTERSECTED.material.emissive.setHex(0xff0000); //davon setze die Farbe auf rot
 
