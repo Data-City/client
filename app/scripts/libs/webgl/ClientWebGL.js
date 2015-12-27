@@ -11,10 +11,7 @@ var extrema = { //enthaelt die Extremwerte aus den Daten nach Aufruf von addCity
 	minHeigth : Number.MAX_VALUE,
 	minColor : Number.MAX_VALUE
 };
-/*//		nodesOfStreetsSortByXCoord: JSON, durch das man mit X Koordinaten auf alle moeglichen existierenden Z-Koordinaten der Knoten bekommt
-//	 	nodesOfStreetsSortByZCoord: JSON, durch das man mit Y Koordinaten auf alle moeglichen existierenden X-Koordinaten der Knoten bekommt
-var nodesOfStreetsSortByXCoord = {};
-var nodesOfStreetsSortByZCoord = {};*/
+
 
 
 // wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
@@ -67,7 +64,7 @@ function createArrayOfBuildings(data, nameOfBuilding, widthOfBuilding, heightOfB
 	var color;
 
 	for(var i=0; i<myData.length; i++){
-		if(myData[i][widthOfBuilding]!=undefined){
+		if(myData[i][widthOfBuilding]!=undefined && myData[i][heightOfBuilding]!=undefined ){
 			width = myData[i][widthOfBuilding];
 			height = myData[i][heightOfBuilding];
 			color = myData[i][colorOfBuilding];

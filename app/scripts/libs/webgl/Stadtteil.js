@@ -2,6 +2,8 @@ var gap = 5; //Abstand zwischen den Gebaeuden
 
 var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, buildingInZDirection, lastMaxWidth, width, startToBuildInXDirection;
 var nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord;
+var arrayOfNodes;
+//var map;
 
 // Eine Art Konstruktor fuer ein Gebaeude
 //@params: aName: Name von dem Gebaeude
@@ -24,7 +26,10 @@ function building(aName, aWidth, aHeight, aColor){
 		originalwidth: aWidth,
 		originalcolor:aColor,
 		posOfNextStreetNode:[0,0],
-		nextEdge: anEdge
+		nextEdge: anEdge,
+		outcomingEdges: 1,
+		incomingEdges: 1//,
+		//nodeID: -1
 	};
 	return aBuilding;
 };
@@ -43,9 +48,27 @@ function district(arrayOfBuildings){
 		buildings:arrayOfBuildings,
 		posOfNextStreetNode:[0,0],
 		nextEdge: anEdge,
-		edges : []};
+		edges : [],
+		outcomingEdges: 1,
+		incomingEdges: 1
+	};//,
+		//nodeID: -1};
 	return aDistrict;
 };
+
+/*
+//Konstruktor fuer einen Knoten
+//@params xCoord: xKoordinate
+//		zCoord: z-Koordinate
+//		theID: die ID
+function node(xCoord, zCoord, theID){
+	var aNode = {
+		x: xCoord,
+		z: zCoord,
+		id: theID
+	};
+	return aNode;
+}*/
 
 
 //Konstruktor für eine gerichtete Kante
@@ -59,8 +82,9 @@ function edge(startpoint, endpoint, isAHorzintalEdge){
 		height: 0,
 		xWidth: Math.abs(startpoint[0]-endpoint[0])+1,
 		zWidth: Math.abs(startpoint[1]-endpoint[1])+1,
-		incomingWeight: 1,
-		outcomingWeight: 1,
+		/*incomingWeight: 1,
+		outcomingWeight: 1,*/
+		weight: 1,
 		isHorizontalEdge: isAHorzintalEdge};
 	return anEdge;
 };
@@ -80,24 +104,74 @@ function sortNodesOfStreets(){
 //erstellt ein Array aus Kanten
 //@return: arrayOfEdges: ein Array bestehend aus allen Kanten
 function createEdges(){
+	arrayOfNodes =[];
 	var arrayOfEdges = [];
+	//map = {};
 	for(var x in nodesOfStreetsSortByXCoord){
 		for(var i=0; i<nodesOfStreetsSortByXCoord[x].length-1; i++){
+		//******************
 			arrayOfEdges.push(edge([parseFloat(x), nodesOfStreetsSortByXCoord[x][i]], [parseFloat(x), nodesOfStreetsSortByXCoord[x][i+1]], false));
+		//******************
+			/*if(map[arrayOfNodes.length]==undefined) map[arrayOfNodes.length]={};
+			if(map[arrayOfNodes.length+1]==undefined) map[arrayOfNodes.length+1]={};
+			map[arrayOfNodes.length][arrayOfNodes.length+1]=1;
+			map[arrayOfNodes.length+1][arrayOfNodes.length]=1;
+			arrayOfNodes.push([parseFloat(x), parseFloat(nodesOfStreetsSortByXCoord[x][i])]);
+			console.log(map);*/
 		}
+		arrayOfNodes.push([parseFloat(x), nodesOfStreetsSortByXCoord[x][nodesOfStreetsSortByXCoord[x].length-1]]);
+		//console.log(map);
 	}
+	//console.log("***************");
+	//var firstNodeID, secondNodeID;
 	for(var x in nodesOfStreetsSortByZCoord){
 		for(var i=0; i<nodesOfStreetsSortByZCoord[x].length-1; i++){
+			//***************************
 			arrayOfEdges.push(edge([nodesOfStreetsSortByZCoord[x][i], parseFloat(x)], [nodesOfStreetsSortByZCoord[x][i+1], parseFloat(x)], true));
+			//**************************
+			/*firstNodeID =getNodeIndex(parseFloat(nodesOfStreetsSortByZCoord[x][i]), parseFloat(x));
+			secondNodeID = getNodeIndex(parseFloat(nodesOfStreetsSortByZCoord[x][i+1]), parseFloat(x));
+			map[firstNodeID][secondNodeID]=1;
+			map[secondNodeID][firstNodeID]=1;
+			console.log(map);*/
 		}
 	}
-	var h;
+	var h;//, localMap;
 	for(var x in arrayOfBuildings){
 		h = arrayOfBuildings[x].posOfNextStreetNode;
 		arrayOfBuildings[x].nextEdge = edge([h[0], h[1]], [h[0],arrayOfBuildings[x].centerPosition[2]+arrayOfBuildings[x].width/2], false);
+		//arrayOfBuildings[x].nodeID = arrayOfNodes.length;
+		//localMap = map;
+		//arrayOfNodes.push([arrayOfBuildings[x].posOfNextStreetNode[0], arrayOfBuildings[x].posOfNextStreetNode[1]]);
 	}
 	return arrayOfEdges;
 }
+
+
+/*
+//gibt den Index des Knotens in arrayOfNodes zurück
+//@params: x: x-Koordinate vom Knoten
+//			z: z-Koordinate vom Knoten
+//@return: Index des Knotens in arrayOfNodes
+function getNodeIndex(x, z){
+	for(var i=0;i<arrayOfNodes.length;i++){
+		if(arrayOfNodes[i][0]=x && arrayOfNodes[i][1]==z) return i;
+	}
+	return -1;
+}*/
+
+/*
+//erstellt die Nodes fuer den Graphen
+//@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
+//bisher noch nicht verwendet
+function createNodes(mainDistrict){
+	arrayOfNodes = [];
+	for(var x in nodesOfStreetsSortByXCoord){
+		for(var i=0; i<nodesOfStreetsSortByXCoord[x].length; i++){
+			arrayOfNodes.push(node(parseFloat(x), nodesOfStreetsSortByXCoord[x][i], arrayOfNodes.length));
+		}
+	}
+}*/
 
 
 //Methode, um fuer jedes Stadtteil die einzelnen Gebaeude zu positionieren und die Stadtteile auch zu positionieren
