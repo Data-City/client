@@ -180,6 +180,7 @@
 				    <button type="button" class="btn btn-success" ng-click="updateView();"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
                     <button type="button" class="btn btn-warning"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
 					<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');" onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
+                    <button type="button" class="btn btn-default" onclick='document.getElementById("WebGLCanvas").innerHTML = ""'>Stadt löschen</button>
 				</div>
 			</div>
 		</div>
@@ -211,6 +212,6 @@
 </div>
 
 <!-- Hier wird die Stadt rein gezeichnet -->
-<div id="WebGLCanvas">
+<div id="WebGLCanvas"></div>
     
 <div id ="jsonDownload"></div>
