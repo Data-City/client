@@ -172,15 +172,11 @@
 								<input type="text" class="form-control" ng-model="partOfString" placeholder="Teil-String"
 								title="Dieser Teil-String sortiert alle Datensätze in Blöcke ein. Alle Unterschiede nach diesem String werden in einen eigenen Block eifenen Block platziert.">
 							</td>
-							<td>
-								<button type="submit" class="btn btn-default" ng-click="filter">Test-Button</button>
-							</td>
 						</tr>
 					</table>
-				    <button type="button" class="btn btn-success" ng-click="updateView();"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
-                    <button type="button" class="btn btn-warning"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
-					<button type="button" class="btn btn-default" ng-click="setDataForCity(collection,chosenView,'Stadt');" onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
-                    <button type="button" class="btn btn-default" onclick='document.getElementById("WebGLCanvas").innerHTML = ""'>Stadt löschen</button>
+				    <button type="button" class="btn btn-success btn-xs" ng-click="updateView();"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
+                    <button type="button" class="btn btn-danger btn-xs"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
+					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');" onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
 				</div>
 			</div>
 		</div>
