@@ -111,9 +111,13 @@ function init(nameOfdivElement) {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 				
 	//Hinzufügen von dem renderer-Element zu unserem HTML-Dokument
+    /*
 	var domElement = document.getElementById(nameOfdivElement);
 	document.body.appendChild( renderer.domElement );
 	renderer.domElement.id = "WebGLCanvas";
+    */
+    document.getElementById("WebGLCanvas").innerHTML = "";
+    document.getElementById("WebGLCanvas").appendChild(renderer.domElement);
 
 	scene = new THREE.Scene();
 
