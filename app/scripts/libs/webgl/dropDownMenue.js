@@ -125,7 +125,6 @@ function scale(value, aString, scene, aDistrict, camera, arrayOfWebGLBoxes, arra
 	setMainDistrict(aDistrict);
 	scalingExtrema(extrema, aString);
 	addCityToScene(aDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema);
-	addStreetsToScene(aDistrict, scene);
 	updateControls(Math.max(aDistrict.width, extrema.maxHeight));
 }
 

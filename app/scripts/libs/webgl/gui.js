@@ -1,8 +1,3 @@
-var streetMaterial = getMaterial(0xA4A4A4);
-var myMaterial = {"street": getMaterial(0xA4A4A4),
-	"incoming": getMaterial(0xBDBDBD),
-	"outcoming": getMaterial(0x585858)};
-
 //Hilfsmethode, um eine WebGL-Box zu malen
 //@params: aBuilding: ein JSON-Objekt vom Typ Gebaeude/building, das gezeichnet werden soll
 //			material: ein Material von THREE.js, das auf das Gebaeude drauf soll
@@ -70,15 +65,36 @@ function addCityToScene(mainDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfB
 	// nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
 	for(var i=0;i<mainDistrict.buildings.length;i++){
 		addBoxes(0x768dff, mainDistrict.buildings[i], scene, arrayOfWebGLBoxes);
+		//mainDistrict.buildings[i].leftGarden.centerPosition[1]--;
+		//mainDistrict.buildings[i].rightGarden.centerPosition[1]--;
+		addGarden(mainDistrict.buildings[i], scene);
 		for(var j=0;j<mainDistrict.buildings[i].buildings.length;j++){
 			var faktor = getColor(extrema, mainDistrict.buildings[i].buildings[j].color);
 			addBoxes(new THREE.Color(faktor,faktor,1), mainDistrict.buildings[i].buildings[j], scene, arrayOfWebGLBoxes);
+			addGarden(mainDistrict.buildings[i].buildings[j], scene);
 		}
 	}
 	//Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
 	mainDistrict.centerPosition[1]=-1.5;
 	addBoxes(0xB5BCDE, mainDistrict, scene, arrayOfWebGLBoxes);
 	setCameraPos(camera, mainDistrict, extrema);
+}
+
+
+
+//Hilfsmethode fuer addCityToScene, zeichnet die Gaerten zu den zugehoerigen gebaeuden bzw Districts
+//@params aBuilding: das Gebaeude bzw das District
+function addGarden(aBuilding, scene){
+	var gardens = ["leftGarden", "rightGarden"];
+	for(var i=0;i<2;i++){
+		var gardenMaterial = getMaterial(0x088A08);
+		var geometry = new THREE.BoxGeometry(aBuilding[gardens[i]].width, aBuilding[gardens[i]].height, aBuilding[gardens[i]].depth);
+		var cube = new THREE.Mesh(geometry, gardenMaterial);
+		cube.position.x = aBuilding[gardens[i]].centerPosition[0];
+		cube.position.y = aBuilding[gardens[i]].centerPosition[1];
+		cube.position.z = aBuilding[gardens[i]].centerPosition[2];
+		scene.add(cube);
+	}
 }
 
 
@@ -105,113 +121,22 @@ function setCameraPos(camera, mainDistrict, extrema){
 
 
 
-//Methode, um die Stadt auf die WebGL-scene zu zeichnen, wenn wir die Daten bekommen haben
-//@params:	mainDistrict: das Stadtteil, das der unteren Grundflaeche entspricht mit allen zu zeichnenden Stadtteilen und Gebaeuden
-//			scene: die scene, der man die Zeichnungen hinzufuegen moechte
-function addStreetsToScene(mainDistrict, scene){
-	var aEdge;
-	for(var i=0;i<mainDistrict.buildings.length;i++){
-		//zeichne alle Kanten, die im array building.edges liegen
-		for(var j=0; j<mainDistrict.buildings[i].edges.length;j++){
-			aEdge = mainDistrict.buildings[i].edges[j];
-			drawEdge(aEdge, scene);
-		}
-		//zeichne alle Kanten, die von den Gebaeuden ausgehen
-		for(var j=0; j<mainDistrict.buildings[i].buildings.length;j++){
-			//aEdge = mainDistrict.buildings[i].buildings[j].nextEdge;
-			//drawEdge(aEdge, scene);
-			drawBuildingEdge(mainDistrict.buildings[i].buildings[j], scene);
-		}
-	}
-}
+/*var material = new THREE.LineBasicMaterial({
+	linewidth: 100, color: 0x0000ff
+});
 
 
-//zeichnet die Kante, die zu einem Gebaeude gehoeren, auf die WebGLCanvas
-//@params: aBuilding: Das Gebaeude, zu dem man die Kanten / Strassen zeichnen moechte
-//			scene: die scene, auf die die Strassen gepackt werden soll
-function drawBuildingEdge(aBuilding, scene){
-	var helpingArray = ["incoming", "outcoming"];
-	var shift;
-	for(var i=0;i<2;i++){
-		var geometry = new THREE.BoxGeometry(aBuilding[helpingArray[i]+"Edges"], 0.01, aBuilding.nextEdge.zWidth-1.5);
-		var street = new THREE.Mesh(geometry, myMaterial[helpingArray[i]]);
-		if(i==0) shift = -aBuilding[helpingArray[i]+"Edges"]/2;
-		else shift = aBuilding[helpingArray[i]+"Edges"]/2;
-		street.position.x = aBuilding.nextEdge.center[0]+shift;
-		street.position.z = aBuilding.nextEdge.center[1]-0.25;
-		street.position.y = 0.005;
-		scene.add(street);
-	}
-}
+var geometry = new THREE.Geometry();
+geometry.vertices.push(
+	new THREE.Vector3( -100, 70, 0 ),
+	new THREE.Vector3( -10, 100, 0 ),
+	new THREE.Vector3( -10, 70, 0 )
+);
 
+var line = new THREE.Line( geometry, material );
+//line.scale.set(2, 2, 2);
+scene.add( line );*/
 
-
-
-//zeichnet eine Kante auf die WebGLCanvas
-//@param aEdge: die Kante, die gezeichnet werden soll
-//		material: Material der Strasse
-//		scene: die Scene, auf die die Strasse gepackt werden soll
-function drawEdge(aEdge, scene){
-	/*drawEachEdge(aEdge, true, scene);
-	drawEachEdge(aEdge, false, scene);*/
-	if(aEdge.isHorizontalEdge){
-		var geometry = new THREE.BoxGeometry(aEdge.xWidth, 0.01, aEdge.weight);
-		var street = new THREE.Mesh(geometry, streetMaterial);
-		street.position.z = aEdge.center[1];//+aEdge.weight/2;
-		street.position.x = aEdge.center[0];//+aEdge.weight/2;
-	}
-	else{
-		var geometry = new THREE.BoxGeometry(aEdge.weight, 0.01, aEdge.zWidth);
-		var street = new THREE.Mesh(geometry, streetMaterial);
-		street.position.x = aEdge.center[0];//+aEdge.weight/2;
-		street.position.z = aEdge.center[1];//+aEdge.weight/2;
-	}
-	street.position.y = 0.005;
-	scene.add(street);
-}
-
-
-/*
-//Hilfsfunktion fuer drawEdge
-//@params: aEdge: Kante, die gezeichnet werden soll
-//			material: Material der Strasse
-//			isIncoming: Boolean, true, wenn es eine eingehende Strasse ist, sonst false
-//			scene: die scene, auf die die Strasse gepackt werden soll
-function drawEachEdge(aEdge, isIncoming, scene){
-
-	if(aEdge.isHorizontalEdge){
-		if(isIncoming){
-			var geometry = new THREE.BoxGeometry(aEdge.xWidth+1+0.05, 0.01, aEdge.incomingWeight);
-			var street = new THREE.Mesh(geometry, streetMaterial);
-			street.position.z = aEdge.center[1]+aEdge.incomingWeight/2+0.05;
-			street.position.x = aEdge.center[0]+aEdge.incomingWeight/2-0.5;
-		}
-		else{
-			var geometry = new THREE.BoxGeometry(aEdge.xWidth+1+0.05, 0.01, aEdge.outcomingWeight);
-			var street = new THREE.Mesh(geometry, streetMaterial);
-			street.position.z = aEdge.center[1]-aEdge.incomingWeight/2-0.05;
-			street.position.x = aEdge.center[0]-aEdge.incomingWeight/2+0.5;
-		}
-	}
-	else{
-		if(isIncoming){
-			var geometry = new THREE.BoxGeometry(aEdge.incomingWeight, 0.01, aEdge.zWidth+1+0.05);
-			var street = new THREE.Mesh(geometry, streetMaterial);
-			street.position.x = aEdge.center[0]+aEdge.incomingWeight/2+0.05;
-			street.position.z = aEdge.center[1]+aEdge.incomingWeight/2-0.5;
-		}
-		else{
-			var geometry = new THREE.BoxGeometry(aEdge.outcomingWeight, 0.01, aEdge.zWidth+1+0.05);
-			var street = new THREE.Mesh(geometry, streetMaterial);
-			street.position.x = aEdge.center[0]-aEdge.incomingWeight/2-0.05;
-			street.position.z = aEdge.center[1]-aEdge.incomingWeight/2+0.5;
-		}
-		
-	}
-	street.position.y = 0;
-	scene.add(street);
-}
-*/
 
 
 //Methode zum Bestimmen der Farbe aus dem Farbwert (bisher noch nicht genutzt)
@@ -235,7 +160,7 @@ function render() {
 			INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); //von dem Objekt nehme vom Material die Farbe und setze sie
 	}
 	
-	if (intersects.length > 0 && intersects[0].object.material!=streetMaterial) { //wenn der Strahl mindestens 1 Objekt schneidet
+	if (intersects.length > 0) { //wenn der Strahl mindestens 1 Objekt schneidet
 		INTERSECTED = intersects[0].object; //INTERSECTED sei nun das erste Objekt, das geschnitten wurde
 		INTERSECTED.material.emissive.setHex(0xff0000); //davon setze die Farbe auf rot
 
@@ -258,7 +183,7 @@ function onDocumentMouseDown( event ) {
 
 	var intersects = raycaster.intersectObjects( scene.children); // schaut, was der Strahl, den die Maus macht, alles an Objekten schneidet
 
-	if ( intersects.length > 0 && intersects[0].object.material!=streetMaterial) { //wenn der Strahl ein Objekt schneidet
+	if ( intersects.length > 0) { //wenn der Strahl ein Objekt schneidet
 		var index = arrayOfWebGLBoxes.indexOf(intersects[0].object.geometry);
 		
 		//changeBuildingInformation(neueHoehe, neueFlaeche, neueFarbe, neuerDistrict, neuerName)

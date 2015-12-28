@@ -1,9 +1,6 @@
-var gap = 5; //Abstand zwischen den Gebaeuden
+var gap = 30; //Abstand zwischen den Gebaeuden
 
 var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, buildingInZDirection, lastMaxWidth, width, startToBuildInXDirection;
-var nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord;
-var arrayOfNodes;
-//var map;
 
 // Eine Art Konstruktor fuer ein Gebaeude
 //@params: aName: Name von dem Gebaeude
@@ -12,7 +9,6 @@ var arrayOfNodes;
 //		aColor: Farbe von dem Gebaeude
 //@return: ein Javascript-Objekt vom Typ Gebaeude bzw. building
 function building(aName, aWidth, aHeight, aColor){
-	var anEdge = edge([0,0], [0,0], true);
 	var aBuilding = {
 		//es wird 1.5 addiert, damit Gebaeude mit urspruenglich 0 Hoehe auch gezeichnet werden
 		// und beim logarithmieren auch nicht verschwinden
@@ -20,16 +16,15 @@ function building(aName, aWidth, aHeight, aColor){
 		width:aWidth+1.5,
 		centerPosition:[aWidth/2,aHeight/2,aWidth/2],
 		color:aColor+1.5,
+		numOfIncomingCalls : 10,
+		numOfOutgoingCalls: 10,
 		district: 'es gibt zurzeit nur eins',
 		name: aName,
 		originalheight: aHeight,
 		originalwidth: aWidth,
 		originalcolor:aColor,
-		posOfNextStreetNode:[0,0],
-		nextEdge: anEdge,
-		outcomingEdges: 1,
-		incomingEdges: 1//,
-		//nodeID: -1
+		"rightGarden": garden(10, 5),
+		"leftGarden": garden(10,5)
 	};
 	return aBuilding;
 };
@@ -40,151 +35,56 @@ function building(aName, aWidth, aHeight, aColor){
 //							oder nur Stadtteilen (d.h. JSON-Objekte district)
 //@return: ein Javascript-Objekt vom Typ stadtteil bzw. district
 function district(arrayOfBuildings){
-	var anEdge = edge([0,0], [0,0], true);
 	var aDistrict = {
 		height:1,
 		width:1,
+		numOfIncomingCalls : 10+1.5,
+		numOfOutgoingCalls: (10+1.5)/2,
 		centerPosition:[1/2,-1/2,1/2],
 		buildings:arrayOfBuildings,
-		posOfNextStreetNode:[0,0],
-		nextEdge: anEdge,
-		edges : [],
-		outcomingEdges: 1,
-		incomingEdges: 1
+		name: "ein District",
+		originalnumOfIncomingCalls : 10,
+		originalnumOfOutgoingCalls: 10,
+		"rightGarden": garden(10,5),
+		"leftGarden": garden(10,5)
 	};//,
 		//nodeID: -1};
 	return aDistrict;
 };
 
-/*
-//Konstruktor fuer einen Knoten
-//@params xCoord: xKoordinate
-//		zCoord: z-Koordinate
-//		theID: die ID
-function node(xCoord, zCoord, theID){
-	var aNode = {
-		x: xCoord,
-		z: zCoord,
-		id: theID
+
+//Konstruktor für einen Vorgarten
+//@params: aWidth: Breite von dem Garten (x-Richtung)
+//			aDepth: Tiefe von dem Garten (z-Richtung)
+function garden(aWidth, aDepth){
+	var aGarden = {
+		width: aWidth,
+		height: 0.01,
+		depth: aDepth,
+		centerPosition: [0,0.05,0]
 	};
-	return aNode;
-}*/
-
-
-//Konstruktor für eine gerichtete Kante
-//@params: startpoint: Der Punkt als Array [x,z], bei dem die Kante startet
-//			endpoint: Der Punkt als Array [x,z], bei dem die Kante endet
-function edge(startpoint, endpoint, isAHorzintalEdge){
-	var anEdge = {
-		endPointA: startpoint,
-		endPointB: endpoint,
-		center: [(startpoint[0]+endpoint[0])/2, (startpoint[1]+endpoint[1])/2],
-		height: 0,
-		xWidth: Math.abs(startpoint[0]-endpoint[0])+1,
-		zWidth: Math.abs(startpoint[1]-endpoint[1])+1,
-		/*incomingWeight: 1,
-		outcomingWeight: 1,*/
-		weight: 1,
-		isHorizontalEdge: isAHorzintalEdge};
-	return anEdge;
-};
-
-// sortiert zu jedem key in nodesOfStreetsSortByXCoord und nodesOfStreetsSortByZCoord das zugehoerige Array absteigend 
-//@params: nodesOfStreetsSortByXCoord: JSON, durch das man mit X Koordinaten auf alle moeglichen existierenden Z-Koordinaten der Knoten bekommt
-//	 	nodesOfStreetsSortByZCoord: JSON, durch das man mit Y Koordinaten auf alle moeglichen existierenden X-Koordinaten der Knoten bekommt
-function sortNodesOfStreets(){
-	for(var x in nodesOfStreetsSortByXCoord){
-		nodesOfStreetsSortByXCoord[x].sort(function(a, b){return a-b});
-	}
-	for(var x in nodesOfStreetsSortByZCoord){
-		nodesOfStreetsSortByZCoord[x].sort(function(a, b){return a-b});
-	}
+	return aGarden;
 }
 
-//erstellt ein Array aus Kanten
-//@return: arrayOfEdges: ein Array bestehend aus allen Kanten
-function createEdges(){
-	arrayOfNodes =[];
-	var arrayOfEdges = [];
-	//map = {};
-	for(var x in nodesOfStreetsSortByXCoord){
-		for(var i=0; i<nodesOfStreetsSortByXCoord[x].length-1; i++){
-		//******************
-			arrayOfEdges.push(edge([parseFloat(x), nodesOfStreetsSortByXCoord[x][i]], [parseFloat(x), nodesOfStreetsSortByXCoord[x][i+1]], false));
-		//******************
-			/*if(map[arrayOfNodes.length]==undefined) map[arrayOfNodes.length]={};
-			if(map[arrayOfNodes.length+1]==undefined) map[arrayOfNodes.length+1]={};
-			map[arrayOfNodes.length][arrayOfNodes.length+1]=1;
-			map[arrayOfNodes.length+1][arrayOfNodes.length]=1;
-			arrayOfNodes.push([parseFloat(x), parseFloat(nodesOfStreetsSortByXCoord[x][i])]);
-			console.log(map);*/
-		}
-		arrayOfNodes.push([parseFloat(x), nodesOfStreetsSortByXCoord[x][nodesOfStreetsSortByXCoord[x].length-1]]);
-		//console.log(map);
-	}
-	//console.log("***************");
-	//var firstNodeID, secondNodeID;
-	for(var x in nodesOfStreetsSortByZCoord){
-		for(var i=0; i<nodesOfStreetsSortByZCoord[x].length-1; i++){
-			//***************************
-			arrayOfEdges.push(edge([nodesOfStreetsSortByZCoord[x][i], parseFloat(x)], [nodesOfStreetsSortByZCoord[x][i+1], parseFloat(x)], true));
-			//**************************
-			/*firstNodeID =getNodeIndex(parseFloat(nodesOfStreetsSortByZCoord[x][i]), parseFloat(x));
-			secondNodeID = getNodeIndex(parseFloat(nodesOfStreetsSortByZCoord[x][i+1]), parseFloat(x));
-			map[firstNodeID][secondNodeID]=1;
-			map[secondNodeID][firstNodeID]=1;
-			console.log(map);*/
-		}
-	}
-	var h;//, localMap;
-	for(var x in arrayOfBuildings){
-		h = arrayOfBuildings[x].posOfNextStreetNode;
-		arrayOfBuildings[x].nextEdge = edge([h[0], h[1]], [h[0],arrayOfBuildings[x].centerPosition[2]+arrayOfBuildings[x].width/2], false);
-		//arrayOfBuildings[x].nodeID = arrayOfNodes.length;
-		//localMap = map;
-		//arrayOfNodes.push([arrayOfBuildings[x].posOfNextStreetNode[0], arrayOfBuildings[x].posOfNextStreetNode[1]]);
-	}
-	return arrayOfEdges;
+//Methode zum setzen der GartenPosition in Abhängigkeit vom Gebaeude
+//@params: aBuilding: ein Gebaeude oder District
+function setGardenPos(aBuilding){
+	aBuilding.rightGarden.centerPosition[0] = aBuilding.centerPosition[0]+1+aBuilding.rightGarden.width/2;
+	aBuilding.rightGarden.centerPosition[2] = aBuilding.centerPosition[2]+1+aBuilding.rightGarden.depth/2+aBuilding.width/2;
+	aBuilding.leftGarden.centerPosition[0] = aBuilding.centerPosition[0]-1-aBuilding.leftGarden.width/2;
+	aBuilding.leftGarden.centerPosition[2] = aBuilding.centerPosition[2]+1+aBuilding.leftGarden.depth/2+aBuilding.width/2;
 }
 
-
-/*
-//gibt den Index des Knotens in arrayOfNodes zurück
-//@params: x: x-Koordinate vom Knoten
-//			z: z-Koordinate vom Knoten
-//@return: Index des Knotens in arrayOfNodes
-function getNodeIndex(x, z){
-	for(var i=0;i<arrayOfNodes.length;i++){
-		if(arrayOfNodes[i][0]=x && arrayOfNodes[i][1]==z) return i;
-	}
-	return -1;
-}*/
-
-/*
-//erstellt die Nodes fuer den Graphen
-//@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
-//bisher noch nicht verwendet
-function createNodes(mainDistrict){
-	arrayOfNodes = [];
-	for(var x in nodesOfStreetsSortByXCoord){
-		for(var i=0; i<nodesOfStreetsSortByXCoord[x].length; i++){
-			arrayOfNodes.push(node(parseFloat(x), nodesOfStreetsSortByXCoord[x][i], arrayOfNodes.length));
-		}
-	}
-}*/
 
 
 //Methode, um fuer jedes Stadtteil die einzelnen Gebaeude zu positionieren und die Stadtteile auch zu positionieren
 //@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
 function setMainDistrict(mainDistrict){
-	nodesOfStreetsSortByXCoord={};
-	nodesOfStreetsSortByZCoord={};
 	var districtarray = mainDistrict.buildings;
 	//setze die Gebaeuder erst mal fuer jedes Stadtteil separat, um die Breite der Districts zu kriegen
 	for(var i=0;i<mainDistrict.buildings.length;i++){
 		setOneDistrict(mainDistrict.buildings[i]);
-		sortNodesOfStreets();
-		mainDistrict.buildings[i].edges = createEdges();
+		setGardenPos(mainDistrict.buildings[i]);
 	}
 	
 	//verwende dieselbe Methode fuer die districts
@@ -208,6 +108,7 @@ function shiftTheCity(mainDistrict){
 		districtarray[i].centerPosition[0] = districtarray[i].centerPosition[0]-(mainDistrict.width/2);
 		districtarray[i].centerPosition[1] = -1/2;
 		districtarray[i].centerPosition[2] = districtarray[i].centerPosition[2]-(mainDistrict.width/2);
+		shiftGardens(districtarray[i], -(mainDistrict.width/2), -(mainDistrict.width/2)+10);
 		
 		//Hilfsvariablen
 		shiftX = districtarray[i].centerPosition[0]-(districtarray[i].width)/2;
@@ -217,46 +118,32 @@ function shiftTheCity(mainDistrict){
 		for(var j=0;j<districtarray[i].buildings.length;j++){
 			shiftBuilding(districtarray, i, j, shiftX, shiftZ);
 		}
-		for(var j=0; j<districtarray[i].edges.length; j++){
-			shiftEdges(districtarray, i, j, shiftX, shiftZ);
-		}
 	}
 	
 }
 
 
+
 //Hilfsmethode zum Verschieben der Gebaeuden
 //@params: districtarray: ein Districtarray
 //			i: das i-te District im districtarray
-//			j: die j-te Edge vom i-ten District
+//			j: das j-te Gebaeude vom i-ten District
 //			shiftX: verschiebe das Gebaeude um shiftX in x-Richtung
 //			shiftZ: verschiebe das Gebaeude um shiftZ in z-Richtung
 function shiftBuilding(districtarray, i, j, shiftX, shiftZ){
 	//Verschiebe Position des Gebaeudes
 	districtarray[i].buildings[j].centerPosition[0]=districtarray[i].buildings[j].centerPosition[0]+shiftX;
 	districtarray[i].buildings[j].centerPosition[2]=districtarray[i].buildings[j].centerPosition[2]+shiftZ;
-	// Verschiebe Position vom Streetnode
-	districtarray[i].buildings[j].posOfNextStreetNode[0]=districtarray[i].buildings[j].posOfNextStreetNode[0]+shiftX;
-	districtarray[i].buildings[j].posOfNextStreetNode[1]=districtarray[i].buildings[j].posOfNextStreetNode[1]+shiftZ;
-	// Verschiebe Position von der anliegenden Strasse
-	districtarray[i].buildings[j].nextEdge.center[0] = districtarray[i].buildings[j].nextEdge.center[0]+shiftX;
-	districtarray[i].buildings[j].nextEdge.center[1] = districtarray[i].buildings[j].nextEdge.center[1]+shiftZ;
+	//Verschiebe den linken Garten und rechten Garten
+	shiftGardens(districtarray[i].buildings[j], shiftX, shiftZ);
 }
 
-
-//Hilfsmethode zum Verschieben der Edges
-//@params: districtarray: ein Districtarray
-//			i: das i-te District im districtarray
-//			j: die j-te Edge vom i-ten District
-//			shiftX: verschiebe die Edge um shiftX in x-Richtung
-//			shiftZ: verschiebe die Edge um shiftZ in z-Richtung
-function shiftEdges(districtarray, i, j, shiftX, shiftZ){
-	districtarray[i].edges[j].endPointA[0] = districtarray[i].edges[j].endPointA[0]+shiftX;
-	districtarray[i].edges[j].endPointA[1] = districtarray[i].edges[j].endPointA[1]+shiftZ;
-	districtarray[i].edges[j].endPointB[0] = districtarray[i].edges[j].endPointB[0]+shiftX;
-	districtarray[i].edges[j].endPointB[1] = districtarray[i].edges[j].endPointB[1]+shiftZ;
-	districtarray[i].edges[j].center[0] = districtarray[i].edges[j].center[0]+shiftX;
-	districtarray[i].edges[j].center[1] = districtarray[i].edges[j].center[1]+shiftZ;
+//Methode, um Gaerten zu verschieben
+function shiftGardens(aBuilding, shiftX, shiftZ){
+	aBuilding.leftGarden.centerPosition[0]=aBuilding.leftGarden.centerPosition[0]+shiftX;
+	aBuilding.leftGarden.centerPosition[2]=aBuilding.leftGarden.centerPosition[2]+shiftZ;
+	aBuilding.rightGarden.centerPosition[0]=aBuilding.rightGarden.centerPosition[0]+shiftX;
+	aBuilding.rightGarden.centerPosition[2]=aBuilding.rightGarden.centerPosition[2]+shiftZ;
 }
 
 
@@ -274,6 +161,7 @@ function sortBuildings(aDistrict){
 }
 
 
+
 //Methode wird vom setMainDistrict aufgerufen
 // Sie berechnet fuer die Gebaeude von einem Stadtteil die Position und speichert sie in buildings.centerPosition
 // anschließend wird noch das Stadtteil vergroessert, damit alle Gebaeude auf das Stadtteil draufpassen
@@ -282,6 +170,7 @@ function setOneDistrict(aDistrict){
 	
 	aDistrict = sortBuildings(aDistrict);//zunaechst muessen wir das gebaudearray sortieren absteigend nach der Breite der Boxen
 	setFirstBuilding(aDistrict); //Initialisiert globale Variablen
+	setGardenPos(arrayOfBuildings[0]);
 	
 	for(var i=1;i<arrayOfBuildings.length;i++){
 		if(buildingInZDirection==true){//wenn wir gerade in Z-Richtung bauen
@@ -314,7 +203,7 @@ function setOneDistrict(aDistrict){
 				}
 			}
 		}
-		setTheFiveStreetNodes(i);
+		setGardenPos(arrayOfBuildings[i]);
 	}
 	
 	aDistrict.width = width;
@@ -343,29 +232,6 @@ function setFirstBuilding(aDistrict){
 	if(arrayOfBuildings.length>1){
 		extension = arrayOfBuildings[1].width+gap;
 	}
-	setTheFiveStreetNodes(0);
-}
-
-
-// Diese Methode fuegt den JSON-Objekten nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord, welchee die Positionen der Strassenkreuzungen bzw. Knoten speichern,
-// die mit dem i-ten Gebaeude erstellt werden muessen
-//@param: i: die Position des Gebaeudes, mit dem die Knoten erstellt werden sollen, aus dem array arrayOfBuildings
-function setTheFiveStreetNodes(i){
-	var toAdd = arrayOfBuildings[i].width/2 + gap/2;
-	var centerPos = arrayOfBuildings[i].centerPosition;
-	arrayOfBuildings[i].posOfNextStreetNode = [centerPos[0], centerPos[2]+toAdd];
-	
-	//addANode(nodesOfStreetsSortByXCoord, centerPos[0], centerPos[2]+toAdd);
-	addANode(nodesOfStreetsSortByXCoord, centerPos[0]+toAdd, centerPos[2]+toAdd);
-	addANode(nodesOfStreetsSortByXCoord, centerPos[0]+toAdd, centerPos[2]-toAdd);
-	addANode(nodesOfStreetsSortByXCoord, centerPos[0]-toAdd, centerPos[2]+toAdd);
-	addANode(nodesOfStreetsSortByXCoord, centerPos[0]-toAdd, centerPos[2]-toAdd);
-	
-	//addANode(nodesOfStreetsSortByZCoord, centerPos[2]+toAdd, centerPos[0]);
-	addANode(nodesOfStreetsSortByZCoord, centerPos[2]+toAdd, centerPos[0]+toAdd);
-	addANode(nodesOfStreetsSortByZCoord, centerPos[2]+toAdd, centerPos[0]-toAdd);
-	addANode(nodesOfStreetsSortByZCoord, centerPos[2]-toAdd, centerPos[0]+toAdd);
-	addANode(nodesOfStreetsSortByZCoord, centerPos[2]-toAdd, centerPos[0]-toAdd);
 }
 
 

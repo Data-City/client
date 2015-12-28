@@ -34,7 +34,6 @@ function drawCity(data, association, nameOfDivElement){
 				
 	//zeichnen nun auch die Stadt
 	addCityToScene(mainDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema);
-	addStreetsToScene(mainDistrict, scene);
 	
 	// Erstelle das Menue oben rechts
 	if( Detector.webgl ){
@@ -111,11 +110,11 @@ function init(nameOfdivElement) {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 				
 	//Hinzufügen von dem renderer-Element zu unserem HTML-Dokument
-    /*
-	var domElement = document.getElementById(nameOfdivElement);
+    
+	/*var domElement = document.getElementById(nameOfdivElement);
 	document.body.appendChild( renderer.domElement );
-	renderer.domElement.id = "WebGLCanvas";
-    */
+	renderer.domElement.id = "WebGLCanvas";*/
+    
     document.getElementById("WebGLCanvas").innerHTML = "";
     document.getElementById("WebGLCanvas").appendChild(renderer.domElement);
 
@@ -127,7 +126,7 @@ function init(nameOfdivElement) {
 				
 	//Lichtquellen setzen
 	setLight(scene);
-	
+
 	raycaster = new THREE.Raycaster();
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
