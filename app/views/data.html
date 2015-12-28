@@ -3,6 +3,7 @@
   <!-- Fehlerausgabe, falls man nicht eingeloggt ist -->
   <div class="alert alert-danger" role="alert" ng-hide="loggedIn">
     <h3>Sie sind nicht eingeloggt!</h3>
+    <p><a ng-href="#/login"><i class=" glyphicon glyphicon-chevron-right"></i> Login</a></p>
   </div>
 
   <!-- Panel zur Anzeige der Datensätze -->
@@ -19,15 +20,15 @@
           <th>Geändert</th>
           <th></th>
         </tr>
-        <tr ng-repeat="collection in collections"  ng-click="setChosenCollection(collection._id)">
-          <td>{{collection._id}}</td>
-          <td>{{formatTimeString(collection._created_on)}}</td>
-          <td>{{formatTimeString(collection._lastupdated_on)}}</td>
-          <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)" data-toggle="tooltip" title="Löschen"></span></td>
-          <!--  
-            Erst nochmal draußen, weil es blöd wäre, jetzt schon einen Datensatz zu löschen, ohne einen hinzufügen zu können
-          <td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="deleteDataset(collection.id)" data-toggle="modal" data-target="#deleteCollectionModal"></span></td>
-          -->
+        <tr ng-repeat="collection in collections">
+          <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection._id}}</td>
+          <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection._created_on)}}</td>
+          <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection._lastupdated_on)}}</td>
+          <td>
+              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteCollectionModal" data-toggle="tooltip" title="Löschen" ng-click="setChosenCollectionOnly(collection._id)">
+			     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+		      </button>
+          </td>
         </tr>
       </table>
       
@@ -52,21 +53,20 @@
       '<button type="button" class="btn btn-default" onclick="">Datei hochladen</button>' +
     '</div>'
   </div>
-
-  <!-- Modal: Popup für's Löschen -->
-  <div id="deleteCollectionModal" class="modal fade" role="dialog">
+</div>  
+                      
+<!-- Modal: "Popup", ob eine Ansicht gelöscht werden soll -->
+<div id="deleteCollectionModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-sm">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-body">
-          <p>Möchten Sie den Datensatz "{{chosenCollection.name}}" wirklich löschen?</p>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Möchten Sie den Datensatz "" wirklich löschen?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteDataset(chosenCollection)">Ja</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="deleteCollection(chosenCollection)">Ja</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
-        </div>
-      </div>
-
     </div>
-  </div>
 </div>
