@@ -11,9 +11,5 @@ describe('Filter: bytype', function () {
     bytype = $filter('bytype');
   }));
 
-  it('should return the input prefixed with "bytype filter:"', function () {
-    var text = 'angularjs';
-    expect(bytype(text)).toBe('bytype filter: ' + text);
-  });
 
 });

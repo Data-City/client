@@ -11,9 +11,5 @@ describe('Filter: bychooseability', function () {
     bychooseability = $filter('bychooseability');
   }));
 
-  it('should return the input prefixed with "bychooseability filter:"', function () {
-    var text = 'angularjs';
-    expect(bychooseability(text)).toBe('bychooseability filter: ' + text);
-  });
 
 });
