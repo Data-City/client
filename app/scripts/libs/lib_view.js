@@ -229,3 +229,22 @@ var getAttributesWithType = function (data) {
 		return attributesWithType;
       }
     };
+	
+var getURL = function(database, collection) {
+	return BASEURL + "/" + database + "/" + collection;
+};
+	
+var createAggregation = function(database, collection, username, password, $http, aggrs, func) {
+	var req = {
+		method: 'PUT',
+		url: getURL(database, collection),
+		headers: {
+			'Content-Type': 'application/hal+json'
+		},
+		data: {
+			'aggrs': aggrs, 
+		},
+	};
+	
+	$http(req).then(func);
+};

@@ -120,8 +120,8 @@ angular.module('datacityApp')
     var getType = function (thing) {
       return typeof (thing);
     };
-    
-    $scope.toggleChooseabilityOfAttribute = function(index) {
+
+    $scope.toggleChooseabilityOfAttribute = function (index) {
       $scope.attributesOfCollection[index].chooseable = !$scope.attributesOfCollection[index].chooseable;
     };
     
@@ -174,6 +174,49 @@ angular.module('datacityApp')
           $scope.collection = resp;
           $scope.attributesOfCollection = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
           $log.info($scope.attributesOfCollection);
+
+          var createGroupAggrParams = function (attrs) {
+            var stats = [];
+            attrs.forEach(function (element, index) {
+              if (element.type === 'number') {
+                var name = element.name;
+                stats[name] = {
+                  'min': { $min: "_$" + element.name }
+                };
+              }
+            }
+              );
+            return stats;
+          };
+
+          $log.info(createGroupAggrParams($scope.attributesOfCollection));
+          /*
+          var aggrs = {
+            "type": "pipeline",
+            "uri": 'stats',
+            "stages": {
+              "_$group": {
+                '_id': "_$age",
+                //'stats' : createGroupAggrParams($scope.attributesOfCollection)
+                'min': { $min: "_$age" }
+              }
+            }
+          };
+          */
+
+          var aggrs = [
+            {
+              "type": "pipeline",
+              "uri": "test_ap",
+              "stages": [
+              ]
+            }
+          ];
+
+          createAggregation("prelife", $scope.chosenView.collID, username, password, $http, aggrs, function (resp) {
+            $log.info("Antwort auf create Aggregtion:");
+            $log.info(resp);
+          });
         });
 
       }
