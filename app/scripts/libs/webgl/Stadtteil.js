@@ -1,6 +1,15 @@
 var gap = 30; //Abstand zwischen den Gebaeuden
+var gardenID = 0;
+var hashGarden = {};
 
 var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, buildingInZDirection, lastMaxWidth, width, startToBuildInXDirection;
+
+//gibt die Hashtable fuer die Gaerten zurueck
+//@return: die Hashtable fuer die Gaerten
+function getHashGarden(){
+	return hashGarden;
+}
+
 
 // Eine Art Konstruktor fuer ein Gebaeude
 //@params: aName: Name von dem Gebaeude
@@ -9,6 +18,11 @@ var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, b
 //		aColor: Farbe von dem Gebaeude
 //@return: ein Javascript-Objekt vom Typ Gebaeude bzw. building
 function building(aName, aWidth, aHeight, aColor){
+	var theLeftGarden = garden(10,5, gardenID);
+	var theRightGarden = garden(10,5, gardenID+1);
+	hashGarden[gardenID]=theLeftGarden;
+	hashGarden[gardenID+1]=theRightGarden;
+	gardenID = gardenID+2;
 	var aBuilding = {
 		//es wird 1.5 addiert, damit Gebaeude mit urspruenglich 0 Hoehe auch gezeichnet werden
 		// und beim logarithmieren auch nicht verschwinden
@@ -23,8 +37,9 @@ function building(aName, aWidth, aHeight, aColor){
 		originalheight: aHeight,
 		originalwidth: aWidth,
 		originalcolor:aColor,
-		"rightGarden": garden(10, 5),
-		"leftGarden": garden(10,5)
+		"leftGarden": theLeftGarden,
+		"rightGarden": theRightGarden
+		
 	};
 	return aBuilding;
 };
@@ -35,6 +50,11 @@ function building(aName, aWidth, aHeight, aColor){
 //							oder nur Stadtteilen (d.h. JSON-Objekte district)
 //@return: ein Javascript-Objekt vom Typ stadtteil bzw. district
 function district(arrayOfBuildings){
+	var theLeftGarden = garden(10,5, gardenID);
+	var theRightGarden = garden(10,5, gardenID+1);
+	hashGarden[gardenID]=theLeftGarden;
+	hashGarden[gardenID+1]=theRightGarden;
+	gardenID = gardenID+2;
 	var aDistrict = {
 		height:1,
 		width:1,
@@ -45,10 +65,9 @@ function district(arrayOfBuildings){
 		name: "ein District",
 		originalnumOfIncomingCalls : 10,
 		originalnumOfOutgoingCalls: 10,
-		"rightGarden": garden(10,5),
-		"leftGarden": garden(10,5)
-	};//,
-		//nodeID: -1};
+		"leftGarden": theLeftGarden,
+		"rightGarden": theRightGarden
+	};
 	return aDistrict;
 };
 
@@ -56,15 +75,43 @@ function district(arrayOfBuildings){
 //Konstruktor für einen Vorgarten
 //@params: aWidth: Breite von dem Garten (x-Richtung)
 //			aDepth: Tiefe von dem Garten (z-Richtung)
-function garden(aWidth, aDepth){
+//			aID: die ID vom Garten
+function garden(aWidth, aDepth, aID){
 	var aGarden = {
 		width: aWidth,
 		height: 0.01,
 		depth: aDepth,
-		centerPosition: [0,0.05,0]
+		centerPosition: [0,0.05,0],
+		nextLinePos: [0,0],
+		on: false,
+		id: aID,
+		linesTo: abhaengigkeiten()
 	};
+	if(aID<10){
+		aGarden.linesTo[aID] = 0;
+	}
 	return aGarden;
 }
+
+
+//Mathode zum Setzen der nächsten Position, von der aus man eine Linea zeichnen kann im Garten
+//@params: aGarden: ein Garten
+function setNextLinePos(aGarden){
+	if(aGarden.nextLinePos[0]+0.01 > aGarden.centerPosition[0]+aGarden.width){
+		aGarden.nextLinePos[0] = aGarden.centerPosition[0]-aGarden.width/2;
+		if(aGarden.nextLinePos[1]+0.01 > aGarden.centerPosition[2]+aGarden.depth){
+			aGarden.nextLinePos[1] = aGarden.centerPosition[1]-aGarden.depth/2;
+		}
+		else{
+			aGarden.nextLinePos[1] = aGarden.nextLinePos[1]+0.01;
+		}
+	}
+	else{ 
+		aGarden.nextLinePos[0]=aGarden.nextLinePos[0]+0.01;
+	}
+}
+
+
 
 //Methode zum setzen der GartenPosition in Abhängigkeit vom Gebaeude
 //@params: aBuilding: ein Gebaeude oder District
@@ -144,6 +191,11 @@ function shiftGardens(aBuilding, shiftX, shiftZ){
 	aBuilding.leftGarden.centerPosition[2]=aBuilding.leftGarden.centerPosition[2]+shiftZ;
 	aBuilding.rightGarden.centerPosition[0]=aBuilding.rightGarden.centerPosition[0]+shiftX;
 	aBuilding.rightGarden.centerPosition[2]=aBuilding.rightGarden.centerPosition[2]+shiftZ;
+	
+	aBuilding.leftGarden.nextLinePos[0]=aBuilding.leftGarden.centerPosition[0]-aBuilding.leftGarden.width/2;
+	aBuilding.leftGarden.nextLinePos[1]=aBuilding.leftGarden.centerPosition[2]-aBuilding.leftGarden.depth/2;
+	aBuilding.rightGarden.nextLinePos[0]=aBuilding.rightGarden.centerPosition[0]-aBuilding.rightGarden.width/2;
+	aBuilding.rightGarden.nextLinePos[1]=aBuilding.rightGarden.centerPosition[2]-aBuilding.rightGarden.depth/2;
 }
 
 

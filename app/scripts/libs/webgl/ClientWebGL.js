@@ -13,6 +13,24 @@ var extrema = { //enthaelt die Extremwerte aus den Daten nach Aufruf von addCity
 };
 
 
+//gibt die Extremwerte zurueck
+function getExtrema(){
+	return extrema;
+}
+
+
+//gibt das Gebaeude zurueck, das diesen Namen hat
+//wird bisher noch nicht gebraucht
+//@params name
+function getBuildingByName(name){
+	for(var i=0;i<arrayOfBuildingsAsWebGLBoxes;i++){
+		if(name==arrayOfBuildingsAsWebGLBoxes[i].name){
+			return arrayOfBuildingsAsWebGLBoxes[i];
+		}
+	}
+}
+
+
 
 // wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
 // @param data: JSON vom Datenbank-Team, das fuer jedes Gebaeude die Hoehe, Breite, Farbe, etc. gespeichert hat

@@ -1,3 +1,6 @@
+var maximalHeight;
+var mapOfLines = {};
+
 //Hilfsmethode, um eine WebGL-Box zu malen
 //@params: aBuilding: ein JSON-Objekt vom Typ Gebaeude/building, das gezeichnet werden soll
 //			material: ein Material von THREE.js, das auf das Gebaeude drauf soll
@@ -65,8 +68,6 @@ function addCityToScene(mainDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfB
 	// nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
 	for(var i=0;i<mainDistrict.buildings.length;i++){
 		addBoxes(0x768dff, mainDistrict.buildings[i], scene, arrayOfWebGLBoxes);
-		//mainDistrict.buildings[i].leftGarden.centerPosition[1]--;
-		//mainDistrict.buildings[i].rightGarden.centerPosition[1]--;
 		addGarden(mainDistrict.buildings[i], scene);
 		for(var j=0;j<mainDistrict.buildings[i].buildings.length;j++){
 			var faktor = getColor(extrema, mainDistrict.buildings[i].buildings[j].color);
@@ -78,6 +79,12 @@ function addCityToScene(mainDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfB
 	mainDistrict.centerPosition[1]=-1.5;
 	addBoxes(0xB5BCDE, mainDistrict, scene, arrayOfWebGLBoxes);
 	setCameraPos(camera, mainDistrict, extrema);
+
+	//***********************************************
+	maximalHeight = getExtrema().maxHeight;
+	//drawLines(arrayOfBuildingsAsWebGLBoxes[2]["leftGarden"]);
+	//drawALine(arrayOfBuildingsAsWebGLBoxes[2]["leftGarden"], arrayOfBuildingsAsWebGLBoxes[3]["rightGarden"]);
+	//***********************************************
 }
 
 
@@ -88,14 +95,94 @@ function addGarden(aBuilding, scene){
 	var gardens = ["leftGarden", "rightGarden"];
 	for(var i=0;i<2;i++){
 		var gardenMaterial = getMaterial(0x088A08);
+		gardenMaterial.name="garden";
 		var geometry = new THREE.BoxGeometry(aBuilding[gardens[i]].width, aBuilding[gardens[i]].height, aBuilding[gardens[i]].depth);
 		var cube = new THREE.Mesh(geometry, gardenMaterial);
 		cube.position.x = aBuilding[gardens[i]].centerPosition[0];
 		cube.position.y = aBuilding[gardens[i]].centerPosition[1];
 		cube.position.z = aBuilding[gardens[i]].centerPosition[2];
+		cube.garden = aBuilding[gardens[i]];
 		scene.add(cube);
 	}
 }
+
+
+//Zeichnet alle Abhaengigkeiten, die von einem Garten ausgehen
+//@params: aGarden: der Garten, fuer den die Abhaengigkeit gezeichnet werden soll
+function drawLines(aGarden){
+	aGarden.on=true;
+	var hashTable = getHashGarden();
+	for(var x in aGarden.linesTo){
+		for(var i=0; i<aGarden.linesTo[x]; i++){
+			if(hashTable[x].on==false){
+				drawALine(aGarden, hashTable[x]);
+			}
+		}
+	}
+}
+
+
+
+//Zeichnet fuer die Gaerten eine Abhaengigkeit
+//@params: aGarden: der Start-Garten
+//			destGarden: der Ziel-Garten
+function drawALine(aGarden, destGarden){
+	var curve = new THREE.CubicBezierCurve3(
+		new THREE.Vector3(aGarden.nextLinePos[0], 0, aGarden.nextLinePos[1]),
+		new THREE.Vector3(aGarden.nextLinePos[0]+0.3*(destGarden.nextLinePos[0]-aGarden.nextLinePos[0]), 2*maximalHeight, aGarden.nextLinePos[1]+0.3*(destGarden.nextLinePos[0]-aGarden.nextLinePos[1])),
+		new THREE.Vector3(aGarden.nextLinePos[0]+0.7*(destGarden.nextLinePos[0]-aGarden.nextLinePos[0]), 2*maximalHeight, aGarden.nextLinePos[1]+0.7*(destGarden.nextLinePos[0]-aGarden.nextLinePos[1])),
+		new THREE.Vector3(destGarden.nextLinePos[0], 0, destGarden.nextLinePos[1])
+	);
+	var geometry = new THREE.Geometry();
+	geometry.vertices = curve.getPoints( 50 );
+
+	var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+	var curveObject = new THREE.Line( geometry, material );
+	scene.add(curveObject);
+	
+	workUpGarden(aGarden, destGarden, curveObject);
+	workUpGarden(destGarden, aGarden, curveObject);
+}
+
+
+//Hilfsmethode fuer drawALine: fuegt die Linie den mapOfLines hinzu und setzt naechste Linenposition neu
+//@params: aGarden: der Garten, dem die Linie gehoert
+//			destGarden: der Garten, zu dem die Linie geht
+//			curveObject: die Linie, die gezeichnet wurde
+function workUpGarden(aGarden, destGarden, curveObject){
+	if(mapOfLines[aGarden.id]==undefined){
+		mapOfLines[aGarden.id] = {};
+		mapOfLines[aGarden.id][destGarden.id] = [curveObject];
+	}
+	else{
+		if(mapOfLines[aGarden.id][destGarden.id]==undefined){
+			mapOfLines[aGarden.id][destGarden.id] = [curveObject];
+		}
+		else{
+			mapOfLines[aGarden.id][destGarden.id].push(curveObject);
+		}
+	}
+	setNextLinePos(aGarden);
+}
+
+
+//Methode zum Löschen der Kanten, die von einem Garten ausgehen
+//@params aGarden: der Garten, von dem aus die Linien gelöscht werden sollen
+function removeLines(aGarden){
+	var JsonOfLines = mapOfLines[aGarden.id];
+	var hashTable = getHashGarden();
+	var object;
+	for(var x in JsonOfLines){
+		if(hashTable[x].on==false){
+			for(var i=0;i<JsonOfLines[x].length;i++){
+				scene.remove(JsonOfLines[x][i]);
+			}
+		}
+	}
+	mapOfLines[aGarden.id]={};
+	aGarden.on = false;
+}
+
 
 
 //Hilfsmethode fuer addCityToScene, zeichnet die Boxen und fuegt sie dem array arrayOfBuildingsAsWebGLBoxes hinzu
@@ -121,22 +208,6 @@ function setCameraPos(camera, mainDistrict, extrema){
 
 
 
-/*var material = new THREE.LineBasicMaterial({
-	linewidth: 100, color: 0x0000ff
-});
-
-
-var geometry = new THREE.Geometry();
-geometry.vertices.push(
-	new THREE.Vector3( -100, 70, 0 ),
-	new THREE.Vector3( -10, 100, 0 ),
-	new THREE.Vector3( -10, 70, 0 )
-);
-
-var line = new THREE.Line( geometry, material );
-//line.scale.set(2, 2, 2);
-scene.add( line );*/
-
 
 
 //Methode zum Bestimmen der Farbe aus dem Farbwert (bisher noch nicht genutzt)
@@ -155,12 +226,11 @@ function render() {
 	raycaster.setFromCamera(mouse, camera); //erstellt einen Strahl mit der Maus in Verbindung mit der Kamera
 	
 	var intersects = raycaster.intersectObjects(scene.children); //sammelt Objekte, die der Strahl schneidet
-	
-	if (INTERSECTED){
+	if (INTERSECTED && INTERSECTED.material.type != "LineBasicMaterial"){
 			INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); //von dem Objekt nehme vom Material die Farbe und setze sie
 	}
 	
-	if (intersects.length > 0) { //wenn der Strahl mindestens 1 Objekt schneidet
+	if (intersects.length > 0 && intersects[0].object.material.type!="LineBasicMaterial") { //wenn der Strahl mindestens 1 Objekt schneidet
 		INTERSECTED = intersects[0].object; //INTERSECTED sei nun das erste Objekt, das geschnitten wurde
 		INTERSECTED.material.emissive.setHex(0xff0000); //davon setze die Farbe auf rot
 
@@ -184,16 +254,25 @@ function onDocumentMouseDown( event ) {
 	var intersects = raycaster.intersectObjects( scene.children); // schaut, was der Strahl, den die Maus macht, alles an Objekten schneidet
 
 	if ( intersects.length > 0) { //wenn der Strahl ein Objekt schneidet
-		var index = arrayOfWebGLBoxes.indexOf(intersects[0].object.geometry);
-		
-		//changeBuildingInformation(neueHoehe, neueFlaeche, neueFarbe, neuerDistrict, neuerName)
-		changeBuildingInformation(
-			arrayOfBuildingsAsWebGLBoxes[index].originalheight, 
-			arrayOfBuildingsAsWebGLBoxes[index].originalwidth, 
-			arrayOfBuildingsAsWebGLBoxes[index].originalcolor, 
-			"noch nicht implementiert", 
-			arrayOfBuildingsAsWebGLBoxes[index].name);
-		
+		if(intersects[0].object.material.name=="garden"){
+			if(intersects[0].object.garden.on==false){
+				drawLines(intersects[0].object.garden)
+			}
+			else{
+				removeLines(intersects[0].object.garden);
+			}
+		}
+		else{
+			var index = arrayOfWebGLBoxes.indexOf(intersects[0].object.geometry);
+			
+			//changeBuildingInformation(neueHoehe, neueFlaeche, neueFarbe, neuerDistrict, neuerName)
+			changeBuildingInformation(
+				arrayOfBuildingsAsWebGLBoxes[index].originalheight, 
+				arrayOfBuildingsAsWebGLBoxes[index].originalwidth, 
+				arrayOfBuildingsAsWebGLBoxes[index].originalcolor, 
+				"noch nicht implementiert", 
+				arrayOfBuildingsAsWebGLBoxes[index].name);
+		}
 	}
 
 }

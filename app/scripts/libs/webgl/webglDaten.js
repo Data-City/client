@@ -38,9 +38,25 @@ function getLegende(){
 	return legende;
 }
 
+
+function abhaengigkeiten(){
+	var toReturn = {0:5,
+		1:23,
+		2:75,
+		3:1,
+		4:9,
+		5:15,
+		6:27,
+		7:15,
+		8:4,
+		9:6};
+	return toReturn;
+}
+
+
 function ersteDatei(){
 	var toReturn =  {"data" : { "_embedded" : { "rh:doc" : [ 
-		{"Package" : "geb1" , "Klassen" :50  , "Methoden" :5000  , "Zeilen" :73  , "Verzweigungen" : "" },
+		{"Package" : "geb1" , "Klassen" :50  , "Methoden" :50  , "Zeilen" :73  , "Verzweigungen" : "" },
 		{"Package" : "geb2" , "Klassen" :10  , "Methoden" :20  , "Zeilen" :186  , "Verzweigungen" : "" },
 		{"Package" : "geb3" , "Klassen" :30  , "Methoden" :50  , "Zeilen" :45  , "Verzweigungen" : "" },
 		{"Package" : "geb4" , "Klassen" :50  , "Methoden" :30  , "Zeilen" : 156 , "Verzweigungen" : "" },
