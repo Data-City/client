@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: controllers/admin.js</title>
+    <title>JSDoc: Source: filters/bychooseability.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: controllers/admin.js</h1>
+    <h1 class="page-title">Source: filters/bychooseability.js</h1>
 
     
 
@@ -29,19 +29,26 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 
 /**
- * @ngdoc function
- * @name datacityApp.controller:AdminCtrl
+ * Filtert Attribute nach ihrer Wählbarkeit
+ * 
+ * @ngdoc filter
+ * @name datacityApp.filter:bychooseability
+ * @function
  * @description
- * # AdminCtrl
- * Controller of the datacityApp
+ * # bychooseability
+ * Filter in the datacityApp.
  */
 angular.module('datacityApp')
-  .controller('AdminCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .filter('bychooseability', function () {
+    return function (attrs) {
+      var out = [];
+      attrs.forEach(function (element, index) {
+        if (element.chooseable) {
+          out.push(element);
+        }
+      });
+      return out;
+    };
   });
 </code></pre>
         </article>
