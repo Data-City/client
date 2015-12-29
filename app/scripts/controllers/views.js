@@ -18,7 +18,7 @@ angular.module('datacityApp')
     /**
      *  Konstruktor für eine Ansicht
      */
-     function View() {
+    function View() {
       this.name = "Neue Ansicht";
       this.collID = $scope.collID;
       this.creator = username;
@@ -39,7 +39,7 @@ angular.module('datacityApp')
     $scope.numberOfViews = null;
     $scope.chosenView = null;
     $scope.collection = null;
-    $scope.attributesOfCollection = null;
+    $scope.attributesOfCollection = [];
 
     /**
      * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
@@ -48,7 +48,11 @@ angular.module('datacityApp')
       $scope.collection = collection;
       $scope.view = view;
       $scope.divID = divID;
-
+      $log.info(view);
+      view.dimensions.hoehe = view.dimensions.hoehe.name;
+      view.dimensions.flaeche = view.dimensions.flaeche.name;
+      view.dimensions.farbe = view.dimensions.farbe.name;
+      view.dimensions.district = view.dimensions.district.name;
       drawCity(collection, view, divID);
     };
     
@@ -101,7 +105,7 @@ angular.module('datacityApp')
       var attrs = [];
       for (var key in row) {
         if (key[0] !== '_') {
-          $log.info("Key: " + key + "\tValue: " + row[key] +  "\tType: " + getType(row[key]));
+          $log.info("Key: " + key + "\tValue: " + row[key] + "\tType: " + getType(row[key]));
           attrs[key] = getType(row[key]);
         }
       }
@@ -114,7 +118,11 @@ angular.module('datacityApp')
      * @return Den Typen vom Objekt/Parameter
      */
     var getType = function (thing) {
-      return typeof(thing);
+      return typeof (thing);
+    };
+    
+    $scope.toggleChooseabilityOfAttribute = function(index) {
+      $scope.attributesOfCollection[index].chooseable = !$scope.attributesOfCollection[index].chooseable;
     };
     
     /**
@@ -123,15 +131,15 @@ angular.module('datacityApp')
      * @param attribute Name der Spalte
      * @param typeToValidate String des Typs, der die Spalte haben soll (string, number, ...)
      */
-    $scope.validate = function (attribute, typeToValidate) {     
-        var type = $scope.getFirstValidEntry(attribute);
-        
-        if(type === typeToValidate){
-            //console.log("Eingabewert OK");
-        }else{
-            //console.log("Eingabewert ist nicht OK");
-            window.alert("In dieses Feld dürfen nur Eingaben vom Typ " + typeToValidate);
-        }
+    $scope.validate = function (attribute, typeToValidate) {
+      var type = $scope.getFirstValidEntry(attribute);
+
+      if (type === typeToValidate) {
+        //console.log("Eingabewert OK");
+      } else {
+        //console.log("Eingabewert ist nicht OK");
+        window.alert("In dieses Feld dürfen nur Eingaben vom Typ " + typeToValidate);
+      }
     };
     
     /**
@@ -141,15 +149,15 @@ angular.module('datacityApp')
      * @return: Rückgabewert des ersten Eintrags
      */
     $scope.getFirstValidEntry = function (attribute) {
-        var data = $scope.collection.data;
-              
-        for (var key in data._embedded['rh:doc']) {
-            if (data._embedded['rh:doc'][key][attribute] !== "") {
-                return typeof data._embedded['rh:doc'][key][attribute];
-            }
+      var data = $scope.collection.data;
+
+      for (var key in data._embedded['rh:doc']) {
+        if (data._embedded['rh:doc'][key][attribute] !== "") {
+          return typeof data._embedded['rh:doc'][key][attribute];
         }
-        window.alert("Die ausgewählte Spalte ist leer!");
-        return null;
+      }
+      window.alert("Die ausgewählte Spalte ist leer!");
+      return null;
     };
     
     /**
@@ -164,25 +172,13 @@ angular.module('datacityApp')
         $scope.chosenView = view;
         getCollection("prelife", $scope.chosenView.collID, username, password, $http, function (resp) {
           $scope.collection = resp;
-          $log.info($scope.collection);
-
-          var firstEntry = $scope.collection.data._embedded['rh:doc'][0];
-          var attrs = [];
-          for (var key in firstEntry) {
-            if (key[0] !== '_') {
-              attrs.push(key);
-            }
-          }
-
-          getProperties(firstEntry);
-
-          $scope.attributesOfCollection = attrs;
-          $log.info("Attributes of Collection: " + attrs);
+          $scope.attributesOfCollection = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
+          $log.info($scope.attributesOfCollection);
         });
 
       }
-      $log.info($scope.chosenView);
     };
+
 
     /**
      * Initialisierung
@@ -264,17 +260,17 @@ angular.module('datacityApp')
      * Erzeugt einen Text zum Download der ausgewählten Ansicht als JSON-Datei
      */
     $scope.downloadJSON = function () {
-        var data = $scope.chosenView;
-        var json = JSON.stringify(data);
-        var blob = new Blob([json], {type: "application/json"});
-        var url  = URL.createObjectURL(blob);
+      var data = $scope.chosenView;
+      var json = JSON.stringify(data);
+      var blob = new Blob([json], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
 
-        var a = document.createElement('a');
-        a.download    = "chosenView.json";
-        a.href        = url;
-        a.textContent = "chosenView.json";
+      var a = document.createElement('a');
+      a.download = "chosenView.json";
+      a.href = url;
+      a.textContent = "chosenView.json";
 
-        document.getElementById('jsonDownload').appendChild(a);
+      document.getElementById('jsonDownload').appendChild(a);
     };
-    
+
   });
