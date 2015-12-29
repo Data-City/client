@@ -28,7 +28,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
      * 
      * @param id ID eines Datensatzes, der ausgewählt werden soll
      */
-	$scope.setChosenCollection = function (id) {
+	$scope.setChosenCollectionAndRedirect = function (id) {
 		getCollection(database, id, username, password, $http, function (response) {
 			if ($scope.chosenCollection === response) {
 				$scope.chosenCollection = null;
@@ -41,7 +41,18 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
 			window.location="#/views/" + $scope.chosenCollection.data._id;
 		});
 	};
-
+    
+    $scope.setChosenCollectionOnly = function (id) {
+		getCollection(database, id, username, password, $http, function (response) {
+			if ($scope.chosenCollection === response) {
+				$scope.chosenCollection = null;
+			} else {
+				$scope.chosenCollection = response;
+			}
+			$log.info($scope.chosenCollection.data._id);
+		});
+	};
+   
 	$scope.getIdOfCollection = function (collection) {
 		return collection ? collection.data._id : null;
 	};
@@ -51,15 +62,16 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, sharedLogi
      * 
      * @param id ID des Datensatzes, der gelöscht werden soll
      */
-
-	//Die zugehörigen Ansichten sollten auch gelöscht werden!! ------> funktioniert noch nicht
-	$scope.deleteDataset = function (id) {
-		delete $scope.data[id];
-		if ($rootScope.chosenDataset === id) {
-			$rootScope.chosenDataset = null;
-		}
+    
+	$scope.deleteDataset = function () {
+        
+        //Erst den Datensatz löschen
+        //Dann
+        //Alle dazugehörigen Ansichten auch
+        console.log("chosenDataset: ");
+        console.log($scope.chosenCollection);
 	};
-
+    
 	var database = "prelife";
 	var username = sharedLogin.getUsername();
 	var password = sharedLogin.getPassword();
