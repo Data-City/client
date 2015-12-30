@@ -4,6 +4,8 @@
 var BASEURL = "https://pegenau.com:16392";
 var ANSICHTEN = "/einstellungen/ansichten";
 
+var META_DATA_PART = "_dc_";
+
 //Authorisierung
 var setAuthHeader = function (username, password, $http) {
 	$http.defaults.headers.common.Authorization = "Basic " + btoa(username + ":" + password);
@@ -312,6 +314,6 @@ var createMinMedMaxAggrParam = function(attrs, colname) {
 		}
 	});
 	aggrs.aggrs[0].stages[0]._$group = ops;
-	aggrs.aggrs[0].stages.push({ "_$out" : colname + "_stats"});
+	aggrs.aggrs[0].stages.push({ "_$out" : colname + "_dc_stats"});
     return aggrs;
 };
