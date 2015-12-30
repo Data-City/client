@@ -13,7 +13,8 @@
     "angular-sanitize": "^1.4.0",
     "angular-touch": "^1.4.0",
     "three.js": "threejs#*",
-    "THREEOrbitControls": "~71.1.0"
+    "THREEOrbitControls": "~71.1.0",
+    "angular-spinner": "~0.8.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"
