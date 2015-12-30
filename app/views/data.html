@@ -5,9 +5,12 @@
     <h3>Sie sind nicht eingeloggt!</h3>
     <p><a ng-href="#/login"><i class=" glyphicon glyphicon-chevron-right"></i> Login</a></p>
   </div>
-
+  
+  <!-- Spinner um zu zeigen, dass geladen wird -->
+  <span us-spinner ng-show="loggedIn && !displayableCollections"></span>
+  
   <!-- Panel zur Anzeige der Datensätze -->
-  <div class="panel panel-default" ng-show="loggedIn">
+  <div class="panel panel-default" ng-show="loggedIn && displayableCollections">
     <div class="panel-heading">
       <h3 class="panel-title">{{numberOfDisplayableCollections}} Datensätze</h3>
     </div>
