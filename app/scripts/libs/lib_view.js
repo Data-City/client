@@ -234,17 +234,84 @@ var getURL = function(database, collection) {
 	return BASEURL + "/" + database + "/" + collection;
 };
 	
-var createAggregation = function(database, collection, username, password, $http, aggrs, func) {
+var createAggregation = function(database, collection, username, password, $http, aggrs, etag, func) {
+	setAuthHeader(username, password, $http);
+	/*
 	var req = {
 		method: 'PUT',
 		url: getURL(database, collection),
 		headers: {
 			'Content-Type': 'application/hal+json'
 		},
+		params: {
+			//aggrs
+		},
 		data: {
-			'aggrs': aggrs, 
+			aggrs, 
 		},
 	};
 	
 	$http(req).then(func);
+	*/
+	var config = {
+		headers: {
+			"If-Match": etag,
+		}
+	};
+	$http.put(getURL(database,collection), aggrs, config);
+};
+
+var createMinMedMaxAggrParam = function(attrs, colname) {
+	/*
+	
+          var aggrs =  {aggrs: [
+            {
+          "type":"pipeline",
+          "uri":"maxminavg",
+          "stages": [
+          { "_$group" : {
+              "_id": 0, //Ermittelung der Max,Min,Avg Werte eines Feldes aller Dokumente
+              "max_age" : { "_$max" : "$age" },
+              "min_age" : { "_$min" : "$age" },
+              "avg_age" : { "_$avg" : "$age" },
+              },               
+            }]
+          },
+        ]
+      };
+	*/
+	
+	var aggrs = {aggrs: [
+		{
+			"type": "pipeline",
+			"uri": "maxminavg",
+			"stages": [
+				{
+					"_$group" : {
+					}
+				}
+			]
+		}
+	]};
+	var ops = {
+		"_id": 0,
+	};
+    attrs.forEach(function (element, index) {
+    	if (element.type === 'number') {
+        	var name = element.name;
+			
+			var max = "max_" + name;
+			var min = "min_" + name;
+			var avg = "avg_" + name;
+			
+			ops[max] = { "_$max" : "$" + name };
+			ops[min] = { "_$min" : "$" + name };
+			ops[avg] = { "_$avg" : "$" + name };
+			
+			
+		}
+	});
+	aggrs.aggrs[0].stages[0]._$group = ops;
+	aggrs.aggrs[0].stages.push({ "_$out" : colname + "_stats"});
+    return aggrs;
 };
