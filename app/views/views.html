@@ -1,4 +1,5 @@
-<div ng-app="datacityApp" ng-controller="ViewsCtrl" class="container">
+<div ng-app="datacityApp" ng-controller="ViewsCtrl">
+	<!-- class="container"-->
 
 	<!-- Fehlerausgabe, falls man nicht eingeloggt ist -->
 	<div class="alert alert-danger" role="alert" ng-hide="loggedIn">
@@ -48,7 +49,8 @@
 			</button>
 		</div>
 		<br>
-
+		<!-- Spinner um zu zeigen, dass geladen wird -->
+		<span us-spinner ng-show="loggedIn && loader"></span>
 		<div class="panel panel-primary" id="dimensions" ng-show="chosenView">
 			<div class="panel-heading">
 				<h4 class="panel-title">
@@ -80,6 +82,32 @@
 						<h3 class="panel-title">1. Daten reduzieren</h3>
 					</div>
 					<div class="panel-body">
+						<div ng-repeat="attr in chosenView.attributesOfCollection">
+							<div class="row">
+								<div class="col-md-2 col-sm-2">
+									<input type="checkbox" ng-model="attr.chooseable"> Nutzen? </input>
+								</div>
+								<div class="col-md-10 col-sm-10">
+									<b>Name: {{attr.name}} Typ: {{attr.type}}</B>
+								</div>
+							</div>
+							<div class="row">
+								<div class="panel panel-default" ng-show="attr.type === 'number'">
+									<div class="panel-body">
+										<input type="checkbox" ng-model="attr.toBeFiltered"> Filtern</input><br />
+										<span class="pull-left">Min: {{chosenView.metaData["min_" + attr.name]}}</span>
+										<span class="center">Avg: {{chosenView.metaData["avg_" + attr.name]}}</span>
+										<span class="pull-right">Max: {{chosenView.metaData["max_" + attr.name]}}</span>
+										<br />
+										<slider ng-model="attr.numberValueFilter"  min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" range="true"></slider>
+										<br />
+										<input type="number" ng-model="attr.numberValueFilter[0]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" class="pull-left"></input>
+										<input type="number" ng-model="attr.numberValueFilter[1]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" class="pull-right">
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--
 						<table class="table">
 							<thead>
 								<tr>
@@ -101,6 +129,7 @@
 								</tr>
 							</tbody>
 						</table>
+						-->
 					</div>
 				</div>
 				<div class="panel panel-default">
@@ -132,7 +161,7 @@
 
 									<div class="input-group" title="Hier kann jeder beliebige Datentyp sein.">
 										<span class="input-group-addon">Name</span>
-										<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability) track by attr.name"></select>
+										<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
 									</div>
 								</td>
 								<td ng-show="selfName">
@@ -147,7 +176,7 @@
 								<td>
 									<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern als Eingabe.">
 										<span class="input-group-addon">Fläche</span>
-										<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
+										<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
 									</div>
 								</td>
 								<td ng-show="selfName">
@@ -162,7 +191,7 @@
 								<td>
 									<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe.">
 										<span class="input-group-addon">Höhe</span>
-										<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
+										<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
 									</div>
 								</td>
 								<td ng-show="selfName">
@@ -177,7 +206,7 @@
 								<td>
 									<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe, da fließender Übergang von Blau zu weiß">
 										<span class="input-group-addon">Farbe</span>
-										<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
+										<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
 									</div>
 								</td>
 								<td ng-show="selfName">
@@ -191,21 +220,6 @@
 									<output id="colourOutput">0%</output>
 								</abbr>
 								-->
-								</td>
-							</tr>
-							<!-- BLOECKE -->
-							<tr>
-								<td>
-									<div class="input-group" title="Später sollen hier alle Datentypen möglich sein. Vorerst aber nur Strings">
-										<span class="input-group-addon">Block</span>
-										<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability) track by attr.name"></select>
-									</div>
-								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>
-								<td>
-									<input type="text" class="form-control" ng-model="partOfString" placeholder="Teil-String" title="Dieser Teil-String sortiert alle Datensätze in Blöcke ein. Alle Unterschiede nach diesem String werden in einen eigenen Block eifenen Block platziert.">
 								</td>
 							</tr>
 						</table>

@@ -14,11 +14,13 @@ angular.module('datacityApp')
   .filter('bychooseability', function () {
     return function (attrs) {
       var out = [];
-      attrs.forEach(function (element, index) {
-        if (element.chooseable) {
-          out.push(element);
-        }
-      });
+      if (attrs) {
+        attrs.forEach(function (element, index) {
+          if (element.chooseable) {
+            out.push(element);
+          }
+        });
+      }
       return out;
     };
   });
