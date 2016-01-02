@@ -108,6 +108,8 @@ angular.module('datacityApp')
     /** 
      * @row den Namen der Spalte
      * @deprecated
+     */
+    /*
     var getProperties = function (row) {
       var attrs = [];
       for (var key in row) {
@@ -121,10 +123,13 @@ angular.module('datacityApp')
     };
     */
     
-    /**
+    /*
      * @deprecated
      * @param thing Das übergebene Objekt
      * @return Den Typen vom Objekt/Parameter
+     */
+    
+    /*
     var getType = function (thing) {
       return typeof (thing);
     };
@@ -136,6 +141,8 @@ angular.module('datacityApp')
      * @param attribute Name der Spalte
      * @param typeToValidate String des Typs, der die Spalte haben soll (string, number, ...)
      * @deprecated
+     */
+    /*
     $scope.validate = function (attribute, typeToValidate) {
       var type = $scope.getFirstValidEntry(attribute);
 
