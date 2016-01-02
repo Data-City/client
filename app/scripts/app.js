@@ -18,7 +18,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'angularSpinner'
+    'angularSpinner',
+    'ui.bootstrap-slider',
   ])
   .config(function ($routeProvider) {
     $routeProvider
