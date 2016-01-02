@@ -7,7 +7,6 @@
 
 	<div ng-show="loggedIn" id="collapseAll" class="panel-collapse collapse in">
 		<a ng-href="#/data"><i class=" glyphicon glyphicon-chevron-left"></i>Einen Datensatz auswählen</a>
-
 		<div class="alert alert-danger" role="alert" ng-hide="collID">
 			<h3>Kein Datensatz gewählt!</h3>
 		</div>
@@ -50,7 +49,7 @@
 		</div>
 		<br>
 
-		<div class="panel panel-default" id="dimensions" ng-show="chosenView">
+		<div class="panel panel-primary" id="dimensions" ng-show="chosenView">
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					Ansicht bearbeiten: {{chosenView.name}}
@@ -70,150 +69,151 @@
 					</div>
 				</h4>
 			</div>
-
 			<div class="panel-body">
 				<div class="input-group">
 					<span class="input-group-addon">Name der Ansicht</span>
 					<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
 				</div>
-				<h3>Datenfelder</h3>
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Angezeigt als</th>
-							<th>Typ</th>
-							<th>Wählbar</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="attr in attributesOfCollection">
-							<td>{{attr.name}}</td>
-							<td>TODO</td>
-							<td>{{attr.type}}</td>
-							<td ng-click="toggleChooseabilityOfAttribute(attr.index)">
-								<span class="glyphicon glyphicon-eye-open" aria-hidden="true" ng-show="attr.chooseable"></span>
-								<span class="glyphicon glyphicon-eye-close" aria-hidden="true" ng-hide="attr.chooseable"></span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<div>
-					<table class="table">
-						<tr>
-							<th>
-								<h4>Dimensionen des Gebäudes festlegen</h4>
-							</th>
-							<th>
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
-								</div>
-							</th>
-						</tr>
-						<!-- NAME -->
-						<tr>
-							<td>
+				<br />
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">1. Daten reduzieren</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Angezeigt als</th>
+									<th>Typ</th>
+									<th>Wählbar</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="attr in attributesOfCollection">
+									<td>{{attr.name}}</td>
+									<td>TODO</td>
+									<td>{{attr.type}}</td>
+									<td ng-click="toggleChooseabilityOfAttribute(attr.index)">
+										<span class="glyphicon glyphicon-eye-open" aria-hidden="true" ng-show="attr.chooseable"></span>
+										<span class="glyphicon glyphicon-eye-close" aria-hidden="true" ng-hide="attr.chooseable"></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">2. Blöcke definieren</h3>
+					</div>
+					<div class="panel-body">
+						Hier wird es Eingabemöglichkeiten für Blöcke geben.
+						<br /> 0 bis n Blöcke.
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">3. Dimensionen der Gebäude definieren</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table">
+							<tr>
+								<th>
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
+									</div>
+								</th>
+							</tr>
+							<!-- NAME -->
+							<tr>
+								<td>
 
-								<div class="input-group" title="Hier kann jeder beliebige Datentyp sein.">
-									<span class="input-group-addon">Name</span>
-									<select
-										class="form-control"
-										ng-model="chosenView.dimensions.name"
-										ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability) track by attr.name"
-									></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								?
-							</td>
-						</tr>
-						<!-- FLAECHE -->
-						<tr>
-							<td>
-								<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern als Eingabe.">
-									<span class="input-group-addon">Fläche</span>
-									<select
-										class="form-control"
-										ng-model="chosenView.dimensions.flaeche"
-										ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"
-									></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								Doppelter Slider von Max bis Min (...|.......|...)
-							</td>
-						</tr>
-						<!-- HOEHE -->
-						<tr>
-							<td>
-								<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe.">
-									<span class="input-group-addon">Höhe</span>
-									<select
-										class="form-control"
-										ng-model="chosenView.dimensions.hoehe"
-										ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"
-									></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								Doppelter Slider von Max bis Min
-							</td>
-						</tr>
-						<!-- FARBE -->
-						<tr>
-							<td>
-								<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe, da fließender Übergang von Blau zu weiß">
-									<span class="input-group-addon">Farbe</span>
-									<select
-										class="form-control"
-										ng-model="chosenView.dimensions.farbe"
-										ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"
-									></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								?
-								<!-- Wird nicht mehr benötigt, da fließender Übergang
+									<div class="input-group" title="Hier kann jeder beliebige Datentyp sein.">
+										<span class="input-group-addon">Name</span>
+										<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability) track by attr.name"></select>
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>
+								<td>
+									?
+								</td>
+							</tr>
+							<!-- FLAECHE -->
+							<tr>
+								<td>
+									<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern als Eingabe.">
+										<span class="input-group-addon">Fläche</span>
+										<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>
+								<td>
+									Doppelter Slider von Max bis Min (...|.......|...)
+								</td>
+							</tr>
+							<!-- HOEHE -->
+							<tr>
+								<td>
+									<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe.">
+										<span class="input-group-addon">Höhe</span>
+										<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>
+								<td>
+									Doppelter Slider von Max bis Min
+								</td>
+							</tr>
+							<!-- FARBE -->
+							<tr>
+								<td>
+									<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe, da fließender Übergang von Blau zu weiß">
+										<span class="input-group-addon">Farbe</span>
+										<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>
+								<td>
+									?
+									<!-- Wird nicht mehr benötigt, da fließender Übergang
 								<input class="bar" type="range" min="0" max="100" step="1" value="0" onchange="colourOutput.value=value.concat('%')"/>
 								<abbr title="Wert, ab dem eine neue Farbe angezeigt wird">
 									<output id="colourOutput">0%</output>
 								</abbr>
 								-->
-							</td>
-						</tr>
-						<!-- BLOECKE -->
-						<tr>
-							<td>
-								<div class="input-group" title="Später sollen hier alle Datentypen möglich sein. Vorerst aber nur Strings">
-									<span class="input-group-addon">Block</span>
-									<select
-										class="form-control"
-										ng-model="chosenView.dimensions.district"
-										ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability) track by attr.name"
-									></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								<input type="text" class="form-control" ng-model="partOfString" placeholder="Teil-String" title="Dieser Teil-String sortiert alle Datensätze in Blöcke ein. Alle Unterschiede nach diesem String werden in einen eigenen Block eifenen Block platziert.">
-							</td>
-						</tr>
-					</table>
+								</td>
+							</tr>
+							<!-- BLOECKE -->
+							<tr>
+								<td>
+									<div class="input-group" title="Später sollen hier alle Datentypen möglich sein. Vorerst aber nur Strings">
+										<span class="input-group-addon">Block</span>
+										<select class="form-control" ng-model="chosenView.dimensions.district" ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability) track by attr.name"></select>
+									</div>
+								</td>
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>
+								<td>
+									<input type="text" class="form-control" ng-model="partOfString" placeholder="Teil-String" title="Dieser Teil-String sortiert alle Datensätze in Blöcke ein. Alle Unterschiede nach diesem String werden in einen eigenen Block eifenen Block platziert.">
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div>
+
 					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
 					<button type="button" class="btn btn-danger btn-xs"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
@@ -237,7 +237,7 @@
 				</div>
 			</div>
 		</div>
-        
+
 	</div>
 
 	<!-- Ein- und Ausklappen der Auswahlmöglichkeiten -->
