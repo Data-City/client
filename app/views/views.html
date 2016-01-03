@@ -31,7 +31,7 @@
 						<th>Geändert von</th>
 						<th>Geändert am</th>
 					</tr>
-					<tr ng-repeat="view in views | filter:collID" ng-click="setChosenView(view);">
+					<tr ng-repeat="view in views | filter:collID:true" ng-click="setChosenView(view);">
 						<td>{{view.name}}</td>
 						<td>{{view.collID}}</td>
 						<td>{{view.creator}}</td>
