@@ -105,74 +105,6 @@ angular.module('datacityApp')
       });
     };
 
-    /** 
-     * @row den Namen der Spalte
-     * @deprecated
-     */
-    /*
-    var getProperties = function (row) {
-      var attrs = [];
-      for (var key in row) {
-        if (key[0] !== '_') {
-          $log.info("Key: " + key + "\tValue: " + row[key] + "\tType: " + getType(row[key]));
-          attrs[key] = getType(row[key]);
-        }
-      }
-      $log.info("Properties:");
-      $log.info(attrs[key]);
-    };
-    */
-    
-    /*
-     * @deprecated
-     * @param thing Das übergebene Objekt
-     * @return Den Typen vom Objekt/Parameter
-     */
-    
-    /*
-    var getType = function (thing) {
-      return typeof (thing);
-    };
-    */
-    
-    /**
-     * Gibt eine Warnung aus, falls die Spalte einen anderen Datentyp hat als sie haben sollte
-     * 
-     * @param attribute Name der Spalte
-     * @param typeToValidate String des Typs, der die Spalte haben soll (string, number, ...)
-     * @deprecated
-     */
-    /*
-    $scope.validate = function (attribute, typeToValidate) {
-      var type = $scope.getFirstValidEntry(attribute);
-
-      if (type === typeToValidate) {
-        //console.log("Eingabewert OK");
-      } else {
-        //console.log("Eingabewert ist nicht OK");
-        window.alert("In dieses Feld dürfen nur Eingaben vom Typ " + typeToValidate);
-      }
-    };
-    */
-    
-    /**
-     * Sucht den ersten Eintrag in der Spalte und gibt dessen Typ zurück
-     * 
-     * @param attribute: Name der Spalte
-     * @return: Rückgabewert des ersten Eintrags
-    $scope.getFirstValidEntry = function (attribute) {
-      var data = $scope.collection.data;
-
-      for (var key in data._embedded['rh:doc']) {
-        if (data._embedded['rh:doc'][key][attribute] !== "") {
-          return typeof data._embedded['rh:doc'][key][attribute];
-        }
-      }
-      window.alert("Die ausgewählte Spalte ist leer!");
-      return null;
-    };
-    */
-    
     /**
      * Wählt bei Klick auf eine Ansicht diese aus
      */
@@ -189,10 +121,7 @@ angular.module('datacityApp')
           // Attribute der Collection holen, falls noch nicht vorhanden
           if (!$scope.chosenView.attributesOfCollection || $scope.chosenView.attributesOfCollection.length === 0) {
             var attrs = getAttributesWithType(resp.data._embedded['rh:doc']);
-            $scope.$apply(function () {
-              $scope.chosenView.attributesOfCollection = attrs;
-            });
-
+            $scope.chosenView.attributesOfCollection = attrs;
           }
           
           // Get Meta-Data
@@ -249,7 +178,6 @@ angular.module('datacityApp')
             
           });*/
 
-            $scope.$apply();
           }
 
 
