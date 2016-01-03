@@ -8,6 +8,7 @@ var META_DATA_PART = "_dc_";
 
 //Authorisierung
 var setAuthHeader = function (username, password, $http) {
+	//$http.defaults.headers.common["Access-Control-Allow-Origin"] = '*';
 	$http.defaults.headers.common.Authorization = "Basic " + btoa(username + ":" + password);
 };
 
@@ -89,7 +90,7 @@ var deleteView = function (doc, username, password, $http, func) {
 	});
 };
 
-var updateView = function (view, username, password, $http, func) {
+var updateView = function (view, username, password, $http, $log, func) {
 	var config = {headers:  {
         "If-Match": view._etag.$oid}
     };
@@ -97,11 +98,18 @@ var updateView = function (view, username, password, $http, func) {
 	
 	$http.patch(url, view, config).then(function(response){
 		func(response);
-	});
+	}, function errorCallback(response) {
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+	$log.error("Error updating view:");
+	$log.error(view);
+	$log.error("Response:");
+	$log.error(response);
+  });
 };
 
 //Holt beliebige URL ab Base URL, Beispiel /database/collection
-var getURL = function (url, parameters, username, password, $http, func) {
+var getURL = function (url, parameters, username, password, $http, funcSucc, funcError) {
 	setAuthHeader(username, password, $http);
 	/*
 	$http.get(BASEURL + url, config).then(
@@ -116,7 +124,7 @@ var getURL = function (url, parameters, username, password, $http, func) {
 		params: parameters,
 	};
 	
-	$http(req).then(func);
+	$http(req).then(funcSucc, funcError);
 };
 
 /**
@@ -225,6 +233,9 @@ var getAttributesWithType = function (data) {
             'name': name,
             'type': type,
 			'chooseable': true,
+			'toBeFiltered': false,
+			'numberValueFilter': [],
+			'searchTermFilter': null,
           };
 		  count++;
         }
@@ -232,7 +243,7 @@ var getAttributesWithType = function (data) {
       }
     };
 	
-var getURL = function(database, collection) {
+var createURL = function(database, collection) {
 	return BASEURL + "/" + database + "/" + collection;
 };
 	
@@ -260,7 +271,7 @@ var createAggregation = function(database, collection, username, password, $http
 			"If-Match": etag,
 		}
 	};
-	$http.put(getURL(database,collection), aggrs, config);
+	$http.put(createURL(database,collection), aggrs, config);
 };
 
 var createMinMedMaxAggrParam = function(attrs, colname) {
@@ -287,6 +298,43 @@ var createMinMedMaxAggrParam = function(attrs, colname) {
 		{
 			"type": "pipeline",
 			"uri": "maxminavg",
+			"stages": [
+				{
+					"_$group" : {
+					}
+				}
+			]
+		}
+	]};
+	var ops = {
+		"_id": 0,
+	};
+    attrs.forEach(function (element, index) {
+    	if (element.type === 'number') {
+        	var name = element.name;
+			
+			var max = "max_" + name;
+			var min = "min_" + name;
+			var avg = "avg_" + name;
+			
+			ops[max] = { "_$max" : "$" + name };
+			ops[min] = { "_$min" : "$" + name };
+			ops[avg] = { "_$avg" : "$" + name };
+			
+			
+		}
+	});
+	aggrs.aggrs[0].stages[0]._$group = ops;
+	aggrs.aggrs[0].stages.push({ "_$out" : colname + "_dc_stats"});
+    return aggrs;
+};
+
+var createCityAggregation = function(attrs, colname) {
+	
+	var aggrs = {aggrs: [
+		{
+			"type": "pipeline",
+			"uri": "cityAggregation",
 			"stages": [
 				{
 					"_$group" : {

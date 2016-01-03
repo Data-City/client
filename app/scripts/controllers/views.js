@@ -14,10 +14,18 @@
  */
 angular.module('datacityApp')
   .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin) {
-
+    
+    
+    //Standardeinstellungen
+    var username = sharedLogin.getUsername();
+    var password = sharedLogin.getPassword();
+    var database = "einstellungen";
+    var collection = "ansichten";
+    var baseurl = "https://pegenau.com:16392";
+    
     /**
-     *  Konstruktor für eine Ansicht
-     */
+    *  Konstruktor für eine Ansicht
+    */
     function View() {
       this.name = "Neue Ansicht";
       this.collID = $scope.collID;
@@ -31,15 +39,20 @@ angular.module('datacityApp')
         color: null,
         district: null
       };
+      this.attributesOfCollection = [];
+      this.metaData = null;
     }
-
+    
+    // Initialisierung des Controllers
     $scope.collection = null;
     $scope.collID = null;
     $scope.views = null;
     $scope.numberOfViews = null;
     $scope.chosenView = null;
-    $scope.collection = null;
-    $scope.attributesOfCollection = [];
+    $scope.loader = false;
+
+   
+
 
     /**
      * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
@@ -52,19 +65,12 @@ angular.module('datacityApp')
       view.dimensions.hoehe = view.dimensions.hoehe.name;
       view.dimensions.flaeche = view.dimensions.flaeche.name;
       view.dimensions.farbe = view.dimensions.farbe.name;
-      view.dimensions.district = view.dimensions.district.name;
+      //view.dimensions.district = view.dimensions.district.name;
       drawCity(collection, view, divID);
     };
     
-    //Standardeinstellungen
-    var username = sharedLogin.getUsername();
-    var password = sharedLogin.getPassword();
-    var database = "einstellungen";
-    var collection = "ansichten";
-    var baseurl = "https://pegenau.com:16392";
-
     /**
-     * Gibt die Ansichten aus
+     * Holt die Ansichten und speichert sie im Controller-Scope
      */
     $scope.getViews = function (func) {
       getViews(database, collection, username, password, $http, function (response) {
@@ -79,11 +85,12 @@ angular.module('datacityApp')
     };
 
     /**
-     * Aktualisiert die Ansicht
-     * Wird für die live-Änderung der Namensänderung einer Ansicht benötigt
+     * Speichert Änderungen an den Einstellungen der Ansicht
      */
     $scope.updateView = function () {
-      updateView($scope.chosenView, username, password, $http, function (response) {
+      $log.info("Update View:");
+      $log.info($scope.chosenView);
+      updateView($scope.chosenView, username, password, $http, $log, function (response) {
         var id = $scope.chosenView._id;
         $scope.chosenView = null;
         $scope.getViews(function (views) {
@@ -98,91 +105,84 @@ angular.module('datacityApp')
       });
     };
 
-    /** 
-     * @row den Namen der Spalte
-     */
-    var getProperties = function (row) {
-      var attrs = [];
-      for (var key in row) {
-        if (key[0] !== '_') {
-          $log.info("Key: " + key + "\tValue: " + row[key] + "\tType: " + getType(row[key]));
-          attrs[key] = getType(row[key]);
-        }
-      }
-      $log.info("Properties:");
-      $log.info(attrs[key]);
-    };
-    
-    /**
-     * @param thing Das übergebene Objekt
-     * @return Den Typen vom Objekt/Parameter
-     */
-    var getType = function (thing) {
-      return typeof (thing);
-    };
-
-    $scope.toggleChooseabilityOfAttribute = function (index) {
-      $scope.attributesOfCollection[index].chooseable = !$scope.attributesOfCollection[index].chooseable;
-    };
-    
-    /**
-     * Gibt eine Warnung aus, falls die Spalte einen anderen Datentyp hat als sie haben sollte
-     * 
-     * @param attribute Name der Spalte
-     * @param typeToValidate String des Typs, der die Spalte haben soll (string, number, ...)
-     */
-    $scope.validate = function (attribute, typeToValidate) {
-      var type = $scope.getFirstValidEntry(attribute);
-
-      if (type === typeToValidate) {
-        //console.log("Eingabewert OK");
-      } else {
-        //console.log("Eingabewert ist nicht OK");
-        window.alert("In dieses Feld dürfen nur Eingaben vom Typ " + typeToValidate);
-      }
-    };
-    
-    /**
-     * Sucht den ersten Eintrag in der Spalte und gibt dessen Typ zurück
-     * 
-     * @param attribute: Name der Spalte
-     * @return: Rückgabewert des ersten Eintrags
-     */
-    $scope.getFirstValidEntry = function (attribute) {
-      var data = $scope.collection.data;
-
-      for (var key in data._embedded['rh:doc']) {
-        if (data._embedded['rh:doc'][key][attribute] !== "") {
-          return typeof data._embedded['rh:doc'][key][attribute];
-        }
-      }
-      window.alert("Die ausgewählte Spalte ist leer!");
-      return null;
-    };
-    
     /**
      * Wählt bei Klick auf eine Ansicht diese aus
      */
     $scope.setChosenView = function (view) {
       if ($scope.chosenView === view) {
-        $scope.chosenView = null;
-        $scope.collection = null;
-        $scope.attributesOfCollection = null;
+        $scope.chosenView = new View();
       } else {
         $scope.chosenView = view;
         getCollection("prelife", $scope.chosenView.collID, username, password, $http, function (resp) {
           $scope.collection = resp;
-          $scope.attributesOfCollection = getAttributesWithType(resp.data._embedded['rh:doc']);
+          
+          
+          
+          // Attribute der Collection holen, falls noch nicht vorhanden
+          if (!$scope.chosenView.attributesOfCollection || $scope.chosenView.attributesOfCollection.length === 0) {
+            var attrs = getAttributesWithType(resp.data._embedded['rh:doc']);
+            $scope.chosenView.attributesOfCollection = attrs;
+          }
+          
+          // Get Meta-Data
+          if (!$scope.chosenView.metaData) {
+            // Aggregation erstellen
+            createAggregation(
+              "prelife", // Die Datenbank, in der die aktuelle collection liegt
+              $scope.chosenView.collID, // Name der Collection
+              username, // DB User
+              password, // DB Passwort
+              $http,
+              createMinMedMaxAggrParam($scope.chosenView.attributesOfCollection, view.collID), // Aggregationsparameter in der Form aggrs = { aggrs : [ ... ]}
+              resp.data._etag.$oid // der aktuelle etag der Collection
+              );
 
-          createAggregation(
-            "prelife", // Die Datenbank, in der die aktuelle collection liegt
-            $scope.chosenView.collID, // Name der Collection
-            username, // DB User
-            password, // DB Passwort
-            $http,
-            createMinMedMaxAggrParam($scope.attributesOfCollection, view.collID), // Aggregationsparameter in der Form aggrs = { aggrs : [ ... ]}
-            resp.data._etag.$oid // der aktuelle etag der Collection
-            );
+            
+            // Aggregation ausführen
+            /*
+            var req = {
+              method: 'GET',
+              url: "https://pegenau.com:16392/prelife" + "/" + $scope.chosenView.collID + "/_aggrs/maxminavg",
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
+              },
+              data: { test: 'test' }
+            };
+
+            $http(req).then(function (response) {
+              $log.info("Aggregation erfolgreich ausgeführt")
+              $log.info(req);
+            }, function (response) {
+              $log.error("FEHLER BEI AGGREGATION");
+              $log.error(response);
+            });
+            */
+
+            var url = "/" + "prelife" + "/" + $scope.chosenView.collID + META_DATA_PART + "stats";
+            $log.info("URL zu Metadaten: " + url);
+            getURL(url, null, username, password, $http, function (response) {
+              $scope.chosenView.metaData = response.data._embedded["rh:doc"][0];
+              $log.info($scope.chosenView.metaData);
+            });
+            /*
+          //$scope.loader = true;
+          $log.info("Führe Aggregation aus: " + url);
+          getURL(url, null, username, password, $http, function (response) {
+            $log.info(response);
+            $scope.loader = false;
+            
+            // Aggregation abrufen
+            
+          });*/
+
+          }
+
+
+
+          $log.info($scope.chosenView);
         });
 
       }
