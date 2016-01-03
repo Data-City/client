@@ -41,7 +41,24 @@ angular.module('datacityApp')
       };
       this.attributesOfCollection = [];
       this.metaData = null;
+      this.aggregations = [];
     }
+    
+    /**
+    *  Konstruktor für eine Aggregation
+    */
+    function Aggregation() {
+      this.groupOverField = null;
+      this.aggregationOperations = [];
+    }
+    
+    $scope.addNewAggregation = function() {
+      $scope.chosenView.aggregations.push(new Aggregation());
+    };
+    
+    $scope.removeAggregation = function(arrayIndex) {
+      $scope.chosenView.aggregations.splice(arrayIndex, 1);   
+    };
     
     // Initialisierung des Controllers
     $scope.collection = null;
@@ -51,10 +68,12 @@ angular.module('datacityApp')
     $scope.chosenView = null;
     $scope.loader = false;
     
-    // Ein- & Ausklappen der Panels (Schritt 1-3)
-    $scope.showStep1 = false;
-    $scope.showStep2 = false;
-    $scope.showStep3 = false;
+    // Ein- & Ausklappen der Panels (Schritt 1-4)
+    $scope.showStep1 = false; // Daten reduzieren
+    $scope.showStep2 = true; // Aggreagtion
+    $scope.showStep3 = false; // Blöcke
+    $scope.showStep4 = false; // Dimensionen
+    
    
 
 

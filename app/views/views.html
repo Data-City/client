@@ -77,6 +77,8 @@
 					<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
 				</div>
 				<br />
+
+				<!-- SCHRITT 1 - Daten reduzieren -->
 				<div class="panel panel-default">
 					<div class="panel-heading" ng-click="showStep1 = !showStep1;">
 						<span class="panel-title">1. Daten reduzieren</span>
@@ -104,7 +106,8 @@
 											<div class="col-md-4 col-sm-4"><span class="pull-right">Max: {{chosenView.metaData["max_" + attr.name]}}</span></div>
 										</div>
 										<div class="row container">
-											<slider class="container" ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" value="attr.numberValueFilter"
+											<slider class="container" ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+											value="(attr.numberValueFilter.length > 0) ? attr.numberValueFilter : [chosenView.metaData['min_' + attr.name], chosenView.metaData['max_' + attr.name]]"
 											range="true"></slider>
 										</div>
 										<div class="row container">
@@ -123,24 +126,73 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- SCHRITT 2 - Daten aggregieren -->
 				<div class="panel panel-default">
 					<div class="panel-heading" ng-click="showStep2 = !showStep2;">
-						<span class="panel-title">2. Blöcke definieren</span>
+						<span class="panel-title">2. Daten aggregieren</span>
 						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
 						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
 					</div>
 					<div class="panel-body" ng-show="showStep2">
-						Hier wird es Eingabemöglichkeiten für Blöcke geben.
-						<br /> 0 bis n Blöcke.
+						<table class="table">
+							<thead>
+								<th>Nr.</th>
+								<th>Aggregationsparameter</th>
+								<th>Löschen</th>
+							</thead>
+							<tr ng-repeat="(arrayIndex, aggregation) in chosenView.aggregations">
+								<td>{{key + 1}}</td>
+								<td>
+									<table class="table">
+										<tr>
+											<td>Gruppieren über</td>
+											<td>
+												<select class="form-control" ng-model="aggregation.groupOverField" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
+											</td>
+										</tr>
+										<tr ng-show="aggregation.groupOverField" ng-repeat="(key, attr) in (chosenView.attributesOfCollection | bychooseability | attrbyname:aggregation.groupOverField)">
+											<td>{{attr.name}}</td>
+											<td>OPERATION</td>
+										</tr>
+									</table>
+								</td>
+								<td>
+									<button type="button" class="btn btn-sm btn-danger pull-right" aria-label="Left Align" ng-click="removeAggregation(key);">
+										<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+									</button>
+								</td>
+							</tr>
+						</table>
+
+						<!-- Button: Neue Aggregation -->
+						<button type="button" class="btn btn-success pull-right" aria-label="Left Align" ng-click="addNewAggregation()">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true">Aggregationsschritt hinzufügen</span>
+						</button>
 					</div>
 				</div>
+
+				<!-- SCHRITT 3 - Blöcke bilden -->
 				<div class="panel panel-default">
 					<div class="panel-heading" ng-click="showStep3 = !showStep3;">
-						<span class="panel-title">3. Dimensionen der Gebäude definieren</span>
+						<span class="panel-title">3. Blöcke definieren</span>
 						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep3" aria-hidden="true"></span>
 						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
 					</div>
 					<div class="panel-body" ng-show="showStep3">
+						Hier wird es Eingabemöglichkeiten für Blöcke geben.
+						<br /> 0 bis n Blöcke.
+					</div>
+				</div>
+
+				<!-- SCHRITT 4 - Dimensionen bestimmen -->
+				<div class="panel panel-default">
+					<div class="panel-heading" ng-click="showStep4 = !showStep4;">
+						<span class="panel-title">4. Dimensionen der Gebäude definieren</span>
+						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep4" aria-hidden="true"></span>
+					</div>
+					<div class="panel-body" ng-show="showStep4">
 						<table class="table">
 							<!-- NAME -->
 							<tr>
@@ -220,6 +272,6 @@
 </div>
 
 <!-- Hier wird die Stadt rein gezeichnet -->
-<div id="WebGLCanvas"></div>
+<div id="Stadt"></div>
 
 <div id="jsonDownload"></div>
