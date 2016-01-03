@@ -98,7 +98,9 @@
 						</tr>
 					</tbody>
 				</table>
+
 				<div>
+					<form name="dimform">
 					<table class="table">
 						<tr>
 							<th>
@@ -214,10 +216,11 @@
 							</td>
 						</tr>
 					</table>
-					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
+					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
 					<button type="button" class="btn btn-danger btn-xs"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
 					onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
+				</form>
 				</div>
 			</div>
 		</div>
