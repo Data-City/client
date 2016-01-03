@@ -94,42 +94,31 @@
 							<div class="row">
 								<div class="panel panel-default" ng-show="attr.type === 'number'">
 									<div class="panel-body">
-										<input type="checkbox" ng-model="attr.toBeFiltered"> Filtern</input><br />
-										<span class="pull-left">Min: {{chosenView.metaData["min_" + attr.name]}}</span>
-										<span class="center">Avg: {{chosenView.metaData["avg_" + attr.name]}}</span>
-										<span class="pull-right">Max: {{chosenView.metaData["max_" + attr.name]}}</span>
+										<input type="checkbox" ng-model="attr.toBeFiltered"> Filtern</input>
 										<br />
-										<slider ng-model="attr.numberValueFilter"  min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" range="true"></slider>
-										<br />
-										<input type="number" ng-model="attr.numberValueFilter[0]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" class="pull-left"></input>
-										<input type="number" ng-model="attr.numberValueFilter[1]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" class="pull-right">
+										<div class="row container">
+											<div class="col-md-4 col-sm-4"><span class="pull-left">Min: {{chosenView.metaData["min_" + attr.name]}}</span></div>
+											<div class="col-md-4 col-sm-4"><span class="center-block text-center">Avg: {{chosenView.metaData["avg_" + attr.name]}}</span></div>
+											<div class="col-md-4 col-sm-4"><span class="pull-right">Max: {{chosenView.metaData["max_" + attr.name]}}</span></div>
+										</div>
+										<div class="row container">
+											<slider class="container" ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" value="attr.numberValueFilter"
+											range="true"></slider>
+										</div>
+										<div class="row container">
+											<div class="col-md-6 col-sm-6">
+												<input type="number" ng-model="attr.numberValueFilter[0]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+												class="pull-left"></input>
+											</div>
+											<div class="col-md-6 col-sm-6">
+												<input type="number" ng-model="attr.numberValueFilter[1]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+												class="pull-right"></input>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<!--
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>Angezeigt als</th>
-									<th>Typ</th>
-									<th>Wählbar</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="attr in attributesOfCollection">
-									<td>{{attr.name}}</td>
-									<td>TODO</td>
-									<td>{{attr.type}}</td>
-									<td ng-click="toggleChooseabilityOfAttribute(attr.index)">
-										<span class="glyphicon glyphicon-eye-open" aria-hidden="true" ng-show="attr.chooseable"></span>
-										<span class="glyphicon glyphicon-eye-close" aria-hidden="true" ng-hide="attr.chooseable"></span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						-->
 					</div>
 				</div>
 				<div class="panel panel-default">
