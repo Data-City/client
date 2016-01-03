@@ -55,8 +55,14 @@ function drawCity(data, association, nameOfDivElement){
 	
 	// Erstelle das Menue oben rechts
 	if( Detector.webgl ){
+		var ourDivElement = document.getElementById(nameOfDivElement);
+		if(ourDivElement.children["dropdownmenu"]!=undefined){
+			ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
+		}
 		setMenue(association["dimensions"], scene, mainDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema, control, controls, nameOfDivElement);
 	}
+	
+	
 	
 	updateControls(Math.max(mainDistrict.width, extrema.maxHeight));	
 	animate();
@@ -129,14 +135,14 @@ function init(nameOfDivElement) {
 				
 	//Hinzufügen von dem renderer-Element zu unserem HTML-Dokument
     
-	var domElement = document.getElementById(nameOfDivElement);
+	/*var domElement = document.getElementById(nameOfDivElement);
 	//document.body.appendChild( renderer.domElement );
 	renderer.domElement.id = "WebGLCanvas";
-	document.getElementById(nameOfDivElement).appendChild(renderer.domElement);
+	document.getElementById(nameOfDivElement).appendChild(renderer.domElement);*/
 	
-   /* renderer.domElement.id = "WebGLCanvas";
+    renderer.domElement.id = "WebGLCanvas";
     document.getElementById(nameOfDivElement).innerHTML = "";
-    document.getElementById(nameOfDivElement).appendChild(renderer.domElement);*/
+    document.getElementById(nameOfDivElement).appendChild(renderer.domElement);
 
 	scene = new THREE.Scene();
 
