@@ -50,7 +50,11 @@ angular.module('datacityApp')
     $scope.numberOfViews = null;
     $scope.chosenView = null;
     $scope.loader = false;
-
+    
+    // Ein- & Ausklappen der Panels (Schritt 1-3)
+    $scope.showStep1 = false;
+    $scope.showStep2 = false;
+    $scope.showStep3 = false;
    
 
 
@@ -115,8 +119,6 @@ angular.module('datacityApp')
         $scope.chosenView = view;
         getCollection("prelife", $scope.chosenView.collID, username, password, $http, function (resp) {
           $scope.collection = resp;
-          
-          
           
           // Attribute der Collection holen, falls noch nicht vorhanden
           if (!$scope.chosenView.attributesOfCollection || $scope.chosenView.attributesOfCollection.length === 0) {
