@@ -55,8 +55,14 @@ function drawCity(data, association, nameOfDivElement){
 	
 	// Erstelle das Menue oben rechts
 	if( Detector.webgl ){
-		setMenue(association["dimensions"], scene, mainDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema, control, controls);
+		var ourDivElement = document.getElementById(nameOfDivElement);
+		if(ourDivElement.children["dropdownmenu"]!=undefined){
+			ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
+		}
+		setMenue(association["dimensions"], scene, mainDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema, control, controls, nameOfDivElement);
 	}
+	
+	
 	
 	updateControls(Math.max(mainDistrict.width, extrema.maxHeight));	
 	animate();
@@ -118,7 +124,7 @@ function updateExtrema(width, height, color){
 //Initialisiert das Bild, d.h. malt die Zeichenflaeche, erstellt die Kamera, setzt das Licht, 
 //aktiviert das Beobachten der Mausaktivitaeten und das Zoomen, Drehen, Verschieben
 //@params nameOfDivElement: der Name vom Div-Element
-function init(nameOfdivElement) {
+function init(nameOfDivElement) {
 	//$("body").html("<div id=" + nameOfdivElement + "></div>");
 
 	// Erstelle einen neuen Renderer
@@ -129,12 +135,15 @@ function init(nameOfdivElement) {
 				
 	//Hinzufügen von dem renderer-Element zu unserem HTML-Dokument
     
-	/*var domElement = document.getElementById(nameOfdivElement);
-	document.body.appendChild( renderer.domElement );
-	renderer.domElement.id = "WebGLCanvas";*/
-    
-    document.getElementById("WebGLCanvas").innerHTML = "";
-    document.getElementById("WebGLCanvas").appendChild(renderer.domElement);
+	/*var domElement = document.getElementById(nameOfDivElement);
+	//document.body.appendChild( renderer.domElement );
+	renderer.domElement.id = "WebGLCanvas";
+	document.getElementById(nameOfDivElement).appendChild(renderer.domElement);*/
+	
+    renderer.domElement.id = "WebGLCanvas";
+    document.getElementById(nameOfDivElement).innerHTML = "";
+	console.log("Div-ID: " + nameOfDivElement);
+    document.getElementById(nameOfDivElement).appendChild(renderer.domElement);
 
 	scene = new THREE.Scene();
 

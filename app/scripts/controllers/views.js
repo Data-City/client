@@ -41,7 +41,24 @@ angular.module('datacityApp')
       };
       this.attributesOfCollection = [];
       this.metaData = null;
+      this.aggregations = [];
     }
+    
+    /**
+    *  Konstruktor für eine Aggregation
+    */
+    function Aggregation() {
+      this.groupOverField = null;
+      this.aggregationOperations = [];
+    }
+    
+    $scope.addNewAggregation = function() {
+      $scope.chosenView.aggregations.push(new Aggregation());
+    };
+    
+    $scope.removeAggregation = function(arrayIndex) {
+      $scope.chosenView.aggregations.splice(arrayIndex, 1);   
+    };
     
     // Initialisierung des Controllers
     $scope.collection = null;
@@ -50,7 +67,13 @@ angular.module('datacityApp')
     $scope.numberOfViews = null;
     $scope.chosenView = null;
     $scope.loader = false;
-
+    
+    // Ein- & Ausklappen der Panels (Schritt 1-4)
+    $scope.showStep1 = false; // Daten reduzieren
+    $scope.showStep2 = true; // Aggreagtion
+    $scope.showStep3 = false; // Blöcke
+    $scope.showStep4 = false; // Dimensionen
+    
    
 
 
@@ -115,8 +138,6 @@ angular.module('datacityApp')
         $scope.chosenView = view;
         getCollection("prelife", $scope.chosenView.collID, username, password, $http, function (resp) {
           $scope.collection = resp;
-          
-          
           
           // Attribute der Collection holen, falls noch nicht vorhanden
           if (!$scope.chosenView.attributesOfCollection || $scope.chosenView.attributesOfCollection.length === 0) {

@@ -59,10 +59,16 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, n
 //			arrayOfBuildingsAsWebGLBoxes: Array, bestehend aus allen bisher gezeichneten Gebaeuden in der gleichen Reihenfolge wie arrayOfWebGLBoxes
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
 
-function setMenue(legende, scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema, control, controls){
+function setMenue(legende, scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema, control, controls, nameOfDivElement){
 	var gui = new dat.GUI({
-		width : 375
+		width : 375, autoPlace: false
 	});
+
+	gui.domElement.style.position = 'absolute';
+	gui.domElement.style.left = document.getElementById("WebGLCanvas").getBoundingClientRect().left+"px";
+	gui.domElement.style.top = document.getElementById("WebGLCanvas").getBoundingClientRect().top+"px";
+	gui.domElement.id = "dropdownmenu";
+	document.getElementById(nameOfDivElement).appendChild(gui.domElement);
 
 	var h = gui.addFolder( "Legende" );
 	for(var i=0; i<myDimensions.length; i++){
