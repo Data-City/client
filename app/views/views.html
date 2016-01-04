@@ -31,7 +31,7 @@
 						<th>Geändert von</th>
 						<th>Geändert am</th>
 					</tr>
-					<tr ng-repeat="view in views | filter:collID" ng-click="setChosenView(view);">
+					<tr ng-repeat="view in views | filter:collID:true" ng-click="setChosenView(view);">
 						<td>{{view.name}}</td>
 						<td>{{view.collID}}</td>
 						<td>{{view.creator}}</td>
@@ -76,79 +76,16 @@
 					<span class="input-group-addon">Name der Ansicht</span>
 					<input type="text" class="form-control" placeholder="{{chosenView.name}}" ng-model="chosenView.name" ng-blur="updateView();">
 				</div>
-				<h3>Datenfelder</h3>
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Angezeigt als</th>
-							<th>Typ</th>
-							<th>Wählbar</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="attr in attributesOfCollection">
-							<td>{{attr.name}}</td>
-							<td>TODO</td>
-							<td>{{attr.type}}</td>
-							<td ng-click="toggleChooseabilityOfAttribute(attr.index)">
-								<span class="glyphicon glyphicon-eye-open" aria-hidden="true" ng-show="attr.chooseable"></span>
-								<span class="glyphicon glyphicon-eye-close" aria-hidden="true" ng-hide="attr.chooseable"></span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<div>
-					<form name="dimform">
-					<table class="table">
-						<tr>
-							<th>
-								<h4>Dimensionen des Gebäudes festlegen</h4>
-							</th>
-							<th>
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
-								</div>
-							</th>
-						</tr>
-						<!-- NAME -->
-						<tr>
-							<td>
-
-								<div class="input-group" title="Hier kann jeder beliebige Datentyp sein.">
-									<span class="input-group-addon">Name</span>
-									<select
-										class="form-control"
-										ng-model="chosenView.dimensions.name"
-										ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability) track by attr.name"
-									></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								?
-							</td>
-						</tr>
-						<!-- FLAECHE -->
-						<tr>
-							<td>
-								<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern als Eingabe.">
-									<span class="input-group-addon">Fläche</span>
-									<select
-										class="form-control"
-										ng-model="chosenView.dimensions.flaeche"
-										ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability | bytype:'number') track by attr.name"
-									></select>
 				<br />
+
+				<!-- SCHRITT 1 - Daten reduzieren -->
 				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">1. Daten reduzieren</h3>
+					<div class="panel-heading" ng-click="showStep1 = !showStep1;">
+						<span class="panel-title">1. Daten reduzieren</span>
+						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep1" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep1" aria-hidden="true"></span>
 					</div>
-					<div class="panel-body">
+					<div class="panel-body" ng-show="showStep1">
 						<div ng-repeat="attr in chosenView.attributesOfCollection">
 							<div class="row">
 								<div class="col-md-2 col-sm-2">
@@ -161,160 +98,148 @@
 							<div class="row">
 								<div class="panel panel-default" ng-show="attr.type === 'number'">
 									<div class="panel-body">
-										<input type="checkbox" ng-model="attr.toBeFiltered"> Filtern</input><br />
-										<span class="pull-left">Min: {{chosenView.metaData["min_" + attr.name]}}</span>
-										<span class="center">Avg: {{chosenView.metaData["avg_" + attr.name]}}</span>
-										<span class="pull-right">Max: {{chosenView.metaData["max_" + attr.name]}}</span>
+										<input type="checkbox" ng-model="attr.toBeFiltered"> Filtern</input>
 										<br />
-										<slider ng-model="attr.numberValueFilter"  min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" range="true"></slider>
-										<br />
-										<input type="number" ng-model="attr.numberValueFilter[0]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" class="pull-left"></input>
-										<input type="number" ng-model="attr.numberValueFilter[1]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]" class="pull-right">
+										<div class="row container">
+											<div class="col-md-4 col-sm-4"><span class="pull-left">Min: {{chosenView.metaData["min_" + attr.name]}}</span></div>
+											<div class="col-md-4 col-sm-4"><span class="center-block text-center">Avg: {{chosenView.metaData["avg_" + attr.name]}}</span></div>
+											<div class="col-md-4 col-sm-4"><span class="pull-right">Max: {{chosenView.metaData["max_" + attr.name]}}</span></div>
+										</div>
+										<div class="row container">
+											<slider class="container" ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+											value="(attr.numberValueFilter.length > 0) ? attr.numberValueFilter : [chosenView.metaData['min_' + attr.name], chosenView.metaData['max_' + attr.name]]"
+											range="true"></slider>
+										</div>
+										<div class="row container">
+											<div class="col-md-6 col-sm-6">
+												<input type="number" ng-model="attr.numberValueFilter[0]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+												class="pull-left"></input>
+											</div>
+											<div class="col-md-6 col-sm-6">
+												<input type="number" ng-model="attr.numberValueFilter[1]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+												class="pull-right"></input>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<!--
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>Angezeigt als</th>
-									<th>Typ</th>
-									<th>Wählbar</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="attr in attributesOfCollection">
-									<td>{{attr.name}}</td>
-									<td>TODO</td>
-									<td>{{attr.type}}</td>
-									<td ng-click="toggleChooseabilityOfAttribute(attr.index)">
-										<span class="glyphicon glyphicon-eye-open" aria-hidden="true" ng-show="attr.chooseable"></span>
-										<span class="glyphicon glyphicon-eye-close" aria-hidden="true" ng-hide="attr.chooseable"></span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						-->
 					</div>
 				</div>
+
+				<!-- SCHRITT 2 - Daten aggregieren -->
 				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">2. Blöcke definieren</h3>
+					<div class="panel-heading" ng-click="showStep2 = !showStep2;">
+						<span class="panel-title">2. Daten aggregieren</span>
+						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
 					</div>
-					<div class="panel-body">
+					<div class="panel-body" ng-show="showStep2">
+						<table class="table">
+							<thead>
+								<th>Nr.</th>
+								<th>Aggregationsparameter</th>
+								<th>Löschen</th>
+							</thead>
+							<tr ng-repeat="(arrayIndex, aggregation) in chosenView.aggregations">
+								<td>{{key + 1}}</td>
+								<td>
+									<table class="table">
+										<tr>
+											<td>Gruppieren über</td>
+											<td>
+												<select class="form-control" ng-model="aggregation.groupOverField" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
+											</td>
+										</tr>
+										<tr ng-show="aggregation.groupOverField" ng-repeat="(key, attr) in (chosenView.attributesOfCollection | bychooseability | attrbyname:aggregation.groupOverField)">
+											<td>{{attr.name}}</td>
+											<td>OPERATION</td>
+										</tr>
+									</table>
+								</td>
+								<td>
+									<button type="button" class="btn btn-sm btn-danger pull-right" aria-label="Left Align" ng-click="removeAggregation(key);">
+										<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+									</button>
+								</td>
+							</tr>
+						</table>
+
+						<!-- Button: Neue Aggregation -->
+						<button type="button" class="btn btn-success pull-right" aria-label="Left Align" ng-click="addNewAggregation()">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true">Aggregationsschritt hinzufügen</span>
+						</button>
+					</div>
+				</div>
+
+				<!-- SCHRITT 3 - Blöcke bilden -->
+				<div class="panel panel-default">
+					<div class="panel-heading" ng-click="showStep3 = !showStep3;">
+						<span class="panel-title">3. Blöcke definieren</span>
+						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep3" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
+					</div>
+					<div class="panel-body" ng-show="showStep3">
 						Hier wird es Eingabemöglichkeiten für Blöcke geben.
 						<br /> 0 bis n Blöcke.
 					</div>
 				</div>
+
+				<!-- SCHRITT 4 - Dimensionen bestimmen -->
 				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">3. Dimensionen der Gebäude definieren</h3>
+					<div class="panel-heading" ng-click="showStep4 = !showStep4;">
+						<span class="panel-title">4. Dimensionen der Gebäude definieren</span>
+						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep4" aria-hidden="true"></span>
 					</div>
-					<div class="panel-body">
+					<div class="panel-body" ng-show="showStep4">
 						<table class="table">
-							<tr>
-								<th>
-									<div class="checkbox">
-										<label>
-											<input type="checkbox" ng-model="selfName">Namen selbst eingeben</label>
-									</div>
-								</th>
-							</tr>
 							<!-- NAME -->
 							<tr>
 								<td>
-
-									<div class="input-group" title="Hier kann jeder beliebige Datentyp sein.">
+									<div class="input-group">
 										<span class="input-group-addon">Name</span>
 										<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
 									</div>
-								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>
-								<td>
-									?
 								</td>
 							</tr>
 							<!-- FLAECHE -->
 							<tr>
 								<td>
-									<div class="input-group" title="Der ein-dimensionale Datensatz wird auf die Dimensionen 'Breite' und 'Tiefe' gestreckt. Nur sinnvoll mit Nummern als Eingabe.">
+									<div class="input-group">
 										<span class="input-group-addon">Fläche</span>
 										<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
 									</div>
-								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>
-								<td>
-									Doppelter Slider von Max bis Min (...|.......|...)
 								</td>
 							</tr>
 							<!-- HOEHE -->
 							<tr>
 								<td>
-									<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe.">
+									<div class="input-group">
 										<span class="input-group-addon">Höhe</span>
 										<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
 									</div>
-								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>
-								<td>
-									Doppelter Slider von Max bis Min
 								</td>
 							</tr>
 							<!-- FARBE -->
 							<tr>
 								<td>
-									<div class="input-group" title="Nur sinnvoll mit Nummern als Eingabe, da fließender Übergang von Blau zu weiß">
+									<div class="input-group">
 										<span class="input-group-addon">Farbe</span>
 										<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
 									</div>
 								</td>
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>
-								<td>
-									?
-									<!-- Wird nicht mehr benötigt, da fließender Übergang
-								<input class="bar" type="range" min="0" max="100" step="1" value="0" onchange="colourOutput.value=value.concat('%')"/>
-								<abbr title="Wert, ab dem eine neue Farbe angezeigt wird">
-									<output id="colourOutput">0%</output>
-								</abbr>
-								-->
-							</td>
-						</tr>
-						<!-- BLOECKE -->
-						<tr>
-							<td>
-								<div class="input-group" title="Später sollen hier alle Datentypen möglich sein. Vorerst aber nur Strings">
-									<span class="input-group-addon">Block</span>
-									<select
-										class="form-control"
-										ng-model="chosenView.dimensions.district"
-										ng-options="attr as attr.name for attr in (attributesOfCollection | bychooseability) track by attr.name"
-									></select>
-								</div>
-							</td>
-							<td ng-show="selfName">
-								<input type="text" class="form-control">
-							</td>
-							<td>
-								<input type="text" class="form-control" ng-model="partOfString" placeholder="Teil-String" title="Dieser Teil-String sortiert alle Datensätze in Blöcke ein. Alle Unterschiede nach diesem String werden in einen eigenen Block eifenen Block platziert.">
-							</td>
-						</tr>
-					</table>
-					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
+							</tr>
+						</table>
+					</div>
+				</div>
 
-					<button type="button" class="btn btn-danger btn-xs" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
+				<div>
+
+					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
+					<button type="button" class="btn btn-danger btn-xs"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
 					onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
-				</form>
 				</div>
 			</div>
 		</div>
@@ -347,6 +272,6 @@
 </div>
 
 <!-- Hier wird die Stadt rein gezeichnet -->
-<div id="WebGLCanvas"></div>
+<div id="Stadt"></div>
 
 <div id="jsonDownload"></div>
