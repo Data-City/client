@@ -118,8 +118,8 @@ angular.module('datacityApp')
     $scope.loader = false;
     
     // Ein- & Ausklappen der Panels (Schritt 1-4)
-    $scope.showStep1 = false; // Daten reduzieren
-    $scope.showStep2 = true; // Aggreagtion
+    $scope.showStep1 = true; // Daten reduzieren
+    $scope.showStep2 = false; // Aggreagtion
     $scope.showStep3 = false; // Blöcke
     $scope.showStep4 = false; // Dimensionen
     
@@ -356,17 +356,20 @@ angular.module('datacityApp')
       var view = $scope.chosenView;
       $log.info("Called");
       $log.info(view);
+      var project = projectStage(view.attributesOfCollection);
       var match = matchStage(view.attributesOfCollection);
-      var aggr = buildAggregationPipe(match);
+      $log.info(match);
+      var aggr = buildAggregationPipe(project, match);
       var etag = null;
-      getCurrentETag(database, collection, username, password, $http, function (et) {
+      getCurrentETag("prelife", view.collID, username, password, $http, function (et) {
         etag = et;
         $log.info(aggr);
-        createAggregation(database, collection, username, password, $http, aggr, etag, function (resp) {
+        createAggregation("prelife", view.collID, username, password, $http, aggr, etag, function (resp) {
           $log.info("Aggregation erstellt:");
           $log.info(resp);
         });
       });
+      
 
     };
 
