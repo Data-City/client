@@ -247,10 +247,12 @@ function onDocumentMouseDown( event ) {
 	if ( intersects.length > 0) { //wenn der Strahl ein Objekt schneidet
 		if(intersects[0].object.material.name=="garden"){
 			if(intersects[0].object.garden.on==false){
-				drawLines(intersects[0].object.garden)
+				drawLines(intersects[0].object.garden);
+				intersects[0].object.material.color.setHex(0xA5DF00);
 			}
 			else{
 				removeLines(intersects[0].object.garden);
+				intersects[0].object.material.color.setHex(0x088A08);
 			}
 		}
 		else{
