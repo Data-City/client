@@ -55,11 +55,9 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, n
 //			scene: die scene, mit der man arbeiten moechte und auf die man reagieren moechte
 //			aDistrict: das JSON vom Typ Stadtteil, mit dem ich agieren moechte, wenn der Nutzer das mit der Legende machen moechte
 //			camera: die Kamera, die neu positioniert wird, falls das district bearbeitet wird
-//			arrayOfWebGLBoxes: Array, bestehend aus allen bisher gezeichneten THREE.BoxGeometry's
-//			arrayOfBuildingsAsWebGLBoxes: Array, bestehend aus allen bisher gezeichneten Gebaeuden in der gleichen Reihenfolge wie arrayOfWebGLBoxes
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
 
-function setMenue(legende, scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema, control, controls, nameOfDivElement){
+function setMenue(legende, scene, aDistrict, camera, extrema, control, controls, nameOfDivElement){
 	var gui = new dat.GUI({
 		width : 375, autoPlace: false
 	});
@@ -67,7 +65,7 @@ function setMenue(legende, scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfB
 	gui.domElement.style.position = 'absolute';
 	var divelRect = document.getElementById("WebGLCanvas").getBoundingClientRect();
 	gui.domElement.style.left = divelRect.left+"px";
-	gui.domElement.style.top = "0px";//(divelRect.top+divelRect.bottom-divelRect.height)+"px";
+	gui.domElement.style.top = "0px";
 	gui.domElement.id = "dropdownmenu";
 	document.getElementById(nameOfDivElement).appendChild(gui.domElement);
 
@@ -85,9 +83,9 @@ function setMenue(legende, scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfB
 	//*****************************************************************
 	
 	h = gui.addFolder( "Skalierung");
-	h.add (scaling, "logarithmicHeight").name( "Höhe logarithmieren").onChange(function(value){scale(value, "height", scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema);});
-	h.add (scaling, "logarithmicWidth").name ("Breite logarithmieren").onChange(function(value){scale(value, "width", scene, aDistrict, camera,arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema);});
-	h.add (scaling, "logarithmicColor").name ("Farbe logarithmieren").onChange(function(value){scale(value, "color", scene, aDistrict, camera,arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema);});
+	h.add (scaling, "logarithmicHeight").name( "Höhe logarithmieren").onChange(function(value){scale(value, "height", scene, aDistrict, camera, extrema);});
+	h.add (scaling, "logarithmicWidth").name ("Breite logarithmieren").onChange(function(value){scale(value, "width", scene, aDistrict, camera, extrema);});
+	h.add (scaling, "logarithmicColor").name ("Farbe logarithmieren").onChange(function(value){scale(value, "color", scene, aDistrict, camera, extrema);});
 	
 	//********************************************************************
 	
@@ -108,11 +106,9 @@ var update = function() {
 //			scene: die scene, auf die neu gemalt werden soll
 //			aDistrict: das JSON vom Typ district, dessen Gebaeude skaliert werden soll
 //			camera: die Kamera, die nach dem Zeichnen neu positioniert werden soll
-//			arrayOfWebGLBoxes: Array, bestehend aus allen bisher gezeichneten THREE.BoxGeometry's
-//			arrayOfBuildingsAsWebGLBoxes: Array, bestehend aus allen bisher gezeichneten Gebaeuden in der gleichen Reihenfolge wie arrayOfWebGLBoxes
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
-function scale(value, aString, scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema){
-	removeAllObjects(scene, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes);
+function scale(value, aString, scene, aDistrict, camera, extrema){
+	removeAllObjects(scene);
 	setLight(scene);
 	if(value){
 		var scalingMethod = scaleLogarithmically;
@@ -131,7 +127,7 @@ function scale(value, aString, scene, aDistrict, camera, arrayOfWebGLBoxes, arra
 	}
 	setMainDistrict(aDistrict);
 	scalingExtrema(extrema, aString);
-	addCityToScene(aDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema);
+	addCityToScene(aDistrict, scene, camera, extrema);
 	updateControls(Math.max(aDistrict.width, extrema.maxHeight));
 }
 
@@ -195,11 +191,9 @@ function scaleLinearly(aDistrict, i, j, aString){
 
 //Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen
 //@params: scene: die Scene, auf der alle Objekte geloescht werden soll
-function removeAllObjects(scene, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes){
+function removeAllObjects(scene){
 	for( var i = scene.children.length - 1; i >= 0; i--) {
 		scene.remove(scene.children[i]);
 	}
-	 arrayOfWebGLBoxes = [];
-	 arrayOfBuildingsAsWebGLBoxes =[];
 }
 					

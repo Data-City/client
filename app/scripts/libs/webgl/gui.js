@@ -5,14 +5,13 @@ var mapOfLines = {};
 //@params: aBuilding: ein JSON-Objekt vom Typ Gebaeude/building, das gezeichnet werden soll
 //			material: ein Material von THREE.js, das auf das Gebaeude drauf soll
 //			scene: die scene, der die Box hinzugefuegt werden soll
-//			arrayOfWebGLBoxes: das Array bestehend aus THREE.BoxGeometry's, um spaeter den Mouseclick hinzubekommen
-function drawBox(aBuilding, material, scene, arrayOfWebGLBoxes){
+function drawBox(aBuilding, material, scene){
 	var geometry = new THREE.BoxGeometry(aBuilding.width, aBuilding.height, aBuilding.width);
-	arrayOfWebGLBoxes.push(geometry);
 	var cube = new THREE.Mesh(geometry, material);
 	cube.position.x = aBuilding.centerPosition[0];
 	cube.position.y = aBuilding.centerPosition[1];
 	cube.position.z = aBuilding.centerPosition[2];
+	cube.building = aBuilding;
 	scene.add(cube);
 }
 
@@ -57,34 +56,27 @@ function setLight(scene){
 //@params:	mainDistrict: das Stadtteil, das der unteren Grundflaeche entspricht mit allen zu zeichnenden Stadtteilen und Gebaeuden
 //			scene: die scene, der man die Zeichnungen hinzufuegen moechte
 //			camera: die Kamera, die wir nach dem Malen anders positionieren moechten
-//			arrayOfWebGLBoxes: ein Array, bestehend aus allen THREE.BoxGeometry's, die bisher gezeichnet wurden
-//			arrayOfBuildingsAsWebGLBoxes: ein Array, bestehend aus allen JSON-Objekten buildings, die bisher gezeichnet wurden,
-//									in der gleichen Reihenfolge wie arrayOfWebGLBoxes
 //			extrema: ein JSON-Objekt, das die Extremwerte der Daten enhtaelt, dass man darauf zugreifen kann
-function addCityToScene(mainDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema){
+function addCityToScene(mainDistrict, scene, camera, extrema){
 	// Material von unserer Box.
 	var buildingMaterial = getMaterial(0xee1289);
 				
 	// nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
 	for(var i=0;i<mainDistrict.buildings.length;i++){
-		addBoxes(0x768dff, mainDistrict.buildings[i], scene, arrayOfWebGLBoxes);
+		addBoxes(0x768dff, mainDistrict.buildings[i], scene);
 		addGarden(mainDistrict.buildings[i], scene);
 		for(var j=0;j<mainDistrict.buildings[i].buildings.length;j++){
 			var faktor = getColor(extrema, mainDistrict.buildings[i].buildings[j].color);
-			addBoxes(new THREE.Color(faktor,faktor,1), mainDistrict.buildings[i].buildings[j], scene, arrayOfWebGLBoxes);
+			addBoxes(new THREE.Color(faktor,faktor,1), mainDistrict.buildings[i].buildings[j], scene);
 			addGarden(mainDistrict.buildings[i].buildings[j], scene);
 		}
 	}
 	//Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
 	mainDistrict.centerPosition[1]=-1.5;
-	addBoxes(0xB5BCDE, mainDistrict, scene, arrayOfWebGLBoxes);
+	addBoxes(0xB5BCDE, mainDistrict, scene);
 	setCameraPos(camera, mainDistrict, extrema);
 
-	//***********************************************
 	maximalHeight = getExtrema().maxHeight;
-	//drawLines(arrayOfBuildingsAsWebGLBoxes[2]["leftGarden"]);
-	//drawALine(arrayOfBuildingsAsWebGLBoxes[2]["leftGarden"], arrayOfBuildingsAsWebGLBoxes[3]["rightGarden"]);
-	//***********************************************
 }
 
 
@@ -185,12 +177,11 @@ function removeLines(aGarden){
 
 
 
-//Hilfsmethode fuer addCityToScene, zeichnet die Boxen und fuegt sie dem array arrayOfBuildingsAsWebGLBoxes hinzu
+//Hilfsmethode fuer addCityToScene, zeichnet die Boxen
 //@params
-function addBoxes(aColor, aBuilding, scene, arrayOfWebGLBoxes){
+function addBoxes(aColor, aBuilding, scene){
 	var districtMaterial = getMaterial(aColor);
-	drawBox(aBuilding, districtMaterial, scene, arrayOfWebGLBoxes);
-	arrayOfBuildingsAsWebGLBoxes.push(aBuilding);
+	drawBox(aBuilding, districtMaterial, scene);
 }
 
 
@@ -263,15 +254,12 @@ function onDocumentMouseDown( event ) {
 			}
 		}
 		else{
-			var index = arrayOfWebGLBoxes.indexOf(intersects[0].object.geometry);
-			
-			//changeBuildingInformation(neueHoehe, neueFlaeche, neueFarbe, neuerDistrict, neuerName)
 			changeBuildingInformation(
-				arrayOfBuildingsAsWebGLBoxes[index].originalheight, 
-				arrayOfBuildingsAsWebGLBoxes[index].originalwidth, 
-				arrayOfBuildingsAsWebGLBoxes[index].originalcolor, 
+				intersects[0].object.building.originalheight, 
+				intersects[0].object.building.originalwidth, 
+				intersects[0].object.building.originalcolor, 
 				"noch nicht implementiert", 
-				arrayOfBuildingsAsWebGLBoxes[index].name);
+				intersects[0].object.building.name);
 		}
 	}
 

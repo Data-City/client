@@ -1,7 +1,5 @@
 var camera, scene, renderer, controls, control, raycaster;
 var mainDistrict;
-var arrayOfWebGLBoxes = [];				//Array aus THREE.BoxGeometry's, die je gezeichnet wurden
-var arrayOfBuildingsAsWebGLBoxes = []; 	//Array aus Gebaeuden in der gleichen Reihenfolge wie die zugehoerigen WebGLBoxen
 var mouse = new THREE.Vector2(), INTERSECTED, SELECTED;
 var extrema = { //enthaelt die Extremwerte aus den Daten nach Aufruf von addCityToScene --> createArrayOfBuildings
 	maxWidth:0,
@@ -16,18 +14,6 @@ var extrema = { //enthaelt die Extremwerte aus den Daten nach Aufruf von addCity
 //gibt die Extremwerte zurueck
 function getExtrema(){
 	return extrema;
-}
-
-
-//gibt das Gebaeude zurueck, das diesen Namen hat
-//wird bisher noch nicht gebraucht
-//@params name
-function getBuildingByName(name){
-	for(var i=0;i<arrayOfBuildingsAsWebGLBoxes;i++){
-		if(name==arrayOfBuildingsAsWebGLBoxes[i].name){
-			return arrayOfBuildingsAsWebGLBoxes[i];
-		}
-	}
 }
 
 
@@ -51,7 +37,7 @@ function drawCity(data, association, nameOfDivElement){
 	setMainDistrict(mainDistrict);
 				
 	//zeichnen nun auch die Stadt
-	addCityToScene(mainDistrict, scene, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema);
+	addCityToScene(mainDistrict, scene, camera, extrema);
 	
 	// Erstelle das Menue oben rechts
 	if( Detector.webgl ){
@@ -59,7 +45,7 @@ function drawCity(data, association, nameOfDivElement){
 		if(ourDivElement.children["dropdownmenu"]!=undefined){
 			ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
 		}
-		setMenue(association["dimensions"], scene, mainDistrict, camera, arrayOfWebGLBoxes, arrayOfBuildingsAsWebGLBoxes, extrema, control, controls, nameOfDivElement);
+		setMenue(association["dimensions"], scene, mainDistrict, camera, extrema, control, controls, nameOfDivElement);
 	}
 	
 	
