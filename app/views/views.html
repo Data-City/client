@@ -229,6 +229,21 @@
 										<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
 									</div>
 								</td>
+<<<<<<< HEAD
+=======
+								<td ng-show="selfName">
+									<input type="text" class="form-control">
+								</td>
+								<td>
+									?
+									<!-- Wird nicht mehr benötigt, da fließender Übergang
+								<input class="bar" type="range" min="0" max="100" step="1" value="0" onchange="colourOutput.value=value.concat('%')"/>
+								<abbr title="Wert, ab dem eine neue Farbe angezeigt wird">
+									<output id="colourOutput">0%</output>
+								</abbr>
+								-->
+								</td>
+>>>>>>> parent of 7e90b1b... Button Änderung speichern verstecken
 							</tr>
 						</table>
 					</div>
