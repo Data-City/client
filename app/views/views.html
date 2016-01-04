@@ -107,7 +107,7 @@
 										</div>
 										<div class="row container">
 											<slider class="container" ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
-											value="(attr.numberValueFilter.length > 0) ? attr.numberValueFilter : [chosenView.metaData['min_' + attr.name], chosenView.metaData['max_' + attr.name]]"
+											value="(attr.numberValueFilter.length > 0) ? attr.numberValueFilter : Array(chosenView.metaData['min_' + attr.name], chosenView.metaData['max_' + attr.name])"
 											range="true"></slider>
 										</div>
 										<div class="row container">
@@ -138,22 +138,34 @@
 						<table class="table">
 							<thead>
 								<th>Nr.</th>
-								<th>Aggregationsparameter</th>
+								<th></th>
 								<th>Löschen</th>
 							</thead>
 							<tr ng-repeat="(arrayIndex, aggregation) in chosenView.aggregations">
-								<td>{{key + 1}}</td>
+								<td><b>{{arrayIndex + 1}}</b></td>
 								<td>
 									<table class="table">
+										<thead>
+											<th>Beschreibung</th>
+											<th>Attribut</th>
+											<th>Operation</th>
+											<th>Neuer Name</th>
+										</thead>
 										<tr>
 											<td>Gruppieren über</td>
 											<td>
-												<select class="form-control" ng-model="aggregation.groupOverField" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
+												<select ng-model="aggregation.groupOverField" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
+											</td>
+											<td></td>
+											<td>
+												<input type="text"></input>
 											</td>
 										</tr>
 										<tr ng-show="aggregation.groupOverField" ng-repeat="(key, attr) in (chosenView.attributesOfCollection | bychooseability | attrbyname:aggregation.groupOverField)">
+											<td></td>
 											<td>{{attr.name}}</td>
-											<td>OPERATION</td>
+											<td><select ng-options="option as option.name for option in availableAggregationOperations track by option.cmd" ng-model="selected"></select></td>
+											<td><input type="text"></input></td>
 										</tr>
 									</table>
 								</td>
@@ -240,6 +252,7 @@
 
 					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
 					<button type="button" class="btn btn-danger btn-xs" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
+					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="createAggregationForDisplay();">Aggregation erzeugen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
 					onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
 				</div>

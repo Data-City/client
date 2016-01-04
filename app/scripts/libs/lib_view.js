@@ -329,6 +329,49 @@ var createMinMedMaxAggrParam = function(attrs, colname) {
     return aggrs;
 };
 
+var getCurrentETag = function(database, collection, username, password, $http, func) {
+	setAuthHeader(username, password, $http);
+	
+	$http.get(createURL(database,collection)).then(function (response) {
+		func(response.data._etag.$oid);
+	});
+};
+
+/**
+ * Erzeugt eine match-Stage:
+ * 
+ * "_$match": matchStage(params) 
+ */
+var matchStage = function(params) {
+	var match = {'_$and': [ ]};
+	params.forEach(function(element, index) {
+		/*
+		{ score: { $gt: 70, $lt: 90 } },
+		{ views: { $gte: 1000 } } 
+		*/
+		if(element.type === 'number' && element.chooseable && element.toBeFiltered) {
+			var attrName = '$' + element.name;
+			match._$and.push({ [attrName]: {'_$gte': element.numberValueFilter[0], '_$lte': element.numberValueFilter[1]}});
+		}
+	});
+	return match;
+};
+
+var buildAggregationPipe = function(match) {
+	var aggr = {aggrs: [
+		{
+			"type": "pipeline",
+			"uri": "cityAggregation",
+			"stages": [
+				{
+					"_$match" : match
+				}
+			]
+		}
+	]};
+	return aggr;
+};
+
 var createCityAggregation = function(attrs, colname) {
 	
 	var aggrs = {aggrs: [

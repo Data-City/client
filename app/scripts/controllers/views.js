@@ -52,12 +52,61 @@ angular.module('datacityApp')
       this.aggregationOperations = [];
     }
     
-    $scope.addNewAggregation = function() {
+    /**
+     * Alle für MongoDB verfügbaren Gruppierungsoperationen
+     * 
+     * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
+     */
+    $scope.availableAggregationOperations = {
+      'forgot': {
+        name: 'Vergessen',
+        cmd: null,
+      },
+      'sum': {
+        name: 'Summe',
+        cmd: '$sum',
+      },
+      'avg': {
+        name: 'Durchschnitt',
+        cmd: '$avg',
+      },
+      'first': {
+        name: 'Erster Wert',
+        cmd: '$first',
+      },
+      'last': {
+        name: 'Letzter Wert',
+        cmd: '$last',
+      },
+      'max': {
+        name: 'Maximum',
+        cmd: '$max',
+      },
+      'push': {
+        name: 'Push',
+        cmd: '$push',
+      },
+      'addToSet': {
+        name: 'Zur Menge hinzufügen',
+        cmd: '$addToSet',
+      },
+      'stdDevPop': {
+        name: 'Standardabweichung',
+        cmd: '$stdDevPop',
+      },
+      'stdDevSamp': {
+        name: 'Stichprobenabweichung',
+        cmd: '$stdDevSamp',
+      }
+
+    };
+
+    $scope.addNewAggregation = function () {
       $scope.chosenView.aggregations.push(new Aggregation());
     };
-    
-    $scope.removeAggregation = function(arrayIndex) {
-      $scope.chosenView.aggregations.splice(arrayIndex, 1);   
+
+    $scope.removeAggregation = function (arrayIndex) {
+      $scope.chosenView.aggregations.splice(arrayIndex, 1);
     };
     
     // Initialisierung des Controllers
@@ -301,6 +350,24 @@ angular.module('datacityApp')
       a.textContent = "chosenView.json";
 
       document.getElementById('jsonDownload').appendChild(a);
+    };
+
+    $scope.createAggregationForDisplay = function () {
+      var view = $scope.chosenView;
+      $log.info("Called");
+      $log.info(view);
+      var match = matchStage(view.attributesOfCollection);
+      var aggr = buildAggregationPipe(match);
+      var etag = null;
+      getCurrentETag(database, collection, username, password, $http, function (et) {
+        etag = et;
+        $log.info(aggr);
+        createAggregation(database, collection, username, password, $http, aggr, etag, function (resp) {
+          $log.info("Aggregation erstellt:");
+          $log.info(resp);
+        });
+      });
+
     };
 
   });
