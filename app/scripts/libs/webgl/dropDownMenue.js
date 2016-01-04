@@ -65,8 +65,9 @@ function setMenue(legende, scene, aDistrict, camera, arrayOfWebGLBoxes, arrayOfB
 	});
 
 	gui.domElement.style.position = 'absolute';
-	gui.domElement.style.left = document.getElementById("WebGLCanvas").getBoundingClientRect().left+"px";
-	gui.domElement.style.top = document.getElementById("WebGLCanvas").getBoundingClientRect().top+"px";
+	var divelRect = document.getElementById("WebGLCanvas").getBoundingClientRect();
+	gui.domElement.style.left = divelRect.left+"px";
+	gui.domElement.style.top = "0px";//(divelRect.top+divelRect.bottom-divelRect.height)+"px";
 	gui.domElement.id = "dropdownmenu";
 	document.getElementById(nameOfDivElement).appendChild(gui.domElement);
 

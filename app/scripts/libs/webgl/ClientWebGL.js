@@ -142,7 +142,6 @@ function init(nameOfDivElement) {
 	
     renderer.domElement.id = "WebGLCanvas";
     document.getElementById(nameOfDivElement).innerHTML = "";
-	console.log("Div-ID: " + nameOfDivElement);
     document.getElementById(nameOfDivElement).appendChild(renderer.domElement);
 
 	scene = new THREE.Scene();

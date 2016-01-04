@@ -10,7 +10,7 @@
 
 	<body>
 		<p id="demo"></p>
-		<p id="stadt"></p>
+		<div id="Stadt"></div>
 		<script src="js/three.min.js"></script>
 		<script src="js/TrackballControls.js"></script>
 		<script src='js/dat.gui.min.js'></script>
@@ -26,7 +26,7 @@
 		<script src="webglDaten.js"></script>
 		<script>
 			//kriegt die ganzen Daten, die abzubilden sind, kriegt die Zuordnungen und kriegt den Namen vom Div-Element, mit dem ich nichts anfangen kann...
-			drawCity(dieDatei(), dieZuordnungen(), "stadt");
+			drawCity(dieDatei(), dieZuordnungen(), "Stadt");
 			//die Methode "dieDatei()" und die Methode "dieZuordnungen" sind Getter für die Daten und die Zuordnungen, 
 			// also die geben mir die JSON-Objekte, die ihr auch habt. Diese beiden Methoden koennt ihr aber nirgends aufrufen, denn sie sind in beispiel.js drin....
 			//aber die JSON-Objekte habt ihr ja auch
