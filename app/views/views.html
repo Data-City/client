@@ -186,73 +186,60 @@
 				</div>
 
 				<!-- SCHRITT 4 - Dimensionen bestimmen -->
-				<div class="panel panel-default">
-					<div class="panel-heading" ng-click="showStep4 = !showStep4;">
-						<span class="panel-title">4. Dimensionen der Gebäude definieren</span>
-						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
-						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep4" aria-hidden="true"></span>
-					</div>
-					<div class="panel-body" ng-show="showStep4">
-						<table class="table">
-							<!-- NAME -->
-							<tr>
-								<td>
-									<div class="input-group">
-										<span class="input-group-addon">Name</span>
-										<select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
-									</div>
-								</td>
-							</tr>
-							<!-- FLAECHE -->
-							<tr>
-								<td>
-									<div class="input-group">
-										<span class="input-group-addon">Fläche</span>
-										<select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
-									</div>
-								</td>
-							</tr>
-							<!-- HOEHE -->
-							<tr>
-								<td>
-									<div class="input-group">
-										<span class="input-group-addon">Höhe</span>
-										<select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
-									</div>
-								</td>
-							</tr>
-							<!-- FARBE -->
-							<tr>
-								<td>
-									<div class="input-group">
-										<span class="input-group-addon">Farbe</span>
-										<select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
-									</div>
-								</td>
-<<<<<<< HEAD
-=======
-								<td ng-show="selfName">
-									<input type="text" class="form-control">
-								</td>
-								<td>
-									?
-									<!-- Wird nicht mehr benötigt, da fließender Übergang
-								<input class="bar" type="range" min="0" max="100" step="1" value="0" onchange="colourOutput.value=value.concat('%')"/>
-								<abbr title="Wert, ab dem eine neue Farbe angezeigt wird">
-									<output id="colourOutput">0%</output>
-								</abbr>
-								-->
-								</td>
->>>>>>> parent of 7e90b1b... Button Änderung speichern verstecken
-							</tr>
-						</table>
-					</div>
-				</div>
+                <form name="dimform">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" ng-click="showStep4 = !showStep4;">
+                            <span class="panel-title">4. Dimensionen der Gebäude definieren</span>
+                            <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep4" aria-hidden="true"></span>
+                        </div>
+                        <div class="panel-body" ng-show="showStep4">
+                            <table class="table">
+                                <!-- NAME -->
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Name</span>
+                                            <select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- FLAECHE -->
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Fläche</span>
+                                            <select class="form-control" ng-model="chosenView.dimensions.flaeche" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- HOEHE -->
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Höhe</span>
+                                            <select class="form-control" ng-model="chosenView.dimensions.hoehe" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- FARBE -->
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Farbe</span>
+                                            <select class="form-control" ng-model="chosenView.dimensions.farbe" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability | bytype:'number') track by attr.name"></select>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </form>
 
 				<div>
 
-					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
-					<button type="button" class="btn btn-danger btn-xs"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
+					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
+					<button type="button" class="btn btn-danger btn-xs" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
 					onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
 				</div>
