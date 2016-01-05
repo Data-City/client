@@ -56,6 +56,11 @@ angular
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
+      .when('/data/preview', {
+        templateUrl: 'views/preview.html',
+        controller: 'PreviewCtrl',
+        controllerAs: 'preview'
+      })
       .when('/views/', {
         templateUrl: 'views/views.html',
         controller: 'ViewsCtrl',
