@@ -1,111 +1,14 @@
 'use strict';
 /*jshint -W117 */
-// Basis-URL zu RESTHeart
-var BASEURL = "https://pegenau.com:16392";
-var ANSICHTEN = "/einstellungen/ansichten";
-
-var META_DATA_PART = "_dc_";
-
-//Authorisierung
-var setAuthHeader = function (username, password, $http) {
-	//$http.defaults.headers.common["Access-Control-Allow-Origin"] = '*';
-	$http.defaults.headers.common.Authorization = "Basic " + btoa(username + ":" + password);
-};
-
-//Holt sich alle Datensätze
-var getCollections = function (database, username, password, $http, func) {
-	setAuthHeader(username, password, $http);
-
-	$http.get(BASEURL + "/" + database).then(
-		function (response) {
-			func(response.data._embedded['rh:coll']);
-		}
-	);
-};
-
-//Holt sich alle Ansichten
-var getViews = function (database, collection, username, password, $http, func) {
-	setAuthHeader(username, password, $http);
-
-	$http.get(BASEURL + "/" + database + "/" + collection).then(
-		function (response) {
-			func(response);
-		}
-	);
-};
 
 /**
  * Counts the elements in obj
  */
-
 var count = function (obj) {
 	if(obj === null) {
 		return 0;
 	}
 	return Object.keys(obj).length;
-};
-
-var getViewsByColID = function (database, collection, colID, username, password, $http, func) {
-	setAuthHeader(username, password, $http);
-
-	$http.get(BASEURL + "/" + database + "/" + collection).then(
-		function (response) {
-			func(response);
-		}
-	);
-};
-
-var getCollection = function (database, collection, username, password, $http, func) {
-	setAuthHeader(username, password, $http);
-
-	$http.get(BASEURL + "/" + database + "/" + collection).then(
-		function (response) {
-			func(response);
-		}
-	);
-};
-
-var getNumberOfCollections = function (database, username, password, $http, func) {
-	getCollections(database, username, password, $http, function (response) {
-		var count = Object.keys(response).length;
-		func(count);
-	});
-};
-
-var getNumberOfViews = function (database, collection, username, password, $http, func) {
-	getViews(database, collection, username, password, $http, function (response) {
-		var count = Object.keys(response).length;
-		func(count);
-	});
-};
-
-var deleteView = function (doc, username, password, $http, func) {
-	var config = {headers:  {
-        "If-Match": doc._etag.$oid}
-    };
-	var url = BASEURL + ANSICHTEN + '/' + doc._id;
-	
-	$http.delete(url, config).then(function(response){
-		func(response);
-	});
-};
-
-var updateView = function (view, username, password, $http, $log, func) {
-	var config = {headers:  {
-        "If-Match": view._etag.$oid}
-    };
-	var url = BASEURL + ANSICHTEN + '/' + view._id;
-	
-	$http.patch(url, view, config).then(function(response){
-		func(response);
-	}, function errorCallback(response) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-	$log.error("Error updating view:");
-	$log.error(view);
-	$log.error("Response:");
-	$log.error(response);
-  });
 };
 
 //Holt beliebige URL ab Base URL, Beispiel /database/collection
@@ -148,9 +51,9 @@ var getType = function (thing) {
 };
 
 
-/**
+/*
  * Erzeugt ein Array aller Attribute, die nicht mit "_" beginnen und ihrem Typ
- */
+
 var getProperties = function (row) {
 	var attrs = [];
     for (var key in row) {
@@ -164,6 +67,7 @@ var getProperties = function (row) {
       }
 return attrs;
 };
+*/
 
 /**
  * Gibt alle Attribute mit Typ zurück
@@ -336,22 +240,6 @@ var getCurrentETag = function(database, collection, username, password, $http, f
 		func(response.data._etag.$oid);
 	});
 };
-
-
-var projectStage = function(params) {
-	/*
-	$project : { title : 1 , author : 1 }
-	*/
-	var project = {};
-	params.forEach(function(element, index) {
-		if(element.chooseable) {
-			project[element.name] = 1;
-		}		
-	});
-	return project;
-};
-
-
 
 var createCityAggregation = function(attrs, colname) {
 	

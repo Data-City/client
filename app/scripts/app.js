@@ -22,6 +22,7 @@ angular
     'ui.bootstrap-slider',
   ])
   .config(function ($routeProvider) {
+      
     $routeProvider
       .when('/', {
         templateUrl: 'views/login.html',

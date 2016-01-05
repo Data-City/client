@@ -12,13 +12,13 @@
  * Filter in the datacityApp.
  */
 angular.module('datacityApp')
-  .filter('colsbydisplayability', function ($log) {
+  .filter('colsbydisplayability', function ($log, REST) {
     return function (collections) {
       var displayableCollections = [];
       
       collections.forEach(function (element, index) {
         /*jshint -W117 */
-        if (element._id.indexOf(META_DATA_PART) < 0) {
+        if (element._id.indexOf(REST.META_DATA_PART) < 0) {
           displayableCollections.push(element);
         }
       });
