@@ -13,7 +13,7 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-  .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin) {
+  .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR) {
     
     
     //Standardeinstellungen
@@ -52,55 +52,6 @@ angular.module('datacityApp')
       this.aggregationOperations = [];
     }
     
-    /**
-     * Alle für MongoDB verfügbaren Gruppierungsoperationen
-     * 
-     * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
-     */
-    $scope.availableAggregationOperations = {
-      'forgot': {
-        name: 'Vergessen',
-        cmd: null,
-      },
-      'sum': {
-        name: 'Summe',
-        cmd: '$sum',
-      },
-      'avg': {
-        name: 'Durchschnitt',
-        cmd: '$avg',
-      },
-      'first': {
-        name: 'Erster Wert',
-        cmd: '$first',
-      },
-      'last': {
-        name: 'Letzter Wert',
-        cmd: '$last',
-      },
-      'max': {
-        name: 'Maximum',
-        cmd: '$max',
-      },
-      'push': {
-        name: 'Push',
-        cmd: '$push',
-      },
-      'addToSet': {
-        name: 'Zur Menge hinzufügen',
-        cmd: '$addToSet',
-      },
-      'stdDevPop': {
-        name: 'Standardabweichung',
-        cmd: '$stdDevPop',
-      },
-      'stdDevSamp': {
-        name: 'Stichprobenabweichung',
-        cmd: '$stdDevSamp',
-      }
-
-    };
-
     $scope.addNewAggregation = function () {
       $scope.chosenView.aggregations.push(new Aggregation());
     };
@@ -123,9 +74,8 @@ angular.module('datacityApp')
     $scope.showStep3 = false; // Blöcke
     $scope.showStep4 = false; // Dimensionen
     
-   
-
-
+    $scope.availableAggregationOperations = AGGR.availableAggregationOperations;
+    
     /**
      * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
      */
@@ -206,52 +156,14 @@ angular.module('datacityApp')
               createMinMedMaxAggrParam($scope.chosenView.attributesOfCollection, view.collID), // Aggregationsparameter in der Form aggrs = { aggrs : [ ... ]}
               resp.data._etag.$oid // der aktuelle etag der Collection
               );
-
-            
-            // Aggregation ausführen
-            /*
-            var req = {
-              method: 'GET',
-              url: "https://pegenau.com:16392/prelife" + "/" + $scope.chosenView.collID + "/_aggrs/maxminavg",
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
-              },
-              data: { test: 'test' }
-            };
-
-            $http(req).then(function (response) {
-              $log.info("Aggregation erfolgreich ausgeführt")
-              $log.info(req);
-            }, function (response) {
-              $log.error("FEHLER BEI AGGREGATION");
-              $log.error(response);
-            });
-            */
-
+             
             var url = "/" + "prelife" + "/" + $scope.chosenView.collID + META_DATA_PART + "stats";
             $log.info("URL zu Metadaten: " + url);
             getURL(url, null, username, password, $http, function (response) {
               $scope.chosenView.metaData = response.data._embedded["rh:doc"][0];
               $log.info($scope.chosenView.metaData);
             });
-            /*
-          //$scope.loader = true;
-          $log.info("Führe Aggregation aus: " + url);
-          getURL(url, null, username, password, $http, function (response) {
-            $log.info(response);
-            $scope.loader = false;
-            
-            // Aggregation abrufen
-            
-          });*/
-
           }
-
-
-
           $log.info($scope.chosenView);
         });
 
@@ -356,10 +268,10 @@ angular.module('datacityApp')
       var view = $scope.chosenView;
       $log.info("Called");
       $log.info(view);
-      var project = projectStage(view.attributesOfCollection);
-      var match = matchStage(view.attributesOfCollection);
+      var project = AGGR.projectStage(view.attributesOfCollection);
+      var match = AGGR.matchStage(view.attributesOfCollection);
       $log.info(match);
-      var aggr = buildAggregationPipe(project, match);
+      var aggr = AGGR.buildAggregationPipe(project, match);
       var etag = null;
       getCurrentETag("prelife", view.collID, username, password, $http, function (et) {
         etag = et;

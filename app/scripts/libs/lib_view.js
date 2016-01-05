@@ -337,39 +337,6 @@ var getCurrentETag = function(database, collection, username, password, $http, f
 	});
 };
 
-/**
- * Erzeugt eine match-Stage:
- * 
- * "_$match": matchStage(params) 
- */
-var matchStage = function(params) {
-	var arrayOfMatchCriteria = [];
-	params.forEach(function(element, index) {
-		/*
-		{ score: { $gt: 70, $lt: 90 } },
-		{ views: { $gte: 1000 } } 
-		*/
-		if(element.type === 'number' && element.chooseable && element.toBeFiltered) {
-			var obj = {};
-			obj[element.name] = {'_$gte': element.numberValueFilter[0], '_$lte': element.numberValueFilter[1]};
-			arrayOfMatchCriteria.push(obj);
-		}
-	});
-	// Mehrere Bedingungen mit AND verknüpfen
-	if(arrayOfMatchCriteria.length < 1) {
-		return {};
-	} else if (arrayOfMatchCriteria.length === 1) {
-		return arrayOfMatchCriteria[0];
-	} else {
-		// { $or: [ { score: { $gt: 70, $lt: 90 } }, { views: { $gte: 1000 } } ] }
-		var ret = { "_$and" : [] };
-		for(var i = 0; i < arrayOfMatchCriteria.length; i++) {
-			ret._$and.push(arrayOfMatchCriteria[i]);
-		}
-		return ret;
-	}
-};
-
 
 var projectStage = function(params) {
 	/*
@@ -384,19 +351,7 @@ var projectStage = function(params) {
 	return project;
 };
 
-var buildAggregationPipe = function(project, match) {
-	var aggr = {"aggrs": [
-		{
-			"type": "pipeline",
-			"uri": "data",
-			"stages": [
-				{ "_$project" : project },
-				{ "_$match" : match },
-			]
-		}
-	]};
-	return aggr;
-};
+
 
 var createCityAggregation = function(attrs, colname) {
 	
