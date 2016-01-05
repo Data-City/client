@@ -163,7 +163,7 @@ angular.module('datacityApp')
         /**
          * Erzeugt eine neue Ansicht für eine gegebene Collection
          */
-        this.createNewView = function(view, collection, fn) {
+        this.createView = function(view, collection, fn) {
             var url = BASEURL + '/einstellungen/ansichten/' + view.timeOfCreation;
             $http.put(url, view).then(function (response) {
                 if(fn) {

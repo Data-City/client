@@ -11,24 +11,6 @@ var count = function (obj) {
 	return Object.keys(obj).length;
 };
 
-//Holt beliebige URL ab Base URL, Beispiel /database/collection
-var getURL = function (url, parameters, username, password, $http, funcSucc, funcError) {
-	setAuthHeader(username, password, $http);
-	/*
-	$http.get(BASEURL + url, config).then(
-		function (response) {
-			func(response);
-		}
-	);
-	*/
-	var req = {
-		method: 'GET',
-		url: BASEURL + url,
-		params: parameters,
-	};
-	
-	$http(req).then(funcSucc, funcError);
-};
 
 /**
  * Gibt es Datentyp des uebergebenen Datums zurueck
@@ -147,37 +129,6 @@ var getAttributesWithType = function (data) {
       }
     };
 	
-var createURL = function(database, collection) {
-	return BASEURL + "/" + database + "/" + collection;
-};
-	
-var createAggregation = function(database, collection, username, password, $http, aggrs, etag, func) {
-	setAuthHeader(username, password, $http);
-	/*
-	var req = {
-		method: 'PUT',
-		url: getURL(database, collection),
-		headers: {
-			'Content-Type': 'application/hal+json'
-		},
-		params: {
-			//aggrs
-		},
-		data: {
-			aggrs, 
-		},
-	};
-	
-	$http(req).then(func);
-	*/
-	var config = {
-		headers: {
-			"If-Match": etag,
-		}
-	};
-	$http.put(createURL(database,collection), aggrs, config);
-};
-
 var createMinMedMaxAggrParam = function(attrs, colname) {
 	/*
 	
@@ -231,14 +182,6 @@ var createMinMedMaxAggrParam = function(attrs, colname) {
 	aggrs.aggrs[0].stages[0]._$group = ops;
 	aggrs.aggrs[0].stages.push({ "_$out" : colname + "_dc_stats"});
     return aggrs;
-};
-
-var getCurrentETag = function(database, collection, username, password, $http, func) {
-	setAuthHeader(username, password, $http);
-	
-	$http.get(createURL(database,collection)).then(function (response) {
-		func(response.data._etag.$oid);
-	});
 };
 
 var createCityAggregation = function(attrs, colname) {

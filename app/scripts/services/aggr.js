@@ -9,6 +9,8 @@
  */
 angular.module('datacityApp')
     .provider('AGGR', function AGGR() {
+        
+        var rest = null;
      
      /**
      * Alle für MongoDB verfügbaren Gruppierungsoperationen
@@ -111,7 +113,7 @@ angular.module('datacityApp')
         /**
          * Setzt einzelne Aggregationsschritte zu einem vollständigen Aggregationsparameter zusammen
          */
-        this.buildAggregationPipe = function(project, match) {
+        this.buildAggregationPipe = function(collection, project, match) {
             var aggr = {
                 "aggrs": [
                 {
@@ -121,22 +123,22 @@ angular.module('datacityApp')
                 }
             ]};
             
-            if(project) {
+            if(project && count(project) > 0) {
                 aggr.aggrs[0].stages.push({ "_$project" : project });
             }
             
-            if(match) {
+            if(match && count(project) > 0) {
                 aggr.aggrs[0].stages.push({ "_$match" : match });
             }
+            aggr.aggrs[0].stages.push({ "_$out" : collection + rest.META_DATA_PART + 'data'});
             
 	       return aggr;
         };
-        
-        
 
 
         // Method for instantiating
-        this.$get = function () {
-            return new AGGR();
+        this.$get = function (REST) {
+            rest = REST;
+            return this;
         };
     });
