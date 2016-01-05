@@ -1,3 +1,8 @@
+//*****************************
+var seperator = ".";
+var numOfSeps = 4;
+//*****************************
+
 var camera, scene, renderer, controls, control, raycaster;
 var mainDistrict;
 var mouse = new THREE.Vector2(), INTERSECTED, SELECTED;
@@ -29,8 +34,9 @@ function drawCity(data, association, nameOfDivElement){
 			camera.aspect = window.innerWidth / window.innerHeight;
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			}, false );
-	
-	var districtarray = [district(createArrayOfBuildings(data, association["dimensions"]["name"], association["dimensions"]["flaeche"], association["dimensions"]["hoehe"], association["dimensions"]["farbe"]))];
+	/*var districtarray = [district(createArrayOfBuildings(data, association["dimensions"]["name"], association["dimensions"]["flaeche"], association["dimensions"]["hoehe"], association["dimensions"]["farbe"]))];
+	mainDistrict = district(districtarray);*/
+	var districtarray = createArrayOfBuildings(data, association["dimensions"]["name"]["name"], association["dimensions"]["flaeche"], association["dimensions"]["hoehe"], association["dimensions"]["farbe"]);
 	mainDistrict = district(districtarray);
 				
 	// diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
@@ -72,9 +78,45 @@ function createArrayOfBuildings(data, nameOfBuilding, widthOfBuilding, heightOfB
 	var height;
 	var color;
 
+	var jsonOfDistrictArrays = {};
+	
 	for(var i=0; i<myData.length; i++){
 		if(myData[i][widthOfBuilding]!=undefined && myData[i][heightOfBuilding]!=undefined ){
+			//******************************
+
+			var splittedName = myData[i][nameOfBuilding].toString().split(seperator);
+			//---------
 			width = myData[i][widthOfBuilding];
+			height = myData[i][heightOfBuilding];
+			color = myData[i][colorOfBuilding];
+			if(width=="") width = 0;
+			if(height=="") height=0;
+			if(color=="") color=0;
+			updateExtrema(width, height, color);
+			//----------
+			
+			if(splittedName.length <= numOfSeps){
+				if(jsonOfDistrictArrays[" "]==undefined){
+					jsonOfDistrictArrays[" "] = [building(myData[i][nameOfBuilding], width, height, color)];
+				}
+				else{
+					jsonOfDistrictArrays[" "].push(building(myData[i][nameOfBuilding], width, height, color));
+				}
+			}
+			else{
+				var packagename = "";
+				for(var j=0;j<numOfSeps; j++){
+					packagename = splittedName[j]+seperator;
+				}
+				if(jsonOfDistrictArrays[packagename]==undefined){
+					jsonOfDistrictArrays[packagename] = [building(myData[i][nameOfBuilding], width, height, color)];
+				}
+				else{
+					jsonOfDistrictArrays[packagename].push(building(myData[i][nameOfBuilding], width, height, color));
+				}
+			}
+			//****************************
+			/*width = myData[i][widthOfBuilding];
 			height = myData[i][heightOfBuilding];
 			color = myData[i][colorOfBuilding];
 			
@@ -85,7 +127,11 @@ function createArrayOfBuildings(data, nameOfBuilding, widthOfBuilding, heightOfB
 			anArrayOfBuildings.push(building(myData[i][nameOfBuilding], width, height, color));
 			
 			updateExtrema(width, height, color);
+			*/
 		}
+	}
+	for(var x in jsonOfDistrictArrays){
+		anArrayOfBuildings.push(district(jsonOfDistrictArrays[x]));
 	}
 	
 	return anArrayOfBuildings;
