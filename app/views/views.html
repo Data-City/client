@@ -252,8 +252,8 @@
 
 				<div>
 
-					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();" onclick="dimform.$pristine" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
-					<button type="button" class="btn btn-danger btn-xs" ng-show="dimform.$dirty" disabled> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
+					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
+					<button type="button" class="btn btn-danger btn-xs" ng-click="discardChanges()"ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderungen verwerfen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="createAggregationForDisplay();">Aggregation erzeugen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
 					onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>

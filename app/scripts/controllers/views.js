@@ -118,6 +118,13 @@ angular.module('datacityApp')
             REST.updateView($scope.chosenView, function () {
                 $scope.getViews();
             });
+            //Macht die beiden Buttons wieder unsichtbar
+            $scope.dimform.$setPristine();
+        };
+        
+        $scope.discardChanges = function () {
+            $scope.chosenView = angular.copy($scope.originalView);
+            $scope.dimform.$setPristine();
         };
 
         /**
@@ -155,6 +162,8 @@ angular.module('datacityApp')
                             $log.error(response);
                         });
                     }
+                    //Wird zum Zurücksetzen benötigt
+                    $scope.originalView = angular.copy($scope.chosenView);
                 });
 
             }
