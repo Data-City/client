@@ -121,7 +121,7 @@ angular.module('datacityApp')
             //Macht die beiden Buttons wieder unsichtbar
             $scope.dimform.$setPristine();
         };
-        
+
         $scope.discardChanges = function () {
             $scope.chosenView = angular.copy($scope.originalView);
             $scope.dimform.$setPristine();
@@ -149,18 +149,9 @@ angular.module('datacityApp')
                         // Aggregation erstellen
                         REST.createAggregation(
                             "prelife", // Die Datenbank, in der die aktuelle collection liegt
-                            createMinMedMaxAggrParam($scope.chosenView.attributesOfCollection, view.collID), // Aggregationsparameter in der Form aggrs = { aggrs : [ ... ]}
+                            AGGR.createMinMedMaxAggrParam($scope.chosenView.attributesOfCollection, view.collID), // Aggregationsparameter in der Form aggrs = { aggrs : [ ... ]}
                             resp.data._etag.$oid // der aktuelle etag der Collection
                             );
-
-                        var url = "/" + "prelife" + "/" + $scope.chosenView.collID + REST.META_DATA_PART + "stats";
-                        $log.info("URL zu Metadaten: " + url);
-                        REST.getURL(url, null, function (response) {
-                            $scope.chosenView.metaData = response.data._embedded["rh:doc"][0];
-                        }, function error(response) {
-                            $log.error("Fehler beim Holen der Meta-Daten");
-                            $log.error(response);
-                        });
                     }
                     //Wird zum Zurücksetzen benötigt
                     $scope.originalView = angular.copy($scope.chosenView);
@@ -252,7 +243,7 @@ angular.module('datacityApp')
 
             var a = document.createElement('a');
             console.log($scope.chosenView);
-            a.download =  "Collection_" + $scope.chosenView.collID + " - Ansicht_" + $scope.chosenView.name + ".json";
+            a.download = "Collection_" + $scope.chosenView.collID + " - Ansicht_" + $scope.chosenView.name + ".json";
             a.href = url;
             a.textContent = "Collection:" + $scope.chosenView.collID + " - Ansicht:" + $scope.chosenView.name + ".json";
 
@@ -262,8 +253,43 @@ angular.module('datacityApp')
         };
 
         $scope.createAggregationForDisplay = function () {
+            REST.hasCollectionMetaData("prelife", $scope.chosenView.collID, function(r) {
+                $log.info("Meta-Daten vorhanden: " + r);
+            });
+            
+            REST.hasCollectionAggregations("prelife", $scope.chosenView.collID, function(boolean) {
+                $log.info("Aggregationen vorhanden: " + boolean);
+            });
+            
+            
+            /*
+            var params = {
+                'metaData' : {
+                    'name': {
+                        'type' : 'string'
+                    },
+                    'createdOn': 'heute'
+                }
+            };
+            
             var view = $scope.chosenView;
-            $log.info("Called");
+            REST.getCurrentETag("prelife", view.collID, function (etag) {
+                REST.putOnCollection("prelife", view.collID, etag, params, function (resp) {
+                    $log.info("Aggregation erstellt:");
+                    $log.info(resp);
+                });
+            });
+            */
+            /*
+            var view = $scope.chosenView;
+            var aggr = AGGR.createMinMedMaxAggrParam(view.attributesOfCollection, view.collID);
+            REST.addAggregation("prelife", view.collID, aggr, function (response) {
+                $log.info("Aggregation erstellt");
+                $log.info(response);
+            });
+            */  
+            /*
+            var view = $scope.chosenView;
             $log.info(view);
             var project = AGGR.projectStage(view.attributesOfCollection);
             var match = AGGR.matchStage(view.attributesOfCollection);
@@ -275,7 +301,7 @@ angular.module('datacityApp')
                     $log.info(resp);
                 });
             });
-
+            */
 
         };
 
