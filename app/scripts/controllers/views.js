@@ -132,7 +132,7 @@ angular.module('datacityApp')
          */
         $scope.setChosenView = function (view) {
             if ($scope.chosenView === view) {
-                $scope.chosenView = new View();
+                $scope.chosenView = null;
             } else {
                 $scope.chosenView = view;
                 REST.getDocuments("prelife", $scope.chosenView.collID, function (resp) {
