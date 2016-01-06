@@ -79,125 +79,128 @@
 				<br />
 
 				<!-- SCHRITT 1 - Daten reduzieren -->
-				<div class="panel panel-default">
-					<div class="panel-heading" ng-click="showStep1 = !showStep1;">
-						<span class="panel-title">1. Daten reduzieren</span>
-						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep1" aria-hidden="true"></span>
-						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep1" aria-hidden="true"></span>
-					</div>
-					<div class="panel-body" ng-show="showStep1">
-						<div class="row" ng-repeat="attr in chosenView.attributesOfCollection">
-							<div class="col-md-2 col-sm-2">
-								<input type="checkbox" ng-model="attr.chooseable"> <b>Name: {{attr.name}} ({{attr.type}})</B></input>
-							</div>
-							<div class="col-md-10 col-sm-10">
-								<div class="panel panel-default" ng-show="attr.chooseable && attr.type === 'number'">
-									<div class="panel-body">
-										<input type="checkbox" ng-model="attr.toBeFiltered"> Filtern</input>
-										<br />
-										<div class="row container">
-											<div class="col-md-4 col-sm-4"><span class="pull-left">Min: {{chosenView.metaData["min_" + attr.name]}}</span></div>
-											<div class="col-md-4 col-sm-4"><span class="center-block text-center">Avg: {{chosenView.metaData["avg_" + attr.name]}}</span></div>
-											<div class="col-md-4 col-sm-4"><span class="pull-right">Max: {{chosenView.metaData["max_" + attr.name]}}</span></div>
-										</div>
-										<div class="row container">
-											<slider class="container" ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
-											value="(attr.numberValueFilter.length > 0) ? attr.numberValueFilter : Array(chosenView.metaData['min_' + attr.name], chosenView.metaData['max_' + attr.name])"
-											range="true"></slider>
-										</div>
-										<div class="row container">
-											<div class="col-md-6 col-sm-6">
-												<input type="number" ng-model="attr.numberValueFilter[0]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
-												class="pull-left"></input>
-											</div>
-											<div class="col-md-6 col-sm-6">
-												<input type="number" ng-model="attr.numberValueFilter[1]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
-												class="pull-right"></input>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+                <form name="dimform" id="dimform">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" ng-click="showStep1 = !showStep1;">
+                            <span class="panel-title">1. Daten reduzieren</span>
+                            <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep1" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep1" aria-hidden="true"></span>
+                        </div>
+                        <div class="panel-body" ng-show="showStep1">
+                            <div class="row" ng-repeat="attr in chosenView.attributesOfCollection">
+                                <div class="row container">
+                                    <input type="checkbox" ng-model="attr.chooseable" title="Wählbar machen"> <b>{{attr.name}} ({{attr.type}})</b></input>
+                                </div>
+                                <div class="col-md-10 col-sm-10">
+                                    <div class="panel panel-default" ng-show="attr.chooseable && attr.type === 'number'">
+                                        <div class="panel-body">
+                                            <input type="checkbox" ng-model="attr.toBeFiltered"> Filtern</input>
+                                            <br />
+                                            <div ng-show="attr.toBeFiltered">
+                                                <div class="row container">
+                                                    <div class="col-md-4 col-sm-4"><span class="pull-left">Minimum: {{chosenView.metaData["min_" + attr.name]}}</span></div>
+                                                    <div class="col-md-4 col-sm-4"><span class="center-block text-center">Durchschnitt: {{chosenView.metaData["avg_" + attr.name].toFixed(3)}}</span></div>
+                                                    <div class="col-md-4 col-sm-4"><span class="pull-right">Maximum: {{chosenView.metaData["max_" + attr.name]}}</span></div>
+                                                </div>
+                                                <div class="row container">
+                                                    <slider class="container" ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+                                                    value="(attr.numberValueFilter.length > 0) ? attr.numberValueFilter : Array(chosenView.metaData['min_' + attr.name], chosenView.metaData['max_' + attr.name])"
+                                                    range="true"></slider>
+                                                </div>
+                                                <div class="row container">
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <input type="number" ng-model="attr.numberValueFilter[0]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+                                                        class="pull-left"></input>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <input type="number" ng-model="attr.numberValueFilter[1]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+                                                        class="pull-right"></input>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-				<!-- SCHRITT 2 - Daten aggregieren -->
-				<div class="panel panel-default">
-					<div class="panel-heading" ng-click="showStep2 = !showStep2;">
-						<span class="panel-title">2. Daten aggregieren</span>
-						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
-						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
-					</div>
-					<div class="panel-body" ng-show="showStep2">
-						<table class="table">
-							<thead>
-								<th>Nr.</th>
-								<th></th>
-								<th>Löschen</th>
-							</thead>
-							<tr ng-repeat="(arrayIndex, aggregation) in chosenView.aggregations">
-								<td><b>{{arrayIndex + 1}}</b></td>
-								<td>
-									<table class="table">
-										<thead>
-											<th>Beschreibung</th>
-											<th>Attribut</th>
-											<th>Operation</th>
-											<th>Neuer Name</th>
-										</thead>
-										<tr>
-											<td>Gruppieren über</td>
-											<td>
-												<select ng-model="aggregation.groupOverField" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
-											</td>
-											<td></td>
-											<td>
-												<input type="text"></input>
-											</td>
-										</tr>
-										<tr ng-show="aggregation.groupOverField" ng-repeat="(key, attr) in (chosenView.attributesOfCollection | bychooseability | attrbyname:aggregation.groupOverField)">
-											<td></td>
-											<td>{{attr.name}}</td>
-											<td>
-												<select ng-options="option as option.name for option in availableAggregationOperations track by option.cmd" ng-model="selected"></select>
-											</td>
-											<td>
-												<input type="text"></input>
-											</td>
-										</tr>
-									</table>
-								</td>
-								<td>
-									<button type="button" class="btn btn-sm btn-danger pull-right" aria-label="Left Align" ng-click="removeAggregation(key);">
-										<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-									</button>
-								</td>
-							</tr>
-						</table>
+                    <!-- SCHRITT 2 - Daten aggregieren -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading" ng-click="showStep2 = !showStep2;">
+                            <span class="panel-title">2. Daten aggregieren</span>
+                            <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
+                        </div>
+                        <div class="panel-body" ng-show="showStep2">
+                            <table class="table">
+                                <thead>
+                                    <th>Nr.</th>
+                                    <th></th>
+                                    <th>Löschen</th>
+                                </thead>
+                                <tr ng-repeat="(arrayIndex, aggregation) in chosenView.aggregations">
+                                    <td><b>{{arrayIndex + 1}}</b></td>
+                                    <td>
+                                        <table class="table">
+                                            <thead>
+                                                <th>Beschreibung</th>
+                                                <th>Attribut</th>
+                                                <th>Operation</th>
+                                                <th>Neuer Name</th>
+                                            </thead>
+                                            <tr>
+                                                <td>Gruppieren über</td>
+                                                <td>
+                                                    <select ng-model="aggregation.groupOverField" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <input type="text"></input>
+                                                </td>
+                                            </tr>
+                                            <tr ng-show="aggregation.groupOverField" ng-repeat="(key, attr) in (chosenView.attributesOfCollection | bychooseability | attrbyname:aggregation.groupOverField)">
+                                                <td></td>
+                                                <td>{{attr.name}}</td>
+                                                <td>
+                                                    <select ng-options="option as option.name for option in availableAggregationOperations track by option.cmd" ng-model="selected"></select>
+                                                </td>
+                                                <td>
+                                                    <input type="text"></input>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger pull-right" aria-label="Left Align" ng-click="removeAggregation(key);">
+                                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
 
-						<!-- Button: Neue Aggregation -->
-						<button type="button" class="btn btn-success pull-right" aria-label="Left Align" ng-click="addNewAggregation()">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true">Aggregationsschritt hinzufügen</span>
-						</button>
-					</div>
-				</div>
+                            <!-- Button: Neue Aggregation -->
+                            <button type="button" class="btn btn-success pull-right" aria-label="Left Align" ng-click="addNewAggregation()">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true">Aggregationsschritt hinzufügen</span>
+                            </button>
+                        </div>
+                    </div>
 
-				<!-- SCHRITT 3 - Blöcke bilden -->
-				<div class="panel panel-default">
-					<div class="panel-heading" ng-click="showStep3 = !showStep3;">
-						<span class="panel-title">3. Blöcke definieren</span>
-						<span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep3" aria-hidden="true"></span>
-						<span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
-					</div>
-					<div class="panel-body" ng-show="showStep3">
-						Hier wird es Eingabemöglichkeiten für Blöcke geben.
-						<br /> 0 bis n Blöcke.
-					</div>
-				</div>
+                    <!-- SCHRITT 3 - Blöcke bilden -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading" ng-click="showStep3 = !showStep3;">
+                            <span class="panel-title">3. Blöcke definieren</span>
+                            <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep3" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
+                        </div>
+                        <div class="panel-body" ng-show="showStep3">
+                            Hier wird es Eingabemöglichkeiten für Blöcke geben.
+                            <br /> 0 bis n Blöcke.
+                        </div>
+                    </div>
 
-				<!-- SCHRITT 4 - Dimensionen bestimmen -->
-				<form name="dimform">
+                    <!-- SCHRITT 4 - Dimensionen bestimmen -->
+				
 					<div class="panel panel-default">
 						<div class="panel-heading" ng-click="showStep4 = !showStep4;">
 							<span class="panel-title">4. Dimensionen der Gebäude definieren</span>
@@ -249,8 +252,8 @@
 
 				<div>
 
-					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
-					<button type="button" class="btn btn-danger btn-xs" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
+					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();" onclick="dimform.$pristine" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
+					<button type="button" class="btn btn-danger btn-xs" ng-show="dimform.$dirty" disabled> <span class="glyphicon glyphicon-remove"></span> Änderung verwerfen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="createAggregationForDisplay();">Aggregation erzeugen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
 					onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
@@ -287,5 +290,3 @@
 
 <!-- Hier wird die Stadt rein gezeichnet -->
 <div id="Stadt" style="position:absolute;"></div>
-
-<div id="jsonDownload"></div>
