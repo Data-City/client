@@ -242,11 +242,14 @@ angular.module('datacityApp')
             var url = URL.createObjectURL(blob);
 
             var a = document.createElement('a');
-            a.download = "chosenView.json";
+            console.log($scope.chosenView);
+            a.download =  "Collection_" + $scope.chosenView.collID + " - Ansicht_" + $scope.chosenView.name + ".json";
             a.href = url;
-            a.textContent = "chosenView.json";
+            a.textContent = "Collection:" + $scope.chosenView.collID + " - Ansicht:" + $scope.chosenView.name + ".json";
 
-            document.getElementById('jsonDownload').appendChild(a);
+            var myWindow = window.open("", "", "width=400, height=200");
+            myWindow.document.write("<div id='jsonDownload'></div>");
+            myWindow.document.getElementById('jsonDownload').appendChild(a);
         };
 
         $scope.createAggregationForDisplay = function () {
