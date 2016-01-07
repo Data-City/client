@@ -68,31 +68,32 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
      * Löscht die ausgewählte Collection
      */
     $scope.deleteCollection = function () {
-        // TODO Alle Collections löschen, die mit collectionId_dc_ beginnen
-        REST.deleteCollection(database, $scope.chosenCollection.data._id, function (response) {
-        });
-        //Hier sollte noch etwas hin, das die Seite refresht
-        $scope.getCollections();
+        
+        //Die Collection selbst löschen
+        REST.deleteCollection(database, $scope.chosenCollection.data._id, function (response) {});
+        
+        // Alle Collections löschen, die mit collectionId_dc_ beginnen
+        for (var iterate in $scope.allCollections) {
+            var myRegExp = new RegExp($scope.chosenCollection.data._id + "_dc_", 'i');
+            var match = $scope.allCollections[iterate]._id.match(myRegExp);
+            
+            if (match) {
+                REST.deleteCollection(database, $scope.allCollections[iterate]._id, function (response) {});
+            }
+        } 
+        
+         //Hier sollte noch etwas hin, das die Tabelle refresht
     };
     
     /**
      * Holt alle Collections
      */
-    $scope.getCollections = function () {
-        REST.getCollections(database, function (response) {
-            var allCollections = response.data._embedded['rh:coll'];
-            $scope.allCollections = allCollections;
-            $scope.displayableCollections = $filter('colsbydisplayability')(allCollections);
-            $scope.numberOfDisplayableCollections = count($scope.displayableCollections);
-        });
-    }
-    
-            REST.getCollections(database, function (response) {
-            var allCollections = response.data._embedded['rh:coll'];
-            $scope.allCollections = allCollections;
-            $scope.displayableCollections = $filter('colsbydisplayability')(allCollections);
-            $scope.numberOfDisplayableCollections = count($scope.displayableCollections);
-        });
+    REST.getCollections(database, function (response) {
+        var allCollections = response.data._embedded['rh:coll'];
+        $scope.allCollections = allCollections;
+        $scope.displayableCollections = $filter('colsbydisplayability')(allCollections);
+        $scope.numberOfDisplayableCollections = count($scope.displayableCollections);   
+    });
 
     /**
      * @return Eine schönere Anzeige des Datums
