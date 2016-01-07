@@ -56,11 +56,20 @@ angular
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
-      .when('/data/preview', {
+/**
+      .when('/data/:collID/preview', {
+         templateUrl: 'views/collID/preview.html',
+        controller: 'PreviewCtrl',
+        controllerAs: 'preview'
+      })
+*/
+       
+      .when('/data/preview/:collID', {
         templateUrl: 'views/preview.html',
         controller: 'PreviewCtrl',
         controllerAs: 'preview'
       })
+
       .when('/views/', {
         templateUrl: 'views/views.html',
         controller: 'ViewsCtrl',

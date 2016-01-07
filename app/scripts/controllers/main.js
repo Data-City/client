@@ -49,6 +49,10 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
         });
     };
 
+    $scope.getMyLink = function(collId){
+        location.href = "#/data/preview/" + collId;
+    };
+
 
     $scope.getIdOfCollection = function (collection) {
         return collection ? collection.data._id : null;
