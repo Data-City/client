@@ -1,5 +1,13 @@
 var maximalHeight;
 var mapOfLines = {};
+var clickedGardens = [];
+
+
+//Methode zum hinzufuegen von Elementen zu clickedGardens
+//@params: gardenID: eine GartenID
+function pushToClickedGardens(gardenID){
+	clickedGardens.push(gardenID);
+}
 
 //Hilfsmethode, um eine WebGL-Box zu malen
 //@params: aBuilding: ein JSON-Objekt vom Typ Gebaeude/building, das gezeichnet werden soll
@@ -94,6 +102,7 @@ function addGarden(aBuilding, scene){
 		cube.position.y = aBuilding[gardens[i]].centerPosition[1];
 		cube.position.z = aBuilding[gardens[i]].centerPosition[2];
 		cube.garden = aBuilding[gardens[i]];
+		aBuilding[gardens[i]].mesh = cube;
 		scene.add(cube);
 	}
 }
@@ -197,6 +206,16 @@ function setCameraPos(camera, mainDistrict, extrema){
 }
 
 
+//setzt die Kameraposition neu, wenn die alte Ansicht wiederhergestellt werden soll aus einem Link
+//@params: camera: die Kamera, die wir anders positionieren moechten
+//			aJson: das Json, das im Link gespeichert worden ist der Form {camPos: json_mit_Camera_Position,
+//										garden: array_mit_ID_der_Gaerten,_die_an_sind,
+//										scaling: json_von_legende}
+function setCameraPosForLink(camera, aJson){
+	camera.position.x = aJson.camPos.x;
+	camera.position.y = aJson.camPos.y;
+	camera.position.z = aJson.camPos.z;
+}
 
 
 
@@ -237,7 +256,7 @@ function render() {
 
 //Wird ausgefuehrt, wenn man mit der Maus klickt
 function onDocumentMouseDown( event ) {	
-
+	
 	event.preventDefault(); // schaltet controls aus
 	
 	raycaster.setFromCamera( mouse, camera ); //schaut, was die Maus durch die Kamera so erwischt
@@ -249,10 +268,12 @@ function onDocumentMouseDown( event ) {
 			if(intersects[0].object.garden.on==false){
 				drawLines(intersects[0].object.garden);
 				intersects[0].object.material.color.setHex(0xA5DF00);
+				clickedGardens.push(intersects[0].object.garden.id);
 			}
 			else{
 				removeLines(intersects[0].object.garden);
 				intersects[0].object.material.color.setHex(0x088A08);
+				clickedGardens.splice(clickedGardens.indexOf(intersects[0].object.garden.id), 1);
 			}
 		}
 		else{
@@ -279,10 +300,20 @@ function getScrollDistance(divElement) {
         top: rect.top
     };
 }
+
+//Methode zum erstellen des JSON zum Speichern der aktuellen Ansicht mit Kameraposition etc.
+//@return: das gewuenschte Json
+function getJsonForCurrentLink(){
+	var aJson = {};
+	aJson.camPos = camera.position;
+	aJson.garden = clickedGardens;
+	aJson.scaling = getScalingBooleans();
+	return aJson;
+}
 		
 //berechnet die Position von der Maus	
 function onDocumentMouseMove( event ) {
-	
+	changeLinkForCurrentView(getJsonForCurrentLink());
 	event.preventDefault(); 
 	var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
 

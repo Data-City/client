@@ -45,7 +45,15 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
             if ($scope.chosenCollection) {
                 window.location = "#/views/" + $scope.chosenCollection.data._id;
             }
-            
+        });
+    };
+    
+    $scope.setChosenCollectionOnly = function (collId) {
+       REST.getDocuments(database, collId, function (collection) {
+            $log.info(collection);
+            $scope.chosenCollection = collection;
+            console.log("asnbdhas");
+            console.log($scope.chosenCollection);
         });
     };
 
@@ -59,7 +67,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     /**
      * @param id ID der Collection, die gelöscht werden soll
      */
-    $scope.deleteDataset = function () {
+    $scope.deleteDataset = function (chosenCollection) {
         // TODO Alle Collections löschen, die mit collectionId_dc_ beginnen
 		
         //Erst den Datensatz löschen

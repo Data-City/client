@@ -29,11 +29,27 @@ var scaling = {
 	"logarithmicColor" : false
 };
 
+//Getter für scaling
+function getScalingBooleans(){
+	return scaling;
+}
+
+//Setter fuer scaling
+//@params: scalingObject: Object, mit dem Scaling ueberschrieben werden soll
+function setScalingBooleans(scalingObject){
+	scaling = scalingObject;
+}
+
 //fuer den Ordner "Steuerung"
 var controlling = {
 	"zoomSpeed" : 1,
 	"rotateSpeed": 1
 };
+
+//fuer den Ordner "aktuelle Ansicht"
+var currentView = {
+	"Link": ''
+}
 
 //aendert bei den Gebaeudeinformationen in der Legende die Werte, die angezeigt werden sollen
 //@params: newHeight: die neue Hoehe, die angezeigt werden soll
@@ -47,6 +63,15 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, n
 	buildingInformation["farbe"]=newColor;
 	buildingInformation["district"]=newDistrict;
 	buildingInformation["name"]=newName;
+}
+
+//aendert bei dem Link in der Legende den Link zum Verschicken
+//@params: aJson: ein Objekt der Form {camPos: json_mit_Camera_Position,
+//										garden: array_mit_ID_der_Gaerten,_die_an_sind,
+//										scaling: json_von_legende}
+function changeLinkForCurrentView(aJson){
+	currentView['Link']= 'http://dummylink.com/viewDataCity?webGLSettings='+JSON.stringify(aJson);
+	
 }
 	
 
@@ -92,6 +117,11 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
 	h = gui.addFolder("Steuerung");
 	h.add(controlling, "zoomSpeed", 0.1, 2).name("Zoomgeschwindigkeit").onChange(function(value){controls.zoomSpeed = value;});
 	h.add(controlling, "rotateSpeed", 0.1, 2).name("Rotationsgeschwindigkeit").onChange(function(value){control.rotateSpeed = value;});
+	
+	//********************************************************************
+	
+	h = gui.addFolder("aktuelle Ansicht");
+	h.add(currentView, "Link").name("Link markieren Strg+A").listen();
 }
 
 
