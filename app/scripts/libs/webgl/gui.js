@@ -2,6 +2,13 @@ var maximalHeight;
 var mapOfLines = {};
 var clickedGardens = [];
 
+
+//Methode zum hinzufuegen von Elementen zu clickedGardens
+//@params: gardenID: eine GartenID
+function pushToClickedGardens(gardenID){
+	clickedGardens.push(gardenID);
+}
+
 //Hilfsmethode, um eine WebGL-Box zu malen
 //@params: aBuilding: ein JSON-Objekt vom Typ Gebaeude/building, das gezeichnet werden soll
 //			material: ein Material von THREE.js, das auf das Gebaeude drauf soll
@@ -95,6 +102,7 @@ function addGarden(aBuilding, scene){
 		cube.position.y = aBuilding[gardens[i]].centerPosition[1];
 		cube.position.z = aBuilding[gardens[i]].centerPosition[2];
 		cube.garden = aBuilding[gardens[i]];
+		aBuilding[gardens[i]].mesh = cube;
 		scene.add(cube);
 	}
 }
@@ -198,6 +206,16 @@ function setCameraPos(camera, mainDistrict, extrema){
 }
 
 
+//setzt die Kameraposition neu, wenn die alte Ansicht wiederhergestellt werden soll aus einem Link
+//@params: camera: die Kamera, die wir anders positionieren moechten
+//			aJson: das Json, das im Link gespeichert worden ist der Form {camPos: json_mit_Camera_Position,
+//										garden: array_mit_ID_der_Gaerten,_die_an_sind,
+//										scaling: json_von_legende}
+function setCameraPosForLink(camera, aJson){
+	camera.position.x = aJson.camPos.x;
+	camera.position.y = aJson.camPos.y;
+	camera.position.z = aJson.camPos.z;
+}
 
 
 

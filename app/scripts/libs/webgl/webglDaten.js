@@ -101,7 +101,9 @@ function beispielZuordnungen(){
 }
 
 
-
+function getLinkJson(){
+	return {"camPos":{"x":180.71211144233038,"y":90.35605572116523,"z":271.06816716349556},"garden":[0,1,2],"scaling":{"logarithmicHeight":false,"logarithmicWidth":false,"logarithmicColor":false}};
+}
 
 
 

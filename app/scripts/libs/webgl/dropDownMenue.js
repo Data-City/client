@@ -34,6 +34,12 @@ function getScalingBooleans(){
 	return scaling;
 }
 
+//Setter fuer scaling
+//@params: scalingObject: Object, mit dem Scaling ueberschrieben werden soll
+function setScalingBooleans(scalingObject){
+	scaling = scalingObject;
+}
+
 //fuer den Ordner "Steuerung"
 var controlling = {
 	"zoomSpeed" : 1,

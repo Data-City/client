@@ -231,3 +231,30 @@ function setControls(){
 function updateControls(maxDistance){
 	controls.maxDistance = maxDistance*3;
 }
+
+
+//wenn ein Link fuer eine spezielle Ansicht aufgerufen wurde, wird diese Methode aufgerufen, 
+// um die alte Ansicht (mit Kameraposition etc.) wiederherzustellen, nachdem drawCity(...) aufgerufen wurde
+//@params: das Json, das im Link gespeichert worden ist der Form {camPos: json_mit_Camera_Position,
+//										garden: array_mit_ID_der_Gaerten,_die_an_sind,
+//										scaling: json_von_legende}
+function setSpecificView(aJson){
+	setScalingBooleans(aJson.scaling);
+	var scaleArray = ["height", "width", "color"];
+	var i=0;
+	for(var x in aJson.scaling){
+		if(aJson.scaling[x]){
+			scale(true, scaleArray[i], scene, mainDistrict, camera, extrema);
+		}
+		i++;
+	}
+
+	setCameraPosForLink(camera, aJson);
+	
+	var theHashGarden = getHashGarden();
+	for(var i=0;i<aJson.garden.length; i++){
+		drawLines(theHashGarden[aJson.garden[i]]);
+		theHashGarden[aJson.garden[i]].mesh.material.color.setHex(0xA5DF00);
+		pushToClickedGardens(aJson.garden[i]);
+	}
+}
