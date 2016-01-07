@@ -186,7 +186,7 @@ angular.module('datacityApp')
             }
         });
         aggrs.aggrs[0].stages[0]._$group = ops;
-        aggrs.aggrs[0].stages.push({ "_$out" : colname + "_dc_stats"});
+        aggrs.aggrs[0].stages.push({ "_$out" : colname + "_dc_" + this.META_DATA_AGGR_URI});
         return aggrs;
     };
 
