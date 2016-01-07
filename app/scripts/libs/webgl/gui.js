@@ -1,5 +1,6 @@
 var maximalHeight;
 var mapOfLines = {};
+var clickedGardens = [];
 
 //Hilfsmethode, um eine WebGL-Box zu malen
 //@params: aBuilding: ein JSON-Objekt vom Typ Gebaeude/building, das gezeichnet werden soll
@@ -237,7 +238,7 @@ function render() {
 
 //Wird ausgefuehrt, wenn man mit der Maus klickt
 function onDocumentMouseDown( event ) {	
-
+	
 	event.preventDefault(); // schaltet controls aus
 	
 	raycaster.setFromCamera( mouse, camera ); //schaut, was die Maus durch die Kamera so erwischt
@@ -249,10 +250,12 @@ function onDocumentMouseDown( event ) {
 			if(intersects[0].object.garden.on==false){
 				drawLines(intersects[0].object.garden);
 				intersects[0].object.material.color.setHex(0xA5DF00);
+				clickedGardens.push(intersects[0].object.garden.id);
 			}
 			else{
 				removeLines(intersects[0].object.garden);
 				intersects[0].object.material.color.setHex(0x088A08);
+				clickedGardens.splice(clickedGardens.indexOf(intersects[0].object.garden.id), 1);
 			}
 		}
 		else{
@@ -279,10 +282,20 @@ function getScrollDistance(divElement) {
         top: rect.top
     };
 }
+
+//Methode zum erstellen des JSON zum Speichern der aktuellen Ansicht mit Kameraposition etc.
+//@return: das gewuenschte Json
+function getJsonForCurrentLink(){
+	var aJson = {};
+	aJson.camPos = camera.position;
+	aJson.garden = clickedGardens;
+	aJson.scaling = getScalingBooleans();
+	return aJson;
+}
 		
 //berechnet die Position von der Maus	
 function onDocumentMouseMove( event ) {
-	
+	changeLinkForCurrentView(getJsonForCurrentLink());
 	event.preventDefault(); 
 	var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
 

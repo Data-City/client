@@ -268,7 +268,7 @@ function dieZuordnungen(){
 			"flaeche" : "Klassen" , 
 			"farbe" : "Zeilen" , 
 			"district" : "Verzweigungen" , 
-			"name" : "Package"
+			"name" : {"name": "Package"}
 		} , 
 		"_etag" : { "$oid" : "5661a4a1975a565ba33b1671"} , 
 		"_lastupdated_on" : "2015-12-04T14:35:13Z"

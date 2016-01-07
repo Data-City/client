@@ -94,7 +94,7 @@ function beispielZuordnungen(){
 			"flaeche" : "Klassen" , 
 			"farbe" : "Zeilen" , 
 			"district" : "Verzweigungen" , 
-			"name" : "Package"
+			"name" : {"name": "Package"}
 		}
 	};
 	return zuordnungen;
