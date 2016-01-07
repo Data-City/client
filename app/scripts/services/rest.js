@@ -147,6 +147,7 @@ angular.module('datacityApp')
          * TODO Meta-Daten löschen
          */
         this.deleteCollection = function(db, collection, fn) {
+            // Eigentliche Collection löschen
             this.getCurrentETag(db, collection, function(etag) {
                 rest.deleteData(function(r) {
                     $log.info('Gelöscht:\t' + db + '/' + collection);

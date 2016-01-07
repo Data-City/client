@@ -14,8 +14,6 @@
  */
 angular.module('datacityApp')
     .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST) {
-
-        $scope.test = 1;
         //Standardeinstellungen
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
@@ -23,6 +21,8 @@ angular.module('datacityApp')
         var database = "einstellungen";
         var collection = "ansichten";
         var baseurl = "https://pegenau.com:16392";
+        
+        var dbWithCollections = "prelife";
     
         /**
         *  Konstruktor für eine Ansicht
@@ -95,16 +95,10 @@ angular.module('datacityApp')
         /**
          * Holt die Ansichten und speichert sie im Controller-Scope
          */
-
-        $scope.getViews = function (func) {
+        $scope.getViews = function () {
             REST.getViewsOfCollection($scope.collID, function (views) {
                 $scope.views = views;
-                if ($scope.views) {
-                    $scope.numberOfViews = count(views);
-                }
-                if (func) {
-                    func(views);
-                }
+                $scope.numberOfViews = (views) ? count(views) : 0;
             });
         };
 
@@ -135,28 +129,6 @@ angular.module('datacityApp')
                 $scope.chosenView = null;
             } else {
                 $scope.chosenView = view;
-                REST.getDocuments("prelife", $scope.chosenView.collID, function (resp) {
-                    $scope.collection = resp;
-          
-                    // Attribute der Collection holen, falls noch nicht vorhanden
-                    if (!$scope.chosenView.attributesOfCollection || $scope.chosenView.attributesOfCollection.length === 0) {
-                        var attrs = getAttributesWithType(resp.data._embedded['rh:doc']);
-                        $scope.chosenView.attributesOfCollection = attrs;
-                    }
-          
-                    // Get Meta-Data
-                    if (!$scope.chosenView.metaData) {
-                        // Aggregation erstellen
-                        REST.createAggregation(
-                            "prelife", // Die Datenbank, in der die aktuelle collection liegt
-                            AGGR.createMinMedMaxAggrParam($scope.chosenView.attributesOfCollection, view.collID), // Aggregationsparameter in der Form aggrs = { aggrs : [ ... ]}
-                            resp.data._etag.$oid // der aktuelle etag der Collection
-                            );
-                    }
-                    //Wird zum Zurücksetzen benötigt
-                    $scope.originalView = angular.copy($scope.chosenView);
-                });
-
             }
         };
 
@@ -167,6 +139,12 @@ angular.module('datacityApp')
         if ($routeParams.collID) {
             $scope.collID = $routeParams.collID;
             $scope.getViews();
+            REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
+                $scope.collection = resp;
+                $scope.metaData = resp.data.metaData;
+                $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
+            });
+            
         }
 
         /**
@@ -254,59 +232,16 @@ angular.module('datacityApp')
 
         $scope.createAggregationForDisplay = function () {
             var view = $scope.chosenView;
-            /*
-            REST.deleteCollection("prelife", "spielwiese", function(r) {
-                $log.info('deleteCollection');
-                $log.info(r);
-            });
-            return;
-            */
+            
+            //REST.deleteCollection("prelife", "spielwiese", null);
+            //return;
+            
             REST.ensureCollectionsMetaData("prelife", view.collID,
                 function(response) {
                     $log.info('ensureCollectionsMetaData durch. Antwort:');
                     $log.info(response);
             });
-            /*
-            var params = {
-                'metaData' : {
-                    'name': {
-                        'type' : 'string'
-                    },
-                    'createdOn': 'heute'
-                }
-            };
             
-            var view = $scope.chosenView;
-            REST.getCurrentETag("prelife", view.collID, function (etag) {
-                REST.putOnCollection("prelife", view.collID, etag, params, function (resp) {
-                    $log.info("Aggregation erstellt:");
-                    $log.info(resp);
-                });
-            });
-            */
-            /*
-            var view = $scope.chosenView;
-            var aggr = AGGR.createMinMedMaxAggrParam(view.attributesOfCollection, view.collID);
-            REST.addAggregation("prelife", view.collID, aggr, function (response) {
-                $log.info("Aggregation erstellt");
-                $log.info(response);
-            });
-            */  
-            /*
-            var view = $scope.chosenView;
-            $log.info(view);
-            var project = AGGR.projectStage(view.attributesOfCollection);
-            var match = AGGR.matchStage(view.attributesOfCollection);
-            $log.info(match);
-            var aggr = AGGR.buildAggregationPipe(project, match);
-            REST.getCurrentETag("prelife", view.collID, function (etag) {
-                REST.createAggregation("prelife", view.collID, etag, aggr, function (resp) {
-                    $log.info("Aggregation erstellt:");
-                    $log.info(resp);
-                });
-            });
-            */
-
         };
 
     });
