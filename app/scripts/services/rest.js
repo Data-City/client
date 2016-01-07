@@ -12,6 +12,7 @@ angular.module('datacityApp')
         // Private
         var $http = null;
         var $log = null;
+        var AGGR = null;
         // Basis-URL zu RESTHeart
         var BASEURL = "https://pegenau.com:16392";
         var ANSICHTEN = "/einstellungen/ansichten";
@@ -299,6 +300,54 @@ angular.module('datacityApp')
                 });
             });
         };
+        /**
+         * Garantiert, dass Meta-Daten einer Collection vorhanden sind und 
+         * ruft die Funktion mit diesen auf
+         */
+        this.ensureCollectionsMetaData = function(database, collection, fn) {
+            // Meta-Daten holen
+            rest.getCollectionsMetaData(database, collection, function(metaData) {
+                // Einfacher Fall: Meta-Daten vorhanden
+                if(metaData) {
+                    fn(metaData);
+                } else {
+                    // Gibt es Tabelle mit Meta-Daten?
+                    var relUrl = rest.createUrl(database, collection) + 
+                                    rest.META_DATA_PART +
+                                    rest.META_DATA_SUFFIX;
+                                    
+                    // Ja
+                    var funcSucc = function(respWithMetaData) {
+                        // TODO
+                        // In collection speichern
+                        // REKURSIV AUFRUFEN
+                    };
+                    // Nein
+                    var funcError = function(resp) {
+                        // Gibt es eine Aggregation?
+                        rest.getAggregations(database, collection, function(aggrs) {
+                            // Ja
+                            if(aggrs) {
+                                // TODO
+                                // Aufrufen
+                                // REKURSIV AUFRUFEN
+                            // Nein
+                            } else {
+                                // Aggregation anlegen
+                                var aggr = AGGR.createMinMedMaxAggrParam(view.attributesOfCollection, collection);
+                                rest.addAggregation(database, collection, aggr, function (response) {
+                                    $log.info("Aggregation erstellt");
+                                    $log.info(response);
+                                    // TODO 
+                                    // REKURSIV Aufrufen
+                                });
+                            }
+                        });
+                    };                
+                    rest.getURL(relUrl, null, funcSucc, funcError);
+                }
+            })
+        }
 
         /**
          * Besitzt die Collection eine Meta-Daten Aggregation _dc_stats
@@ -362,14 +411,19 @@ angular.module('datacityApp')
         this.setLOG = function (log) {
             $log = log;
         };
+        
+        this.setAGGR = function (aggr) {
+            AGGR = aggr;
+        }
 
         /**
          * Instanziert Provider
          */
-        this.$get = function ($http, $log) {
+        this.$get = function ($http, $log, AGGR) {
             rest = this;
             this.setHTTP($http);
             this.setLOG($log);
+            this.setAGGR(AGGR);
             return this;
         };
     });
