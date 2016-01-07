@@ -11,6 +11,8 @@ angular.module('datacityApp')
     .provider('AGGR', function AGGR() {
         
         var rest = null;
+        
+        this.META_DATA_AGGR_URI = "maxminavg";
      
      /**
      * Alle für MongoDB verfügbaren Gruppierungsoperationen
@@ -156,7 +158,7 @@ angular.module('datacityApp')
         var aggrs = {aggrs: [
             {
                 "type": "pipeline",
-                "uri": "maxminavg",
+                "uri": this.META_DATA_AGGR_URI,
                 "stages": [
                     {
                         "_$group" : {
@@ -189,8 +191,7 @@ angular.module('datacityApp')
     };
 
         // Method for instantiating
-        this.$get = function (REST) {
-            rest = REST;
+        this.$get = function () {
             return this;
         };
     });

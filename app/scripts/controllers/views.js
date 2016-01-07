@@ -253,15 +253,19 @@ angular.module('datacityApp')
         };
 
         $scope.createAggregationForDisplay = function () {
-            REST.hasCollectionMetaData("prelife", $scope.chosenView.collID, function(r) {
-                $log.info("Meta-Daten vorhanden: " + r);
+            var view = $scope.chosenView;
+            /*
+            REST.deleteCollection("prelife", "spielwiese", function(r) {
+                $log.info('deleteCollection');
+                $log.info(r);
             });
-            
-            REST.hasCollectionAggregations("prelife", $scope.chosenView.collID, function(boolean) {
-                $log.info("Aggregationen vorhanden: " + boolean);
+            return;
+            */
+            REST.ensureCollectionsMetaData("prelife", view.collID,
+                function(response) {
+                    $log.info('ensureCollectionsMetaData durch. Antwort:');
+                    $log.info(response);
             });
-            
-            
             /*
             var params = {
                 'metaData' : {

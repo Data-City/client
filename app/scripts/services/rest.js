@@ -36,11 +36,22 @@ angular.module('datacityApp')
             password = pw;
         };
         
+        var getAuthorizationHeader = function() {
+            return "Basic " + btoa(username + ":" + password);
+        };
+        
         /**
          * Setzt Benutzername + Passwort passend in den Auth-Header
          */
         var setAuthHeader = function () {
-            $http.defaults.headers.common.Authorization = "Basic " + btoa(username + ":" + password);
+            $http.defaults.headers.common.Authorization = getAuthorizationHeader();
+        };
+        
+        /**
+         * Löscht den Auth-Header
+         */
+        var deleteAuthHeader = function() {
+            delete $http.defaults.headers.common.Authorization;
         };
         
         /**
@@ -135,6 +146,51 @@ angular.module('datacityApp')
                     $log.error(response);
                 });
         };
+        
+        /**
+         * Löscht eine Collection
+         * 
+         * TODO Ansichten löschen
+         */
+        this.deleteCollection = function(db, collection, fn) {
+            this.getCurrentETag(db, collection, function(etag) {
+                rest.deleteData(function(r) {
+                }, etag, db, collection, null);
+            });
+        };
+        
+        /**
+         * Löscht die Daten und ruft die Funktion mit dem Ergebnis auf
+         * 
+         * db, collection und id können null sein
+         */
+        this.deleteData = function (fn, etag, db, collection, id) {
+            setAuthHeader();
+            var config = {headers:  {
+                "If-Match": etag}
+            };
+            
+            var url = BASEURL;
+            if (db) {
+                url += "/" + db;
+                if (collection) {
+                    url += "/" + collection;
+                    if (id) {
+                        url += "/" + id;
+                    }
+                }
+            }
+            //$log.info("Getting " + url);
+            $http.delete(url, config).then(
+                function (response) {
+                    fn(response);
+                },
+                function error(response) {
+                    $log.error("Error calling " + url);
+                    $log.error(response);
+                });
+        };
+        
         
         this.updateView = function(view, fn) {
             setAuthHeader();
@@ -259,13 +315,16 @@ angular.module('datacityApp')
          * Holt alle vorhandenen Aggregationen
          */
         this.getAggregations = function(database, collection, fn) {
-            this.getDocuments(database, collection, function(response) {
+            this.getDocuments(database, collection,
+                function(response) {
                 if(response.data) {
                     fn(response.data.aggrs);
                 } else {
                    fn(null); 
-                }
-            });
+                }}, function error(resp) {
+                    $log.error('Fehler beim Holen der Aggregation von ' + database + '/' + collection + '!\n' + 'Antwort:');
+                    $log.error(resp);
+                });
         };
 
         /**
@@ -276,7 +335,7 @@ angular.module('datacityApp')
                var hasAggregations = (aggrs) ? true : false;
                fn(hasAggregations);
             });
-        }
+        };
         
         /**
          * Fügt eine Aggregation zu den bestehenden hinzu
@@ -295,59 +354,124 @@ angular.module('datacityApp')
                 
                 rest.getCurrentETag(database, collection, function(etag) {
                     $log.info('ETag: ' + etag);
-                    
-                    //rest.createAggregation(database, collection, etag, aggr, fn);
+                    rest.createAggregation(database, collection, etag, aggr, function(r) {
+                        fn(r);
+                    });
                 });
             });
         };
+        
+        /**
+         * Ruft die Meta-Daten-Aggregations-URI auf
+         * 
+         * Beispiel:
+         * /db/collection/_aggrs/AGGR.META_DATA_AGGR_URI
+         */
+        this.callCollectionsMetaDataAggrURI = function(database, collection, fn) {
+            var relUrl = '/' + database + '/' + collection + '/_aggrs/' + AGGR.META_DATA_AGGR_URI;
+            var parameters = null;
+            deleteAuthHeader();
+            rest.getURL(relUrl, parameters, 
+                function success(response) {
+                $log.info('Aggregations URI ' + relUrl + 'erfolgreich aufgerufen. Antwort: ');
+                $log.info(response);
+                fn(response);
+            }, function error(response) {
+                $log.error('FEHLER: Konnte Aggregations-URI ' + relUrl + ' nicht aufrufen. Antwort: ');
+                $log.error('response');
+            });
+        };
+        
+        /**
+         * Fügt einer Collection die Meta-Daten-Aggregation hinzu
+         */
+        this.createMetaDataAggregation = function(database, collection, fn) {
+            deleteAuthHeader();
+            $log.info('Hole Attribute der Collection:');
+            rest.getURL('/' + database + '/' + collection, null, function(resp) {
+                var attributesOfCollection = getAttributesWithType(resp.data._embedded['rh:doc']);
+                $log.info(attributesOfCollection);
+                $log.info('Erstelle Aggregationsparameter');
+                var aggr = AGGR.createMinMedMaxAggrParam(attributesOfCollection, collection);
+                $log.info(aggr);
+                rest.addAggregation(database, collection, aggr, function (response) {
+                    $log.info("Aggregation erstellt");
+                    $log.info(response);
+                    fn(response);
+                });}, null);
+        };
+        
         /**
          * Garantiert, dass Meta-Daten einer Collection vorhanden sind und 
          * ruft die Funktion mit diesen auf
          */
         this.ensureCollectionsMetaData = function(database, collection, fn) {
             // Meta-Daten holen
+            $log.info("Hole Meta-Data");
             rest.getCollectionsMetaData(database, collection, function(metaData) {
                 // Einfacher Fall: Meta-Daten vorhanden
                 if(metaData) {
+                    $log.info("Meta-Daten gefunden");
                     fn(metaData);
                 } else {
+                    $log.info("Keine Meta-Daten gefunden");
                     // Gibt es Tabelle mit Meta-Daten?
-                    var relUrl = rest.createUrl(database, collection) + 
+                    var relUrl = '/' + database + '/' + collection + 
                                     rest.META_DATA_PART +
                                     rest.META_DATA_SUFFIX;
                                     
                     // Ja
                     var funcSucc = function(respWithMetaData) {
-                        // TODO
-                        // In collection speichern
-                        // REKURSIV AUFRUFEN
+                        $log.info('RespWithMetaData:');
+                        $log.info(respWithMetaData);
+                        $log.info('TODO: in collection speichern');
+                        $log.info('TODO: rekursiv aufrufen');
                     };
                     // Nein
                     var funcError = function(resp) {
+                        $log.info('Keine Tabelle gefunden. Hinweis: dadurch der 404-Fehler (;');
+                        $log.info('Gibt die nötige Aggregation?');
                         // Gibt es eine Aggregation?
                         rest.getAggregations(database, collection, function(aggrs) {
                             // Ja
                             if(aggrs) {
-                                // TODO
-                                // Aufrufen
-                                // REKURSIV AUFRUFEN
+                                $log.info('Das sind die vorhandenen Aggregationen:');
+                                $log.info(aggrs);
+                                var metaDataAggrExists = false;
+                                aggrs.forEach(function(element) {
+                                    if(element.uri === AGGR.META_DATA_AGGR_URI) {
+                                        metaDataAggrExists = true;
+                                    }
+                                });
+                                if(metaDataAggrExists) {
+                                    // Meta-Daten Aggregation gefunden
+                                    // => Aufrufen
+                                    $log.info('MetaDaten-Aggregation gefunden');
+                                    rest.callCollectionsMetaDataAggrURI(database, collection, function(response) {
+                                        $log.info('TODO: Rekursion');
+                                    });
+                                } else {
+                                    // Aggregation anlegen
+                                    rest.createMetaDataAggregation(database, collection, function(response) {
+                                        // REKURSION
+                                        rest.ensureCollectionsMetaData(database, collection, fn);
+                                    });
+                                }
                             // Nein
                             } else {
                                 // Aggregation anlegen
-                                var aggr = AGGR.createMinMedMaxAggrParam(view.attributesOfCollection, collection);
-                                rest.addAggregation(database, collection, aggr, function (response) {
-                                    $log.info("Aggregation erstellt");
-                                    $log.info(response);
-                                    // TODO 
-                                    // REKURSIV Aufrufen
+                                rest.createMetaDataAggregation(database, collection, function(response) {
+                                    // REKURSION
+                                    rest.ensureCollectionsMetaData(database, collection, fn);
                                 });
                             }
                         });
-                    };                
+                    };   
+                    $log.info('Gibt es Tabelle mit MetaDaten ' + relUrl);             
                     rest.getURL(relUrl, null, funcSucc, funcError);
                 }
-            })
-        }
+            });
+        };
 
         /**
          * Besitzt die Collection eine Meta-Daten Aggregation _dc_stats
@@ -414,7 +538,7 @@ angular.module('datacityApp')
         
         this.setAGGR = function (aggr) {
             AGGR = aggr;
-        }
+        };
 
         /**
          * Instanziert Provider
