@@ -33,6 +33,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     $scope.displayableCollections = null;
     $scope.numberOfDisplayableCollections = 0;
     $scope.chosenCollection = null;
+    
 
 
     /**
@@ -70,9 +71,9 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     $scope.deleteCollection = function () {
         // TODO Alle Collections löschen, die mit collectionId_dc_ beginnen
         REST.deleteCollection(database, $scope.chosenCollection.data._id, function (response) {
+            $scope.getCollections();
         });
-        //Hier sollte noch etwas hin, das die Seite refresht
-        $scope.getCollections();
+        
     };
     
     /**
@@ -85,14 +86,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
             $scope.displayableCollections = $filter('colsbydisplayability')(allCollections);
             $scope.numberOfDisplayableCollections = count($scope.displayableCollections);
         });
-    }
-    
-            REST.getCollections(database, function (response) {
-            var allCollections = response.data._embedded['rh:coll'];
-            $scope.allCollections = allCollections;
-            $scope.displayableCollections = $filter('colsbydisplayability')(allCollections);
-            $scope.numberOfDisplayableCollections = count($scope.displayableCollections);
-        });
+    };
 
     /**
      * @return Eine schönere Anzeige des Datums
@@ -101,4 +95,8 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
         var d = new Date(timeString);
         return d.toLocaleDateString() + " " + d.toLocaleTimeString();
     };
+    
+    
+    // Init
+    $scope.getCollections();
 });
