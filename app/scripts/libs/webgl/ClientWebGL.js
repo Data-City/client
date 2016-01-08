@@ -41,7 +41,10 @@ function drawCity(data, association, nameOfDivElement){
 				
 	// diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
 	setMainDistrict(mainDistrict);
-				
+	
+	//und anschließend verschiebe die Gebaeude entsprechend ihrer districts
+	shiftTheCity(mainDistrict);
+		
 	//zeichnen nun auch die Stadt
 	addCityToScene(mainDistrict, scene, camera, extrema);
 	
@@ -53,9 +56,6 @@ function drawCity(data, association, nameOfDivElement){
 		}
 		setMenue(association["dimensions"], scene, mainDistrict, camera, extrema, control, controls, nameOfDivElement);
 	}
-	
-	
-	
 	updateControls(Math.max(mainDistrict.width, extrema.maxHeight));	
 	animate();
 }
@@ -166,11 +166,6 @@ function init(nameOfDivElement) {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 				
 	//Hinzufügen von dem renderer-Element zu unserem HTML-Dokument
-    
-	/*var domElement = document.getElementById(nameOfDivElement);
-	//document.body.appendChild( renderer.domElement );
-	renderer.domElement.id = "WebGLCanvas";
-	document.getElementById(nameOfDivElement).appendChild(renderer.domElement);*/
 	
     renderer.domElement.id = "WebGLCanvas";
     document.getElementById(nameOfDivElement).innerHTML = "";

@@ -71,7 +71,6 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, n
 //										scaling: json_von_legende}
 function changeLinkForCurrentView(aJson){
 	currentView['Link']= 'http://dummylink.com/viewDataCity?webGLSettings='+JSON.stringify(aJson);
-	
 }
 	
 
@@ -108,9 +107,9 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
 	//*****************************************************************
 	
 	h = gui.addFolder( "Skalierung");
-	h.add (scaling, "logarithmicHeight").name( "Höhe logarithmieren").onChange(function(value){scale(value, "height", scene, aDistrict, camera, extrema);});
-	h.add (scaling, "logarithmicWidth").name ("Breite logarithmieren").onChange(function(value){scale(value, "width", scene, aDistrict, camera, extrema);});
-	h.add (scaling, "logarithmicColor").name ("Farbe logarithmieren").onChange(function(value){scale(value, "color", scene, aDistrict, camera, extrema);});
+	h.add (scaling, "logarithmicHeight").name( "Höhe logarithmieren").onChange(function(value){scaling["logarithmicHeight"]=value; scale(value, "height", scene, aDistrict, camera, extrema);});
+	h.add (scaling, "logarithmicWidth").name ("Breite logarithmieren").onChange(function(value){scaling["logarithmicWidth"]=value; scale(value, "width", scene, aDistrict, camera, extrema);});
+	h.add (scaling, "logarithmicColor").name ("Farbe logarithmieren").onChange(function(value){scaling["logarithmicColor"]=value; scale(value, "color", scene, aDistrict, camera, extrema);});
 	
 	//********************************************************************
 	
@@ -122,6 +121,7 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
 	
 	h = gui.addFolder("aktuelle Ansicht");
 	h.add(currentView, "Link").name("Link markieren Strg+A").listen();
+	h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
 }
 
 
@@ -139,6 +139,7 @@ var update = function() {
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
 function scale(value, aString, scene, aDistrict, camera, extrema){
 	removeAllObjects(scene);
+	setClickedGardensEmpty();
 	setLight(scene);
 	if(value){
 		var scalingMethod = scaleLogarithmically;
@@ -156,6 +157,7 @@ function scale(value, aString, scene, aDistrict, camera, extrema){
 		}
 	}
 	setMainDistrict(aDistrict);
+	shiftTheCity(aDistrict);
 	scalingExtrema(extrema, aString);
 	addCityToScene(aDistrict, scene, camera, extrema);
 	updateControls(Math.max(aDistrict.width, extrema.maxHeight));

@@ -39,7 +39,6 @@ function building(aName, aWidth, aHeight, aColor){
 		originalcolor:aColor,
 		"leftGarden": theLeftGarden,
 		"rightGarden": theRightGarden
-		
 	};
 	return aBuilding;
 };
@@ -128,17 +127,15 @@ function setGardenPos(aBuilding){
 //@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
 function setMainDistrict(mainDistrict){
 	var districtarray = mainDistrict.buildings;
-	//setze die Gebaeuder erst mal fuer jedes Stadtteil separat, um die Breite der Districts zu kriegen
-	for(var i=0;i<mainDistrict.buildings.length;i++){
-		setOneDistrict(mainDistrict.buildings[i]);
-		setGardenPos(mainDistrict.buildings[i]);
+	if(districtarray != undefined){
+		for(var i=0;i<mainDistrict.buildings.length;i++){
+			setMainDistrict(districtarray);
+			setOneDistrict(mainDistrict.buildings[i]);
+			setGardenPos(mainDistrict.buildings[i]);
+		}
+		setOneDistrict(mainDistrict);
+		setGardenPos(mainDistrict);
 	}
-	
-	//verwende dieselbe Methode fuer die districts
-	setOneDistrict(mainDistrict);
-	
-	//und anschließend verschiebe die Gebaeude entsprechend ihrer districts
-	shiftTheCity(mainDistrict);
 }
 
 
@@ -147,51 +144,68 @@ function setMainDistrict(mainDistrict){
 function shiftTheCity(mainDistrict){
 	var districtarray = mainDistrict.buildings;
 	var shiftX = 0;
+	var shiftY = 0;
 	var shiftZ = 0;
-	
 	//fuer jedes Stadtteil...
 	for(var i=0;i<districtarray.length;i++){
-		//verschiebe zuerst das grosse District zurueck in die Mitte
-		districtarray[i].centerPosition[0] = districtarray[i].centerPosition[0]-(mainDistrict.width/2);
-		districtarray[i].centerPosition[1] = -1/2;
-		districtarray[i].centerPosition[2] = districtarray[i].centerPosition[2]-(mainDistrict.width/2);
-		shiftGardens(districtarray[i], -(mainDistrict.width/2), -(mainDistrict.width/2)+10);
+		//verschiebe zuerst das ganze District zurueck in die Mitte
+		shiftBuilding(districtarray[i], -(mainDistrict.width/2), -1, -(mainDistrict.width/2));
+		shiftGardens(districtarray[i], -(mainDistrict.width/2), 0, -(mainDistrict.width/2)+10);
 		
 		//Hilfsvariablen
 		shiftX = districtarray[i].centerPosition[0]-(districtarray[i].width)/2;
+		shiftY = 0;
 		shiftZ = districtarray[i].centerPosition[2]-(districtarray[i].width)/2;
 		
 		//verschiebe jedes Gebaeude in diesem Stadtteil
 		for(var j=0;j<districtarray[i].buildings.length;j++){
-			shiftBuilding(districtarray, i, j, shiftX, shiftZ);
+			shiftEachBuilding(districtarray[i].buildings[j], shiftX, shiftY, shiftZ);
 		}
 	}
 	
 }
 
+//rekursive Methode zum shiften der Gebaeude
+//@params: aBuilding: Das Gebäude oder das District, das geshiftet werden soll
+//			shiftX: Wert, um den das Objekt in X-Richtung geshiftet werden soll
+//			shiftY: Wert, um den das Objekt in Y-Richtung geshiftet werden soll
+//			shiftZ: Wert, um den das Objekt in Z-Richtung geshiftet werden soll
+function shiftEachBuilding(aBuilding, shiftX, shiftY, shiftZ){
+	shiftBuilding(aBuilding, shiftX, shiftY, shiftZ);
+	shiftGardens(aBuilding, shiftX, shiftY, shiftZ);
+	if(aBuilding.buildings!=undefined){
+		for(var i=0; i<aBuilding.buildings.length; i++){
+			shiftEachBuilding(aBuilding.buildings[i], shiftX, shiftY, shiftZ);
+		}
+	}
+}
 
 
 //Hilfsmethode zum Verschieben der Gebaeuden
-//@params: districtarray: ein Districtarray
-//			i: das i-te District im districtarray
-//			j: das j-te Gebaeude vom i-ten District
+//@params: aBuilding: das Gebaeude oder District, das verschoben werden soll
 //			shiftX: verschiebe das Gebaeude um shiftX in x-Richtung
+//			shiftY: verschiebe das Gebaeude um shiftY in y-Richtung
 //			shiftZ: verschiebe das Gebaeude um shiftZ in z-Richtung
-function shiftBuilding(districtarray, i, j, shiftX, shiftZ){
+function shiftBuilding(aBuilding, shiftX, shiftY, shiftZ){
 	//Verschiebe Position des Gebaeudes
-	districtarray[i].buildings[j].centerPosition[0]=districtarray[i].buildings[j].centerPosition[0]+shiftX;
-	districtarray[i].buildings[j].centerPosition[2]=districtarray[i].buildings[j].centerPosition[2]+shiftZ;
-	//Verschiebe den linken Garten und rechten Garten
-	shiftGardens(districtarray[i].buildings[j], shiftX, shiftZ);
+	aBuilding.centerPosition[0]=aBuilding.centerPosition[0]+shiftX;
+	aBuilding.centerPosition[1]=aBuilding.centerPosition[1]+shiftY;
+	aBuilding.centerPosition[2]=aBuilding.centerPosition[2]+shiftZ;
 }
 
 //Methode, um Gaerten zu verschieben
-function shiftGardens(aBuilding, shiftX, shiftZ){
+//@params: aBuilding: das Gebaeude oder District, das verschoben werden soll
+//			shiftX: verschiebe das Gebaeude um shiftX in x-Richtung
+//			shiftY: verschiebe das Gebaeude um shiftY in y-Richtung
+//			shiftZ: verschiebe das Gebaeude um shiftZ in z-Richtung
+function shiftGardens(aBuilding, shiftX, shiftY, shiftZ){
 	aBuilding.leftGarden.centerPosition[0]=aBuilding.leftGarden.centerPosition[0]+shiftX;
+	aBuilding.leftGarden.centerPosition[1]=aBuilding.leftGarden.centerPosition[1]+shiftY;
 	aBuilding.leftGarden.centerPosition[2]=aBuilding.leftGarden.centerPosition[2]+shiftZ;
 	aBuilding.rightGarden.centerPosition[0]=aBuilding.rightGarden.centerPosition[0]+shiftX;
+	aBuilding.rightGarden.centerPosition[1]=aBuilding.rightGarden.centerPosition[1]+shiftY;
 	aBuilding.rightGarden.centerPosition[2]=aBuilding.rightGarden.centerPosition[2]+shiftZ;
-	
+
 	aBuilding.leftGarden.nextLinePos[0]=aBuilding.leftGarden.centerPosition[0]-aBuilding.leftGarden.width/2;
 	aBuilding.leftGarden.nextLinePos[1]=aBuilding.leftGarden.centerPosition[2]-aBuilding.leftGarden.depth/2;
 	aBuilding.rightGarden.nextLinePos[0]=aBuilding.rightGarden.centerPosition[0]-aBuilding.rightGarden.width/2;

@@ -2,6 +2,11 @@ var maximalHeight;
 var mapOfLines = {};
 var clickedGardens = [];
 
+//Methode zum leeren des Arrays clickedGardens
+function setClickedGardensEmpty(){
+	clickedGardens = [];
+}
+
 
 //Methode zum hinzufuegen von Elementen zu clickedGardens
 //@params: gardenID: eine GartenID
@@ -71,13 +76,7 @@ function addCityToScene(mainDistrict, scene, camera, extrema){
 				
 	// nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
 	for(var i=0;i<mainDistrict.buildings.length;i++){
-		addBoxes(0x768dff, mainDistrict.buildings[i], scene);
-		addGarden(mainDistrict.buildings[i], scene);
-		for(var j=0;j<mainDistrict.buildings[i].buildings.length;j++){
-			var faktor = getColor(extrema, mainDistrict.buildings[i].buildings[j].color);
-			addBoxes(new THREE.Color(faktor,faktor,1), mainDistrict.buildings[i].buildings[j], scene);
-			addGarden(mainDistrict.buildings[i].buildings[j], scene);
-		}
+		addEachDistrict(mainDistrict.buildings[i], scene, extrema);
 	}
 	//Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
 	mainDistrict.centerPosition[1]=-1.5;
@@ -85,6 +84,25 @@ function addCityToScene(mainDistrict, scene, camera, extrema){
 	setCameraPos(camera, mainDistrict, extrema);
 
 	maximalHeight = getExtrema().maxHeight;
+}
+
+//rekursive Hilfsmethode fuer addCityToScene
+//@params:	aDistrict: das Stadtteil, das gezeichnet werden soll
+//			scene: die scene, der man die Zeichnungen hinzufuegen moechte
+//			extrema: ein JSON-Objekt, das die Extremwerte der Daten enhtaelt, dass man darauf zugreifen kann
+function addEachDistrict(aDistrict, scene, extrema){
+	if(aDistrict.buildings==undefined){
+		var faktor = getColor(extrema, aDistrict.color);
+		addBoxes(new THREE.Color(faktor,faktor,1), aDistrict, scene);
+		addGarden(aDistrict, scene);
+	}
+	else{
+		addBoxes(0x768dff, aDistrict, scene);
+		addGarden(aDistrict, scene);
+		for(var j=0;j<aDistrict.buildings.length;j++){
+			addEachDistrict(aDistrict.buildings[j], scene, extrema);
+		}
+	}
 }
 
 
@@ -262,7 +280,6 @@ function onDocumentMouseDown( event ) {
 	raycaster.setFromCamera( mouse, camera ); //schaut, was die Maus durch die Kamera so erwischt
 
 	var intersects = raycaster.intersectObjects( scene.children); // schaut, was der Strahl, den die Maus macht, alles an Objekten schneidet
-
 	if ( intersects.length > 0) { //wenn der Strahl ein Objekt schneidet
 		if(intersects[0].object.material.name=="garden"){
 			if(intersects[0].object.garden.on==false){
@@ -310,10 +327,12 @@ function getJsonForCurrentLink(){
 	aJson.scaling = getScalingBooleans();
 	return aJson;
 }
+
 		
 //berechnet die Position von der Maus	
 function onDocumentMouseMove( event ) {
 	changeLinkForCurrentView(getJsonForCurrentLink());
+
 	event.preventDefault(); 
 	var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
 
