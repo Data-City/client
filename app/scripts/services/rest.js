@@ -119,6 +119,7 @@ angular.module('datacityApp')
          * db, collection und id können null sein
          */
         this.getData = function (fn, db, collection, id) {
+            setAuthHeader();
             var url = BASEURL;
             if (db) {
                 url += "/" + db;
@@ -243,6 +244,7 @@ angular.module('datacityApp')
          * Erzeugt eine neue Ansicht für eine gegebene Collection
          */
         this.createView = function(view, collection, fn) {
+            setAuthHeader();
             var url = BASEURL + '/einstellungen/ansichten/' + view.timeOfCreation;
             $http.put(url, view).then(
                 function success(response) {
@@ -257,6 +259,7 @@ angular.module('datacityApp')
         };
         
         this.createAggregation = function(database, collection, etag, params, fn) {
+            setAuthHeader();
             if(!params) {
                 return;
             }            
@@ -373,13 +376,16 @@ angular.module('datacityApp')
          * /db/collection/_aggrs/AGGR.META_DATA_AGGR_URI
          */
         this.callCollectionsMetaDataAggrURI = function(database, collection, fn) {
+            setAuthHeader();
             var relUrl = '/' + database + '/' + collection + '/_aggrs/' + AGGR.META_DATA_AGGR_URI;
             var config = null;
             $http.jsonp(BASEURL + relUrl, config).then(
-                function success() {
-                    fn();
-                }, function error() {
-                    fn();
+                function success(response) {
+                    fn(response);
+                }, function error(response) {
+                    $log.error('Evtl (!!!) Fehler bei callCollectionsMetaDataAggrURI');
+                    $log.error('Adresse: ' + BASEURL + relUrl);
+                    fn(response);
                 }
             );
         };
@@ -388,6 +394,7 @@ angular.module('datacityApp')
          * Fügt einer Collection die Meta-Daten-Aggregation hinzu
          */
         this.createMetaDataAggregation = function(database, collection, fn) {
+            setAuthHeader();
             rest.getURL('/' + database + '/' + collection, null, function(resp) {
                 var attributesOfCollection = getAttributesWithType(resp.data._embedded['rh:doc']);
                 var aggr = AGGR.createMinMedMaxAggrParam(attributesOfCollection, collection);
@@ -401,6 +408,7 @@ angular.module('datacityApp')
          * ruft die Funktion mit diesen auf
          */
         this.ensureCollectionsMetaData = function(database, collection, fn) {
+            setAuthHeader();
             // Meta-Daten holen
             //$log.info('=======================================================================');
             //$log.info("Hole Meta-Data");
@@ -462,6 +470,7 @@ angular.module('datacityApp')
                                     //$log.info('MetaDaten-Aggregation gefunden');
                                     rest.callCollectionsMetaDataAggrURI(database, collection, function(response) {
                                         // REKURSION
+                                        //$log.info(response);
                                         rest.ensureCollectionsMetaData(database, collection, fn);
                                     });
                                 } else {
@@ -473,6 +482,7 @@ angular.module('datacityApp')
                                 }
                             // Nein
                             } else {
+                                //$log.info('Keine Aggregation gefunden => Anlegen!');
                                 // Aggregation anlegen
                                 rest.createMetaDataAggregation(database, collection, function(response) {
                                     // REKURSION
@@ -485,14 +495,6 @@ angular.module('datacityApp')
                     rest.getURL(relUrl, null, funcSucc, funcError);
                 }
             });
-        };
-
-        /**
-         * Besitzt die Collection eine Meta-Daten Aggregation _dc_stats
-         */
-        this.hasCollectionMetaDataAggregation = function(database, collection, fn) {
-            // TODO
-            return null;
         };
         
         /**
