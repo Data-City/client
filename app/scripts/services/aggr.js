@@ -13,6 +13,17 @@ angular.module('datacityApp')
         var rest = null;
         
         this.META_DATA_AGGR_URI = "maxminavg";
+
+
+        /**
+ * Counts the elements in obj
+ */
+var count = function (obj) {
+    if(obj === null) {
+        return 0;
+    }
+    return Object.keys(obj).length;
+};
      
      /**
      * Alle für MongoDB verfügbaren Gruppierungsoperationen
