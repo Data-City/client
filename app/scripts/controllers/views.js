@@ -68,6 +68,7 @@ angular.module('datacityApp')
         $scope.numberOfViews = null;
         $scope.chosenView = null;
         $scope.loader = false;
+        $scope.metaData = null;
     
         // Ein- & Ausklappen der Panels (Schritt 1-4)
         $scope.showStep1 = true; // Daten reduzieren
@@ -141,10 +142,14 @@ angular.module('datacityApp')
             $scope.getViews();
             REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
                 $scope.collection = resp;
-                $scope.metaData = resp.data.metaData;
+                $scope.metaData = resp.data.metaData.data;
                 $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
             });
             
+        }
+        
+        $scope.getMetaData = function(attrname, type) {
+            return $scope.metaData[type + '_' + attrname];
         }
 
         /**

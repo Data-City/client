@@ -87,7 +87,7 @@
                             <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep1" aria-hidden="true"></span>
                         </div>
                         <div class="panel-body" ng-show="showStep1">
-                            <div class="row" ng-repeat="attr in chosenView.attributesOfCollection">
+                            <div class="row" ng-repeat="attr in attributes">
                                 <div class="row container">
                                     <input type="checkbox" ng-model="attr.chooseable" title="Wählbar machen"> <b>{{attr.name}} ({{attr.type}})</b></input>
                                 </div>
@@ -98,9 +98,9 @@
                                             <br />
                                             <div ng-show="attr.toBeFiltered">
                                                 <div class="row container">
-                                                    <div class="col-md-4 col-sm-4"><span class="pull-left">Minimum: {{chosenView.metaData["min_" + attr.name]}}</span></div>
-                                                    <div class="col-md-4 col-sm-4"><span class="center-block text-center">Durchschnitt: {{chosenView.metaData["avg_" + attr.name].toFixed(3)}}</span></div>
-                                                    <div class="col-md-4 col-sm-4"><span class="pull-right">Maximum: {{chosenView.metaData["max_" + attr.name]}}</span></div>
+                                                    <div class="col-md-4 col-sm-4"><span class="pull-left">Minimum: {{getMetaData(attr.name, 'min')}}</span></div>
+                                                    <div class="col-md-4 col-sm-4"><span class="center-block text-center">Durchschnitt: {{getMetaData(attr.name, 'avg')}}</span></div>
+                                                    <div class="col-md-4 col-sm-4"><span class="pull-right">Maximum: {{getMetaData(attr.name, 'max')}}</span></div>
                                                 </div>
                                                 <div class="row container">
                                                     <slider class="container" ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
