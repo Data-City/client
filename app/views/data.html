@@ -7,12 +7,12 @@
   </div>
   
   <!-- Spinner um zu zeigen, dass geladen wird -->
-  <span us-spinner ng-show="loggedIn && !displayableCollections"></span>
+  <span us-spinner ng-show="loggedIn && !collections"></span>
   
   <!-- Panel zur Anzeige der Datensätze -->
-  <div class="panel panel-default" ng-show="loggedIn && displayableCollections">
+  <div class="panel panel-default" ng-show="loggedIn && collections">
     <div class="panel-heading">
-      <h3 class="panel-title">{{numberOfDisplayableCollections}} Datensätze</h3>
+      <h3 class="panel-title">{{numberOfCollections}} Datensätze</h3>
     </div>
     <!-- Tabelle für die Datensätze -->
     <div class="panel-body">
@@ -20,13 +20,11 @@
         <tr>
           <th>Name</th>
           <th>Erstellt</th>
-          <th>Geändert</th>
           <th></th>
         </tr>
-        <tr ng-repeat="collection in displayableCollections">
+        <tr ng-repeat="collection in collections">
           <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection._id}}</td>
           <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection._created_on)}}</td>
-          <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection._lastupdated_on)}}</td>
           <td>
             <button type="button" class="btn btn-xs btn-success" onclick="location.href='/#/data/preview'">Vorschau</button>
             <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#deleteCollectionModal" data-toggle="tooltip"

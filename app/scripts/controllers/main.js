@@ -29,13 +29,10 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     REST.setPassword(sharedLogin.getPassword());
 	
     // Der ausgewählte (angeklickte) Datensatz
-    $scope.allCollections = null;
-    $scope.displayableCollections = null;
-    $scope.numberOfDisplayableCollections = 0;
+    $scope.collections = null;
+    $scope.numberOfCollections = 0;
     $scope.chosenCollection = null;
     
-
-
     /**
      * Auswählen eines Datensatzes
      * Wenn der Datensatz bereits ausgewählt ist, wird er nicht mehr ausgewählt (deselected...)
@@ -45,7 +42,6 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     $scope.setChosenCollectionAndRedirect = function (collId) {
         REST.getDocuments(database, collId, function (collection) {
             // Toggle: Select<->Deselect
-            $log.info(collection);
             $scope.chosenCollection = ($scope.chosenCollection === collection) ? null : collection;
             if ($scope.chosenCollection) {
                 window.location = "#/views/" + $scope.chosenCollection.data._id;
@@ -59,8 +55,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
             $scope.chosenCollection = collection;
         });
     };
-
-
+        
     $scope.getIdOfCollection = function (collection) {
         return collection ? collection.data._id : null;
     };
@@ -82,9 +77,8 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     $scope.getCollections = function () {
         REST.getCollections(database, function (response) {
             var allCollections = response.data._embedded['rh:coll'];
-            $scope.allCollections = allCollections;
-            $scope.displayableCollections = $filter('colsbydisplayability')(allCollections);
-            $scope.numberOfDisplayableCollections = count($scope.displayableCollections);
+            $scope.collections = $filter('colsbydisplayability')(allCollections);
+            $scope.numberOfCollections = count($scope.collections);
         });
     };
 
