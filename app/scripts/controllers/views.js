@@ -149,7 +149,12 @@ angular.module('datacityApp')
         }
         
         $scope.getMetaData = function(attrname, type) {
-            return $scope.metaData[type + '_' + attrname];
+            if($scope.metaData) {
+                return $scope.metaData[type + '_' + attrname];
+            } else {
+                return null;
+            }
+            
         }
 
         /**

@@ -154,14 +154,14 @@
                                             <tr>
                                                 <td>Gruppieren über</td>
                                                 <td>
-                                                    <select ng-model="aggregation.groupOverField" ng-options="attr as attr.name for attr in (chosenView.attributesOfCollection | bychooseability) track by attr.name"></select>
+                                                    <select ng-model="aggregation.groupOverField" ng-options="attr as attr.name for attr in (attributes | bychooseability) track by attr.name"></select>
                                                 </td>
                                                 <td></td>
                                                 <td>
                                                     <input type="text"></input>
                                                 </td>
                                             </tr>
-                                            <tr ng-show="aggregation.groupOverField" ng-repeat="(key, attr) in (chosenView.attributesOfCollection | bychooseability | attrbyname:aggregation.groupOverField)">
+                                            <tr ng-show="aggregation.groupOverField" ng-repeat="(key, attr) in (attributes | bychooseability | attrbyname:aggregation.groupOverField)">
                                                 <td></td>
                                                 <td>{{attr.name}}</td>
                                                 <td>
@@ -256,7 +256,7 @@
 
 					<button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
 					<button type="button" class="btn btn-danger btn-xs" ng-click="discardChanges()"ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderungen verwerfen</button>
-					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="createAggregationForDisplay();">Aggregation erzeugen</button>
+					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="console.log('Nichts passiert!');">Aggregation erzeugen</button>
 					<button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
 					onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
 				</div>
