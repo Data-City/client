@@ -28,7 +28,7 @@
           <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection._created_on)}}</td>
           <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection._lastupdated_on)}}</td>
           <td>
-            <button type="button" class="btn btn-xs btn-success" onclick="location.href='/#/data/preview'">Vorschau</button>
+            <button type="button" class="btn btn-xs btn-success" ng-click ="getMyLink(collection._id)">Vorschau</button>
             <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#deleteCollectionModal" data-toggle="tooltip"
             title="Löschen" ng-click="setChosenCollectionOnly(collection._id)">
 			     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>

@@ -1,15 +1,3 @@
 <div ng-app="datacityApp" ng-controller="PreviewCtrl" class="container">
-	<h3>Ergebnisse</h3>
-	<table class="table">
-		<thead>
-			<tr>
-				<th ng-repeat="attr in attributes">{{attr.name}} ({{attr.type}})</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="result in results">
-				<td ng-repeat="attr in attributes">{{result[attr.name]}}</td>
-				</tr>
-		</tbody>
-	</table>
+	<h3>Ergebnisse - {{collId}}</h3>
 </div>
