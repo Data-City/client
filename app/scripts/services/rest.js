@@ -146,7 +146,7 @@ angular.module('datacityApp')
          * TODO Ansichten löschen
          */
         this.deleteCollection = function(db, collection, fn) {
-            // Eigentliche Collection löschen
+            // Die Collection löschen
             this.getCurrentETag(db, collection, function(etag) {
                 rest.deleteData(function(r) {
                     $log.info('Gelöscht:\t' + db + '/' + collection);
@@ -155,22 +155,14 @@ angular.module('datacityApp')
                     }
                 }, etag, db, collection, null);
             });
-             
-            /*      
+            
+            //Die dazugehörigen Ansichten löschen 
             this.getViewsOfCollection(collection, function (views) {
-                
                 for (var iteration in views) {
-                    console.log("Es wird gelöscht: ");
-                    console.log(views[iteration]);
-                    
-                    
-                    this.deleteView(views[iteration], function (response) {
-                        console.log("löschen funktioniert: ");
-                        console.log(response);
+                    rest.deleteView(views[iteration], function (response) {
                     });
                 }
             });
-            */
         };
         
         /**
