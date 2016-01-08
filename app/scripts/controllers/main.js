@@ -23,8 +23,10 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
         $(this).parent().addClass("active");
     });
 	
+    
     // Verbindungsdaten
     var database = "prelife";
+    $log.info('Username: ' + sharedLogin.getUsername() + '\tPassword: ' + sharedLogin.getPassword());
     REST.setUsername(sharedLogin.getUsername());
     REST.setPassword(sharedLogin.getPassword());
 	
@@ -44,7 +46,10 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
             // Toggle: Select<->Deselect
             $scope.chosenCollection = ($scope.chosenCollection === collection) ? null : collection;
             if ($scope.chosenCollection) {
-                window.location = "#/views/" + $scope.chosenCollection.data._id;
+                $scope.collections = null;
+                REST.ensureCollectionsMetaData(database, collId, function(metaData) {
+                    window.location = "#/views/" + $scope.chosenCollection.data._id;
+                });
             }
         });
     };
