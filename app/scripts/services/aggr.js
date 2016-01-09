@@ -88,7 +88,7 @@ var count = function (obj) {
             });
             project = {
                 $project: project
-            }
+            };
             return project;
         };
     
