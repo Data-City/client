@@ -23,6 +23,8 @@ angular.module('datacityApp')
         var baseurl = "https://pegenau.com:16392";
         
         var dbWithCollections = "prelife";
+        
+        $scope.json = null;
     
         /**
         *  Konstruktor für eine Ansicht
@@ -240,9 +242,11 @@ angular.module('datacityApp')
 
         $scope.createAggregationForDisplay = function () {
             var view = $scope.chosenView;
-            var project = AGGR.projectStage($scope.attributes);
-            $log.info(project);
-            
+            var stages = [];            
+            stages.push(AGGR.projectStage($scope.attributes));
+            stages.push(AGGR.matchStage($scope.attributes));
+            $log.info(stages);
+            $scope.json = stages;
         };
 
     });
