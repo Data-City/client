@@ -53,13 +53,23 @@ angular.module('datacityApp')
             this.groupOverField = null;
             this.aggregationOperations = [];
         }
+        
+        $scope.numberOfAggregations = 0;
 
         $scope.addNewAggregation = function () {
             $scope.chosenView.aggregations.push(new Aggregation());
+            $scope.numberOfAggregations += 1;
         };
 
         $scope.removeAggregation = function (arrayIndex) {
             $scope.chosenView.aggregations.splice(arrayIndex, 1);
+            
+            //Zur Sicherheit
+            if ($scope.numberOfAggregations <= 0) {
+                alert("Es gibt <= 0 Aggregationen?");
+            } else {
+                $scope.numberOfAggregations -= 1;
+            }
         };
     
         // Initialisierung des Controllers
@@ -90,6 +100,7 @@ angular.module('datacityApp')
             view.dimensions.hoehe = view.dimensions.hoehe.name;
             view.dimensions.flaeche = view.dimensions.flaeche.name;
             view.dimensions.farbe = view.dimensions.farbe.name;
+            // Noch raus genommen, weil die Distrikte anders ausgewählt werdens
             //view.dimensions.district = view.dimensions.district.name;
             drawCity(collection, view, divID);
         };
@@ -108,16 +119,20 @@ angular.module('datacityApp')
          * Speichert Änderungen an den Einstellungen der Ansicht
          */
         $scope.updateView = function () {
+            //Wird für die Anzeige in Angular benötigt
             $scope.chosenView.lastModifiedBy = sharedLogin.getUsername();
             $scope.chosenView.timeOfLastModification = Date.now();
 
             REST.updateView($scope.chosenView, function () {
                 $scope.getViews();
             });
-            //Macht die beiden Buttons wieder unsichtbar
+            //Versteckt die beiden Buttons wieder
             $scope.dimform.$setPristine();
         };
 
+        /**
+         * Verwirft die Änderungen, die in dem Formular gemacht wurden
+         */
         $scope.discardChanges = function () {
             $scope.chosenView = angular.copy($scope.originalView);
             $scope.dimform.$setPristine();
@@ -149,6 +164,11 @@ angular.module('datacityApp')
             
         }
         
+        /**
+         * Holt sich die Metadaten der Collection (Maximum, Minimum, etc...)
+         * 
+         * @return: Die Metadaten
+         */
         $scope.getMetaData = function(attrname, type) {
             if($scope.metaData) {
                 return $scope.metaData[type + '_' + attrname];
@@ -189,9 +209,9 @@ angular.module('datacityApp')
         function ViewCopy(collID) {
             this.name = collID.name + " (Kopie)";
             this.collID = $scope.collID;
-            this.creator = username;
+            this.creator = sharedLogin.getUsername();
             this.timeOfCreation = Date.now();
-            this.lastModifiedBy = username;
+            this.lastModifiedBy = sharedLogin.getUsername();
             this.timeOfLastModification = this.timeOfCreation;
             this.dimensions = collID.dimensions;
         }
