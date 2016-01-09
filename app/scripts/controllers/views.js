@@ -41,7 +41,6 @@ angular.module('datacityApp')
                 district: null
             };
             this.attributesOfCollection = [];
-            this.metaData = null;
             this.aggregations = [];
         }
     
@@ -153,9 +152,8 @@ angular.module('datacityApp')
                 return $scope.metaData[type + '_' + attrname];
             } else {
                 return null;
-            }
-            
-        }
+            }  
+        };
 
         /**
          * löscht eine Ansicht
@@ -242,15 +240,8 @@ angular.module('datacityApp')
 
         $scope.createAggregationForDisplay = function () {
             var view = $scope.chosenView;
-            
-            //REST.deleteCollection("prelife", "spielwiese", null);
-            //return;
-            
-            REST.ensureCollectionsMetaData("prelife", view.collID,
-                function(response) {
-                    $log.info('ensureCollectionsMetaData durch. Antwort:');
-                    $log.info(response);
-            });
+            var project = AGGR.projectStage($scope.attributes);
+            $log.info(project);
             
         };
 

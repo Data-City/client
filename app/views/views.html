@@ -87,43 +87,46 @@
                             <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep1" aria-hidden="true"></span>
                         </div>
                         <div class="panel-body" ng-show="showStep1">
-                            <div class="row container" ng-repeat="attr in attributes">
-                                <div class="col-md-2 col-sm-2">
-                                    <input type="checkbox" ng-model="attr.chooseable" title="Wählbar machen">
-                                    <br /><b>{{attr.name}} ({{attr.type}})</b></input>
-                                </div>
-                                <div class="col-md-10 col-sm-10">
-                                    <div class="panel panel-default" ng-show="attr.chooseable && attr.type === 'number'">
-                                        <div class="panel-body">
-                                            <input type="checkbox" ng-model="attr.toBeFiltered"> Filtern</input>
-                                            <br />
-                                            <div ng-show="attr.toBeFiltered">
-                                                <minmaxavg
-                                                    min="{{getMetaData(attr.name, 'min')}}"
-                                                    avg="{{getMetaData(attr.name, 'avg')}}"
-                                                    max="{{getMetaData(attr.name, 'max')}}"></minmaxavg>
-                                                <div class="row container">
-                                                    <slider class="container" ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
-                                                    value="(attr.numberValueFilter.length > 0) ? attr.numberValueFilter : Array(chosenView.metaData['min_' + attr.name], chosenView.metaData['max_' + attr.name])"
+                            <table class="table table-striped table-bordered table-condensed table-responsive">
+                                <colgroup>
+                                    <col span="1" style="width: 5%;">
+                                    <col span="1" style="width: 10%;">
+                                    <col span="1" style="width: 5%;">
+                                    <col span="1" style="width: 5%;">
+                                    <col span="1" style="width: 75%;">
+                                </colgroup>
+                                <thead>
+                                    <th>Nutzen</th>
+                                    <th>Name</th>
+                                    <th>Typ</th>
+                                    <th>Filtern</th>
+                                    <th>Optionen</th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="attr in attributes">
+                                        <td>
+                                            <input type="checkbox" ng-model="attr.chooseable">
+                                        </td>
+                                        <td>{{attr.name}}</td>
+                                        <td>{{attr.type}}</td>
+                                        <td>
+                                            <input type="checkbox" ng-model="attr.toBeFiltered">
+                                        </td>
+                                        <td>
+                                            <div ng-show="attr.toBeFiltered && attr.type === 'number'">
+                                                <div class="row">
+                                                    <minmaxavg min="{{getMetaData(attr.name, 'min')}}" avg="{{getMetaData(attr.name, 'avg')}}" max="{{getMetaData(attr.name, 'max')}}"></minmaxavg>
+                                                </div>
+                                                <div class="row">
+                                                    <slider class="container" ng-model="attr.numberValueFilter" min="getMetaData(attr.name, 'min')" max="getMetaData(attr.name, 'max')"
+                                                    value="(attr.numberValueFilter.length > 0) ? attr.numberValueFilter : Array(getMetaData(attr.name, 'min'), getMetaData(attr.name, 'max'));"
                                                     range="true"></slider>
                                                 </div>
-                                                <!--
-                                                <div class="row container">
-                                                    <div class="col-md-6 col-sm-6">
-                                                        <input type="number" ng-model="attr.numberValueFilter[0]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
-                                                        class="pull-left"></input>
-                                                    </div>
-                                                    <div class="col-md-6 col-sm-6">
-                                                        <input type="number" ng-model="attr.numberValueFilter[1]" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
-                                                        class="pull-right"></input>
-                                                    </div>
-                                                </div>
-                                                -->
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
 
                         <!-- SCHRITT 2 - Daten aggregieren -->
@@ -255,7 +258,7 @@
 
                     <button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
                     <button type="button" class="btn btn-danger btn-xs" ng-click="discardChanges()" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderungen verwerfen</button>
-                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="console.log('Nichts passiert!');">Aggregation erzeugen</button>
+                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="createAggregationForDisplay();">Aggregation erzeugen</button>
                     <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
                     onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
                 </div>
