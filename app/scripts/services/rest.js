@@ -143,8 +143,6 @@ angular.module('datacityApp')
         
         /**
          * Löscht eine Collection
-         * 
-         * TODO Ansichten löschen
          */
         this.deleteCollection = function(db, collection, fn) {
             // Die Collection löschen

@@ -30,9 +30,9 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     REST.setUsername(sharedLogin.getUsername());
     REST.setPassword(sharedLogin.getPassword());
 	
-    // Der ausgewählte (angeklickte) Datensatz
     $scope.collections = null;
     $scope.numberOfCollections = 0;
+    // Der ausgewählte (angeklickte) Datensatz
     $scope.chosenCollection = null;
     
     /**
@@ -43,14 +43,12 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
      */
     $scope.setChosenCollectionAndRedirect = function (collId) {
         REST.getDocuments(database, collId, function (collection) {
-            // Toggle: Select<->Deselect
-            $scope.chosenCollection = ($scope.chosenCollection === collection) ? null : collection;
-            if ($scope.chosenCollection) {
-                $scope.collections = null;
-                REST.ensureCollectionsMetaData(database, collId, function(metaData) {
-                    window.location = "#/views/" + $scope.chosenCollection.data._id;
-                });
-            }
+            $scope.chosenCollection = collection;
+            $scope.collections = null;
+            REST.ensureCollectionsMetaData(database, collId, function(metaData) {
+                //Weiterleiten
+                window.location = "#/views/" + $scope.chosenCollection.data._id;
+            });
         });
     };
     
@@ -62,7 +60,9 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     };
     
      $scope.getMyLink = function(collId){
-        location.href = "#/data/preview/" + collId;
+        var link = "#/data/preview/" + collId;
+        location.href = link;
+        return link;
     };
     
     $scope.getIdOfCollection = function (collection) {
@@ -73,11 +73,19 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
      * Löscht die ausgewählte Collection
      */
     $scope.deleteCollection = function () {
-        // TODO Alle Collections löschen, die mit collectionId_dc_ beginnen
+        // Die eigentliche Collection löschen
         REST.deleteCollection(database, $scope.chosenCollection.data._id, function (response) {
             $scope.getCollections();
         });
-        
+        // Alle Collections löschen, die mit "collectionId_dc_"" beginnen
+        for (var iterate in $scope.allCollections) {
+            var myRegExp = new RegExp($scope.chosenCollection.data._id + "_dc_", 'i');
+            var match = $scope.allCollections[iterate]._id.match(myRegExp);
+            
+            if (match) {
+                REST.deleteCollection(database, $scope.allCollections[iterate]._id, function (response) {});
+           }
+        } 
     };
     
     /**
