@@ -1,3 +1,4 @@
+// jshint ignore: start
 // Erzielte Aggregation:
 var aggr = {
     "_id": "city",

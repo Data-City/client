@@ -160,8 +160,7 @@ angular.module('datacityApp')
             //Die dazugehörigen Ansichten löschen 
             this.getViewsOfCollection(collection, function (views) {
                 for (var iteration in views) {
-                    rest.deleteView(views[iteration], function (response) {
-                    });
+                    rest.deleteView(views[iteration], null);
                 }
             });
         };
