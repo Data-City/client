@@ -147,9 +147,6 @@ var update = function() {
 //			camera: die Kamera, die nach dem Zeichnen neu positioniert werden soll
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
 function scale(value, aString, scene, aDistrict, camera, extrema){
-	removeAllObjects(scene);
-	setClickedGardensEmpty();
-	setLight(scene);
 	if(value){
 		var scalingMethod = scaleLogarithmically;
 		var scalingExtrema = takeLogarithmOfExtrema;
@@ -158,7 +155,9 @@ function scale(value, aString, scene, aDistrict, camera, extrema){
 		var scalingMethod = scaleLinearly;
 		var scalingExtrema = linearizeExtrema;
 	}
-	scaleAll(aDistrict, aString, scalingMethod);
+	removeAllObjects(scene, aString, scalingMethod);
+	setClickedGardensEmpty();
+	setLight(scene);
 	setMainDistrict(aDistrict);
 	shiftBack(aDistrict);
 	scalingExtrema(extrema, aString);
@@ -166,21 +165,6 @@ function scale(value, aString, scene, aDistrict, camera, extrema){
 	updateControls(Math.max(aDistrict._width, extrema.maxHeight));
 }
 
-
-//rekursive Methode, um alle Gebaeuden zu skalieren
-//@params: aDistrict: das Distrikt, dessen Gebaeude skaliert werden soll
-//			aString: height oder width oder color
-//			scalingMethod scaleLinearly oder scaleLogarithmically
-function scaleAll(aDistrict, aString, scalingMethod){
-	if(aDistrict.buildings==undefined){
-		aDistrict["_"+aString] = scalingMethod(aDistrict, aString);
-	}
-	else{
-		for(var i=0;i<aDistrict.buildings.length;i++){
-			scaleAll(aDistrict.buildings[i], aString, scalingMethod);
-		}
-	}
-}
 
 //Methode, um die Extremwerte ebenfalls zu skalieren
 //@params: extrema: das JSON, das die alten Extremwerte enthaelt
@@ -237,10 +221,13 @@ function scaleLinearly(aDistrict, aString){
 
 //Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen
 //@params: scene: die Scene, auf der alle Objekte geloescht werden soll
-function removeAllObjects(scene){
+function removeAllObjects(scene, aString, scalingMethod){
 	for( var i = scene.children.length - 1; i >= 0; i--) {
 		if(scene.children[i].building!=undefined){
 			scene.children[i].building._centerPosition = [0,scene.children[i].building._height/2-1.5,0];
+			if(scene.children[i].building.buildings==undefined){
+				scene.children[i].building["_"+aString] = scalingMethod(scene.children[i].building, aString);
+			}
 		}
 		scene.remove(scene.children[i]);
 	}
