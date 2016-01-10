@@ -4176,47 +4176,155 @@ var aggr = {
     "count": 166
 }
 
-var city = {
-    name: 'Name des Datensatzes',
-    minColor: '#000000',
-    maxColor: '#ffffff',
-    maxHeight: 1000,
-    numberOfBuildings: 0,
-    numberOfDistricts: 1,
-    buildings: {
-        0: {
-            id: 1,
-            name: 'Klassen im Package x',
-            numberOfBuildings: 1,
-            numberOfDistricts: 0,
-            height: 3, //Summe aller Hoehen
-            width: 4, //Summe aller Breiten
-            color: 90, //Summe aller Farben
-            numOfIncomingCalls: 1, //summe
-            numOfOutgoingCalls: 1, //summe
-            incomingCalls: {}, //von anderen Packages
-            outgoingCalls: {}, // zu anderen Packages
-            buildings: {
-                0: {
-                    id: 4,
-                    name: 'Beispielklasse',
-                    height: 3,
-                    width: 4,
-                    color: 90,
-                    numOfIncomingCalls: 1,
-                    numOfOutgoingCalls: 1,
-                    incomingCalls: {
-                        // ID: Staerke
-                        '4': 8,
-                    },
-                    outgoingCalls: {
+//******************************************************************
+//Das Wuensch-Dir-Was-JSON
+//******************************************************************
 
-                    },
-                },
-            },
-            districts: {},
-        }
-    }
+//Unter der Annahme, dass diese Zuordnungen gelten
+var zuordnungen = { 
+	"dimensions" : { 
+		"height" : "size" , 
+		"width" : "weight" , 
+		"color" : "age" , 
+		"district" : "gender" , 
+		"name" : "name",
+		"numOfIncomingCalls": "irgendwas1",
+		"numOfOutgoingCalls": "irgendwas2"
+	}
 };
 
-
+var city = {
+    "_id": "city",
+    "_buildings": [
+        {
+            "name": "Burkina Faso",
+			"size": 194, //Summe aller size in .buildings; optional. Wenn es nicht da ist, dann steht in der Legende eben undefined
+            "weight": 112,//analog zu size
+            "age": 21, //analog zu size
+            "country": "Burkina Faso",
+			_height:1.5,
+			_width:1.5,
+			_color:1.5,
+			_centerPosition:[0,0,0],
+			"_leftGarden": {
+				numOfCalls: 220
+				_width: 220+1.5,
+				_height: 0.01,
+				depth: (220+1.5)/2,
+				_centerPosition: [0,0.05,0],
+				nextLinePos: [0,0],
+				on: false,
+				id: aID,
+				linesTo: { 
+					ersteGartenID: 124,
+					zweiteGartenID: 42,
+					dritteGartenID: 54
+				}
+			},
+			"_rightGarden": {
+				numOfCalls: 1000,
+				_width: 1000+1.5,
+				_height: 0.01,
+				depth: (1000+1.5)/2,
+				_centerPosition: [0,0.05,0],
+				nextLinePos: [0,0],
+				on: false,
+				id: aID,
+				linesTo: { 
+					ersteGartenID: 524,
+					zweiteGartenID: 412,
+					dritteGartenID: 64
+				}
+			},
+            "_buildings": [
+                {
+                    "name": "Female",
+					"gender": "Female",
+                    "size": 194, //Summe aller size in .buildings; optional. Wenn es nicht da ist, dann steht in der Legende eben undefined
+                    "weight": 112,//analog zu size
+                    "age": 21, //analog zu size
+                    "country": "Burkina Faso",
+					_height:1.5,
+					_width:1.5,
+					_color:1.5,
+					_centerPosition:[0,0,0],
+					"_leftGarden": {
+						numOfCalls: 220
+						_width: 220+1.5,
+						_height: 0.01,
+						depth: (220+1.5)/2,
+						_centerPosition: [0,0.05,0],
+						nextLinePos: [0,0],
+						on: false,
+						id: aID,
+						linesTo: { 
+							ersteGartenID: 124,
+							zweiteGartenID: 42,
+							dritteGartenID: 54
+						}
+					},
+					"_rightGarden": {
+						numOfCalls: 1000,
+						_width: 1000+1.5,
+						_height: 0.01,
+						depth: (1000+1.5)/2,
+						_centerPosition: [0,0.05,0],
+						nextLinePos: [0,0],
+						on: false,
+						id: aID,
+						linesTo: { 
+							ersteGartenID: 524,
+							zweiteGartenID: 412,
+							dritteGartenID: 64
+						}
+					},
+                    "_buildings": [
+                        {	//hier fehlt "name". In der Legende wird hier dann undefined angezeigt, aber das ist ja ok, denke ich
+                            "gender": "Female",
+                            "size": 194,
+                            "weight": 112,
+                            "age": 21,
+                            "country": "Burkina Faso", //country hat bisher nicht mehr in die Legende gepasst...^^
+														//da muessen wir uns noch ueberlegen, wie viele Sachen wir
+														//in die Legende packen moechten und wie wir das uebergeben
+							_height:194+1.5, //Damit es beim Logarithmieren nicht 0 oder <0 wird
+							_width:112+1.5,
+							_color:21+1.5,
+							_centerPosition:[(112+1.5)/2,(194+1.5)/2,(112+1.5)/2],
+							"_leftGarden": {
+								numOfCalls: 220
+								_width: 220+1.5,
+								_height: 0.01,
+								depth: (220+1.5)/2,
+								_centerPosition: [0,0.05,0],
+								nextLinePos: [0,0],
+								on: false,
+								id: aID,
+								linesTo: { 
+									ersteGartenID: 124,
+									zweiteGartenID: 42,
+									dritteGartenID: 54
+								}
+							},
+							"_rightGarden": {
+								numOfCalls: 1000,
+								_width: 1000+1.5,
+								_height: 0.01,
+								depth: (1000+1.5)/2,
+								_centerPosition: [0,0.05,0],
+								nextLinePos: [0,0],
+								on: false,
+								id: aID,
+								linesTo: { 
+									ersteGartenID: 524,
+									zweiteGartenID: 412,
+									dritteGartenID: 64
+								}
+							},
+                        }
+                    ]
+                }
+            ],
+            "_count": 1 //brauche ich aber bisher nicht, aber kann sicher nicht schaden, das zu wissen
+        }
+	};

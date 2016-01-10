@@ -20,16 +20,16 @@ var aggr = {
             "weight": 112,//analog zu size
             "age": 21, //analog zu size
             "country": "Burkina Faso",
-			height:1.5,
-			width:1.5,
-			color:1.5,
-			centerPosition:[0,0,0],
-			"leftGarden": {
+			_height:1.5,
+			_width:1.5,
+			_color:1.5,
+			_centerPosition:[0,0,0],
+			"_leftGarden": {
 				numOfCalls: 220
-				width: 220+1.5,
-				height: 0.01,
+				_width: 220+1.5,
+				_height: 0.01,
 				depth: (220+1.5)/2,
-				centerPosition: [0,0.05,0],
+				_centerPosition: [0,0.05,0],
 				nextLinePos: [0,0],
 				on: false,
 				id: aID,
@@ -39,12 +39,12 @@ var aggr = {
 					dritteGartenID: 54
 				}
 			},
-			"rightGarden": {
+			"_rightGarden": {
 				numOfCalls: 1000,
-				width: 1000+1.5,
-				height: 0.01,
+				_width: 1000+1.5,
+				_height: 0.01,
 				depth: (1000+1.5)/2,
-				centerPosition: [0,0.05,0],
+				_centerPosition: [0,0.05,0],
 				nextLinePos: [0,0],
 				on: false,
 				id: aID,
@@ -54,7 +54,7 @@ var aggr = {
 					dritteGartenID: 64
 				}
 			},
-            "buildings": [
+            "_buildings": [
                 {
                     "name": "Female",
 					"gender": "Female",
@@ -62,16 +62,16 @@ var aggr = {
                     "weight": 112,//analog zu size
                     "age": 21, //analog zu size
                     "country": "Burkina Faso",
-					height:1.5,
-					width:1.5,
-					color:1.5,
-					centerPosition:[0,0,0],
-					"leftGarden": {
+					_height:1.5,
+					_width:1.5,
+					_color:1.5,
+					_centerPosition:[0,0,0],
+					"_leftGarden": {
 						numOfCalls: 220
-						width: 220+1.5,
-						height: 0.01,
+						_width: 220+1.5,
+						_height: 0.01,
 						depth: (220+1.5)/2,
-						centerPosition: [0,0.05,0],
+						_centerPosition: [0,0.05,0],
 						nextLinePos: [0,0],
 						on: false,
 						id: aID,
@@ -81,12 +81,12 @@ var aggr = {
 							dritteGartenID: 54
 						}
 					},
-					"rightGarden": {
+					"_rightGarden": {
 						numOfCalls: 1000,
-						width: 1000+1.5,
-						height: 0.01,
+						_width: 1000+1.5,
+						_height: 0.01,
 						depth: (1000+1.5)/2,
-						centerPosition: [0,0.05,0],
+						_centerPosition: [0,0.05,0],
 						nextLinePos: [0,0],
 						on: false,
 						id: aID,
@@ -96,7 +96,7 @@ var aggr = {
 							dritteGartenID: 64
 						}
 					},
-                    "buildings": [
+                    "_buildings": [
                         {	//hier fehlt "name". In der Legende wird hier dann undefined angezeigt, aber das ist ja ok, denke ich
                             "gender": "Female",
                             "size": 194,
@@ -105,16 +105,16 @@ var aggr = {
                             "country": "Burkina Faso", //country hat bisher nicht mehr in die Legende gepasst...^^
 														//da muessen wir uns noch ueberlegen, wie viele Sachen wir
 														//in die Legende packen moechten und wie wir das uebergeben
-							height:194+1.5, //Damit es beim Logarithmieren nicht 0 oder <0 wird
-							width:112+1.5,
-							color:21+1.5,
-							centerPosition:[(112+1.5)/2,(194+1.5)/2,(112+1.5)/2],
-							"leftGarden": {
+							_height:194+1.5, //Damit es beim Logarithmieren nicht 0 oder <0 wird
+							_width:112+1.5,
+							_color:21+1.5,
+							_centerPosition:[(112+1.5)/2,(194+1.5)/2,(112+1.5)/2],
+							"_leftGarden": {
 								numOfCalls: 220
-								width: 220+1.5,
-								height: 0.01,
+								_width: 220+1.5,
+								_height: 0.01,
 								depth: (220+1.5)/2,
-								centerPosition: [0,0.05,0],
+								_centerPosition: [0,0.05,0],
 								nextLinePos: [0,0],
 								on: false,
 								id: aID,
@@ -124,12 +124,12 @@ var aggr = {
 									dritteGartenID: 54
 								}
 							},
-							"rightGarden": {
+							"_rightGarden": {
 								numOfCalls: 1000,
-								width: 1000+1.5,
-								height: 0.01,
+								_width: 1000+1.5,
+								_height: 0.01,
 								depth: (1000+1.5)/2,
-								centerPosition: [0,0.05,0],
+								_centerPosition: [0,0.05,0],
 								nextLinePos: [0,0],
 								on: false,
 								id: aID,
