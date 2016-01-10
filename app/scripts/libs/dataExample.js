@@ -4207,7 +4207,7 @@ var city = {
 			_color:1.5,
 			_centerPosition:[0,0,0],
 			"_leftGarden": {
-				numOfCalls: 220
+				numOfCalls: 220,
 				_width: 220+1.5,
 				_height: 0.01,
 				depth: (220+1.5)/2,
