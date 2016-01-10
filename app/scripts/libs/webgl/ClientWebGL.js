@@ -34,20 +34,17 @@ function drawCity(data, association, nameOfDivElement){
 			camera.aspect = window.innerWidth / window.innerHeight;
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			}, false );
-	/*var districtarray = [district(createArrayOfBuildings(data, association["dimensions"]["name"], association["dimensions"]["flaeche"], association["dimensions"]["hoehe"], association["dimensions"]["farbe"]))];
-	mainDistrict = district(districtarray);*/
-	var districtarray = createArrayOfBuildings(data, association["dimensions"]["name"]["name"], association["dimensions"]["flaeche"], association["dimensions"]["hoehe"], association["dimensions"]["farbe"]);
-	mainDistrict = district(districtarray);
-				
+	
+	mainDistrict = data;
+	setAssociation(association["dimensions"]);
+	
 	// diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
 	setMainDistrict(mainDistrict);
-	
-	//und anschließend verschiebe die Gebaeude entsprechend ihrer districts
-	shiftTheCity(mainDistrict);
-		
+	shiftBack(mainDistrict);
+
 	//zeichnen nun auch die Stadt
 	addCityToScene(mainDistrict, scene, camera, extrema);
-	
+
 	// Erstelle das Menue oben rechts
 	if( Detector.webgl ){
 		var ourDivElement = document.getElementById(nameOfDivElement);
@@ -115,19 +112,6 @@ function createArrayOfBuildings(data, nameOfBuilding, widthOfBuilding, heightOfB
 					jsonOfDistrictArrays[packagename].push(building(myData[i][nameOfBuilding], width, height, color));
 				}
 			}
-			//****************************
-			/*width = myData[i][widthOfBuilding];
-			height = myData[i][heightOfBuilding];
-			color = myData[i][colorOfBuilding];
-			
-			if(width=="") width = 0;
-			if(height=="") height=0;
-			if(color=="") color=0;
-			
-			anArrayOfBuildings.push(building(myData[i][nameOfBuilding], width, height, color));
-			
-			updateExtrema(width, height, color);
-			*/
 		}
 	}
 	for(var x in jsonOfDistrictArrays){

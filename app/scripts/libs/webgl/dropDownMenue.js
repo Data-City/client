@@ -1,8 +1,16 @@
+var association = {};
+
+//Setter fuer association
+//@params: newAssociation: die Zuordnung
+function setAssociation(newAssociation){
+	association = newAssociation;
+}
+
 // Dimensionen, die wir abbilden
 var myDimensions = ["Stadtteil","Gebäude","Breite","Höhe","Farbe"]; 
 
 //Namen, auf die wir beim JSON-Objekt zugreifen fuer die Legende
-var dimensionsFromDatabase = ["district", "name", "flaeche", "hoehe", "farbe"]; 
+var dimensionsFromDatabase = ["district", "name", "width", "height", "color"]; 
 
 //fuer den Ordner 'Legende'
 var legend = {
@@ -15,9 +23,9 @@ var legend = {
 
 //fuer den Ordner "Gebaeudeinformationen"
 var buildingInformation = {
-		"hoehe" : "Klicken Sie bitte auf ein Gebäude" , 
-		"flaeche" :  "Klicken Sie bitte auf ein Gebäude" , 
-		"farbe" :  "Klicken Sie bitte auf ein Gebäude" , 
+		"height" : "Klicken Sie bitte auf ein Gebäude" , 
+		"width" :  "Klicken Sie bitte auf ein Gebäude" , 
+		"color" :  "Klicken Sie bitte auf ein Gebäude" , 
 		"district" :  "Klicken Sie bitte auf ein Gebäude", 
 		"name" :  "Klicken Sie bitte auf ein Gebäude"
 };
@@ -58,9 +66,9 @@ var currentView = {
 //			newDistrict: der neue Stadtteil-Name, der angezeigt werden soll
 //			newName: der neue Name vom Gebaeude, der angezeigt werden soll
 function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, newName){
-	buildingInformation["hoehe"]=newHeight;
-	buildingInformation["flaeche"]=newWidth;
-	buildingInformation["farbe"]=newColor;
+	buildingInformation["height"]=newHeight;
+	buildingInformation["width"]=newWidth;
+	buildingInformation["color"]=newColor;
 	buildingInformation["district"]=newDistrict;
 	buildingInformation["name"]=newName;
 }
@@ -149,20 +157,29 @@ function scale(value, aString, scene, aDistrict, camera, extrema){
 		var scalingMethod = scaleLinearly;
 		var scalingExtrema = linearizeExtrema;
 	}
-	var aBuilding;
-	for(var i=0; i<aDistrict.buildings.length;i++){
-		for(var j=0; j<aDistrict.buildings[i].buildings.length;j++){
-			aBuilding = aDistrict.buildings[i].buildings[j];
-			aDistrict.buildings[i].buildings[j][aString] = scalingMethod(aDistrict, i, j, aString);
-		}
-	}
+	scaleAll(aDistrict, aString, scalingMethod);
 	setMainDistrict(aDistrict);
-	shiftTheCity(aDistrict);
+	shiftBack(aDistrict);
 	scalingExtrema(extrema, aString);
 	addCityToScene(aDistrict, scene, camera, extrema);
 	updateControls(Math.max(aDistrict.width, extrema.maxHeight));
 }
 
+
+//rekursive Methode, um alle Gebaeuden zu skalieren
+//@params: aDistrict: das Distrikt, dessen Gebaeude skaliert werden soll
+//			aString: height oder width oder color
+//			scalingMethod scaleLinearly oder scaleLogarithmically
+function scaleAll(aDistrict, aString, scalingMethod){
+	if(aDistrict.buildings==undefined){
+		aDistrict[aString] = scalingMethod(aDistrict, aString);
+	}
+	else{
+		for(var i=0;i<aDistrict.buildings.length;i++){
+			scaleAll(aDistrict.buildings[i], aString, scalingMethod);
+		}
+	}
+}
 
 //Methode, um die Extremwerte ebenfalls zu skalieren
 //@params: extrema: das JSON, das die alten Extremwerte enthaelt
@@ -207,8 +224,8 @@ function linearizeExtrema(extrema, aString){
 //			i: entspricht dem i-ten Stadtteil, in dem sich das Gebaeude befindet
 //			j: entspricht dem j-ten Gebaeude vom i-ten Stadtteil, das geaendert werden soll
 //			aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-function scaleLogarithmically(aDistrict, i, j, aString){
-	return ((Math.log(aDistrict.buildings[i].buildings[j][aString])/Math.log(2)));
+function scaleLogarithmically(aDistrict, aString){
+	return (Math.log(aDistrict[aString])/Math.log(2));
 }
 
 
@@ -217,14 +234,17 @@ function scaleLogarithmically(aDistrict, i, j, aString){
 //			i: entspricht dem i-ten Stadtteil, in dem sich das Gebaeude befindet
 //			j: entspricht dem j-ten Gebaeude vom i-ten Stadtteil, das geaendert werden soll
 //			aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-function scaleLinearly(aDistrict, i, j, aString){
-	return aDistrict.buildings[i].buildings[j]["original"+aString]+1.5;
+function scaleLinearly(aDistrict, aString){
+	return aDistrict[association[aString]]+1.5;
 }
 
 //Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen
 //@params: scene: die Scene, auf der alle Objekte geloescht werden soll
 function removeAllObjects(scene){
 	for( var i = scene.children.length - 1; i >= 0; i--) {
+		if(scene.children[i].building!=undefined){
+			scene.children[i].building.centerPosition = [0,scene.children[i].building.height/2-1.5,0];
+		}
 		scene.remove(scene.children[i]);
 	}
 }

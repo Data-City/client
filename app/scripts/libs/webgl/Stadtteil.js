@@ -1,3 +1,11 @@
+var association = {};
+
+//Setter fuer association
+//@params: newAssociation: die Zuordnung
+function setAssociation(newAssociation){
+	association = newAssociation;
+}
+
 var gap = 30; //Abstand zwischen den Gebaeuden
 var gardenID = 0;
 var hashGarden = {};
@@ -9,66 +17,6 @@ var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, b
 function getHashGarden(){
 	return hashGarden;
 }
-
-
-// Eine Art Konstruktor fuer ein Gebaeude
-//@params: aName: Name von dem Gebaeude
-//		aWidth: Breite von dem Gebaeude
-//		aHeight: Hoehe von dem Gebaeude
-//		aColor: Farbe von dem Gebaeude
-//@return: ein Javascript-Objekt vom Typ Gebaeude bzw. building
-function building(aName, aWidth, aHeight, aColor){
-	var theLeftGarden = garden(10,5, gardenID);
-	var theRightGarden = garden(10,5, gardenID+1);
-	hashGarden[gardenID]=theLeftGarden;
-	hashGarden[gardenID+1]=theRightGarden;
-	gardenID = gardenID+2;
-	var aBuilding = {
-		//es wird 1.5 addiert, damit Gebaeude mit urspruenglich 0 Hoehe auch gezeichnet werden
-		// und beim logarithmieren auch nicht verschwinden
-		height:aHeight+1.5, 
-		width:aWidth+1.5,
-		centerPosition:[aWidth/2,aHeight/2,aWidth/2],
-		color:aColor+1.5,
-		numOfIncomingCalls : 10,
-		numOfOutgoingCalls: 10,
-		district: 'es gibt zurzeit nur eins',
-		name: aName,
-		originalheight: aHeight,
-		originalwidth: aWidth,
-		originalcolor:aColor,
-		"leftGarden": theLeftGarden,
-		"rightGarden": theRightGarden
-	};
-	return aBuilding;
-};
-
-
-//Konstruktor für ein Stadtteil
-//@params: arrayOfBuildings: ein Array bestehend aus nur Gebaeuden(d.h. JSON-Objekte buildings) 
-//							oder nur Stadtteilen (d.h. JSON-Objekte district)
-//@return: ein Javascript-Objekt vom Typ stadtteil bzw. district
-function district(arrayOfBuildings){
-	var theLeftGarden = garden(10,5, gardenID);
-	var theRightGarden = garden(10,5, gardenID+1);
-	hashGarden[gardenID]=theLeftGarden;
-	hashGarden[gardenID+1]=theRightGarden;
-	gardenID = gardenID+2;
-	var aDistrict = {
-		height:1,
-		width:1,
-		numOfIncomingCalls : 10+1.5,
-		numOfOutgoingCalls: (10+1.5)/2,
-		centerPosition:[1/2,-1/2,1/2],
-		buildings:arrayOfBuildings,
-		name: "ein District",
-		originalnumOfIncomingCalls : 10,
-		originalnumOfOutgoingCalls: 10,
-		"leftGarden": theLeftGarden,
-		"rightGarden": theRightGarden
-	};
-	return aDistrict;
-};
 
 
 //Konstruktor für einen Vorgarten
@@ -116,96 +64,12 @@ function setNextLinePos(aGarden){
 //@params: aBuilding: ein Gebaeude oder District
 function setGardenPos(aBuilding){
 	aBuilding.rightGarden.centerPosition[0] = aBuilding.centerPosition[0]+1+aBuilding.rightGarden.width/2;
+	aBuilding.rightGarden.centerPosition[1] = aBuilding.centerPosition[1]-aBuilding.height/2+0.05;
 	aBuilding.rightGarden.centerPosition[2] = aBuilding.centerPosition[2]+1+aBuilding.rightGarden.depth/2+aBuilding.width/2;
 	aBuilding.leftGarden.centerPosition[0] = aBuilding.centerPosition[0]-1-aBuilding.leftGarden.width/2;
+	aBuilding.leftGarden.centerPosition[1] = aBuilding.centerPosition[1]-aBuilding.height/2+0.05;
 	aBuilding.leftGarden.centerPosition[2] = aBuilding.centerPosition[2]+1+aBuilding.leftGarden.depth/2+aBuilding.width/2;
-}
-
-
-
-//Methode, um fuer jedes Stadtteil die einzelnen Gebaeude zu positionieren und die Stadtteile auch zu positionieren
-//@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
-function setMainDistrict(mainDistrict){
-	var districtarray = mainDistrict.buildings;
-	if(districtarray != undefined){
-		for(var i=0;i<mainDistrict.buildings.length;i++){
-			setMainDistrict(districtarray);
-			setOneDistrict(mainDistrict.buildings[i]);
-			setGardenPos(mainDistrict.buildings[i]);
-		}
-		setOneDistrict(mainDistrict);
-		setGardenPos(mainDistrict);
-	}
-}
-
-
-// Diese Methode verschiebt die Stadt so, dass die Mitte vom Main-District bzw. der Rotationspunkt im Koordinatenursprung ist
-//@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
-function shiftTheCity(mainDistrict){
-	var districtarray = mainDistrict.buildings;
-	var shiftX = 0;
-	var shiftY = 0;
-	var shiftZ = 0;
-	//fuer jedes Stadtteil...
-	for(var i=0;i<districtarray.length;i++){
-		//verschiebe zuerst das ganze District zurueck in die Mitte
-		shiftBuilding(districtarray[i], -(mainDistrict.width/2), -1, -(mainDistrict.width/2));
-		shiftGardens(districtarray[i], -(mainDistrict.width/2), 0, -(mainDistrict.width/2)+10);
-		
-		//Hilfsvariablen
-		shiftX = districtarray[i].centerPosition[0]-(districtarray[i].width)/2;
-		shiftY = 0;
-		shiftZ = districtarray[i].centerPosition[2]-(districtarray[i].width)/2;
-		
-		//verschiebe jedes Gebaeude in diesem Stadtteil
-		for(var j=0;j<districtarray[i].buildings.length;j++){
-			shiftEachBuilding(districtarray[i].buildings[j], shiftX, shiftY, shiftZ);
-		}
-	}
 	
-}
-
-//rekursive Methode zum shiften der Gebaeude
-//@params: aBuilding: Das Gebäude oder das District, das geshiftet werden soll
-//			shiftX: Wert, um den das Objekt in X-Richtung geshiftet werden soll
-//			shiftY: Wert, um den das Objekt in Y-Richtung geshiftet werden soll
-//			shiftZ: Wert, um den das Objekt in Z-Richtung geshiftet werden soll
-function shiftEachBuilding(aBuilding, shiftX, shiftY, shiftZ){
-	shiftBuilding(aBuilding, shiftX, shiftY, shiftZ);
-	shiftGardens(aBuilding, shiftX, shiftY, shiftZ);
-	if(aBuilding.buildings!=undefined){
-		for(var i=0; i<aBuilding.buildings.length; i++){
-			shiftEachBuilding(aBuilding.buildings[i], shiftX, shiftY, shiftZ);
-		}
-	}
-}
-
-
-//Hilfsmethode zum Verschieben der Gebaeuden
-//@params: aBuilding: das Gebaeude oder District, das verschoben werden soll
-//			shiftX: verschiebe das Gebaeude um shiftX in x-Richtung
-//			shiftY: verschiebe das Gebaeude um shiftY in y-Richtung
-//			shiftZ: verschiebe das Gebaeude um shiftZ in z-Richtung
-function shiftBuilding(aBuilding, shiftX, shiftY, shiftZ){
-	//Verschiebe Position des Gebaeudes
-	aBuilding.centerPosition[0]=aBuilding.centerPosition[0]+shiftX;
-	aBuilding.centerPosition[1]=aBuilding.centerPosition[1]+shiftY;
-	aBuilding.centerPosition[2]=aBuilding.centerPosition[2]+shiftZ;
-}
-
-//Methode, um Gaerten zu verschieben
-//@params: aBuilding: das Gebaeude oder District, das verschoben werden soll
-//			shiftX: verschiebe das Gebaeude um shiftX in x-Richtung
-//			shiftY: verschiebe das Gebaeude um shiftY in y-Richtung
-//			shiftZ: verschiebe das Gebaeude um shiftZ in z-Richtung
-function shiftGardens(aBuilding, shiftX, shiftY, shiftZ){
-	aBuilding.leftGarden.centerPosition[0]=aBuilding.leftGarden.centerPosition[0]+shiftX;
-	aBuilding.leftGarden.centerPosition[1]=aBuilding.leftGarden.centerPosition[1]+shiftY;
-	aBuilding.leftGarden.centerPosition[2]=aBuilding.leftGarden.centerPosition[2]+shiftZ;
-	aBuilding.rightGarden.centerPosition[0]=aBuilding.rightGarden.centerPosition[0]+shiftX;
-	aBuilding.rightGarden.centerPosition[1]=aBuilding.rightGarden.centerPosition[1]+shiftY;
-	aBuilding.rightGarden.centerPosition[2]=aBuilding.rightGarden.centerPosition[2]+shiftZ;
-
 	aBuilding.leftGarden.nextLinePos[0]=aBuilding.leftGarden.centerPosition[0]-aBuilding.leftGarden.width/2;
 	aBuilding.leftGarden.nextLinePos[1]=aBuilding.leftGarden.centerPosition[2]-aBuilding.leftGarden.depth/2;
 	aBuilding.rightGarden.nextLinePos[0]=aBuilding.rightGarden.centerPosition[0]-aBuilding.rightGarden.width/2;
@@ -214,11 +78,44 @@ function shiftGardens(aBuilding, shiftX, shiftY, shiftZ){
 
 
 
+//Methode, um fuer jedes Stadtteil die einzelnen Gebaeude zu positionieren und die Stadtteile auch zu positionieren
+//@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
+function setMainDistrict(mainDistrict){
+	
+	if(mainDistrict["buildings"] != undefined){
+		for(var i=0;i<mainDistrict["buildings"].length;i++){
+			setMainDistrict(mainDistrict["buildings"][i]);
+			if(mainDistrict["buildings"][i]["buildings"]!=undefined){
+				setOneDistrict(mainDistrict["buildings"][i]);
+			}
+		}
+		setOneDistrict(mainDistrict);
+	}
+}
+
+//verschiebt die Gebauede und Distrikte, sodass sie wieder aufeinander liegen
+//@params: mainDistrict: ein JSON-Objekt vom Typ district
+function shiftBack(mainDistrict){
+	if(mainDistrict.buildings!=undefined){
+		for(var i=0;i<mainDistrict.buildings.length;i++){
+			setCenterPosition(
+				mainDistrict.buildings[i], 
+				mainDistrict.buildings[i].centerPosition[0]-mainDistrict.width/2, 
+				mainDistrict.buildings[i].centerPosition[1], 
+				mainDistrict.buildings[i].centerPosition[2]-mainDistrict.width/2
+			);
+			shiftBack(mainDistrict.buildings[i]);
+		}
+	}
+	setGardenPos(mainDistrict);
+}
+
+
 //Hilfsmethode zum Sortieren der Gebaeude nach Breite absteigend
 //@params: aDistrict: das Stadtteil, dessen Gebaeude sortiert werden sollen
 //@return: das district mit einem sortierten Gebaeudearray
 function sortBuildings(aDistrict){
-	aDistrict.buildings.sort(
+	aDistrict["buildings"].sort(
 			function(building1, building2){
 				return (building2.width)-(building1.width);
 			}
@@ -226,6 +123,34 @@ function sortBuildings(aDistrict){
 	return aDistrict;
 }
 
+//Methode zur Initialisierung des Districts bzw. des Gebaeudes
+//@params: aBuilding: Das Gebaeude bzw. District, das initialisiert werden soll
+function initBuilding(aBuilding){
+	if(aBuilding.height==undefined){
+		var stringarray = ["height", "width", "color"];
+		for(var i=0; i<stringarray.length; i++){
+			if(aBuilding[association[stringarray[i]]]!=undefined){
+				aBuilding[stringarray[i]]=aBuilding[association[stringarray[i]]]+1.5;
+			}
+			else{
+				aBuilding[stringarray[i]]=1.5;
+			}
+		}
+		aBuilding.centerPosition=[0,aBuilding.height/2-1.5,0];
+		aBuilding.numOfIncomingCalls = 10;
+		aBuilding.numOfOutgoingCalls = 10;
+		var theLeftGarden = garden(10,5, gardenID);
+		var theRightGarden = garden(10,5, gardenID+1);
+		hashGarden[gardenID]=theLeftGarden;
+		hashGarden[gardenID+1]=theRightGarden;
+		gardenID = gardenID+2;
+		aBuilding["leftGarden"]= theLeftGarden;
+		aBuilding["rightGarden"] = theRightGarden;
+		if(aBuilding[association["height"]]!=undefined){
+			updateExtrema(aBuilding[association["width"]], aBuilding[association["height"]], aBuilding[association["color"]]);
+		}
+	}
+}
 
 
 //Methode wird vom setMainDistrict aufgerufen
@@ -233,12 +158,13 @@ function sortBuildings(aDistrict){
 // anschließend wird noch das Stadtteil vergroessert, damit alle Gebaeude auf das Stadtteil draufpassen
 //@params: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
 function setOneDistrict(aDistrict){
-	
+	initBuilding(aDistrict);
 	aDistrict = sortBuildings(aDistrict);//zunaechst muessen wir das gebaudearray sortieren absteigend nach der Breite der Boxen
 	setFirstBuilding(aDistrict); //Initialisiert globale Variablen
-	setGardenPos(arrayOfBuildings[0]);
 	
 	for(var i=1;i<arrayOfBuildings.length;i++){
+		
+		initBuilding(arrayOfBuildings[i]);
 		if(buildingInZDirection==true){//wenn wir gerade in Z-Richtung bauen
 
 			if(startToBuildInZDirection>maxDepth){//wenn wir bereits ueber den Rand (Tiefe des letzten Blocks) sind
@@ -269,19 +195,44 @@ function setOneDistrict(aDistrict){
 				}
 			}
 		}
-		setGardenPos(arrayOfBuildings[i]);
 	}
-	
 	aDistrict.width = width;
+}
+
+//Hilfsmethode: wenn man centerPosition von einem District aendert, aendern sich auch die
+//centerPosition von allen Districts bzw. Gebaeuden, die auf diesem District sich befinden mit
+//@params: aDistrict: das District, das gesetzt wird
+//			newX: neuer X-Wert
+//			newY: neuer Y-Wert
+//			newZ: neuer Z-Wert
+function setCenterPosition(aDistrict, newX, newY, newZ){
+	if(aDistrict["buildings"]!=undefined){
+		for(var i=0;i<aDistrict["buildings"].length;i++){
+			setCenterPosition(
+				aDistrict["buildings"][i], 
+				aDistrict["buildings"][i].centerPosition[0]+newX-aDistrict.centerPosition[0], 
+				aDistrict["buildings"][i].centerPosition[1]+newY-aDistrict.centerPosition[1], 
+				aDistrict["buildings"][i].centerPosition[2]+newZ-aDistrict.centerPosition[2]
+			);
+			
+		}
+	}
+	aDistrict.centerPosition = [newX, newY, newZ];
 }
 
 
 //Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des ersten Gebaeudes
 //@params: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
 function setFirstBuilding(aDistrict){
-	arrayOfBuildings = aDistrict.buildings;
+	arrayOfBuildings = aDistrict["buildings"];
+	initBuilding(arrayOfBuildings[0]);
 	//Setzen des ersten Elements
-	arrayOfBuildings[0].centerPosition = [gap+(arrayOfBuildings[0].width)/2, (arrayOfBuildings[0].height)/2, gap+(arrayOfBuildings[0].width)/2];
+	setCenterPosition(
+		arrayOfBuildings[0], 
+		gap+(arrayOfBuildings[0].width)/2, 
+		(arrayOfBuildings[0].height)/2, 
+		gap+(arrayOfBuildings[0].width)/2
+	);
 	
 	maxWidth = 2*gap+arrayOfBuildings[0].width; 	// hier startet man, in X-Richtung zu bauen
 	maxDepth = 2*gap+arrayOfBuildings[0].width;		// baut man in Z-Richtung höher als maxDepth, muss man woanders eine neue Reihe starten
@@ -301,21 +252,6 @@ function setFirstBuilding(aDistrict){
 }
 
 
-// Diese Methode fuegt dem Array, welches dem Wert von aJSON an der Stelle theKey ist, den Wert theValue hinzu
-//@params: aJSON: ein JSON-Objekt der Form {key: Array}
-//		theKey: Key, mit dem man auf JSON zugreifen will
-//		theValue: der Wert, den man einfuegen moechte
-function addANode(aJSON, theKey, theValue){
-	if(aJSON[theKey]!=undefined){
-		if(aJSON[theKey].indexOf(theValue)==-1){
-			(aJSON[theKey]).push(theValue);
-		}
-	}
-	else{
-		aJSON[theKey] = [theValue];
-	}
-}
-
 
 
 //Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
@@ -324,9 +260,10 @@ function addANode(aJSON, theKey, theValue){
 //@params: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
 function continueBuildingInXDirection(i){				
 	//bauen wir weiter in x-Richtung
-	arrayOfBuildings[i].centerPosition = [startToBuildInXDirection-(1/2)*arrayOfBuildings[i].width,
-						(arrayOfBuildings[i].height)/2,
-						maxDepth+(1/2)*arrayOfBuildings[i].width];
+	setCenterPosition(arrayOfBuildings[i], 
+		startToBuildInXDirection-(1/2)*arrayOfBuildings[i].width, 
+		(arrayOfBuildings[i].height)/2, 
+		maxDepth+(1/2)*arrayOfBuildings[i].width);
 	width = Math.max(startToBuildInZDirection, maxDepth+arrayOfBuildings[i].width, maxWidth+extension);
 	buildingInZDirection=false;
 	maxWidth = maxWidth+extension;
@@ -342,9 +279,10 @@ function continueBuildingInXDirection(i){
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
 function buildANewBuildingRowOnTheRightInZDirection(i){
 	// Dann fangen wir rechts von der letzten Gebaeudereihe an, eine neue Gebaeudereihe aufzubauen
-	arrayOfBuildings[i].centerPosition = [maxWidth+extension+(1/2)*arrayOfBuildings[i].width,
-		(arrayOfBuildings[i].height)/2,
-		(1/2)*arrayOfBuildings[i].width+gap];
+	setCenterPosition(arrayOfBuildings[i], 
+		maxWidth+extension+(1/2)*arrayOfBuildings[i].width, 
+		(arrayOfBuildings[i].height)/2, 
+		(1/2)*arrayOfBuildings[i].width+gap);
 	width = Math.max(startToBuildInZDirection, maxWidth+extension);
 	maxWidth = maxWidth+extension;
 	extension=arrayOfBuildings[i].width+gap;
@@ -356,9 +294,10 @@ function buildANewBuildingRowOnTheRightInZDirection(i){
 //wenn wir gerade in Z-Richtung bauen und noch nicht am Rand angekommen sind
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
 function continueBuildingNormallyInZDirection(i, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord){
-	arrayOfBuildings[i].centerPosition = [maxWidth+(1/2)*arrayOfBuildings[i].width,
+	setCenterPosition(arrayOfBuildings[i], 
+		maxWidth+(1/2)*arrayOfBuildings[i].width, 
 		(arrayOfBuildings[i].height)/2,
-		startToBuildInZDirection+(1/2)*arrayOfBuildings[i].width];			
+		startToBuildInZDirection+(1/2)*arrayOfBuildings[i].width);
 	startToBuildInZDirection = startToBuildInZDirection+arrayOfBuildings[i].width+gap;
 	width = Math.max(startToBuildInZDirection, maxWidth+extension, maxDepth);
 
@@ -368,11 +307,11 @@ function continueBuildingNormallyInZDirection(i, nodesOfStreetsSortByXCoord, nod
 //Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
 //wenn wir gerade in X-Richtung bauen (nach links) und noch nicht am Rand angekommen sind
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
-
 function continueBuildingNormallyInXDirection(i){
-	arrayOfBuildings[i].centerPosition = [startToBuildInXDirection-(1/2)*arrayOfBuildings[i].width,
-					(arrayOfBuildings[i].height)/2, 
-					maxDepth+(1/2)*arrayOfBuildings[i].width];
+	setCenterPosition(arrayOfBuildings[i], 
+		startToBuildInXDirection-(1/2)*arrayOfBuildings[i].width,
+		(arrayOfBuildings[i].height)/2,
+		maxDepth+(1/2)*arrayOfBuildings[i].width);
 	width = Math.max(maxDepth+extension, maxWidth);
 	startToBuildInXDirection = startToBuildInXDirection-arrayOfBuildings[i].width-gap;
 
@@ -384,9 +323,10 @@ function continueBuildingNormallyInXDirection(i){
 // dann bauen wir wieder in Z-Richtung und fangen rechts unten an
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
 function buildAgainDownOnTheRightInZDirection(i){
-	arrayOfBuildings[i].centerPosition = [maxWidth+(1/2)*arrayOfBuildings[i].width,
-						(arrayOfBuildings[i].height)/2,
-						(1/2)*arrayOfBuildings[i].width+gap];
+	setCenterPosition(arrayOfBuildings[i], 
+		maxWidth+(1/2)*arrayOfBuildings[i].width,
+		(arrayOfBuildings[i].height)/2,
+		(1/2)*arrayOfBuildings[i].width+gap);
 	maxDepth = maxDepth+extension;
 	startToBuildInZDirection = arrayOfBuildings[i].width+gap+2*gap;
 	startToBuildInXDirection = maxWidth-gap;
@@ -406,9 +346,10 @@ function buildANewRowOnTheTopInXDirection(i){
 	startToBuildInXDirection = lastMaxWidth+2*gap;
 	maxDepth = maxDepth + extension;
 	extension = arrayOfBuildings[i].width+gap;
-	arrayOfBuildings[i].centerPosition = [startToBuildInXDirection-(1/2)*arrayOfBuildings[i].width,
-						(arrayOfBuildings[i].height)/2,
-						maxDepth+(1/2)*arrayOfBuildings[i].width];
+	setCenterPosition(arrayOfBuildings[i], 
+		startToBuildInXDirection-(1/2)*arrayOfBuildings[i].width,
+		(arrayOfBuildings[i].height)/2,
+		maxDepth+(1/2)*arrayOfBuildings[i].width);
 	startToBuildInXDirection = startToBuildInXDirection-arrayOfBuildings[i].width-gap;
 	width = Math.max(maxWidth, maxDepth+extension);
 

@@ -2,6 +2,14 @@ var maximalHeight;
 var mapOfLines = {};
 var clickedGardens = [];
 
+var association = {};
+
+//Setter fuer association
+//@params: newAssociation: die Zuordnung
+function setAssociation(newAssociation){
+	association = newAssociation;
+}
+
 //Methode zum leeren des Arrays clickedGardens
 function setClickedGardensEmpty(){
 	clickedGardens = [];
@@ -30,7 +38,7 @@ function drawBox(aBuilding, material, scene){
 
 
 //Hilfsmethode, um ein schönes Material zu bekommen, wenn man die Farbe kriegt
-//@params: aColor: eine Farbe, i.A. als Hexa-Wert, aber als RGB auch moeglich, oder mit "new THREE.Color(0,0,1)"
+//@params: aColor: eine Farbe, i.A. als Hexa-Wert, aber als RGB auch moeglich, oder mit "new THREE.color(0,0,1)"
 //@return: das Material in der gewuenschten Farbe
 function getMaterial(aColor){
 	var material = new THREE.MeshPhongMaterial( {
@@ -71,12 +79,10 @@ function setLight(scene){
 //			camera: die Kamera, die wir nach dem Malen anders positionieren moechten
 //			extrema: ein JSON-Objekt, das die Extremwerte der Daten enhtaelt, dass man darauf zugreifen kann
 function addCityToScene(mainDistrict, scene, camera, extrema){
-	// Material von unserer Box.
-	var buildingMaterial = getMaterial(0xee1289);
 				
 	// nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
-	for(var i=0;i<mainDistrict.buildings.length;i++){
-		addEachDistrict(mainDistrict.buildings[i], scene, extrema);
+	for(var i=0;i<mainDistrict["buildings"].length;i++){
+		addEachDistrict(mainDistrict["buildings"][i], scene, extrema, 0);
 	}
 	//Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
 	mainDistrict.centerPosition[1]=-1.5;
@@ -90,17 +96,26 @@ function addCityToScene(mainDistrict, scene, camera, extrema){
 //@params:	aDistrict: das Stadtteil, das gezeichnet werden soll
 //			scene: die scene, der man die Zeichnungen hinzufuegen moechte
 //			extrema: ein JSON-Objekt, das die Extremwerte der Daten enhtaelt, dass man darauf zugreifen kann
-function addEachDistrict(aDistrict, scene, extrema){
-	if(aDistrict.buildings==undefined){
+function addEachDistrict(aDistrict, scene, extrema, colorBoolean){
+	if(aDistrict["buildings"]==undefined){
 		var faktor = getColor(extrema, aDistrict.color);
 		addBoxes(new THREE.Color(faktor,faktor,1), aDistrict, scene);
 		addGarden(aDistrict, scene);
 	}
 	else{
-		addBoxes(0x768dff, aDistrict, scene);
-		addGarden(aDistrict, scene);
-		for(var j=0;j<aDistrict.buildings.length;j++){
-			addEachDistrict(aDistrict.buildings[j], scene, extrema);
+		if(colorBoolean==0){
+			addBoxes(0x768dff, aDistrict, scene);
+			addGarden(aDistrict, scene);
+			for(var j=0;j<aDistrict["buildings"].length;j++){
+				addEachDistrict(aDistrict["buildings"][j], scene, extrema, 1);
+			}
+		}
+		else{
+			addBoxes(0xB5BCDE, aDistrict, scene, 0);
+			addGarden(aDistrict, scene);
+			for(var j=0;j<aDistrict["buildings"].length;j++){
+				addEachDistrict(aDistrict["buildings"][j], scene, extrema, 1);
+			}
 		}
 	}
 }
@@ -295,11 +310,12 @@ function onDocumentMouseDown( event ) {
 		}
 		else{
 			changeBuildingInformation(
-				intersects[0].object.building.originalheight, 
-				intersects[0].object.building.originalwidth, 
-				intersects[0].object.building.originalcolor, 
-				"noch nicht implementiert", 
-				intersects[0].object.building.name);
+				intersects[0].object.building[association["height"]], 
+				intersects[0].object.building[association["width"]], 
+				intersects[0].object.building[association["color"]], 
+				intersects[0].object.building[association["district"]],
+				intersects[0].object.building[association["name"]]
+			);
 		}
 	}
 
