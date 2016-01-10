@@ -1995,7 +1995,7 @@ var aggr = {
                 }
             ],
             "count": 2
-        },
+        }/*,
         {
             "name": "Ecuador",
             "buildings": [
@@ -4171,7 +4171,7 @@ var aggr = {
                 }
             ],
             "count": 1
-        }
+        }*/
     ],
     "count": 166
 };

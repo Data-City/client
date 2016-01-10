@@ -1,8 +1,8 @@
-var maximalHeight;
-var mapOfLines = {};
-var clickedGardens = [];
+var maximalHeight; //speichert max. hoehe der Gebaeude, um Linien in dieser Hoehe zu zeichnen, ohne extrema zu uebergeben
+var mapOfLines = {}; //hier werden alle gezeichneteten Linien gespeichert von jedem Garten
+var clickedGardens = []; //Array aus ID der Gaerten, die an sind
 
-var association = {};
+var association = {}; //hier wird die Legende gespeichert
 
 //Setter fuer association
 //@params: newAssociation: die Zuordnung
@@ -27,11 +27,11 @@ function pushToClickedGardens(gardenID){
 //			material: ein Material von THREE.js, das auf das Gebaeude drauf soll
 //			scene: die scene, der die Box hinzugefuegt werden soll
 function drawBox(aBuilding, material, scene){
-	var geometry = new THREE.BoxGeometry(aBuilding.width, aBuilding.height, aBuilding.width);
+	var geometry = new THREE.BoxGeometry(aBuilding._width, aBuilding._height, aBuilding._width);
 	var cube = new THREE.Mesh(geometry, material);
-	cube.position.x = aBuilding.centerPosition[0];
-	cube.position.y = aBuilding.centerPosition[1];
-	cube.position.z = aBuilding.centerPosition[2];
+	cube.position.x = aBuilding._centerPosition[0];
+	cube.position.y = aBuilding._centerPosition[1];
+	cube.position.z = aBuilding._centerPosition[2];
 	cube.building = aBuilding;
 	scene.add(cube);
 }
@@ -85,7 +85,7 @@ function addCityToScene(mainDistrict, scene, camera, extrema){
 		addEachDistrict(mainDistrict["buildings"][i], scene, extrema, 0);
 	}
 	//Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
-	mainDistrict.centerPosition[1]=-1.5;
+	mainDistrict._centerPosition[1]=-1.5;
 	addBoxes(0xB5BCDE, mainDistrict, scene);
 	setCameraPos(camera, mainDistrict, extrema);
 
@@ -96,9 +96,10 @@ function addCityToScene(mainDistrict, scene, camera, extrema){
 //@params:	aDistrict: das Stadtteil, das gezeichnet werden soll
 //			scene: die scene, der man die Zeichnungen hinzufuegen moechte
 //			extrema: ein JSON-Objekt, das die Extremwerte der Daten enhtaelt, dass man darauf zugreifen kann
+//			colorBoolean: 0, wenn Districtfarbe eben 0xB5BCDE war, 1 wenn sie eben 0x768dff (um Districtfarben abzuwechseln)
 function addEachDistrict(aDistrict, scene, extrema, colorBoolean){
 	if(aDistrict["buildings"]==undefined){
-		var faktor = getColor(extrema, aDistrict.color);
+		var faktor = getColor(extrema, aDistrict._color);
 		addBoxes(new THREE.Color(faktor,faktor,1), aDistrict, scene);
 		addGarden(aDistrict, scene);
 	}
@@ -124,16 +125,17 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean){
 
 //Hilfsmethode fuer addCityToScene, zeichnet die Gaerten zu den zugehoerigen gebaeuden bzw Districts
 //@params aBuilding: das Gebaeude bzw das District
+//			scene: scene, der der Garten hinzugefuegt werden soll
 function addGarden(aBuilding, scene){
-	var gardens = ["leftGarden", "rightGarden"];
+	var gardens = ["_leftGarden", "_rightGarden"];
 	for(var i=0;i<2;i++){
 		var gardenMaterial = getMaterial(0x088A08);
 		gardenMaterial.name="garden";
-		var geometry = new THREE.BoxGeometry(aBuilding[gardens[i]].width, aBuilding[gardens[i]].height, aBuilding[gardens[i]].depth);
+		var geometry = new THREE.BoxGeometry(aBuilding[gardens[i]]._width, aBuilding[gardens[i]]._height, aBuilding[gardens[i]].depth);
 		var cube = new THREE.Mesh(geometry, gardenMaterial);
-		cube.position.x = aBuilding[gardens[i]].centerPosition[0];
-		cube.position.y = aBuilding[gardens[i]].centerPosition[1];
-		cube.position.z = aBuilding[gardens[i]].centerPosition[2];
+		cube.position.x = aBuilding[gardens[i]]._centerPosition[0];
+		cube.position.y = aBuilding[gardens[i]]._centerPosition[1];
+		cube.position.z = aBuilding[gardens[i]]._centerPosition[2];
 		cube.garden = aBuilding[gardens[i]];
 		aBuilding[gardens[i]].mesh = cube;
 		scene.add(cube);
@@ -220,7 +222,9 @@ function removeLines(aGarden){
 
 
 //Hilfsmethode fuer addCityToScene, zeichnet die Boxen
-//@params
+//@params: aColor: die Farbe fuer die Box
+//			aBuilding: das Building oder District Objekt, das gezeichnet werden soll
+//			scene: die scene, der das Objekt hinzugefuegt werden soll
 function addBoxes(aColor, aBuilding, scene){
 	var districtMaterial = getMaterial(aColor);
 	drawBox(aBuilding, districtMaterial, scene);
@@ -233,9 +237,9 @@ function addBoxes(aColor, aBuilding, scene){
 //		mainDistrict: District, nachdem sich die Kamera richten soll
 //		extrema: Extremwerte vom District
 function setCameraPos(camera, mainDistrict, extrema){
-	camera.position.x = Math.max(mainDistrict.width, extrema.maxHeight);
-	camera.position.y = Math.max(mainDistrict.width, extrema.maxHeight)/2;
-	camera.position.z = Math.max(mainDistrict.width, extrema.maxHeight)*1.5;
+	camera.position.x = Math.max(mainDistrict._width, extrema.maxHeight);
+	camera.position.y = Math.max(mainDistrict._width, extrema.maxHeight)/2;
+	camera.position.z = Math.max(mainDistrict._width, extrema.maxHeight)*1.5;
 }
 
 

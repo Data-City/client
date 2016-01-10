@@ -1,4 +1,4 @@
-var association = {};
+var association = {}; //hier wird die Legende gespeichert
 
 //Setter fuer association
 //@params: newAssociation: die Zuordnung
@@ -88,7 +88,8 @@ function changeLinkForCurrentView(aJson){
 //			aDistrict: das JSON vom Typ Stadtteil, mit dem ich agieren moechte, wenn der Nutzer das mit der Legende machen moechte
 //			camera: die Kamera, die neu positioniert wird, falls das district bearbeitet wird
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
-
+//			control, controls: das Trackball bzw. OrbitControl fuer die Steuerung,die wir verwenden
+//			nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
 function setMenue(legende, scene, aDistrict, camera, extrema, control, controls, nameOfDivElement){
 	var gui = new dat.GUI({
 		width : 375, autoPlace: false
@@ -162,7 +163,7 @@ function scale(value, aString, scene, aDistrict, camera, extrema){
 	shiftBack(aDistrict);
 	scalingExtrema(extrema, aString);
 	addCityToScene(aDistrict, scene, camera, extrema);
-	updateControls(Math.max(aDistrict.width, extrema.maxHeight));
+	updateControls(Math.max(aDistrict._width, extrema.maxHeight));
 }
 
 
@@ -172,7 +173,7 @@ function scale(value, aString, scene, aDistrict, camera, extrema){
 //			scalingMethod scaleLinearly oder scaleLogarithmically
 function scaleAll(aDistrict, aString, scalingMethod){
 	if(aDistrict.buildings==undefined){
-		aDistrict[aString] = scalingMethod(aDistrict, aString);
+		aDistrict["_"+aString] = scalingMethod(aDistrict, aString);
 	}
 	else{
 		for(var i=0;i<aDistrict.buildings.length;i++){
@@ -221,18 +222,14 @@ function linearizeExtrema(extrema, aString){
 
 //Hilfsmethode zum logarithmieren (Logarithmus zur Basis 2)
 //@params:aDistrict: das Stadtteil, dessen Gebaeude skaliert werden soll
-//			i: entspricht dem i-ten Stadtteil, in dem sich das Gebaeude befindet
-//			j: entspricht dem j-ten Gebaeude vom i-ten Stadtteil, das geaendert werden soll
 //			aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
 function scaleLogarithmically(aDistrict, aString){
-	return (Math.log(aDistrict[aString])/Math.log(2));
+	return (Math.log(aDistrict["_"+aString])/Math.log(2));
 }
 
 
 //Hilfsmethode, um die urspruenglichen Werte wieder herzustellen, d.h. ohne Skalierung die Gebaeude zu zeichnen
 //@params:aDistrict: das Stadtteil, dessen Gebaeude skaliert werden soll
-//			i: entspricht dem i-ten Stadtteil, in dem sich das Gebaeude befindet
-//			j: entspricht dem j-ten Gebaeude vom i-ten Stadtteil, das geaendert werden soll
 //			aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
 function scaleLinearly(aDistrict, aString){
 	return aDistrict[association[aString]]+1.5;
@@ -243,7 +240,7 @@ function scaleLinearly(aDistrict, aString){
 function removeAllObjects(scene){
 	for( var i = scene.children.length - 1; i >= 0; i--) {
 		if(scene.children[i].building!=undefined){
-			scene.children[i].building.centerPosition = [0,scene.children[i].building.height/2-1.5,0];
+			scene.children[i].building._centerPosition = [0,scene.children[i].building._height/2-1.5,0];
 		}
 		scene.remove(scene.children[i]);
 	}

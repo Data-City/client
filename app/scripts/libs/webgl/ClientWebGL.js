@@ -1,12 +1,7 @@
-//*****************************
-var seperator = ".";
-var numOfSeps = 4;
-//*****************************
-
 var camera, scene, renderer, controls, control, raycaster;
 var mainDistrict;
 var mouse = new THREE.Vector2(), INTERSECTED, SELECTED;
-var extrema = { //enthaelt die Extremwerte aus den Daten nach Aufruf von addCityToScene --> createArrayOfBuildings
+var extrema = { //enthaelt die Extremwerte aus den Daten
 	maxWidth:0,
 	maxHeight:0,
 	maxColor:0,
@@ -41,7 +36,7 @@ function drawCity(data, association, nameOfDivElement){
 	// diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
 	setMainDistrict(mainDistrict);
 	shiftBack(mainDistrict);
-
+	
 	//zeichnen nun auch die Stadt
 	addCityToScene(mainDistrict, scene, camera, extrema);
 
@@ -53,78 +48,17 @@ function drawCity(data, association, nameOfDivElement){
 		}
 		setMenue(association["dimensions"], scene, mainDistrict, camera, extrema, control, controls, nameOfDivElement);
 	}
-	updateControls(Math.max(mainDistrict.width, extrema.maxHeight));	
+	updateControls(Math.max(mainDistrict._width, extrema.maxHeight));	
 	animate();
 }
 
 
 
 
-// erstellt aus den Daten vom Client/ von der Datenbank ein Array aus Gebaeuden (buildings, Javascript-Objekte)
-// damit man es spaeter auch sortieren kann
-// @params: data: Daten als JSON vom Client-Team/Datenbank-Team mit allen Infos zu den Gebaeuden
-//			nameOfBuilding: String, mit dem man auf den Namen des Gebaeudes zugreifen kann im JSON 'data'
-//			widthOfBuilding: String, mit dem man auf die Breite des Gebaeudes zugreifen kann im JSON 'data'
-//			heightOfBuilding: String, mit dem man auf die Hoehe des Gebaeudes zugreifen kann im JSON 'data'
-//			colorOfBuilding: String, mit dem man auf die Farbe des Gebaeudes zugreifen kann im JSON 'data'
-function createArrayOfBuildings(data, nameOfBuilding, widthOfBuilding, heightOfBuilding, colorOfBuilding){
-
-	var anArrayOfBuildings = [];
-	var myData = data["data"]["_embedded"]["rh:doc"];
-	var width;
-	var height;
-	var color;
-
-	var jsonOfDistrictArrays = {};
-	
-	for(var i=0; i<myData.length; i++){
-		if(myData[i][widthOfBuilding]!=undefined && myData[i][heightOfBuilding]!=undefined ){
-			//******************************
-
-			var splittedName = myData[i][nameOfBuilding].toString().split(seperator);
-			//---------
-			width = myData[i][widthOfBuilding];
-			height = myData[i][heightOfBuilding];
-			color = myData[i][colorOfBuilding];
-			if(width=="") width = 0;
-			if(height=="") height=0;
-			if(color=="") color=0;
-			updateExtrema(width, height, color);
-			//----------
-			
-			if(splittedName.length <= numOfSeps){
-				if(jsonOfDistrictArrays[" "]==undefined){
-					jsonOfDistrictArrays[" "] = [building(myData[i][nameOfBuilding], width, height, color)];
-				}
-				else{
-					jsonOfDistrictArrays[" "].push(building(myData[i][nameOfBuilding], width, height, color));
-				}
-			}
-			else{
-				var packagename = "";
-				for(var j=0;j<numOfSeps; j++){
-					packagename = splittedName[j]+seperator;
-				}
-				if(jsonOfDistrictArrays[packagename]==undefined){
-					jsonOfDistrictArrays[packagename] = [building(myData[i][nameOfBuilding], width, height, color)];
-				}
-				else{
-					jsonOfDistrictArrays[packagename].push(building(myData[i][nameOfBuilding], width, height, color));
-				}
-			}
-		}
-	}
-	for(var x in jsonOfDistrictArrays){
-		anArrayOfBuildings.push(district(jsonOfDistrictArrays[x]));
-	}
-	
-	return anArrayOfBuildings;
-}
-
-
-
-
 // aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
+//@params: width: Breite, die evtl. geupdatet werden soll
+//			height: Hoehe, die ggf. geupdatet werden soll
+//			color: Farbe, die ggf. geupdatet werden soll<<y
 function updateExtrema(width, height, color){
 	if(width>extrema.maxWidth) extrema.maxWidth = width+1.5;
 	if(height>extrema.maxHeight) extrema.maxHeight = height+1.5;
@@ -141,7 +75,6 @@ function updateExtrema(width, height, color){
 //aktiviert das Beobachten der Mausaktivitaeten und das Zoomen, Drehen, Verschieben
 //@params nameOfDivElement: der Name vom Div-Element
 function init(nameOfDivElement) {
-	//$("body").html("<div id=" + nameOfdivElement + "></div>");
 
 	// Erstelle einen neuen Renderer
 	renderer = new THREE.WebGLRenderer();
@@ -158,7 +91,7 @@ function init(nameOfDivElement) {
 	scene = new THREE.Scene();
 
 	//erstelle Kamera
-	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000000);
 	camera.position.set( 0, 10, 30 );
 				
 	//Lichtquellen setzen
