@@ -36,8 +36,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     $scope.chosenCollection = null;
     
     /**
-     * Auswählen eines Datensatzes
-     * Wenn der Datensatz bereits ausgewählt ist, wird er nicht mehr ausgewählt (deselected...)
+     * Auswählen eines Datensatzes und Weiterlung im Browser zu der Seite
      * 
      * @param colid ID der gewählten Collection
      */
@@ -52,6 +51,11 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
         });
     };
     
+    /**
+     * Auswählen eines Datensatzes 
+     * 
+     * @param colid ID der gewählten Collection
+     */
     $scope.setChosenCollectionOnly = function (collId) {
        REST.getDocuments(database, collId, function (collection) {
             $log.info(collection);
