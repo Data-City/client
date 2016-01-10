@@ -83,7 +83,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
             var match = $scope.allCollections[iterate]._id.match(myRegExp);
             
             if (match) {
-                REST.deleteCollection(database, $scope.allCollections[iterate]._id, function (response) {});
+                REST.deleteCollection(database, $scope.allCollections[iterate]._id, null);
            }
         } 
     };
