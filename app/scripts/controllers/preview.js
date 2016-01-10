@@ -8,32 +8,32 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-  .controller('PreviewCtrl', function ($scope, $http, $rootScope, $log, $filter, sharedLogin, REST) {
-  /**  REST.setUsername(sharedLogin.getUsername());
+  .controller('PreviewCtrl', function ($scope, $routeParams, sharedLogin, $log, REST) {
+    
+    // Verbindungsdaten
+    var db = "prelife";
+    REST.setUsername(sharedLogin.getUsername());
     REST.setPassword(sharedLogin.getPassword());
 
-    var db = "prelife";
-    var collection = "beispiel";
+    $log.info($routeParams.collID);
+    $scope.collID = null;
+    /**
+         * Initialisierung
+         */
+        if ($routeParams.collID) {
+            $scope.collID = $routeParams.collID;
+         //   $scope.getViews();
+          /**  REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
+                $scope.collection = resp;
+                $scope.metaData = resp.data.metaData;
+                $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
+            });
+         */   
+        }
+     var database = "prelife";
+    REST.getDocuments(database, $scope.collId, function (response) {
+      $log.info(response);
+  });
 
-    REST.getDocuments(db, collection, function(result) {
-      $log.info(result);
-    });
 
-    var url = '/prelife/'+getCollection+'';
-
-   /** $scope.results = null;
-    $scope.attributes = null;
-
-    var func = function (response) {
-      $scope.results = response.data._embedded['rh:doc'];
-      $scope.attributes = getProperties($scope.results[0]);
-      $log.info(response.data._embedded);
-    };
-    var config = {
-      keys: {
-        'Zeilen': 1,
-      },
-    };
-    
-    getURL(url, config, username, password, $http, func);*/
   });

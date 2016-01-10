@@ -25,7 +25,7 @@ angular
       
     $routeProvider
       .when('/', {
-        templateUrl: 'views/login.html',
+        templateUrl: 'views/data.html',
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
@@ -56,7 +56,7 @@ angular
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
-      .when('/data/preview', {
+      .when('/data/preview/:collID', {
         templateUrl: 'views/preview.html',
         controller: 'PreviewCtrl',
         controllerAs: 'preview'

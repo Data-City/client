@@ -14,8 +14,6 @@
  */
 angular.module('datacityApp')
     .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST) {
-
-        $scope.test = 1;
         //Standardeinstellungen
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
@@ -23,6 +21,10 @@ angular.module('datacityApp')
         var database = "einstellungen";
         var collection = "ansichten";
         var baseurl = "https://pegenau.com:16392";
+        
+        var dbWithCollections = "prelife";
+        
+        $scope.json = null;
     
         /**
         *  Konstruktor für eine Ansicht
@@ -41,7 +43,6 @@ angular.module('datacityApp')
                 district: null
             };
             this.attributesOfCollection = [];
-            this.metaData = null;
             this.aggregations = [];
         }
     
@@ -52,13 +53,23 @@ angular.module('datacityApp')
             this.groupOverField = null;
             this.aggregationOperations = [];
         }
+        
+        $scope.numberOfAggregations = 0;
 
         $scope.addNewAggregation = function () {
             $scope.chosenView.aggregations.push(new Aggregation());
+            $scope.numberOfAggregations += 1;
         };
 
         $scope.removeAggregation = function (arrayIndex) {
             $scope.chosenView.aggregations.splice(arrayIndex, 1);
+            
+            //Zur Sicherheit
+            if ($scope.numberOfAggregations <= 0) {
+                alert("Es gibt <= 0 Aggregationen?");
+            } else {
+                $scope.numberOfAggregations -= 1;
+            }
         };
     
         // Initialisierung des Controllers
@@ -68,6 +79,7 @@ angular.module('datacityApp')
         $scope.numberOfViews = null;
         $scope.chosenView = null;
         $scope.loader = false;
+        $scope.metaData = null;
     
         // Ein- & Ausklappen der Panels (Schritt 1-4)
         $scope.showStep1 = true; // Daten reduzieren
@@ -88,6 +100,7 @@ angular.module('datacityApp')
             view.dimensions.hoehe = view.dimensions.hoehe.name;
             view.dimensions.flaeche = view.dimensions.flaeche.name;
             view.dimensions.farbe = view.dimensions.farbe.name;
+            // Noch raus genommen, weil die Distrikte anders ausgewählt werdens
             //view.dimensions.district = view.dimensions.district.name;
             drawCity(collection, view, divID);
         };
@@ -95,16 +108,10 @@ angular.module('datacityApp')
         /**
          * Holt die Ansichten und speichert sie im Controller-Scope
          */
-
-        $scope.getViews = function (func) {
+        $scope.getViews = function () {
             REST.getViewsOfCollection($scope.collID, function (views) {
                 $scope.views = views;
-                if ($scope.views) {
-                    $scope.numberOfViews = count(views);
-                }
-                if (func) {
-                    func(views);
-                }
+                $scope.numberOfViews = (views) ? count(views) : 0;
             });
         };
 
@@ -112,16 +119,20 @@ angular.module('datacityApp')
          * Speichert Änderungen an den Einstellungen der Ansicht
          */
         $scope.updateView = function () {
+            //Wird für die Anzeige in Angular benötigt
             $scope.chosenView.lastModifiedBy = sharedLogin.getUsername();
             $scope.chosenView.timeOfLastModification = Date.now();
 
             REST.updateView($scope.chosenView, function () {
                 $scope.getViews();
             });
-            //Macht die beiden Buttons wieder unsichtbar
+            //Versteckt die beiden Buttons wieder
             $scope.dimform.$setPristine();
         };
 
+        /**
+         * Verwirft die Änderungen, die in dem Formular gemacht wurden
+         */
         $scope.discardChanges = function () {
             $scope.chosenView = angular.copy($scope.originalView);
             $scope.dimform.$setPristine();
@@ -135,28 +146,6 @@ angular.module('datacityApp')
                 $scope.chosenView = null;
             } else {
                 $scope.chosenView = view;
-                REST.getDocuments("prelife", $scope.chosenView.collID, function (resp) {
-                    $scope.collection = resp;
-          
-                    // Attribute der Collection holen, falls noch nicht vorhanden
-                    if (!$scope.chosenView.attributesOfCollection || $scope.chosenView.attributesOfCollection.length === 0) {
-                        var attrs = getAttributesWithType(resp.data._embedded['rh:doc']);
-                        $scope.chosenView.attributesOfCollection = attrs;
-                    }
-          
-                    // Get Meta-Data
-                    if (!$scope.chosenView.metaData) {
-                        // Aggregation erstellen
-                        REST.createAggregation(
-                            "prelife", // Die Datenbank, in der die aktuelle collection liegt
-                            AGGR.createMinMedMaxAggrParam($scope.chosenView.attributesOfCollection, view.collID), // Aggregationsparameter in der Form aggrs = { aggrs : [ ... ]}
-                            resp.data._etag.$oid // der aktuelle etag der Collection
-                            );
-                    }
-                    //Wird zum Zurücksetzen benötigt
-                    $scope.originalView = angular.copy($scope.chosenView);
-                });
-
             }
         };
 
@@ -167,7 +156,26 @@ angular.module('datacityApp')
         if ($routeParams.collID) {
             $scope.collID = $routeParams.collID;
             $scope.getViews();
+            REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
+                $scope.collection = resp;
+                $scope.metaData = resp.data.metaData.data;
+                $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
+            });
+            
         }
+        
+        /**
+         * Holt sich die Metadaten der Collection (Maximum, Minimum, etc...)
+         * 
+         * @return: Die Metadaten
+         */
+        $scope.getMetaData = function(attrname, type) {
+            if($scope.metaData) {
+                return $scope.metaData[type + '_' + attrname];
+            } else {
+                return null;
+            }  
+        };
 
         /**
          * löscht eine Ansicht
@@ -201,9 +209,9 @@ angular.module('datacityApp')
         function ViewCopy(collID) {
             this.name = collID.name + " (Kopie)";
             this.collID = $scope.collID;
-            this.creator = username;
+            this.creator = sharedLogin.getUsername();
             this.timeOfCreation = Date.now();
-            this.lastModifiedBy = username;
+            this.lastModifiedBy = sharedLogin.getUsername();
             this.timeOfLastModification = this.timeOfCreation;
             this.dimensions = collID.dimensions;
         }
@@ -254,59 +262,11 @@ angular.module('datacityApp')
 
         $scope.createAggregationForDisplay = function () {
             var view = $scope.chosenView;
-            /*
-            REST.deleteCollection("prelife", "spielwiese", function(r) {
-                $log.info('deleteCollection');
-                $log.info(r);
-            });
-            return;
-            */
-            REST.ensureCollectionsMetaData("prelife", view.collID,
-                function(response) {
-                    $log.info('ensureCollectionsMetaData durch. Antwort:');
-                    $log.info(response);
-            });
-            /*
-            var params = {
-                'metaData' : {
-                    'name': {
-                        'type' : 'string'
-                    },
-                    'createdOn': 'heute'
-                }
-            };
-            
-            var view = $scope.chosenView;
-            REST.getCurrentETag("prelife", view.collID, function (etag) {
-                REST.putOnCollection("prelife", view.collID, etag, params, function (resp) {
-                    $log.info("Aggregation erstellt:");
-                    $log.info(resp);
-                });
-            });
-            */
-            /*
-            var view = $scope.chosenView;
-            var aggr = AGGR.createMinMedMaxAggrParam(view.attributesOfCollection, view.collID);
-            REST.addAggregation("prelife", view.collID, aggr, function (response) {
-                $log.info("Aggregation erstellt");
-                $log.info(response);
-            });
-            */  
-            /*
-            var view = $scope.chosenView;
-            $log.info(view);
-            var project = AGGR.projectStage(view.attributesOfCollection);
-            var match = AGGR.matchStage(view.attributesOfCollection);
-            $log.info(match);
-            var aggr = AGGR.buildAggregationPipe(project, match);
-            REST.getCurrentETag("prelife", view.collID, function (etag) {
-                REST.createAggregation("prelife", view.collID, etag, aggr, function (resp) {
-                    $log.info("Aggregation erstellt:");
-                    $log.info(resp);
-                });
-            });
-            */
-
+            var stages = [];            
+            stages.push(AGGR.projectStage($scope.attributes));
+            stages.push(AGGR.matchStage($scope.attributes));
+            $log.info(stages);
+            $scope.json = stages;
         };
 
     });

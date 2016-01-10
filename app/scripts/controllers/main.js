@@ -14,23 +14,27 @@ var App = angular.module('datacityApp');
  * Die richtige Seite wird in der Navbar hervorgehoben
  */
 App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, sharedLogin, REST) {
+    
+    /**
+     * aktiviert die Navigationsleiste
+     */
     $(".nav a").on("click", function () {
         $(".nav").find(".active").removeClass("active");
         $(this).parent().addClass("active");
     });
 	
+    
     // Verbindungsdaten
     var database = "prelife";
+    $log.info('Username: ' + sharedLogin.getUsername() + '\tPassword: ' + sharedLogin.getPassword());
     REST.setUsername(sharedLogin.getUsername());
     REST.setPassword(sharedLogin.getPassword());
 	
+    $scope.collections = null;
+    $scope.numberOfCollections = 0;
     // Der ausgewählte (angeklickte) Datensatz
-    $scope.allCollections = null;
-    $scope.displayableCollections = null;
-    $scope.numberOfDisplayableCollections = 0;
     $scope.chosenCollection = null;
-
-
+    
     /**
      * Auswählen eines Datensatzes
      * Wenn der Datensatz bereits ausgewählt ist, wird er nicht mehr ausgewählt (deselected...)
@@ -39,12 +43,12 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
      */
     $scope.setChosenCollectionAndRedirect = function (collId) {
         REST.getDocuments(database, collId, function (collection) {
-            // Toggle: Select<->Deselect
-            $log.info(collection);
-            $scope.chosenCollection = ($scope.chosenCollection === collection) ? null : collection;
-            if ($scope.chosenCollection) {
+            $scope.chosenCollection = collection;
+            $scope.collections = null;
+            REST.ensureCollectionsMetaData(database, collId, function(metaData) {
+                //Weiterleiten
                 window.location = "#/views/" + $scope.chosenCollection.data._id;
-            }
+            });
         });
     };
     
@@ -52,40 +56,48 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
        REST.getDocuments(database, collId, function (collection) {
             $log.info(collection);
             $scope.chosenCollection = collection;
-            console.log("asnbdhas");
-            console.log($scope.chosenCollection);
         });
     };
-
-
+    
+     $scope.getMyLink = function(collId){
+        var link = "#/data/preview/" + collId;
+        location.href = link;
+        return link;
+    };
+    
     $scope.getIdOfCollection = function (collection) {
         return collection ? collection.data._id : null;
     };
 
-    // TODO Funktion umbenennen in deleteCollection
-    // TODO Funktion erhält collection id als Parameter
     /**
-     * @param id ID der Collection, die gelöscht werden soll
+     * Löscht die ausgewählte Collection
      */
-    $scope.deleteDataset = function (chosenCollection) {
-        // TODO Alle Collections löschen, die mit collectionId_dc_ beginnen
-		
-        //Erst den Datensatz löschen
-        //Dann
-        //Alle dazugehörigen Ansichten auch
-        console.log("chosenDataset: ");
-        console.log($scope.chosenCollection);
+    $scope.deleteCollection = function () {
+        // Die eigentliche Collection löschen
+        REST.deleteCollection(database, $scope.chosenCollection.data._id, function (response) {
+            $scope.getCollections();
+        });
+        // Alle Collections löschen, die mit "collectionId_dc_"" beginnen
+        for (var iterate in $scope.allCollections) {
+            var myRegExp = new RegExp($scope.chosenCollection.data._id + "_dc_", 'i');
+            var match = $scope.allCollections[iterate]._id.match(myRegExp);
+            
+            if (match) {
+                REST.deleteCollection(database, $scope.allCollections[iterate]._id, function (response) {});
+           }
+        } 
     };
     
     /**
      * Holt alle Collections
      */
-    REST.getCollections(database, function (response) {
-        var allCollections = response.data._embedded['rh:coll'];
-        $scope.allCollections = allCollections;
-        $scope.displayableCollections = $filter('colsbydisplayability')(allCollections);
-        $scope.numberOfDisplayableCollections = count($scope.displayableCollections);
-    });
+    $scope.getCollections = function () {
+        REST.getCollections(database, function (response) {
+            var allCollections = response.data._embedded['rh:coll'];
+            $scope.collections = $filter('colsbydisplayability')(allCollections);
+            $scope.numberOfCollections = count($scope.collections);
+        });
+    };
 
     /**
      * @return Eine schönere Anzeige des Datums
@@ -94,4 +106,8 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
         var d = new Date(timeString);
         return d.toLocaleDateString() + " " + d.toLocaleTimeString();
     };
+    
+    
+    // Init
+    $scope.getCollections();
 });

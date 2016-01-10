@@ -13,6 +13,17 @@ angular.module('datacityApp')
         var rest = null;
         
         this.META_DATA_AGGR_URI = "maxminavg";
+
+
+        /**
+ * Counts the elements in obj
+ */
+var count = function (obj) {
+    if(obj === null) {
+        return 0;
+    }
+    return Object.keys(obj).length;
+};
      
      /**
      * Alle für MongoDB verfügbaren Gruppierungsoperationen
@@ -75,6 +86,9 @@ angular.module('datacityApp')
                     project[element.name] = 1;
                 }		
             });
+            project = {
+                $project: project
+            };
             return project;
         };
     
@@ -92,45 +106,42 @@ angular.module('datacityApp')
                 */
                 if (element.type === 'number' && element.chooseable && element.toBeFiltered) {
                     var obj = {};
-                    obj[element.name] = { '_$gte': element.numberValueFilter[0], '_$lte': element.numberValueFilter[1] };
+                    obj[element.name] = { '$gte': element.numberValueFilter[0], '$lte': element.numberValueFilter[1] };
                     matchers.push(obj);
                 }
             });
+            var ret;
             // Mehrere Bedingungen mit AND verknüpfen
             if  (matchers.length < 1) {
-                return {};
+                ret = {};
             } else if  (matchers.length === 1) {
-                return matchers[0];
+                ret = matchers[0];
             } else {
                 // { $and: [ { score: { $gt: 70, $lt: 90 } }, { views: { $gte: 1000 } } ] }
-                var ret = { "_$and": [] };
+                ret = { "$and": [] };
                 for (var i = 0; i < matchers.length; i++) {
                     ret._$and.push(matchers[i]);
                 }
-                return ret;
             }
+            ret = {
+                $match: ret
+            };
+            return ret;
         };
         
         /**
          * Setzt einzelne Aggregationsschritte zu einem vollständigen Aggregationsparameter zusammen
          */
-        this.buildAggregationPipe = function(collection, project, match) {
+        this.buildAggregationPipe = function(collection, stages) {
             var aggr = {
                 "aggrs": [
                 {
                     "type": "pipeline",
                     "uri": "data",
-                    "stages": [ ]
+                    "stages": stages,
                 }
             ]};
             
-            if(project && count(project) > 0) {
-                aggr.aggrs[0].stages.push({ "_$project" : project });
-            }
-            
-            if(match && count(project) > 0) {
-                aggr.aggrs[0].stages.push({ "_$match" : match });
-            }
             aggr.aggrs[0].stages.push({ "_$out" : collection + rest.META_DATA_PART + 'data'});
             
 	       return aggr;
@@ -186,7 +197,7 @@ angular.module('datacityApp')
             }
         });
         aggrs.aggrs[0].stages[0]._$group = ops;
-        aggrs.aggrs[0].stages.push({ "_$out" : colname + "_dc_stats"});
+        aggrs.aggrs[0].stages.push({ "_$out" : colname + "_dc_" + this.META_DATA_AGGR_URI});
         return aggrs;
     };
 

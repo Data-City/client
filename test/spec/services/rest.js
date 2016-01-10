@@ -19,6 +19,7 @@ describe('Service: REST', function () {
     expect(!!REST).toBe(true);
   });
 
+   /* heißt nicht mehr RESTProvider und die aggr.js hat keine Funktion mit "setSalutation"
   it('should be configurable', function () {
     module(function (RESTProvider) {
       RESTProvider.setSalutation('Lorem ipsum');
@@ -28,5 +29,5 @@ describe('Service: REST', function () {
 
     expect(REST.greet()).toEqual('Lorem ipsum');
   });
-
+*/
 });

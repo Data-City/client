@@ -19,6 +19,7 @@ describe('Service: AGGR', function () {
     expect(!!AGGR).toBe(true);
   });
 
+  /* heißt nicht mehr AGGRProvider und die aggr.js hat keine Funktion mit "setSalutation"
   it('should be configurable', function () {
     module(function (AGGRProvider) {
       AGGRProvider.setSalutation('Lorem ipsum');
@@ -28,5 +29,6 @@ describe('Service: AGGR', function () {
 
     expect(AGGR.greet()).toEqual('Lorem ipsum');
   });
+  */
 
 });
