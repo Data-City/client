@@ -21,9 +21,9 @@ angular.module('datacityApp')
         var database = "einstellungen";
         var collection = "ansichten";
         var baseurl = "https://pegenau.com:16392";
-        
+
         var dbWithCollections = "prelife";
-        
+
         $scope.json = null;
     
         /**
@@ -53,26 +53,26 @@ angular.module('datacityApp')
         function Aggregation() {
             this.groupOverField = null;
             this.aggregationOperations = [];
-        };
-        
+        }
+
         function District() {
             this.field = null;
         }
-        
-        $scope.addDistrict = function() {
+
+        $scope.addDistrict = function () {
             $scope.chosenView.districts.push(new District());
-        }
-        
-        $scope.deleteDistrict = function(arrayIndex) {
+        };
+
+        $scope.deleteDistrict = function (arrayIndex) {
             $scope.chosenView.districts.splice(arrayIndex, 1);
-        }
-        
+        };
+
         $scope.numberOfAggregations = 0;
 
         $scope.addNewAggregation = function () {
             $scope.chosenView.aggregations.push(new Aggregation());
             $scope.numberOfAggregations += 1;
-        }
+        };
 
         $scope.removeAggregation = function (arrayIndex) {
             $scope.chosenView.aggregations.splice(arrayIndex, 1);
@@ -169,12 +169,12 @@ angular.module('datacityApp')
         if ($routeParams.collID) {
             $scope.collID = $routeParams.collID;
             $scope.getViews();
-            REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
+            REST.getDocuments(dbWithCollections, $scope.collID, function (resp) {
                 $scope.collection = resp;
                 $scope.metaData = resp.data.metaData.data;
                 $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
             });
-            
+
         }
         
         /**
@@ -182,12 +182,12 @@ angular.module('datacityApp')
          * 
          * @return: Die Metadaten
          */
-        $scope.getMetaData = function(attrname, type) {
-            if($scope.metaData) {
+        $scope.getMetaData = function (attrname, type) {
+            if ($scope.metaData) {
                 return $scope.metaData[type + '_' + attrname];
             } else {
                 return null;
-            }  
+            }
         };
 
         /**
@@ -272,16 +272,90 @@ angular.module('datacityApp')
             myWindow.document.write("<div id='jsonDownload'></div>");
             myWindow.document.getElementById('jsonDownload').appendChild(a);
         };
-        
-        var createDistrictAggregationStages = function() {
-            
-        }
+
+        var newGroupStage = function () {
+            var groupTemplate = {
+                "$group": {
+                    "_id": "$_id.country",
+                    districts: {
+                        $addToSet: {
+                            "name": "$_id.gender",
+                            "buildings": "$buildings",
+                            "count": "$count"
+                        }
+                    },
+                    noOfDistricts: {
+                        $sum: 1
+                    }
+                }
+            };
+            return groupTemplate;
+        };
+
+        var createDistrictAggregationStages = function (districts) {
+            var stages = [];
+
+            var fields = districts.map(function (d) { return d.field.name; });
+
+            var groupTemplate = {
+                _id: {},
+                buildings: {
+                    $addToSet: {}
+                },
+                count: {
+                    $sum: 1
+                }
+            };
+
+            var idsAdder = function (field) {
+                ids[field] = "$" + field;
+            };
+
+            var dimensionAdder = function (attr) {
+                if (attr.chooseable) {
+                    group.buildings.$addToSet[attr.name] = "$" + attr.name;
+                }
+            };
+
+            for (var index = 0; index < districts.length; index++) {
+                var element = districts[index];
+                var elementName = element.field.name;
+                var group = JSON.parse(JSON.stringify(groupTemplate));
+                
+                // Spezialfall: erste Group Stage
+                if (index === 0) {
+                    
+                    
+                    // IDs hinzufügen
+                    var ids = {};
+                    fields.map(idsAdder);
+                    group._id = ids;
+                    
+                    // Buildings für Dimension hinzufügen
+                    $scope.attributes.map(dimensionAdder);
+                } else {
+                    fields.map(function(field) {group._id[field] = "$_id." + field;});
+                    group.buildings.$addToSet.name = "$_id." + districts[index -1].field.name;
+                    group.buildings.$addToSet.buildings = "$buildings";
+                    group.buildings.$addToSet.count = "$count";
+
+                }
+                stages.push({ "$group": group });
+                var i = fields.indexOf(elementName);
+                fields.splice(i, 1);
+            }
+
+            return stages;
+        };
 
         $scope.createAggregationForDisplay = function () {
             var view = $scope.chosenView;
-            var stages = [];            
+            var stages = [];
             stages.push(AGGR.projectStage($scope.attributes));
             stages.push(AGGR.matchStage($scope.attributes));
+            if (view.districts.length > 0) {
+                stages = stages.concat(createDistrictAggregationStages(view.districts));
+            }
             $log.info(stages);
             $scope.json = stages;
         };

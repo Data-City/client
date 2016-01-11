@@ -229,6 +229,7 @@
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
                             </div>
                             <div class="panel-body" ng-show="showStep3">
+                                Block Nr.1 entspricht dem innersten Block.
                                 <table class="table">
                                     <thead>
                                         <th>Nr.</th>
@@ -321,7 +322,7 @@
                 <pre>
 db.persons.aggregate(
 {{json | json}}
-);
+).pretty();
                 </pre>
             </div>
 
