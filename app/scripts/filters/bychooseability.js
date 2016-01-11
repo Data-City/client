@@ -11,16 +11,16 @@
  * Filter in the datacityApp.
  */
 angular.module('datacityApp')
-  .filter('bychooseability', function () {
-    return function (attrs) {
-      var out = [];
-      if (attrs) {
-        attrs.forEach(function (element, index) {
-          if (element.chooseable) {
-            out.push(element);
-          }
-        });
-      }
-      return out;
-    };
-  });
+    .filter('bychooseability', function() {
+        return function(attrs) {
+            var out = [];
+            if (attrs) {
+                attrs.forEach(function(element, index) {
+                    if (element.chooseable) {
+                        out.push(element);
+                    }
+                });
+            }
+            return out;
+        };
+    });

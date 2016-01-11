@@ -2,61 +2,61 @@ var association = {}; //hier wird die Legende gespeichert
 
 //Setter fuer association
 //@params: newAssociation: die Zuordnung
-function setAssociation(newAssociation){
-	association = newAssociation;
+function setAssociation(newAssociation) {
+    association = newAssociation;
 }
 
 // Dimensionen, die wir abbilden
-var myDimensions = ["Stadtteil","Gebäude","Breite","Höhe","Farbe"]; 
+var myDimensions = ["Stadtteil", "Gebäude", "Breite", "Höhe", "Farbe"];
 
 //Namen, auf die wir beim JSON-Objekt zugreifen fuer die Legende
-var dimensionsFromDatabase = ["district", "name", "width", "height", "color"]; 
+var dimensionsFromDatabase = ["district", "name", "width", "height", "color"];
 
 //fuer den Ordner 'Legende'
 var legend = {
-	"Stadtteil": function(){},
-	"Gebäude": function(){},
-	"Breite": function(){},
-	"Höhe": function(){},
-	"Farbe": function(){}
+    "Stadtteil": function() {},
+    "Gebäude": function() {},
+    "Breite": function() {},
+    "Höhe": function() {},
+    "Farbe": function() {}
 };
 
 //fuer den Ordner "Gebaeudeinformationen"
 var buildingInformation = {
-		"height" : "Klicken Sie bitte auf ein Gebäude" , 
-		"width" :  "Klicken Sie bitte auf ein Gebäude" , 
-		"color" :  "Klicken Sie bitte auf ein Gebäude" , 
-		"district" :  "Klicken Sie bitte auf ein Gebäude", 
-		"name" :  "Klicken Sie bitte auf ein Gebäude"
+    "height": "Klicken Sie bitte auf ein Gebäude",
+    "width": "Klicken Sie bitte auf ein Gebäude",
+    "color": "Klicken Sie bitte auf ein Gebäude",
+    "district": "Klicken Sie bitte auf ein Gebäude",
+    "name": "Klicken Sie bitte auf ein Gebäude"
 };
 
 //fuer den Ordner "Skalierung"
 var scaling = {
-	"logarithmicHeight" : false,
-	"logarithmicWidth" : false,
-	"logarithmicColor" : false
+    "logarithmicHeight": false,
+    "logarithmicWidth": false,
+    "logarithmicColor": false
 };
 
 //Getter für scaling
-function getScalingBooleans(){
-	return scaling;
+function getScalingBooleans() {
+    return scaling;
 }
 
 //Setter fuer scaling
 //@params: scalingObject: Object, mit dem Scaling ueberschrieben werden soll
-function setScalingBooleans(scalingObject){
-	scaling = scalingObject;
+function setScalingBooleans(scalingObject) {
+    scaling = scalingObject;
 }
 
 //fuer den Ordner "Steuerung"
 var controlling = {
-	"zoomSpeed" : 1,
-	"rotateSpeed": 1
+    "zoomSpeed": 1,
+    "rotateSpeed": 1
 };
 
 //fuer den Ordner "aktuelle Ansicht"
 var currentView = {
-	"Link": ''
+    "Link": ''
 }
 
 //aendert bei den Gebaeudeinformationen in der Legende die Werte, die angezeigt werden sollen
@@ -65,22 +65,22 @@ var currentView = {
 //			newColor: die neue Farbe, die angezeigt werden soll
 //			newDistrict: der neue Stadtteil-Name, der angezeigt werden soll
 //			newName: der neue Name vom Gebaeude, der angezeigt werden soll
-function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, newName){
-	buildingInformation["height"]=newHeight;
-	buildingInformation["width"]=newWidth;
-	buildingInformation["color"]=newColor;
-	buildingInformation["district"]=newDistrict;
-	buildingInformation["name"]=newName;
+function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, newName) {
+    buildingInformation["height"] = newHeight;
+    buildingInformation["width"] = newWidth;
+    buildingInformation["color"] = newColor;
+    buildingInformation["district"] = newDistrict;
+    buildingInformation["name"] = newName;
 }
 
 //aendert bei dem Link in der Legende den Link zum Verschicken
 //@params: aJson: ein Objekt der Form {camPos: json_mit_Camera_Position,
 //										garden: array_mit_ID_der_Gaerten,_die_an_sind,
 //										scaling: json_von_legende}
-function changeLinkForCurrentView(aJson){
-	currentView['Link']= 'http://dummylink.com/viewDataCity?webGLSettings='+JSON.stringify(aJson);
+function changeLinkForCurrentView(aJson) {
+    currentView['Link'] = 'http://dummylink.com/viewDataCity?webGLSettings=' + JSON.stringify(aJson);
 }
-	
+
 
 //Methode, um das Dropdown-Menue oben rechts zu zeichnen
 //@params: legende: JSON-Objekt, das der Legende entspricht, sodass z.B. legende["breite"]="Anzahl Methoden" ist
@@ -90,53 +90,67 @@ function changeLinkForCurrentView(aJson){
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
 //			control, controls: das Trackball bzw. OrbitControl fuer die Steuerung,die wir verwenden
 //			nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
-function setMenue(legende, scene, aDistrict, camera, extrema, control, controls, nameOfDivElement){
-	var gui = new dat.GUI({
-		width : 375, autoPlace: false
-	});
+function setMenue(legende, scene, aDistrict, camera, extrema, control, controls, nameOfDivElement) {
+    var gui = new dat.GUI({
+        width: 375,
+        autoPlace: false
+    });
 
-	gui.domElement.style.position = 'absolute';
-	var divelRect = document.getElementById("WebGLCanvas").getBoundingClientRect();
-	gui.domElement.style.left = divelRect.left+"px";
-	gui.domElement.style.top = "0px";
-	gui.domElement.id = "dropdownmenu";
-	document.getElementById(nameOfDivElement).appendChild(gui.domElement);
+    gui.domElement.style.position = 'absolute';
+    var divelRect = document.getElementById("WebGLCanvas").getBoundingClientRect();
+    gui.domElement.style.left = divelRect.left + "px";
+    gui.domElement.style.top = "0px";
+    gui.domElement.id = "dropdownmenu";
+    document.getElementById(nameOfDivElement).appendChild(gui.domElement);
 
-	var h = gui.addFolder( "Legende" );
-	for(var i=0; i<myDimensions.length; i++){
-		h.add( legend, myDimensions[i]).name( myDimensions[i]+": " + legende[dimensionsFromDatabase[i]]);
-	}
-	//*****************************************************************
+    var h = gui.addFolder("Legende");
+    for (var i = 0; i < myDimensions.length; i++) {
+        h.add(legend, myDimensions[i]).name(myDimensions[i] + ": " + legende[dimensionsFromDatabase[i]]);
+    }
+    //*****************************************************************
 
-	h = gui.addFolder( "Gebäudeinformationen" );
-	for(var i=0; i<myDimensions.length; i++){
-		h.add( buildingInformation, dimensionsFromDatabase[i]).name( legende[dimensionsFromDatabase[i]]).listen();
-	}
-	
-	//*****************************************************************
-	
-	h = gui.addFolder( "Skalierung");
-	h.add (scaling, "logarithmicHeight").name( "Höhe logarithmieren").onChange(function(value){scaling["logarithmicHeight"]=value; scale(value, "height", scene, aDistrict, camera, extrema);});
-	h.add (scaling, "logarithmicWidth").name ("Breite logarithmieren").onChange(function(value){scaling["logarithmicWidth"]=value; scale(value, "width", scene, aDistrict, camera, extrema);});
-	h.add (scaling, "logarithmicColor").name ("Farbe logarithmieren").onChange(function(value){scaling["logarithmicColor"]=value; scale(value, "color", scene, aDistrict, camera, extrema);});
-	
-	//********************************************************************
-	
-	h = gui.addFolder("Steuerung");
-	h.add(controlling, "zoomSpeed", 0.1, 2).name("Zoomgeschwindigkeit").onChange(function(value){controls.zoomSpeed = value;});
-	h.add(controlling, "rotateSpeed", 0.1, 2).name("Rotationsgeschwindigkeit").onChange(function(value){control.rotateSpeed = value;});
-	
-	//********************************************************************
-	
-	h = gui.addFolder("aktuelle Ansicht");
-	h.add(currentView, "Link").name("Link markieren Strg+A").listen();
-	h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
+    h = gui.addFolder("Gebäudeinformationen");
+    for (var i = 0; i < myDimensions.length; i++) {
+        h.add(buildingInformation, dimensionsFromDatabase[i]).name(legende[dimensionsFromDatabase[i]]).listen();
+    }
+
+    //*****************************************************************
+
+    h = gui.addFolder("Skalierung");
+    h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(function(value) {
+        scaling["logarithmicHeight"] = value;
+        scale(value, "height", scene, aDistrict, camera, extrema);
+    });
+    h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(function(value) {
+        scaling["logarithmicWidth"] = value;
+        scale(value, "width", scene, aDistrict, camera, extrema);
+    });
+    h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(function(value) {
+        scaling["logarithmicColor"] = value;
+        scale(value, "color", scene, aDistrict, camera, extrema);
+    });
+
+    //********************************************************************
+
+    h = gui.addFolder("Steuerung");
+    h.add(controlling, "zoomSpeed", 0.1, 2).name("Zoomgeschwindigkeit").onChange(function(value) {
+        controls.zoomSpeed = value;
+    });
+    h.add(controlling, "rotateSpeed", 0.1, 2).name("Rotationsgeschwindigkeit").onChange(function(value) {
+        control.rotateSpeed = value;
+    });
+
+    //********************************************************************
+
+    h = gui.addFolder("aktuelle Ansicht");
+    h.add(currentView, "Link").name("Link markieren Strg+A").listen();
+    h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
 }
 
 
 //Hilfsvariable als Methode zum Reagieren auf das DropDown-Menue
 var update = function() {
-	requestAnimationFrame(update);
+    requestAnimationFrame(update);
 };
 
 //skaliert die Gebaeude und zeichnet sie neu
@@ -146,90 +160,84 @@ var update = function() {
 //			aDistrict: das JSON vom Typ district, dessen Gebaeude skaliert werden soll
 //			camera: die Kamera, die nach dem Zeichnen neu positioniert werden soll
 //			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
-function scale(value, aString, scene, aDistrict, camera, extrema){
-	if(value){
-		var scalingMethod = scaleLogarithmically;
-		var scalingExtrema = takeLogarithmOfExtrema;
-	}
-	else{
-		var scalingMethod = scaleLinearly;
-		var scalingExtrema = linearizeExtrema;
-	}
-	removeAllObjects(scene, aString, scalingMethod);
-	setClickedGardensEmpty();
-	setLight(scene);
-	setMainDistrict(aDistrict);
-	shiftBack(aDistrict);
-	scalingExtrema(extrema, aString);
-	addCityToScene(aDistrict, scene, camera, extrema);
-	updateControls(Math.max(aDistrict._width, extrema.maxHeight));
+function scale(value, aString, scene, aDistrict, camera, extrema) {
+    if (value) {
+        var scalingMethod = scaleLogarithmically;
+        var scalingExtrema = takeLogarithmOfExtrema;
+    } else {
+        var scalingMethod = scaleLinearly;
+        var scalingExtrema = linearizeExtrema;
+    }
+    removeAllObjects(scene, aString, scalingMethod);
+    setClickedGardensEmpty();
+    setLight(scene);
+    setMainDistrict(aDistrict);
+    shiftBack(aDistrict);
+    scalingExtrema(extrema, aString);
+    addCityToScene(aDistrict, scene, camera, extrema);
+    updateControls(Math.max(aDistrict._width, extrema.maxHeight));
 }
 
 
 //Methode, um die Extremwerte ebenfalls zu skalieren
 //@params: extrema: das JSON, das die alten Extremwerte enthaelt
 //		aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-function takeLogarithmOfExtrema(extrema, aString){
-	if(aString=="width"){
-		extrema.maxWidth=Math.log(extrema.maxWidth)/Math.log(2);
-		extrema.minWidth = Math.log(extrema.minWidth)/Math.log(2);
-	}
-	else if(aString=="height"){
-		extrema.maxHeight=Math.log(extrema.maxHeight)/Math.log(2);
-		extrema.minHeigth = Math.log(extrema.minHeigth)/Math.log(2);
-	}
-	else{
-		extrema.maxColor=Math.log(extrema.maxColor)/Math.log(2);
-		extrema.minColor = Math.log(extrema.minColor)/Math.log(2);
-	}
+function takeLogarithmOfExtrema(extrema, aString) {
+    if (aString == "width") {
+        extrema.maxWidth = Math.log(extrema.maxWidth) / Math.log(2);
+        extrema.minWidth = Math.log(extrema.minWidth) / Math.log(2);
+    } else if (aString == "height") {
+        extrema.maxHeight = Math.log(extrema.maxHeight) / Math.log(2);
+        extrema.minHeigth = Math.log(extrema.minHeigth) / Math.log(2);
+    } else {
+        extrema.maxColor = Math.log(extrema.maxColor) / Math.log(2);
+        extrema.minColor = Math.log(extrema.minColor) / Math.log(2);
+    }
 }
 
 
 //Methode, um die Extremwerte wieder normal zu skalieren
 //@params: extrema: das JSON, das die alten Extremwerte enthaelt
 //		aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-function linearizeExtrema(extrema, aString){
-	if(aString=="width"){
-		extrema.maxWidth=Math.pow(2, extrema.maxWidth);
-		extrema.minWidth = Math.pow(2, extrema.minWidth);
-	}
-	else if(aString=="height"){
-		extrema.maxHeight=Math.pow(2, extrema.maxHeight);
-		extrema.minHeigth = Math.pow(2, extrema.minHeigth);
-	}
-	else{
-		extrema.maxColor=Math.pow(2, extrema.maxColor);
-		extrema.minColor = Math.pow(2, extrema.minColor);
-	}
+function linearizeExtrema(extrema, aString) {
+    if (aString == "width") {
+        extrema.maxWidth = Math.pow(2, extrema.maxWidth);
+        extrema.minWidth = Math.pow(2, extrema.minWidth);
+    } else if (aString == "height") {
+        extrema.maxHeight = Math.pow(2, extrema.maxHeight);
+        extrema.minHeigth = Math.pow(2, extrema.minHeigth);
+    } else {
+        extrema.maxColor = Math.pow(2, extrema.maxColor);
+        extrema.minColor = Math.pow(2, extrema.minColor);
+    }
 }
 
 
 //Hilfsmethode zum logarithmieren (Logarithmus zur Basis 2)
 //@params:aDistrict: das Stadtteil, dessen Gebaeude skaliert werden soll
 //			aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-function scaleLogarithmically(aDistrict, aString){
-	return (Math.log(aDistrict["_"+aString])/Math.log(2));
+function scaleLogarithmically(aDistrict, aString) {
+    return (Math.log(aDistrict["_" + aString]) / Math.log(2));
 }
 
 
 //Hilfsmethode, um die urspruenglichen Werte wieder herzustellen, d.h. ohne Skalierung die Gebaeude zu zeichnen
 //@params:aDistrict: das Stadtteil, dessen Gebaeude skaliert werden soll
 //			aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-function scaleLinearly(aDistrict, aString){
-	return aDistrict[association[aString]]+1.5;
+function scaleLinearly(aDistrict, aString) {
+    return aDistrict[association[aString]] + 1.5;
 }
 
 //Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen
 //@params: scene: die Scene, auf der alle Objekte geloescht werden soll
-function removeAllObjects(scene, aString, scalingMethod){
-	for( var i = scene.children.length - 1; i >= 0; i--) {
-		if(scene.children[i].building!=undefined){
-			scene.children[i].building._centerPosition = [0,scene.children[i].building._height/2-1.5,0];
-			if(scene.children[i].building.buildings==undefined){
-				scene.children[i].building["_"+aString] = scalingMethod(scene.children[i].building, aString);
-			}
-		}
-		scene.remove(scene.children[i]);
-	}
+function removeAllObjects(scene, aString, scalingMethod) {
+    for (var i = scene.children.length - 1; i >= 0; i--) {
+        if (scene.children[i].building != undefined) {
+            scene.children[i].building._centerPosition = [0, scene.children[i].building._height / 2 - 1.5, 0];
+            if (scene.children[i].building.buildings == undefined) {
+                scene.children[i].building["_" + aString] = scalingMethod(scene.children[i].building, aString);
+            }
+        }
+        scene.remove(scene.children[i]);
+    }
 }
-					

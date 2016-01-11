@@ -11,14 +11,14 @@
  * Filter in the datacityApp.
  */
 angular.module('datacityApp')
-  .filter('bytype', function ($log) {
-    return function (attrs, datatype) {
-      var out = [];
-      attrs.forEach(function (element, index) {
-        if (element.type === datatype) {
-          out.push(element);
-        }
-      });
-      return out;
-    };
-  });
+    .filter('bytype', function($log) {
+        return function(attrs, datatype) {
+            var out = [];
+            attrs.forEach(function(element, index) {
+                if (element.type === datatype) {
+                    out.push(element);
+                }
+            });
+            return out;
+        };
+    });
