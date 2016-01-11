@@ -101,9 +101,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
             
             //Garantieren, dass die Metadaten für alle Collections zur Verfügung stehen
             for (var coll in $scope.collections) {
-                REST.ensureCollectionsMetaData(database, $scope.collections[coll]._id, function(metaData) {
-                    //Die Funktion in der Schleife muss sein, sonst gibt es Fehlermeldungen
-                });
+                REST.ensureCollectionsMetaData(database, $scope.collections[coll]._id, null);
             }
             
         });

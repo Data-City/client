@@ -413,7 +413,9 @@ angular.module('datacityApp')
                 // Einfacher Fall: Meta-Daten vorhanden
                 if(metaData) {
                     //$log.info("Meta-Daten gefunden");
-                    fn(metaData);
+                    if(fn) {
+                        fn(metaData);
+                    }
                 } else {
                     // Keine Meta-Daten vorhanden
                     //$log.info("Keine Meta-Daten gefunden");
