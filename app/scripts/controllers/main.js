@@ -10,13 +10,11 @@
 
 var App = angular.module('datacityApp');
 
-/**
- * Die richtige Seite wird in der Navbar hervorgehoben
- */
+
 App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, sharedLogin, REST) {
     
     /**
-     * aktiviert die Navigationsleiste
+     * Die richtige Seite wird in der Navbar hervorgehoben
      */
     $(".nav a").on("click", function () {
         $(".nav").find(".active").removeClass("active");
@@ -43,11 +41,8 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     $scope.setChosenCollectionAndRedirect = function (collId) {
         REST.getDocuments(database, collId, function (collection) {
             $scope.chosenCollection = collection;
-            $scope.collections = null;
-            REST.ensureCollectionsMetaData(database, collId, function(metaData) {
-                //Weiterleiten
-                window.location = "#/views/" + $scope.chosenCollection.data._id;
-            });
+            $scope.collections = null;           
+            window.location = "#/views/" + $scope.chosenCollection.data._id;
         });
     };
     
@@ -77,10 +72,12 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
      * Löscht die ausgewählte Collection
      */
     $scope.deleteCollection = function () {
+        
         // Die eigentliche Collection löschen
         REST.deleteCollection(database, $scope.chosenCollection.data._id, function (response) {
             $scope.getCollections();
         });
+        
         // Alle Collections löschen, die mit "collectionId_dc_"" beginnen
         for (var iterate in $scope.allCollections) {
             var myRegExp = new RegExp($scope.chosenCollection.data._id + "_dc_", 'i');
@@ -98,8 +95,17 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     $scope.getCollections = function () {
         REST.getCollections(database, function (response) {
             var allCollections = response.data._embedded['rh:coll'];
+            $scope.allCollections = allCollections;
             $scope.collections = $filter('colsbydisplayability')(allCollections);
             $scope.numberOfCollections = count($scope.collections);
+            
+            //Garantieren, dass die Metadaten für alle Collections zur Verfügung stehen
+            for (var coll in $scope.collections) {
+                REST.ensureCollectionsMetaData(database, $scope.collections[coll]._id, function(metaData) {
+                    //Die Funktion in der Schleife muss sein, sonst gibt es Fehlermeldungen
+                });
+            }
+            
         });
     };
 
