@@ -438,6 +438,7 @@ angular.module('datacityApp')
                             params[rest.META_DATA_SUFFIX] = {
                                 'timeOfCreation': Date.now(),
                                 'data': respWithMetaData.data._embedded['rh:doc'][0], 
+                                'numberOfEntries' : Object.keys(respWithMetaData.data._embedded['rh:doc']).length,
                             };
                             rest.getCurrentETag(database, collection, function(etag) {
                                 rest.putOnCollection(database, collection, etag, params, function(response) {
