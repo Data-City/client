@@ -128,8 +128,39 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" ng-click="showStep2 = !showStep2;">
+                                <span class="panel-title">2. Verbindungen</span>
+                                <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
+                            </div>
+                            <div class="panel-body" ng-show="showStep2">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="chosenView.useConnections"> Verbindungen nutzen
+                                    </label>
+                                </div>
+                                <div ng-show="chosenView.useConnections">
+                                    <fieldset class="formgroup">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" ng-model="chosenView.connectionType" value="asSingleField"> Ein Feld des Datensatzes nutzen, dass die Summe der Verbindungen enthält.
+                                                Die Verbindungsrichtung geht dabei verloren
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" ng-model="chosenView.connectionType" value="asAggregation"> Verbindungsrichtungen nutzen:
+                                                <br /> Jede Zeile enthält ein Feld, in dem das Ziel spezifiziert wird. Die Verbindungen
+                                                entstehen, indem diese Felder aggregiert werden.
+                                            </label>
+                                        </div>
+                                    </fieldset>
+                                </div>
 
-                        <!-- SCHRITT 2 - Daten aggregieren -->
+                            </div>
+                        </div>
+                        <!-- SCHRITT 2 - Daten aggregieren
                         <div class="panel panel-default">
                             <div class="panel-heading" ng-click="showStep2 = !showStep2;">
                                 <span class="panel-title">2. Daten aggregieren</span>
@@ -183,13 +214,13 @@
                                     </tr>
                                 </table>
 
-                                <!-- Button: Neue Aggregation -->
+                                <!-- Button: Neue Aggregation 
                                 <button type="button" class="btn btn-success pull-right" aria-label="Left Align" ng-click="addNewAggregation()">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true">Aggregationsschritt hinzufügen</span>
                                 </button>
                             </div>
                         </div>
-
+                        -->
                         <!-- SCHRITT 3 - Blöcke bilden -->
                         <div class="panel panel-default">
                             <div class="panel-heading" ng-click="showStep3 = !showStep3;">
@@ -198,8 +229,29 @@
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
                             </div>
                             <div class="panel-body" ng-show="showStep3">
-                                Hier wird es Eingabemöglichkeiten für Blöcke geben.
-                                <br /> 0 bis n Blöcke.
+                                <table class="table">
+                                    <thead>
+                                        <th>Nr.</th>
+                                        <th>Feld</th>
+                                        <th>Löschen</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="(index, district) in chosenView.districts">
+                                            <td>{{index + 1}}</td>
+                                            <td>
+                                                 <select ng-model="district.field" ng-options="attr as attr.name for attr in (attributes | bychooseability) track by attr.name"></select>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-xs btn-danger" aria-label="Left Align" ng-click="deleteDistrict(index);">
+                                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn btn-success pull-right" aria-label="Left Align" ng-click="addDistrict()">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true">Block hinzufügen</span>
+                                </button>
                             </div>
                         </div>
 
@@ -291,7 +343,7 @@ db.persons.aggregate(
 
         </div>
     </div>
-    
+
     <!-- Ein- und Ausklappen der Auswahlmöglichkeiten -->
     <div class="text-center">
         <a href="javascript:;" data-toggle="collapse" data-parent="#collapseAll" data-target="#collapseAll" ng-click="showEverything=!showEverything">

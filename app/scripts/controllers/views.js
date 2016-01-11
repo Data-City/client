@@ -44,6 +44,7 @@ angular.module('datacityApp')
             };
             this.attributesOfCollection = [];
             this.aggregations = [];
+            this.districts = [];
         }
     
         /**
@@ -52,6 +53,18 @@ angular.module('datacityApp')
         function Aggregation() {
             this.groupOverField = null;
             this.aggregationOperations = [];
+        };
+        
+        function District() {
+            this.field = null;
+        }
+        
+        $scope.addDistrict = function() {
+            $scope.chosenView.districts.push(new District());
+        }
+        
+        $scope.deleteDistrict = function(arrayIndex) {
+            $scope.chosenView.districts.splice(arrayIndex, 1);
         }
         
         $scope.numberOfAggregations = 0;
@@ -59,7 +72,7 @@ angular.module('datacityApp')
         $scope.addNewAggregation = function () {
             $scope.chosenView.aggregations.push(new Aggregation());
             $scope.numberOfAggregations += 1;
-        };
+        }
 
         $scope.removeAggregation = function (arrayIndex) {
             $scope.chosenView.aggregations.splice(arrayIndex, 1);
@@ -82,9 +95,9 @@ angular.module('datacityApp')
         $scope.metaData = null;
     
         // Ein- & Ausklappen der Panels (Schritt 1-4)
-        $scope.showStep1 = true; // Daten reduzieren
-        $scope.showStep2 = false; // Aggreagtion
-        $scope.showStep3 = false; // Blöcke
+        $scope.showStep1 = false; // Daten reduzieren
+        $scope.showStep2 = false; // Verbindungen
+        $scope.showStep3 = true; // Blöcke
         $scope.showStep4 = false; // Dimensionen
     
         $scope.availableAggregationOperations = AGGR.availableAggregationOperations;
@@ -259,6 +272,10 @@ angular.module('datacityApp')
             myWindow.document.write("<div id='jsonDownload'></div>");
             myWindow.document.getElementById('jsonDownload').appendChild(a);
         };
+        
+        var createDistrictAggregationStages = function() {
+            
+        }
 
         $scope.createAggregationForDisplay = function () {
             var view = $scope.chosenView;
