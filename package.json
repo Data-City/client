@@ -19,6 +19,7 @@
     "grunt-filerev": "^2.1.2",
     "grunt-google-cdn": "^0.4.3",
     "grunt-includes": "^0.5.1",
+    "grunt-jsbeautifier": "^0.2.10",
     "grunt-jscs": "^1.8.0",
     "grunt-jsdoc": "^1.1.0",
     "grunt-karma": "*",
