@@ -106,16 +106,24 @@ angular.module('datacityApp')
          * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
          */
         $scope.setDataForCity = function (collection, view, divID) {
-            $scope.collection = collection;
-            $scope.view = view;
-            $scope.divID = divID;
-            $log.info(view);
-            view.dimensions.hoehe = view.dimensions.hoehe.name;
-            view.dimensions.flaeche = view.dimensions.flaeche.name;
-            view.dimensions.farbe = view.dimensions.farbe.name;
-            // Noch raus genommen, weil die Distrikte anders ausgewählt werdens
-            //view.dimensions.district = view.dimensions.district.name;
-            drawCity(collection, view, divID);
+            var view = $scope.chosenView;
+            var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
+            $scope.createAggregationForDisplay(function (response) {
+                REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function (response) {
+                    REST.getURL(relUrl, null, function (collection) {
+                        $scope.collection = collection;
+                        $scope.view = view;
+                        $scope.divID = divID;
+                        $log.info(view);
+                        view.dimensions.hoehe = view.dimensions.hoehe.name;
+                        view.dimensions.flaeche = view.dimensions.flaeche.name;
+                        view.dimensions.farbe = view.dimensions.farbe.name;
+                        // Noch raus genommen, weil die Distrikte anders ausgewählt werdens
+                        //view.dimensions.district = view.dimensions.district.name;
+                        drawCity(collection, view, divID);
+                    })
+                });
+            });
         };
     
         /**
@@ -273,91 +281,27 @@ angular.module('datacityApp')
             myWindow.document.getElementById('jsonDownload').appendChild(a);
         };
 
-        var newGroupStage = function () {
-            var groupTemplate = {
-                "$group": {
-                    "_id": "$_id.country",
-                    districts: {
-                        $addToSet: {
-                            "name": "$_id.gender",
-                            "buildings": "$buildings",
-                            "count": "$count"
-                        }
-                    },
-                    noOfDistricts: {
-                        $sum: 1
-                    }
-                }
-            };
-            return groupTemplate;
-        };
 
-        var createDistrictAggregationStages = function (districts) {
-            var stages = [];
-
-            var fields = districts.map(function (d) { return d.field.name; });
-
-            var groupTemplate = {
-                _id: {},
-                buildings: {
-                    $addToSet: {}
-                },
-                count: {
-                    $sum: 1
-                }
-            };
-
-            var idsAdder = function (field) {
-                ids[field] = "$" + field;
-            };
-
-            var dimensionAdder = function (attr) {
-                if (attr.chooseable) {
-                    group.buildings.$addToSet[attr.name] = "$" + attr.name;
-                }
-            };
-
-            for (var index = 0; index < districts.length; index++) {
-                var element = districts[index];
-                var elementName = element.field.name;
-                var group = JSON.parse(JSON.stringify(groupTemplate));
-                
-                // Spezialfall: erste Group Stage
-                if (index === 0) {
-                    
-                    
-                    // IDs hinzufügen
-                    var ids = {};
-                    fields.map(idsAdder);
-                    group._id = ids;
-                    
-                    // Buildings für Dimension hinzufügen
-                    $scope.attributes.map(dimensionAdder);
-                } else {
-                    fields.map(function(field) {group._id[field] = "$_id." + field;});
-                    group.buildings.$addToSet.name = "$_id." + districts[index -1].field.name;
-                    group.buildings.$addToSet.buildings = "$buildings";
-                    group.buildings.$addToSet.count = "$count";
-
-                }
-                stages.push({ "$group": group });
-                var i = fields.indexOf(elementName);
-                fields.splice(i, 1);
-            }
-
-            return stages;
-        };
-
-        $scope.createAggregationForDisplay = function () {
+        $scope.createAggregationForDisplay = function (fn) {
             var view = $scope.chosenView;
             var stages = [];
+            stages.push(AGGR.createLimitStage(AGGR.MAX_DOCUMENTS_FOR_AGGREGATION));
+            $log.info(stages);
             stages.push(AGGR.projectStage($scope.attributes));
             stages.push(AGGR.matchStage($scope.attributes));
             if (view.districts.length > 0) {
-                stages = stages.concat(createDistrictAggregationStages(view.districts));
+                stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, $scope.attributes));
             }
-            $log.info(stages);
-            $scope.json = stages;
+            var aggr = AGGR.buildAggregationPipe(view.collID, stages);
+            aggr = AGGR.mongoDBCodeToRESTHeart(aggr);
+
+            $scope.json = aggr;
+            REST.addAggregation(dbWithCollections, view.collID, aggr, function (response) {
+                $log.info('Aggregation erzeugt');
+                if (fn) {
+                    fn(response);
+                }
+            });
         };
 
     });

@@ -373,6 +373,7 @@ angular.module('datacityApp')
          * /db/collection/_aggrs/AGGR.META_DATA_AGGR_URI
          */
         this.callCollectionsMetaDataAggrURI = function(database, collection, fn) {
+            /*
             setAuthHeader();
             var relUrl = '/' + database + '/' + collection + '/_aggrs/' + AGGR.META_DATA_AGGR_URI;
             var config = null;
@@ -385,7 +386,24 @@ angular.module('datacityApp')
                     fn(response);
                 }
             );
+            */
+            this.callCollectionAggr(database, collection, AGGR.META_DATA_AGGR_URI, fn);
         };
+        
+        this.callCollectionAggr = function(database, collection, aggr, fn) {
+            setAuthHeader();
+            var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr;
+            var config = null;
+            $http.jsonp(BASEURL + relUrl, config).then(
+                function success(response) {
+                    fn(response);
+                }, function error(response) {
+                    $log.error('Evtl (!!!) Fehler bei callCollectionAggr');
+                    $log.error('Adresse: ' + BASEURL + relUrl);
+                    fn(response);
+                }
+            );
+        }
         
         /**
          * Fügt einer Collection die Meta-Daten-Aggregation hinzu

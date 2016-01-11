@@ -13,7 +13,9 @@ angular.module('datacityApp')
         var rest = null;
         
         this.META_DATA_AGGR_URI = "maxminavg";
-
+        var META_DATA_PART = "_dc_";
+        
+        this.MAX_DOCUMENTS_FOR_AGGREGATION = 100000;
 
         /**
  * Counts the elements in obj
@@ -91,6 +93,10 @@ var count = function (obj) {
             };
             return project;
         };
+        
+        this.createLimitStage = function(limit) {
+            return { $limit: limit};
+        }
     
         /**
          * Erzeugt eine match-Stage:
@@ -138,13 +144,95 @@ var count = function (obj) {
                 {
                     "type": "pipeline",
                     "uri": "data",
-                    "stages": stages,
+                    "stages": stages
                 }
             ]};
             
-            aggr.aggrs[0].stages.push({ "_$out" : collection + rest.META_DATA_PART + 'data'});
+            aggr.aggrs[0].stages.push({ "$out" : collection + META_DATA_PART + 'data'});
             
 	       return aggr;
+        };
+        
+        this.createDistrictAggregationStages = function (districts, attributes) {
+            var stages = [];
+            
+            
+
+            var fields = districts.map(function (d) { return d.field.name; });
+
+            var groupTemplate = {
+                _id: {},
+                buildings: {
+                    $addToSet: {}
+                },
+                count: {
+                    $sum: 1
+                }
+            };
+            
+            
+            // Wird in Schleife genutzt
+            var idsAdder = function (field) {
+                ids[field] = "$" + field;
+            };
+
+            // Wird in Schleife genutzt
+            var dimensionAdder = function (attr) {
+                if (attr.chooseable) {
+                    group.buildings.$addToSet[attr.name] = "$" + attr.name;
+                }
+            };
+
+            for (var index = 0; index < districts.length; index++) {
+                var element = districts[index];
+                var elementName = element.field.name;
+                var group = JSON.parse(JSON.stringify(groupTemplate));
+                
+                // Spezialfall: erste Group Stage
+                if (index === 0) {
+                    
+                    
+                    // IDs hinzufügen
+                    var ids = {};
+                    fields.map(idsAdder);
+                    group._id = ids;
+                    
+                    // Buildings für Dimension hinzufügen
+                    attributes.map(dimensionAdder);
+                } else {
+                    fields.map(function (field) { group._id[field] = "$_id." + field; });
+                    group.buildings.$addToSet.name = "$_id." + districts[index - 1].field.name;
+                    group.buildings.$addToSet.buildings = "$buildings";
+                    group.buildings.$addToSet.count = "$count";
+
+                }
+                stages.push({ "$group": group });
+                var i = fields.indexOf(elementName);
+                fields.splice(i, 1);
+            }
+            
+            // City-Rahmen
+            var group = JSON.parse(JSON.stringify(groupTemplate));
+            group._id = "city";
+            group.buildings.$addToSet.name = "$_id." + districts[districts.length - 1].field.name;
+            group.buildings.$addToSet.buildings = "$buildings";
+            group.buildings.$addToSet.count = "$count";
+            stages.push({ "$group": group });
+
+            return stages;
+        };
+            var escapeRegExp = function(str) {
+                return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+            }
+        
+            var replaceAll = function(str, find, replace) {
+    return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+    }
+        
+        this.mongoDBCodeToRESTHeart = function(obj) {
+              var str = JSON.stringify(obj);
+              str = replaceAll(str, '$', '_$');
+              return JSON.parse(str);
         };
 
     this.createMinMedMaxAggrParam = function(attrs, colname) {
