@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: libs/lib_view.js</title>
+    <title>JSDoc: Source: controllers/preview.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: libs/lib_view.js</h1>
+    <h1 class="page-title">Source: controllers/preview.js</h1>
 
     
 
@@ -28,134 +28,43 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 /*jshint -W117 */
-
 /**
- * Counts the elements in obj
+ * @ngdoc function
+ * @name datacityApp.controller:PlaygroundCtrl
+ * @description
+ * # PlaygroundCtrl
+ * Controller of the datacityApp
  */
-var count = function(obj) {
-    if (obj === null) {
-        return 0;
-    }
-    return Object.keys(obj).length;
-};
+angular.module('datacityApp')
+    .controller('PreviewCtrl', function($scope, $routeParams, sharedLogin, $log, REST) {
 
+        // Verbindungsdaten
+        var db = "prelife";
+        REST.setUsername(sharedLogin.getUsername());
+        REST.setPassword(sharedLogin.getPassword());
 
-/**
- * Gibt es Datentyp des uebergebenen Datums zurueck
- * 
- * Beispiele:
- * "w"	=>	string
- * 3	=>	number
- * 3.14	=>	number
- * null	=>	null
- * ""	=>	null
- * true	=>	boolean
- */
-var getType = function(thing) {
-    if (thing === null) {
-        return "null";
-    } else if (thing === "") {
-        return "null";
-    }
-    return typeof(thing);
-};
-
-
-/*
- * Erzeugt ein Array aller Attribute, die nicht mit "_" beginnen und ihrem Typ
-
-var getProperties = function (row) {
-	var attrs = [];
-    for (var key in row) {
-        if (key[0] !== '_') {
-			var info = {
-				'name': key,
-				'type': getType(row[key]),
-			};
-			attrs.push(info);
+        $log.info($routeParams.collID);
+        $scope.collID = null;
+        /**
+         * Initialisierung
+         */
+        if ($routeParams.collID) {
+            $scope.collID = $routeParams.collID;
+            //   $scope.getViews();
+            /**  REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
+                $scope.collection = resp;
+                $scope.metaData = resp.data.metaData;
+                $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
+            });
+         */
         }
-      }
-return attrs;
-};
-*/
+        var database = "prelife";
+        REST.getDocuments(database, $scope.collId, function(response) {
+            $log.info(response);
+        });
 
-/**
- * Gibt alle Attribute mit Typ zurück
- * 
- * Erwartet als Parameter die Serverantwort, Beispiel:
- * getAttributesWithType($scope.collection.data._embedded['rh:doc']);
- * 
- * Beispielhafte Antwort:
- * 
- * var result = {
- *	'Klassen': {
- *		'name': "Klassen",
- *		'type': "number",
- *		},
- *	'Methoden': {
- *		'name': "Methoden",
- *		'type': "number",
- *	},
- *	'Package': {
- *		'name': "Package",
- *		'type': "string",
- *	},
- *	'Verzweigungen': {
- *		'name': "Verzweigungen",
- *		'type': "number",
- *	},
- *	'Zeilen': {
- *		'name': "Zeilen",
- *		'type': "number",
- *	}
- * };
- */
-var getAttributesWithType = function(data) {
-    var firstEntry = data[0];
-    var attrs = [];
-    // Alle Attribute ermitteln, die nicht mit '_' beginnen
-    for (var attr in firstEntry) {
-        if (attr[0] !== '_') {
-            attrs.push(attr);
-        }
-    }
 
-    // Datentypen der Attribute ermitten
-    for (var entry in data) {
-        var allAttrsValid = true;
-        // Prüfen, ob alle Attribute mit Werten belegt sind
-        for (var attribute in attrs) {
-            if (data[entry][attrs[attribute]] === "") {
-                allAttrsValid = false;
-                break;
-            }
-        }
-
-        // Zu nächstem Datensatz, weil aktueller leere Elemente hat
-        if (!allAttrsValid) {
-            continue;
-        }
-
-        var attributesWithType = [];
-        // Eintrag gültig => Datentypen ermitteln
-        var count = 0;
-        for (var a in attrs) {
-            var name = attrs[a];
-            var type = getType(data[entry][attrs[a]]);
-            attributesWithType[count] = {
-                'index': count,
-                'name': name,
-                'type': type,
-                'chooseable': true,
-                'toBeFiltered': false,
-                'numberValueFilter': [],
-                'searchTermFilter': null,
-            };
-            count++;
-        }
-        return attributesWithType;
-    }
-};
+    });
 </code></pre>
         </article>
     </section>

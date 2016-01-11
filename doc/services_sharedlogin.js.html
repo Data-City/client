@@ -36,61 +36,62 @@
  * Der Service hilft, um die Logindaten über alle Controller hinweg zu realisieren
  */
 angular.module('datacityApp')
-  .service('sharedLogin', function () {
-    
-    // Aus Testzwecken ist man immer eingeloggt
-    var username = "a";
-    var password = "a";
-    // */
-    
-    /* SPÄTER WIEDER REIN NEHMEN!!!
-    //var username;
-    //var password;
-    !!!!!!!!!!!*/
+    .service('sharedLogin', function() {
 
-    var loggedIn = false;
+        // Aus Testzwecken ist man immer eingeloggt
+        var username = "a";
+        var password = "a";
+        // */
 
-    return {
-        /**
-         * @return der Nutzername des eingeloggten Nutzers
-         */
-      getUsername: function () {
-        return username;
-      },
-      /**
-       * @return gibt das Password des eingeloggten Nutzers zurück
-       */
-      getPassword: function () {
-        return password;
-      },
-      
-    /**
-     * Loggt den Nutzer ein, falls die Daten korrekt sind
-     * 
-     * @param usernameInput Der eingegebene Benutzername
-     * @param passwordInput Das eingegebene Passwort
-     */
-      login: function (usernameInput, passwordInput) {
-        username = usernameInput;
-        password = passwordInput;
-        loggedIn = true;
-      },
-     /**
-     * Loggt den Nutzer aus
-     */
-      logout: function () {
-        username = "";
-        password = "";
-        loggedIn = false;
-      },
-      /**
-       * @return Gibt zurück, ob jemand eingeloggt ist oder nicht
-       */
-      getLoggedIn: function () {
-        return loggedIn;
-      }
-    };
-  });</code></pre>
+        /* SPÄTER WIEDER REIN NEHMEN!!!
+        //var username;
+        //var password;
+        !!!!!!!!!!!*/
+
+        var loggedIn = false;
+
+        return {
+            /**
+             * @return der Nutzername des eingeloggten Nutzers
+             */
+            getUsername: function() {
+                return username;
+            },
+            /**
+             * @return gibt das Password des eingeloggten Nutzers zurück
+             */
+            getPassword: function() {
+                return password;
+            },
+
+            /**
+             * Loggt den Nutzer ein, falls die Daten korrekt sind
+             * 
+             * @param usernameInput Der eingegebene Benutzername
+             * @param passwordInput Das eingegebene Passwort
+             */
+            login: function(usernameInput, passwordInput) {
+                username = usernameInput;
+                password = passwordInput;
+                loggedIn = true;
+            },
+            /**
+             * Loggt den Nutzer aus
+             */
+            logout: function() {
+                username = "";
+                password = "";
+                loggedIn = false;
+            },
+            /**
+             * @return Gibt zurück, ob jemand eingeloggt ist oder nicht
+             */
+            getLoggedIn: function() {
+                return loggedIn;
+            }
+        };
+    });
+</code></pre>
         </article>
     </section>
 
@@ -100,13 +101,13 @@ angular.module('datacityApp')
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#count">count</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getProperties">getProperties</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Jan 02 2016 18:08:58 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jan 11 2016 20:22:52 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

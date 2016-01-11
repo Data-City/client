@@ -38,98 +38,116 @@
 
 var App = angular.module('datacityApp');
 
-/**
- * Die richtige Seite wird in der Navbar hervorgehoben
- */
-App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, sharedLogin) {
-	$(".nav a").on("click", function () {
-		$(".nav").find(".active").removeClass("active");
-		$(this).parent().addClass("active");
-	});
-	
-	// Verbindungsdaten
-	var database = "prelife";
-	var username = sharedLogin.getUsername();
-	var password = sharedLogin.getPassword();
-	
-	// Der ausgewählte (angeklickte) Datensatz
-	$scope.allCollections = null;
-	$scope.displayableCollections = null;
-	$scope.numberOfDisplayableCollections = 0;
-	$scope.chosenCollection = null;
+
+App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sharedLogin, REST) {
 
     /**
-     * Auswählen eines Datensatzes
-     * Wenn der Datensatz bereits ausgewählt ist, wird er nicht mehr ausgewählt (deselected...)
+     * Die richtige Seite wird in der Navbar hervorgehoben
+     */
+    $(".nav a").on("click", function() {
+        $(".nav").find(".active").removeClass("active");
+        $(this).parent().addClass("active");
+    });
+
+
+    // Verbindungsdaten
+    var database = "prelife";
+    $log.info('Username: ' + sharedLogin.getUsername() + '\tPassword: ' + sharedLogin.getPassword());
+    REST.setUsername(sharedLogin.getUsername());
+    REST.setPassword(sharedLogin.getPassword());
+
+    $scope.collections = null;
+    $scope.numberOfCollections = 0;
+    // Der ausgewählte (angeklickte) Datensatz
+    $scope.chosenCollection = null;
+
+    /**
+     * Auswählen eines Datensatzes und Weiterlung im Browser zu der Seite
      * 
      * @param colid ID der gewählten Collection
      */
-	$scope.setChosenCollectionAndRedirect = function (colid) {
-		getCollection(database, colid, username, password, $http, function (response) {
-			// Toggle: Select&lt;->Deselect
-			$scope.chosenCollection = ($scope.chosenCollection === response) ? null : response;
-			
-			// TODO
-			// Fehlen statistische Meta-Daten? (colid + "_dc_stats")
-			// Ja: 
-			//	Fehlt Aggregations-URL: /db/colid/_aggrs/statistics, die zum aktuellen ETag passt?
-			//	Ja: Spinner einblenden, Aggregation(s-URL) anlegen und abrufen
-			//		(Das kann dauern: 8.000.000 => ~43 Sekunden, deshalb Spinner)
-			
-			//Direkte Weiterlung zum Datensatz
-			window.location="#/views/" + $scope.chosenCollection.data._id;
-		});
-	};
-    
-    $scope.setChosenCollectionOnly = function (id) {
-		getCollection(database, id, username, password, $http, function (response) {
-			if ($scope.chosenCollection === response) {
-				$scope.chosenCollection = null;
-			} else {
-				$scope.chosenCollection = response;
-			}
-			$log.info($scope.chosenCollection.data._id);
-		});
-	};
-   
-	$scope.getIdOfCollection = function (collection) {
-		return collection ? collection.data._id : null;
-	};
+    $scope.setChosenCollectionAndRedirect = function(collId) {
+        REST.getDocuments(database, collId, function(collection) {
+            $scope.chosenCollection = collection;
+            $scope.collections = null;
+            window.location = "#/views/" + $scope.chosenCollection.data._id;
+        });
+    };
 
-	// TODO Funktion umbenennen in deleteCollection
-	// TODO Funktion erhält collection id als Parameter
     /**
-     * @param id ID der Collection, die gelöscht werden soll
+     * Auswählen eines Datensatzes 
+     * 
+     * @param colid ID der gewählten Collection
      */
-	$scope.deleteDataset = function () {
-        // TODO Alle Collections löschen, die mit collectionId_dc_ beginnen
-		
-        //Erst den Datensatz löschen
-        //Dann
-        //Alle dazugehörigen Ansichten auch
-        console.log("chosenDataset: ");
-        console.log($scope.chosenCollection);
-	};
-    
-	// TODO Funktion umbennenen in getAllCollections
-	// TODO Ergebnis in $scope.allCollections speichern
+    $scope.setChosenCollectionOnly = function(collId) {
+        REST.getDocuments(database, collId, function(collection) {
+            $log.info(collection);
+            $scope.chosenCollection = collection;
+        });
+    };
+
+    $scope.getMyLink = function(collId) {
+        var link = "#/data/preview/" + collId;
+        location.href = link;
+        return link;
+    };
+
+    $scope.getIdOfCollection = function(collection) {
+        return collection ? collection.data._id : null;
+    };
+
+    /**
+     * Löscht die ausgewählte Collection
+     */
+    $scope.deleteCollection = function() {
+
+        // Die eigentliche Collection löschen
+        REST.deleteCollection(database, $scope.chosenCollection.data._id, function(response) {
+            $scope.getCollections();
+        });
+
+        // Alle Collections löschen, die mit "collectionId_dc_"" beginnen
+        for (var iterate in $scope.allCollections) {
+            var myRegExp = new RegExp($scope.chosenCollection.data._id + "_dc_", 'i');
+            var match = $scope.allCollections[iterate]._id.match(myRegExp);
+
+            if (match) {
+                REST.deleteCollection(database, $scope.allCollections[iterate]._id, null);
+            }
+        }
+    };
+
     /**
      * Holt alle Collections
      */
-	getCollections(database, username, password, $http, function (response) {
-		$scope.allCollections = response;
-		$scope.displayableCollections = $filter('colsbydisplayability')(response);
-		$scope.numberOfDisplayableCollections = Object.keys($scope.displayableCollections).length;
-	});
+    $scope.getCollections = function() {
+        REST.getCollections(database, function(response) {
+            var allCollections = response.data._embedded['rh:coll'];
+            $scope.allCollections = allCollections;
+            $scope.collections = $filter('colsbydisplayability')(allCollections);
+            $scope.numberOfCollections = count($scope.collections);
+
+            //Garantieren, dass die Metadaten für alle Collections zur Verfügung stehen
+            for (var coll in $scope.collections) {
+                REST.ensureCollectionsMetaData(database, $scope.collections[coll]._id, null);
+            }
+
+        });
+    };
 
     /**
      * @return Eine schönere Anzeige des Datums
      */
-	$scope.formatTimeString = function (timeString) {
-		var d = new Date(timeString);
-		return d.toLocaleDateString() + " " + d.toLocaleTimeString();
-	};
-});</code></pre>
+    $scope.formatTimeString = function(timeString) {
+        var d = new Date(timeString);
+        return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    };
+
+
+    // Init
+    $scope.getCollections();
+});
+</code></pre>
         </article>
     </section>
 
@@ -139,13 +157,13 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#count">count</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getProperties">getProperties</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Jan 02 2016 18:08:58 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jan 11 2016 20:22:52 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
