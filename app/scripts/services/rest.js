@@ -539,9 +539,10 @@ angular.module('datacityApp')
             // Meta-Daten holen
             //$log.info('=======================================================================');
             //$log.info("Hole Meta-Data");
-            rest.getCollectionsMetaData(database, collection, function(metaData) {
+            rest.getCollectionsMetaData(database, collection, function(collectionResponse) {
+                var metaData = collectionResponse.data[rest.META_DATA_SUFFIX];
                 // Einfacher Fall: Meta-Daten vorhanden
-                if (metaData) {
+                if (metaData.timeOfCreation && metaData.data && metaData.numberOfEntries) {
                     //$log.info("Meta-Daten gefunden");
                     if (fn) {
                         fn(metaData);
@@ -569,7 +570,7 @@ angular.module('datacityApp')
                             params[rest.META_DATA_SUFFIX] = {
                                 'timeOfCreation': Date.now(),
                                 'data': respWithMetaData.data._embedded['rh:doc'][0],
-                                'numberOfEntries': Object.keys(respWithMetaData.data._embedded['rh:doc']).length,
+                                'numberOfEntries': collectionResponse.data._returned,
                             };
                             rest.getCurrentETag(database, collection, function(etag) {
                                 rest.putOnCollection(database, collection, etag, params, function(response) {
@@ -630,8 +631,8 @@ angular.module('datacityApp')
          * Prüft, ob eine Collection Meta-Daten gespeichert hat
          */
         this.hasCollectionMetaData = function(database, collection, fn) {
-            this.getCollectionsMetaData(database, collection, function(metaData) {
-                var boolean = (metaData) ? true : false;
+            this.getCollectionsMetaData(database, collection, function(collection) {
+                var boolean = (collection.data[rest.META_DATA_SUFFIX]) ? true : false;
                 fn(boolean);
             });
         };
@@ -644,7 +645,7 @@ angular.module('datacityApp')
         this.getCollectionsMetaData = function(database, collection, fn) {
             var success = function(response) {
                 if (response.data[rest.META_DATA_SUFFIX]) {
-                    fn(response.data[rest.META_DATA_SUFFIX]);
+                    fn(response);
                 } else {
                     fn(null);
                 }
