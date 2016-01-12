@@ -114,9 +114,9 @@ angular.module('datacityApp')
                         $scope.view = view;
                         $scope.divID = divID;
                         $log.info(view);
-                        view.dimensions.hoehe = view.dimensions.hoehe.name;
-                        view.dimensions.flaeche = view.dimensions.flaeche.name;
-                        view.dimensions.farbe = view.dimensions.farbe.name;
+                        view.dimensions.height = view.dimensions.height.name;
+                        view.dimensions.area = view.dimensions.area.name;
+                        view.dimensions.color = view.dimensions.color.name;
                         // Noch raus genommen, weil die Distrikte anders ausgewählt werdens
                         //view.dimensions.district = view.dimensions.district.name;
                         drawCity(collection, view, divID);
