@@ -545,7 +545,7 @@ angular.module('datacityApp')
                     metaData = collectionResponse.data[rest.META_DATA_SUFFIX];
                     } 
                 // Einfacher Fall: Meta-Daten vorhanden
-                if (metaData && metaData.timeOfCreation && metaData.data && metaData.numberOfEntries) {
+                if (metaData && metaData.timeOfCreation && metaData.data && metaData.numberOfEntries && !(metaData.numberOfEntries === 1)) {
                     //$log.info("Meta-Daten gefunden");
                     if (fn) {
                         fn(metaData);

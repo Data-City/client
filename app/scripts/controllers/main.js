@@ -42,7 +42,10 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
         REST.getDocuments(database, collId, function(collection) {
             $scope.chosenCollection = collection;
             $scope.collections = null;
-            window.location = "#/views/" + $scope.chosenCollection.data._id;
+            REST.ensureCollectionsMetaData(database, collId, function(metaData) {
+                //Weiterleiten
+                window.location = "#/views/" + $scope.chosenCollection.data._id;
+            });
         });
     };
 
@@ -103,7 +106,6 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
             for (var coll in $scope.collections) {
                 REST.ensureCollectionsMetaData(database, $scope.collections[coll]._id, null);
             }
-
         });
     };
 
