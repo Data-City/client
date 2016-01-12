@@ -166,6 +166,7 @@ angular.module('datacityApp')
                 $scope.chosenView = null;
             } else {
                 $scope.chosenView = view;
+                $log.info(view);
             }
         };
 
