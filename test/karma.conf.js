@@ -41,14 +41,16 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
-      "test/mock/**/*.js",
-      "test/spec/**/*.js"
+      "test/spec/**/*.js",
+	  //'app/scripts/services/*.js',
+	  'app/**/*.js',
     ],
 
     // list of files / patterns to exclude
     exclude: [
 	'app/scripts/libs/aggrExample.js',
-	'app/scripts/libs/dataExample.js'
+	'app/scripts/libs/dataExample.js',
+	'app/scripts/libs/webgl/Wuensch-Dir-Was-Json.js'
     ],
 
     // web server port
