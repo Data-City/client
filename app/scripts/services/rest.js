@@ -540,12 +540,12 @@ angular.module('datacityApp')
             //$log.info('=======================================================================');
             //$log.info("Hole Meta-Data");
             rest.getCollectionsMetaData(database, collection, function(collectionResponse) {
-                var metaData;;
+                var metaData;
                 if (collectionResponse) {
                     metaData = collectionResponse.data[rest.META_DATA_SUFFIX];
                     } 
                 // Einfacher Fall: Meta-Daten vorhanden
-                if (metaData && metaData.timeOfCreation && metaData.data && metaData.numberOfEntries && !(metaData.numberOfEntries === 1)) {
+                if (metaData && metaData.timeOfCreation && metaData.data && metaData.numberOfEntries && metaData.numberOfEntries !== 1) {
                     //$log.info("Meta-Daten gefunden");
                     if (fn) {
                         fn(metaData);
