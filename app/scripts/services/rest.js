@@ -27,6 +27,8 @@ angular.module('datacityApp')
         var password = null;
 
         var rest = null;
+        
+        var numberOfEntries = 0;
 
         this.setUsername = function(user) {
             username = user;
@@ -569,6 +571,7 @@ angular.module('datacityApp')
                             params[rest.META_DATA_SUFFIX] = {
                                 'timeOfCreation': Date.now(),
                                 'data': respWithMetaData.data._embedded['rh:doc'][0],
+                                'numberOfEntries' : numberOfEntries,
                             };
                             rest.getCurrentETag(database, collection, function(etag) {
                                 rest.putOnCollection(database, collection, etag, params, function(response) {
@@ -643,6 +646,7 @@ angular.module('datacityApp')
         this.getCollectionsMetaData = function(database, collection, fn) {
             var success = function(response) {
                 if (response.data[rest.META_DATA_SUFFIX]) {
+                    numberOfEntries = response.data._returned;
                     fn(response.data[rest.META_DATA_SUFFIX]);
                 } else {
                     fn(null);
