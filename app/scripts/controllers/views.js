@@ -60,6 +60,9 @@ angular.module('datacityApp')
         }
 
         $scope.addDistrict = function() {
+            if (!$scope.chosenView.districts) {
+                $scope.chosenView.districts = [];    
+            }
             $scope.chosenView.districts.push(new District());
         };
 
