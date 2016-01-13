@@ -32,6 +32,7 @@ function drawCity(data, association, nameOfDivElement) {
     }, false);
 
     mainDistrict = data;
+    association.dimensions.width = association.dimensions.area;
     setAssociation(association["dimensions"]);
 
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig

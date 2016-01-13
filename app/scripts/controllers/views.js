@@ -119,7 +119,7 @@ angular.module('datacityApp')
                         view.dimensions.color = view.dimensions.color.name;
                         // Noch raus genommen, weil die Distrikte anders ausgewählt werdens
                         //view.dimensions.district = view.dimensions.district.name;
-                        drawCity(collection, view, divID);
+                        drawCity(collection.data._embedded['rh:doc'][0], view, divID);
                     });
                 });
             });
