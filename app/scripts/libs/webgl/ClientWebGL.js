@@ -30,8 +30,12 @@ function drawCity(data, association, nameOfDivElement) {
         camera.aspect = window.innerWidth / window.innerHeight;
         renderer.setSize(window.innerWidth, window.innerHeight);
     }, false);
-
-    mainDistrict = data;
+    if(data[0].buildings == undefined){
+	mainDistrict = {buildings: data};
+    }
+    else{
+	mainDistrict = data[0];
+    }
     association.dimensions.width = association.dimensions.area;
     setAssociation(association["dimensions"]);
 

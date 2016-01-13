@@ -1,6 +1,6 @@
 // Erzielte Aggregation:
 function getLaenderDaten() {
-    var aggr = {
+    var aggr = [{
         "_id": "city",
         "buildings": [{
             "name": "Burkina Faso",
@@ -3110,7 +3110,7 @@ function getLaenderDaten() {
             "count": 1
         }],
         "count": 166
-    };
+    }];
     return aggr;
 }
 
@@ -3121,7 +3121,8 @@ function getLaenderZuordnungen() {
             "width": "weight",
             "color": "age",
             "district": "gender",
-            "name": "country"
+            "name": "country",
+	    "area": "weight"
         }
     };
     return zuordnungen;

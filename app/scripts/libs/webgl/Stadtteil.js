@@ -94,7 +94,7 @@ function setMainDistrict(mainDistrict) {
 //@params: mainDistrict: ein JSON-Objekt vom Typ district
 function shiftBack(mainDistrict) {
     if (mainDistrict.buildings != undefined) {
-        for (var i = 0; i < mainDistrict.buildings.length; i++) {
+        for (var i = 0; i < mainDistrict.buildings.length; i++) {        
             setCenterPosition(
                 mainDistrict.buildings[i],
                 mainDistrict.buildings[i]._centerPosition[0] - mainDistrict._width / 2,
@@ -114,7 +114,7 @@ function shiftBack(mainDistrict) {
 function sortBuildings(aDistrict) {
     aDistrict["buildings"].sort(
         function(building1, building2) {
-            return (building2._width) - (building1._width);
+            return (building2[association["width"]]) - (building1[association["width"]]);
         }
     );
     return aDistrict;
@@ -126,7 +126,7 @@ function initBuilding(aBuilding) {
     if (aBuilding._height == undefined) {
         var stringarray = ["height", "width", "color"];
         for (var i = 0; i < stringarray.length; i++) {
-            if (aBuilding[association[stringarray[i]]] != undefined && aBuilding[association[stringarray[i]]] != "") {
+            if (aBuilding[association[stringarray[i]]] != undefined && aBuilding[association[stringarray[i]]]!="") {
                 aBuilding["_" + stringarray[i]] = parseFloat(aBuilding[association[stringarray[i]]]) + 1.5;
             } else {
                 aBuilding["_" + stringarray[i]] = 1.5;
@@ -232,7 +232,7 @@ function setFirstBuilding(aDistrict) {
     width = arrayOfBuildings[0]._width + 2 * gap; //vom aDistrict
     if (arrayOfBuildings.length > 1) {
         initBuilding(arrayOfBuildings[1]);
-        extension = parseFloat(arrayOfBuildings[1]._width) + gap;
+        extension = arrayOfBuildings[1]._width + gap;
     }
 }
 
@@ -248,10 +248,10 @@ function continueBuildingInXDirection(i) {
     setCenterPosition(arrayOfBuildings[i],
         startToBuildInXDirection - (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2,
         maxDepth + (1 / 2) * arrayOfBuildings[i]._width);
-    width = Math.max(startToBuildInZDirection, maxDepth + arrayOfBuildings[i]._width, maxWidth + parseFloat(extension));
+    width = Math.max(startToBuildInZDirection, maxDepth + arrayOfBuildings[i]._width, maxWidth + extension);
     buildingInZDirection = false;
-    maxWidth = maxWidth + parseFloat(extension);
-    extension = parseFloat(arrayOfBuildings[i]._width) + gap;
+    maxWidth = maxWidth + extension;
+    extension = arrayOfBuildings[i]._width + gap;
     startToBuildInZDirection = gap;
     startToBuildInXDirection = startToBuildInXDirection - arrayOfBuildings[i]._width - gap;
 
@@ -265,9 +265,9 @@ function buildANewBuildingRowOnTheRightInZDirection(i) {
     // Dann fangen wir rechts von der letzten Gebaeudereihe an, eine neue Gebaeudereihe aufzubauen
     setCenterPosition(arrayOfBuildings[i],
         maxWidth + extension + (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2, (1 / 2) * arrayOfBuildings[i]._width + gap);
-    width = Math.max(startToBuildInZDirection, maxWidth + parseFloat(extension));
+    width = Math.max(startToBuildInZDirection, maxWidth + extension);
     maxWidth = maxWidth + extension;
-    extension = parseFloat(arrayOfBuildings[i]._width) + gap;
+    extension = arrayOfBuildings[i]._width + gap;
     startToBuildInZDirection = arrayOfBuildings[i]._width + gap * 2;
 }
 
@@ -280,7 +280,7 @@ function continueBuildingNormallyInZDirection(i, nodesOfStreetsSortByXCoord, nod
         maxWidth + (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2,
         startToBuildInZDirection + (1 / 2) * arrayOfBuildings[i]._width);
     startToBuildInZDirection = startToBuildInZDirection + arrayOfBuildings[i]._width + gap;
-    width = Math.max(startToBuildInZDirection, maxWidth + parseFloat(extension), maxDepth);
+    width = Math.max(startToBuildInZDirection, maxWidth + extension, maxDepth);
 }
 
 
@@ -291,7 +291,7 @@ function continueBuildingNormallyInXDirection(i) {
     setCenterPosition(arrayOfBuildings[i],
         startToBuildInXDirection - (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2,
         maxDepth + (1 / 2) * arrayOfBuildings[i]._width);
-    width = Math.max(maxDepth + parseFloat(extension), maxWidth);
+    width = Math.max(maxDepth + extension, maxWidth);
     startToBuildInXDirection = startToBuildInXDirection - arrayOfBuildings[i]._width - gap;
 
 }
@@ -304,13 +304,13 @@ function continueBuildingNormallyInXDirection(i) {
 function buildAgainDownOnTheRightInZDirection(i) {
     setCenterPosition(arrayOfBuildings[i],
         maxWidth + (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2, (1 / 2) * arrayOfBuildings[i]._width + gap);
-    maxDepth = maxDepth + parseFloat(extension);
+    maxDepth = maxDepth + extension;
     startToBuildInZDirection = arrayOfBuildings[i]._width + gap + 2 * gap;
     startToBuildInXDirection = maxWidth - gap;
-    extension = parseFloat(arrayOfBuildings[i]._width) + gap;
+    extension = arrayOfBuildings[i]._width + gap;
     buildingInZDirection = true;
     lastMaxWidth = maxWidth - 2 * gap;
-    width = Math.max(maxWidth + parseFloat(extension), maxDepth);
+    width = Math.max(maxWidth + extension, maxDepth);
 }
 
 
@@ -320,12 +320,12 @@ function buildAgainDownOnTheRightInZDirection(i) {
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
 function buildANewRowOnTheTopInXDirection(i) {
     startToBuildInXDirection = lastMaxWidth + 2 * gap;
-    maxDepth = maxDepth + parseFloat(extension);
-    extension = parseFloat(arrayOfBuildings[i]._width) + gap;
+    maxDepth = maxDepth + extension;
+    extension = arrayOfBuildings[i]._width + gap;
     setCenterPosition(arrayOfBuildings[i],
         startToBuildInXDirection - (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2,
         maxDepth + (1 / 2) * arrayOfBuildings[i]._width);
     startToBuildInXDirection = startToBuildInXDirection - arrayOfBuildings[i]._width - gap;
-    width = Math.max(maxWidth, maxDepth + parseFloat(extension));
+    width = Math.max(maxWidth, maxDepth + extension);
 
 }
