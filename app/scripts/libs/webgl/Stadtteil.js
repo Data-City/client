@@ -114,7 +114,13 @@ function shiftBack(mainDistrict) {
 function sortBuildings(aDistrict) {
     aDistrict["buildings"].sort(
         function(building1, building2) {
-            return (building2[association["width"]]) - (building1[association["width"]]);
+			if(building2._width==undefined){
+				return (building2[association["width"]]) - (building1[association["width"]]);
+			}
+			else{
+				return (building2._width - building1._width);
+			}
+            
         }
     );
     return aDistrict;

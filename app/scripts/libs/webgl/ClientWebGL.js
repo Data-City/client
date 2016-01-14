@@ -31,10 +31,10 @@ function drawCity(data, association, nameOfDivElement) {
         renderer.setSize(window.innerWidth, window.innerHeight);
     }, false);
     if(data[0].buildings == undefined){
-	mainDistrict = {buildings: data};
+		mainDistrict = createMainDistrict(data, association);
     }
     else{
-	mainDistrict = data[0];
+		mainDistrict = data[0];
     }
     association.dimensions.width = association.dimensions.area;
     setAssociation(association["dimensions"]);
@@ -59,7 +59,13 @@ function drawCity(data, association, nameOfDivElement) {
 }
 
 
-
+//Methode, um aus einem Array aus Gebaeuden Districts zu erstellen, die nach Packagenamen sortiert sind
+//@params: data: das Array, das aus den Gebaeuden besteht
+//			association: die Legende
+//@return: das Objekt, das aus District besteht
+function createMainDistrict(data, association){
+	return {buildings: data};
+}
 
 // aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
 //@params: width: Breite, die evtl. geupdatet werden soll

@@ -10,6 +10,7 @@ function setAssociation(newAssociation) {
     association = newAssociation;
 }
 
+
 //Methode zum leeren des Arrays clickedGardens
 function setClickedGardensEmpty() {
     clickedGardens = [];
@@ -33,6 +34,7 @@ function drawBox(aBuilding, material, scene) {
     cube.position.y = aBuilding._centerPosition[1];
     cube.position.z = aBuilding._centerPosition[2];
     cube.building = aBuilding;
+	aBuilding.mesh = cube;
     scene.add(cube);
 }
 
@@ -313,7 +315,8 @@ function onDocumentMouseDown(event) {
                 intersects[0].object.building[association["width"]],
                 intersects[0].object.building[association["color"]],
                 intersects[0].object.building[association["district"]],
-                intersects[0].object.building[association["name"]]
+                intersects[0].object.building[association["name"]],
+				intersects[0].object
             );
         }
     }
