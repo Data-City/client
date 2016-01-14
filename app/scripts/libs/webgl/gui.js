@@ -115,7 +115,7 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
             addBoxes(0xB5BCDE, aDistrict, scene, 0);
             addGarden(aDistrict, scene);
             for (var j = 0; j < aDistrict["buildings"].length; j++) {
-                addEachDistrict(aDistrict["buildings"][j], scene, extrema, 1);
+                addEachDistrict(aDistrict["buildings"][j], scene, extrema, 0);
             }
         }
     }

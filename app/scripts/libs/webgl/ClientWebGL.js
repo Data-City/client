@@ -30,15 +30,17 @@ function drawCity(data, association, nameOfDivElement) {
         camera.aspect = window.innerWidth / window.innerHeight;
         renderer.setSize(window.innerWidth, window.innerHeight);
     }, false);
+    
+    association.dimensions.width = association.dimensions.area;
+    association.dimensions.name = association.dimensions.name.name;
+    setAssociation(association["dimensions"]);
+    
     if(data[0].buildings == undefined){
-		mainDistrict = createMainDistrict(data, association);
+		mainDistrict = createMainDistrict(data, association.dimensions);
     }
     else{
 		mainDistrict = data[0];
     }
-    association.dimensions.width = association.dimensions.area;
-    association.dimensions.name = association.dimensions.name.name;
-    setAssociation(association["dimensions"]);
 
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict);
@@ -65,7 +67,44 @@ function drawCity(data, association, nameOfDivElement) {
 //			association: die Legende
 //@return: das Objekt, das aus District besteht
 function createMainDistrict(data, association){
-	return {buildings: data};
+	var district = {};
+	var splitString, currentDistrict;
+	for(var i=0;i<data.length;i++){
+		currentDistrict = district;
+		splitString = data[i][association.name].toString().split(".");
+		for(var j=0;j<splitString.length;j++){
+			if(currentDistrict[splitString[j]]==undefined){
+				currentDistrict[splitString[j]]={};
+			}
+			currentDistrict=currentDistrict[splitString[j]];
+		}
+		if(currentDistrict.buildings == undefined){
+			currentDistrict.buildings = [data[i]];
+		}
+		else{
+			currentDistrict.buildings.push(data[i]);
+		}
+	}
+	district = getMainDistrictFromJSON(district);
+	return district;
+	//return {buildings: data};
+}
+
+//rekursive Hilfsmethode, um aus dem Objekt, was in createMainDistrict erstellt wurde, ein Stadtobjekt zu erstellen
+//@params: aDistrict: ein Teil vom Objekt, was in createMainDistrict erstellt wurde
+//@return: ein stadtobjekt
+function getMainDistrictFromJSON(aDistrict){
+	var toReturn = {buildings: []};
+	if(aDistrict.buildings == undefined){
+		for(var x in aDistrict){
+			toReturn.buildings.push(getMainDistrictFromJSON(aDistrict[x]));
+			toReturn.buildings[toReturn.buildings.length-1][association.name]=x;
+		}
+	}
+	else{
+		toReturn = {buildings : aDistrict.buildings};
+	}
+	return toReturn;
 }
 
 // aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
