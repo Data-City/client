@@ -3122,7 +3122,7 @@ function getLaenderZuordnungen() {
             "color": "age",
             "district": "gender",
             "name": "country",
-	    "area": "weight"
+            "area": "weight"
         }
     };
     return zuordnungen;

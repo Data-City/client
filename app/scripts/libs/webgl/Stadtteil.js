@@ -94,7 +94,7 @@ function setMainDistrict(mainDistrict) {
 //@params: mainDistrict: ein JSON-Objekt vom Typ district
 function shiftBack(mainDistrict) {
     if (mainDistrict.buildings != undefined) {
-        for (var i = 0; i < mainDistrict.buildings.length; i++) {        
+        for (var i = 0; i < mainDistrict.buildings.length; i++) {
             setCenterPosition(
                 mainDistrict.buildings[i],
                 mainDistrict.buildings[i]._centerPosition[0] - mainDistrict._width / 2,
@@ -114,13 +114,12 @@ function shiftBack(mainDistrict) {
 function sortBuildings(aDistrict) {
     aDistrict["buildings"].sort(
         function(building1, building2) {
-			if(building2._width==undefined){
-				return (building2[association["width"]]) - (building1[association["width"]]);
-			}
-			else{
-				return (building2._width - building1._width);
-			}
-            
+            if (building2._width == undefined) {
+                return (building2[association["width"]]) - (building1[association["width"]]);
+            } else {
+                return (building2._width - building1._width);
+            }
+
         }
     );
     return aDistrict;
@@ -132,7 +131,7 @@ function initBuilding(aBuilding) {
     if (aBuilding._height == undefined) {
         var stringarray = ["height", "width", "color"];
         for (var i = 0; i < stringarray.length; i++) {
-            if (aBuilding[association[stringarray[i]]] != undefined && aBuilding[association[stringarray[i]]]!="") {
+            if (aBuilding[association[stringarray[i]]] != undefined && aBuilding[association[stringarray[i]]] != "") {
                 aBuilding["_" + stringarray[i]] = parseFloat(aBuilding[association[stringarray[i]]]) + 1.5;
             } else {
                 aBuilding["_" + stringarray[i]] = 1.5;

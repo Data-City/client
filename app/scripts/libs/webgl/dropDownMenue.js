@@ -8,7 +8,7 @@ function setAssociation(newAssociation) {
 
 //Variablen, die benoetigt werden, um Gebaeude/ Distrikte zu loeschen
 var storedMesh, storedLeftGarden, storedRightGarden;
-var storedDistrict=[];
+var storedDistrict = [];
 var newBuildingClicked = true;
 
 // Dimensionen, die wir abbilden
@@ -33,7 +33,7 @@ var buildingInformation = {
     "color": "Klicken Sie bitte auf ein Gebäude",
     "district": "Klicken Sie bitte auf ein Gebäude",
     "name": "Klicken Sie bitte auf ein Gebäude",
-	"isRemoved": false
+    "isRemoved": false
 };
 
 //fuer den Ordner "Skalierung"
@@ -77,9 +77,9 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, n
     buildingInformation["color"] = newColor;
     buildingInformation["district"] = newDistrict;
     buildingInformation["name"] = newName;
-	buildingInformation["isRemoved"] = false;
-	newBuildingClicked = true;
-	buildingInformation.mesh = aMesh;
+    buildingInformation["isRemoved"] = false;
+    newBuildingClicked = true;
+    buildingInformation.mesh = aMesh;
 }
 
 //aendert bei dem Link in der Legende den Link zum Verschicken
@@ -122,8 +122,9 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
     for (var i = 0; i < myDimensions.length; i++) {
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(legende[dimensionsFromDatabase[i]]).listen();
     }
-	h.add(buildingInformation, "isRemoved").name("löschen").listen().onChange(function(value){
-		removeOrAddDistrict(newBuildingClicked, buildingInformation.mesh, true);});
+    h.add(buildingInformation, "isRemoved").name("löschen").listen().onChange(function(value) {
+        removeOrAddDistrict(newBuildingClicked, buildingInformation.mesh, true);
+    });
 
     //*****************************************************************
 
@@ -162,53 +163,50 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
 //@params: value: true oder false, ob das Distrikt oder Gebaeude bereits geloescht wurde
 //			aMesh: Mesh vom Distrikt oder Gebaeude, das geloescht werden soll
 //			isFirstCall: true, wenn es der Initialaufruf dieser Methode ist
-function removeOrAddDistrict(value, aMesh, isFirstCall){
-	if(aMesh.building.buildings==undefined){
-		removeOrAddObject(value, aMesh);
-	}
-	else{
-		if(value==true){
-			if(isFirstCall){
-				storedDistrict = [];
-			}
-			storedDistrict.push(aMesh);
-			removeOrAddObject(true, aMesh);
-			for(var i=0; i<aMesh.building.buildings.length;i++){
-				removeOrAddDistrict(true, aMesh.building.buildings[i].mesh, false);
-			}
-		}
-		else{
-			for(var i=0; i<storedDistrict.length;i++){
-				scene.add(storedDistrict[i]);
-			}
-		}
-		
-	}
+function removeOrAddDistrict(value, aMesh, isFirstCall) {
+    if (aMesh.building.buildings == undefined) {
+        removeOrAddObject(value, aMesh);
+    } else {
+        if (value == true) {
+            if (isFirstCall) {
+                storedDistrict = [];
+            }
+            storedDistrict.push(aMesh);
+            removeOrAddObject(true, aMesh);
+            for (var i = 0; i < aMesh.building.buildings.length; i++) {
+                removeOrAddDistrict(true, aMesh.building.buildings[i].mesh, false);
+            }
+        } else {
+            for (var i = 0; i < storedDistrict.length; i++) {
+                scene.add(storedDistrict[i]);
+            }
+        }
+
+    }
 }
 
 //Methode, um Gebaeude zu loeschen
 //@params: value: true oder false, ob ein Gebaeude bereits geloescht wurde oder nicht
 //			aMesh: das Mesh zum Gebaeude
-function removeOrAddObject(value, aMesh){
-	if(value==true){
-		storedMesh = aMesh;
-		storedLeftGarden = aMesh.building._leftGarden.mesh;
-		storedRightGarden = aMesh.building._rightGarden.mesh;
-		var toRemove=[aMesh, storedLeftGarden, storedRightGarden];
-		for(var i=0; i<toRemove.length;i++){
-			if(toRemove[i]!=undefined){
-				storedDistrict.push(toRemove[i]);
-				scene.remove(toRemove[i]);
-			}
-		}
-		newBuildingClicked = false;
-	}
-	else{
-		scene.add(storedMesh);
-		scene.add(storedLeftGarden);
-		scene.add(storedRightGarden);
-		newBuildingClicked = true;
-	}
+function removeOrAddObject(value, aMesh) {
+    if (value == true) {
+        storedMesh = aMesh;
+        storedLeftGarden = aMesh.building._leftGarden.mesh;
+        storedRightGarden = aMesh.building._rightGarden.mesh;
+        var toRemove = [aMesh, storedLeftGarden, storedRightGarden];
+        for (var i = 0; i < toRemove.length; i++) {
+            if (toRemove[i] != undefined) {
+                storedDistrict.push(toRemove[i]);
+                scene.remove(toRemove[i]);
+            }
+        }
+        newBuildingClicked = false;
+    } else {
+        scene.add(storedMesh);
+        scene.add(storedLeftGarden);
+        scene.add(storedRightGarden);
+        newBuildingClicked = true;
+    }
 }
 
 
