@@ -12,18 +12,17 @@ var storedDistrict = [];
 var newBuildingClicked = true;
 
 // Dimensionen, die wir abbilden
-var myDimensions = ["Stadtteil", "Gebäude", "Breite", "Höhe", "Farbe"];
+var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
 
 //Namen, auf die wir beim JSON-Objekt zugreifen fuer die Legende
-var dimensionsFromDatabase = ["district", "name", "width", "height", "color"];
+var dimensionsFromDatabase = ["name", "width", "height", "color"];
 
 //fuer den Ordner 'Legende'
 var legend = {
-    "Stadtteil": function() {},
-    "Gebäude": function() {},
-    "Breite": function() {},
-    "Höhe": function() {},
-    "Farbe": function() {}
+    "Name": association.name,
+    "Breite": association.width,
+    "Höhe": association.height,
+    "Farbe": association.color
 };
 
 //fuer den Ordner "Gebaeudeinformationen"
@@ -31,7 +30,6 @@ var buildingInformation = {
     "height": "Klicken Sie bitte auf ein Gebäude",
     "width": "Klicken Sie bitte auf ein Gebäude",
     "color": "Klicken Sie bitte auf ein Gebäude",
-    "district": "Klicken Sie bitte auf ein Gebäude",
     "name": "Klicken Sie bitte auf ein Gebäude",
     "isRemoved": false
 };
@@ -71,11 +69,10 @@ var currentView = {
 //			newColor: die neue Farbe, die angezeigt werden soll
 //			newDistrict: der neue Stadtteil-Name, der angezeigt werden soll
 //			newName: der neue Name vom Gebaeude, der angezeigt werden soll
-function changeBuildingInformation(newHeight, newWidth, newColor, newDistrict, newName, aMesh) {
+function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh) {
     buildingInformation["height"] = newHeight;
     buildingInformation["width"] = newWidth;
     buildingInformation["color"] = newColor;
-    buildingInformation["district"] = newDistrict;
     buildingInformation["name"] = newName;
     buildingInformation["isRemoved"] = false;
     newBuildingClicked = true;
@@ -113,8 +110,14 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
     document.getElementById(nameOfDivElement).appendChild(gui.domElement);
 
     var h = gui.addFolder("Legende");
+    legend = {
+	"Name": association.name,
+	"Breite": association.width,
+	"Höhe": association.height,
+	"Farbe": association.color
+    };
     for (var i = 0; i < myDimensions.length; i++) {
-        h.add(legend, myDimensions[i]).name(myDimensions[i] + ": " + legende[dimensionsFromDatabase[i]]);
+        h.add(legend, myDimensions[i]);//.name(myDimensions[i]);// + ": " + legende[dimensionsFromDatabase[i]]);
     }
     //*****************************************************************
 
@@ -287,7 +290,12 @@ function scaleLogarithmically(aDistrict, aString) {
 //@params:aDistrict: das Stadtteil, dessen Gebaeude skaliert werden soll
 //			aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
 function scaleLinearly(aDistrict, aString) {
-    return aDistrict[association[aString]] + 1.5;
+    if(aDistrict[association[aString]]==""){
+	return 1.5;
+    }
+    else{
+	return aDistrict[association[aString]] + 1.5;
+    }
 }
 
 //Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen

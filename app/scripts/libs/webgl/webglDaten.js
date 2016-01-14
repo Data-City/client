@@ -54,7 +54,7 @@ function getLegende() {
         "flaeche": "Anzahl Attribute",
         "farbe": "bisher noch nichts",
         "district": "Package",
-        "name": "Klasse"
+        "name": {"name" :"Klasse"}
     };
     return legende;
 }

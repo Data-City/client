@@ -314,7 +314,6 @@ function onDocumentMouseDown(event) {
                 intersects[0].object.building[association["height"]],
                 intersects[0].object.building[association["width"]],
                 intersects[0].object.building[association["color"]],
-                intersects[0].object.building[association["district"]],
                 intersects[0].object.building[association["name"]],
                 intersects[0].object
             );

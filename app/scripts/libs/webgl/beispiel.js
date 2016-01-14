@@ -3121,7 +3121,7 @@ function getLaenderZuordnungen() {
             "width": "weight",
             "color": "age",
             "district": "gender",
-            "name": "country",
+            "name": {"name": "country"},
             "area": "weight"
         }
     };
