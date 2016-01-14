@@ -33,8 +33,8 @@ var getType = function(thing) {
 };
 
 
-/*
- * Erzeugt ein Array aller Attribute, die nicht mit "_" beginnen und ihrem Typ
+
+ // Erzeugt ein Array aller Attribute, die nicht mit "_" beginnen und ihrem Typ
 
 var getProperties = function (row) {
 	var attrs = [];
@@ -49,7 +49,7 @@ var getProperties = function (row) {
       }
 return attrs;
 };
-*/
+
 
 /**
  * Gibt alle Attribute mit Typ zurück

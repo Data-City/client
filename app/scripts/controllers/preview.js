@@ -17,22 +17,21 @@ angular.module('datacityApp')
 
         $log.info($routeParams.collID);
         $scope.collID = null;
+        $scope.results = null;
+        $scope.attributes = null;
+
+        
         /**
          * Initialisierung
          */
         if ($routeParams.collID) {
             $scope.collID = $routeParams.collID;
-            //   $scope.getViews();
-            /**  REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
-                $scope.collection = resp;
-                $scope.metaData = resp.data.metaData;
-                $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
-            });
-         */
         }
-        var database = "prelife";
-        REST.getDocuments(database, $scope.collId, function(response) {
-            $log.info(response);
+        REST.getDocuments(db, $scope.collID, function(collection) {
+            $log.info(collection);
+            $scope.results = collection.data._embedded['rh:doc'];
+            $scope.attributes = getProperties($scope.results[0]);
+            $log.info($scope.attributes);
         });
 
 
