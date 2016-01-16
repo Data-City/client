@@ -32,6 +32,7 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
     $scope.numberOfCollections = 0;
     // Der ausgewählte (angeklickte) Datensatz
     $scope.chosenCollection = null;
+    $scope.loader = true;
 
     /**
      * Auswählen eines Datensatzes und Weiterlung im Browser zu der Seite
@@ -96,16 +97,23 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
      * Holt alle Collections
      */
     $scope.getCollections = function() {
-        REST.getCollections(database, function(response) {
-            var allCollections = response.data._embedded['rh:coll'];
-            $scope.allCollections = allCollections;
-            $scope.collections = $filter('colsbydisplayability')(allCollections);
-            $scope.numberOfCollections = count($scope.collections);
-
+        $scope.loader = true;
+        REST.getCollections(database, function(resp) {
+            if(resp.data && resp.data._embedded) {
+                $scope.allCollections = resp.data._embedded['rh:coll'];
+                $scope.collections = $filter('colsbydisplayability')($scope.allCollections);
+                $scope.numberOfCollections = count($scope.collections);
+            } else {
+                $scope.numberOfCollections = 0;
+            }
+            $scope.loader = false;
+            
+            /*
             //Garantieren, dass die Metadaten für alle Collections zur Verfügung stehen
             for (var coll in $scope.collections) {
                 REST.ensureCollectionsMetaData(database, $scope.collections[coll]._id, null);
             }
+            */
         });
     };
 

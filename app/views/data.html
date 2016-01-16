@@ -1,42 +1,46 @@
 <div ng-app="datacityApp" ng-controller="MainCtrl" class="container">
 
-  <!-- Fehlerausgabe, falls man nicht eingeloggt ist -->
-  <div class="alert alert-danger" role="alert" ng-hide="loggedIn">
-    <h3>Sie sind nicht eingeloggt!</h3>
-    <p><a ng-href="#/login"><i class=" glyphicon glyphicon-chevron-right"></i> Login</a></p>
-  </div>
-  
-  <!-- Spinner um zu zeigen, dass geladen wird -->
-  <span us-spinner ng-show="loggedIn && !collections"></span>
-  
-  <!-- Panel zur Anzeige der Datensätze -->
-  <div class="panel panel-default" ng-show="loggedIn && collections">
-    <div class="panel-heading">
-      <h3 class="panel-title">{{numberOfCollections}} Datensätze</h3>
+    <!-- Fehlerausgabe, falls man nicht eingeloggt ist -->
+    <div class="alert alert-danger" role="alert" ng-hide="loggedIn">
+        <h3>Sie sind nicht eingeloggt!</h3>
+        <p><a ng-href="#/login"><i class=" glyphicon glyphicon-chevron-right"></i> Login</a></p>
     </div>
-    <!-- Tabelle für die Datensätze -->
-    <div class="panel-body">
-      <table class="table">
-        <tr>
-          <th>Name</th>
-          <th>Erstellt</th>
-          <th>Einträge</th>
-          <th></th>
-        </tr>
-        <tr ng-repeat="collection in collections">
-          <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection._id}}</td>
-          <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection.metaData.timeOfCreation)}}</td>
-          <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection.metaData.numberOfEntries}}</td>
-          <td>
-            <button type="button" class="btn btn-xs btn-success" ng-click ="getMyLink(collection._id)">Vorschau</button>
-            <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#deleteCollectionModal" data-toggle="tooltip"
-            title="Löschen" ng-click="setChosenCollectionOnly(collection._id)">
-			     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-		    </button>
-          </td>
-        </tr>
-      </table>
-      <!--
+
+    <!-- Spinner um zu zeigen, dass geladen wird -->
+    <span us-spinner ng-show="loggedIn && loader"></span>
+    
+
+    <!-- Panel zur Anzeige der Datensätze -->
+    <div class="panel panel-default" ng-show="loggedIn && !loader">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{numberOfCollections}} Datensätze</h3>
+        </div>
+        <!-- Tabelle für die Datensätze -->
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Erstellt</th>
+                    <th>Einträge</th>
+                    <th></th>
+                </tr>
+                <tr ng-show="numberOfCollections === 0">
+                    <td colspan="4" align="center"><div class="alert alert-danger" role="alert">Keine Datensätze gefunden!</div></td>
+                </tr>
+                <tr ng-repeat="collection in collections">
+                    <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection._id}}</td>
+                    <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection.metaData.timeOfCreation)}}</td>
+                    <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection.metaData.numberOfEntries}}</td>
+                    <td>
+                        <button type="button" class="btn btn-xs btn-success" ng-click="getMyLink(collection._id)">Vorschau</button>
+                        <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#deleteCollectionModal" data-toggle="tooltip"
+                        title="Löschen" ng-click="setChosenCollectionOnly(collection._id)">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            <!--
         
         BIS UPLOAD WIRKLICH EINGEBUNDEN WIRD
         
@@ -44,10 +48,10 @@
         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> CSV-Datei hochladen
       </button>
       -->
+        </div>
     </div>
-  </div>
-  
-  <!-- Upload-Formular 
+
+    <!-- Upload-Formular 
   <div class="panel panel-default" ng-show="dataView.showUploadForm">
     <div class="panel-heading">
       <h3 class="panel-title">Datensatz hochladen</h3>
@@ -64,19 +68,19 @@
   </div>
 </div>
 -->
-                      
-<!-- Modal: "Popup", ob eine Ansicht gelöscht werden soll -->
-<div id="deleteCollectionModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-body">
-                <p>Möchten Sie den Datensatz "{{chosenCollection.data._id}}" wirklich löschen?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteCollection()">Ja</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+
+    <!-- Modal: "Popup", ob eine Ansicht gelöscht werden soll -->
+    <div id="deleteCollectionModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>Möchten Sie den Datensatz "{{chosenCollection.data._id}}" wirklich löschen?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" ng-click="deleteCollection()">Ja</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
