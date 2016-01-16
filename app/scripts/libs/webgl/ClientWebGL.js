@@ -72,7 +72,7 @@ function createMainDistrict(data, association){
 	for(var i=0;i<data.length;i++){
 		currentDistrict = district;
 		splitString = data[i][association.name].toString().split(".");
-		for(var j=0;j<splitString.length;j++){
+		for(var j=0;j<splitString.length-1;j++){
 			if(currentDistrict[splitString[j]]==undefined){
 				currentDistrict[splitString[j]]={};
 			}
@@ -85,9 +85,10 @@ function createMainDistrict(data, association){
 			currentDistrict.buildings.push(data[i]);
 		}
 	}
+	console.log(district);
 	district = getMainDistrictFromJSON(district);
+	console.log(district);
 	return district;
-	//return {buildings: data};
 }
 
 //rekursive Hilfsmethode, um aus dem Objekt, was in createMainDistrict erstellt wurde, ein Stadtobjekt zu erstellen
@@ -95,16 +96,18 @@ function createMainDistrict(data, association){
 //@return: ein stadtobjekt
 function getMainDistrictFromJSON(aDistrict){
 	var toReturn = {buildings: []};
-	if(aDistrict.buildings == undefined){
-		for(var x in aDistrict){
+	for(var x in aDistrict){
+		if(x=="buildings"){
+			for(var i=0; i<aDistrict.buildings.length; i++){
+				toReturn.buildings.push(aDistrict.buildings[i]);
+			}
+		}
+		else{
 			toReturn.buildings.push(getMainDistrictFromJSON(aDistrict[x]));
 			toReturn.buildings[toReturn.buildings.length-1][association.name]=x;
 		}
 	}
-	else{
-		toReturn = {buildings : aDistrict.buildings};
-	}
-	return toReturn;
+	return toReturn
 }
 
 // aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
