@@ -10,6 +10,7 @@ function setAssociation(newAssociation) {
 var storedMesh, storedLeftGarden, storedRightGarden;
 var storedDistrict = [];
 var newBuildingClicked = true;
+var removedBuildings = [];
 
 // Dimensionen, die wir abbilden
 var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
@@ -116,8 +117,10 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
 	"Höhe": association.height,
 	"Farbe": association.color
     };
+	
+	
     for (var i = 0; i < myDimensions.length; i++) {
-        h.add(legend, myDimensions[i]);//.name(myDimensions[i]);// + ": " + legende[dimensionsFromDatabase[i]]);
+        setFolderLegende(h, i, gui);
     }
     //*****************************************************************
 
@@ -160,6 +163,19 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
     h = gui.addFolder("aktuelle Ansicht");
     h.add(currentView, "Link").name("Link markieren Strg+A").listen();
     h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
+	console.log(gui);
+}
+
+//Hilfsmethode, um den Ordner "Legende" in dat gui zu setzen
+//@params: h: Ordner Legende
+//			i: die Position fuer den naechsten Controller im Ordner Legende
+//			gui: das Dropdownmenue
+function setFolderLegende(h, i, gui){
+	h.add(legend, myDimensions[i]).onChange(
+		function(value){
+			gui.__folders["Gebäudeinformationen"].__listening[i].name(value);
+		}
+	)
 }
 
 //Methode, um ein Distrikt oder ein Gebaeude zu loeschen

@@ -85,9 +85,7 @@ function createMainDistrict(data, association){
 			currentDistrict.buildings.push(data[i]);
 		}
 	}
-	console.log(district);
 	district = getMainDistrictFromJSON(district);
-	console.log(district);
 	return district;
 }
 

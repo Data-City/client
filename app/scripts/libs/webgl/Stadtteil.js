@@ -18,6 +18,14 @@ function getHashGarden() {
     return hashGarden;
 }
 
+var buildingsHashMap = {}; //Hashmap fuer Gebaeude: mapt Gebaeude-ID mit dem Objekt
+var buildingID = 0; //Counter fuer GebaeudeIDs
+
+//Getter fuer die Hashmap der Gebaeuden
+//@return: Hashmap fuer die Gebaeuden
+function getBuildingsHashMap(){
+	return buildingsHashMap;
+}
 
 //Konstruktor für einen Vorgarten
 //@params: aWidth: Breite von dem Garten (x-Richtung)
@@ -148,6 +156,9 @@ function initBuilding(aBuilding) {
         if (aBuilding[association["height"]] != undefined) {
             updateExtrema(aBuilding[association["width"]], aBuilding[association["height"]], aBuilding[association["color"]]);
         }
+		aBuilding._id = buildingID;
+		buildingsHashMap.buildingID = aBuilding;
+		buildingID++;
     }
 }
 
