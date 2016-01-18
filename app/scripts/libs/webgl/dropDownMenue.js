@@ -71,6 +71,7 @@ var currentView = {
 //			newColor: die neue Farbe, die angezeigt werden soll
 //			newDistrict: der neue Stadtteil-Name, der angezeigt werden soll
 //			newName: der neue Name vom Gebaeude, der angezeigt werden soll
+//			aMesh: Mesh von dem Gebaeude, auf das geklickt worden ist
 function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh) {
     buildingInformation["height"] = newHeight;
     buildingInformation["width"] = newWidth;
@@ -130,7 +131,7 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(legende[dimensionsFromDatabase[i]]).listen();
     }
     h.add(buildingInformation, "isRemoved").name("löschen").listen().onChange(function(value) {
-        removeOrAddDistrict(scene, newBuildingClicked, buildingInformation.mesh, true);
+        if(buildingInformation.mesh.length!=0) removeOrAddDistrict(scene, newBuildingClicked, buildingInformation.mesh, true);
     });
 
     //*****************************************************************
@@ -201,6 +202,10 @@ function removeOrAddDistrict(scene, value, aMesh, isFirstCall) {
 	else{
 		for(var i=0; i<storedDistrict.length;i++){
 			scene.add(storedDistrict[i]);
+			if(storedDistrict[i].building != undefined){
+				storedDistrict[i].building._isRemoved = false;
+				removedBuildings.splice(removedBuildings.indexOf(storedDistrict[i].building._id), 1);
+			}
 		}
 	}
 	newBuildingClicked = !value;
@@ -214,6 +219,7 @@ function removeOrAddObject(scene, aMesh){
 	storedBuilding = [];
 	storedBuilding.push(aMesh);
 	aMesh.building._isRemoved = true;
+	removedBuildings.push(aMesh.building._id);
 	if(aMesh.building._leftGarden.mesh!=undefined){
 		storedBuilding.push(aMesh.building._leftGarden.mesh);
 		for(var x in aMesh.building._leftGarden.meshLines){
@@ -253,13 +259,29 @@ function scale(value, aString, scene, aDistrict, camera, extrema) {
         var scalingExtrema = linearizeExtrema;
     }
     removeAllObjects(scene, aString, scalingMethod);
+    scaleRemovedBuildings(scalingMethod, aString, getBuildingsHashMap());
+    storedDistrict = [];
+    storedBuilding = [];
     setClickedGardensEmpty();
     setLight(scene);
     setMainDistrict(aDistrict);
     shiftBack(aDistrict);
     scalingExtrema(extrema, aString);
     addCityToScene(aDistrict, scene, camera, extrema);
+    buildingInformation.mesh = buildingInformation.mesh.building.mesh;
     updateControls(Math.max(aDistrict._width, extrema.maxHeight));
+}
+
+
+
+//skaliert auch die geloeschten Gebaeude, um die Gebaeude so wie immer zu setzen
+//@params: scalingMethod: die Methode, mit der skaliert wird (scaleLinearly oder scaleLogarithmically)
+//		aString: "width" order "height" oder "color"
+//		theBuildingHashMap: aus getBuildingsHashMap()
+function scaleRemovedBuildings(scalingMethod, aString, theBuildingHashMap){
+    for(var i=0; i<removedBuildings.length; i++){
+        theBuildingHashMap[removedBuildings[i]]["_"+aString] = scalingMethod(theBuildingHashMap[removedBuildings[i]], aString);
+    }
 }
 
 

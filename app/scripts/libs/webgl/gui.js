@@ -53,7 +53,9 @@ function drawBox(aBuilding, material, scene) {
     cube.position.z = aBuilding._centerPosition[2];
     cube.building = aBuilding;
     aBuilding.mesh = cube;
-    scene.add(cube);
+    if(aBuilding._isRemoved == false){
+        scene.add(cube);
+    }
 }
 
 
@@ -156,7 +158,9 @@ function addGarden(aBuilding, scene) {
         cube.position.z = aBuilding[gardens[i]]._centerPosition[2];
         cube.garden = aBuilding[gardens[i]];
         aBuilding[gardens[i]].mesh = cube;
-        scene.add(cube);
+	if(aBuilding._isRemoved == false){
+            scene.add(cube);
+	}
     }
 }
 
