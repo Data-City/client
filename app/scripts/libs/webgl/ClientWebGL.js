@@ -216,10 +216,19 @@ function setSpecificView(aJson) {
 
     setCameraPosForLink(camera, aJson);
 
-    var theHashGarden = getHashGarden();
+    /*var theHashGarden = getHashGarden();
     for (var i = 0; i < aJson.garden.length; i++) {
         drawLines(theHashGarden[aJson.garden[i]]);
         theHashGarden[aJson.garden[i]].mesh.material.color.setHex(0xA5DF00);
         pushToClickedGardens(aJson.garden[i]);
-    }
+    }*/
+	var hashMap = getBuildingsHashMap();
+	var stringArray = ["leftGarden", "rightGarden"];
+	for(var j=0; j<stringArray.length; j++){
+		for(var i=0; i<aJson[stringArray[j]].length;i++){
+			drawLines(hashMap[aJson[stringArray[j]][i]]["_"+stringArray[j]], true);
+			hashMap[aJson[stringArray[j]][i]]["_"+stringArray[j]].mesh.material.color.setHex(0xA5DF00);
+		}
+	}
+	setClickedGardens(aJson);
 }

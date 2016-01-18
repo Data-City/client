@@ -7,16 +7,16 @@ function setAssociation(newAssociation) {
 }
 
 var gap = 30; //Abstand zwischen den Gebaeuden
-var gardenID = 0; //counter fuer die GartenIDs
-var hashGarden = {}; //hashed GartenID mit Garten
+//var gardenID = 0; //counter fuer die GartenIDs
+//var hashGarden = {}; //hashed GartenID mit Garten
 
 var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, buildingInZDirection, lastMaxWidth, width, startToBuildInXDirection; //fuer setOneDistrict
 
 //gibt die Hashtable fuer die Gaerten zurueck
 //@return: die Hashtable fuer die Gaerten
-function getHashGarden() {
-    return hashGarden;
-}
+//function getHashGarden() {
+//    return hashGarden;
+//}
 
 var buildingsHashMap = {}; //Hashmap fuer Gebaeude: mapt Gebaeude-ID mit dem Objekt
 var buildingID = 0; //Counter fuer GebaeudeIDs
@@ -28,23 +28,20 @@ function getBuildingsHashMap(){
 }
 
 //Konstruktor für einen Vorgarten
-//@params: aWidth: Breite von dem Garten (x-Richtung)
-//			aDepth: Tiefe von dem Garten (z-Richtung)
-//			aID: die ID vom Garten
-function garden(aWidth, aDepth, aID) {
+//@params: isItLeftGarden: true, wenn es sich um einen linken Garten handelt, sonst false
+function garden(isItLeftGarden, aBuilding) {
     var aGarden = {
-        _width: aWidth,
+		building: aBuilding,
+        _width: 10,
         _height: 0.01,
-        depth: aDepth,
+        depth: 5,
         _centerPosition: [0, 0.05, 0],
         nextLinePos: [0, 0],
         on: false,
-        id: aID,
-        linesTo: abhaengigkeiten()
+		isLeftGarden: isItLeftGarden,
+        linesTo: abhaengigkeiten(),
+		meshLines : {}
     };
-    if (aID < 10) {
-        aGarden.linesTo[aID] = 0;
-    }
     return aGarden;
 }
 
@@ -146,18 +143,18 @@ function initBuilding(aBuilding) {
             }
         }
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
-        var theLeftGarden = garden(10, 5, gardenID);
-        var theRightGarden = garden(10, 5, gardenID + 1);
-        hashGarden[gardenID] = theLeftGarden;
-        hashGarden[gardenID + 1] = theRightGarden;
-        gardenID = gardenID + 2;
+        var theLeftGarden = garden(true, aBuilding);
+        var theRightGarden = garden(false, aBuilding);
+        //hashGarden[gardenID] = theLeftGarden;
+        //hashGarden[gardenID + 1] = theRightGarden;
+        //gardenID = gardenID + 2;
         aBuilding["_leftGarden"] = theLeftGarden;
         aBuilding["_rightGarden"] = theRightGarden;
         if (aBuilding[association["height"]] != undefined) {
             updateExtrema(aBuilding[association["width"]], aBuilding[association["height"]], aBuilding[association["color"]]);
         }
 		aBuilding._id = buildingID;
-		buildingsHashMap.buildingID = aBuilding;
+		buildingsHashMap[buildingID] = aBuilding;
 		buildingID++;
     }
 }

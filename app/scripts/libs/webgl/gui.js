@@ -1,6 +1,7 @@
 var maximalHeight; //speichert max. hoehe der Gebaeude, um Linien in dieser Hoehe zu zeichnen, ohne extrema zu uebergeben
 var mapOfLines = {}; //hier werden alle gezeichneteten Linien gespeichert von jedem Garten
-var clickedGardens = []; //Array aus ID der Gaerten, die an sind
+var clickedLeftGardens = []; //Array aus ID der Gebaeude, dessen Gaerten an sind
+var clickedRightGardens = [];
 
 var association = {}; //hier wird die Legende gespeichert
 
@@ -11,16 +12,33 @@ function setAssociation(newAssociation) {
 }
 
 
-//Methode zum leeren des Arrays clickedGardens
+//Methode zum leeren der Arrays clickedLeft-/-RightGardens
 function setClickedGardensEmpty() {
-    clickedGardens = [];
+    clickedLeftGardens = [];
+	clickedRightGardens = [];
 }
 
 
-//Methode zum hinzufuegen von Elementen zu clickedGardens
-//@params: gardenID: eine GartenID
-function pushToClickedGardens(gardenID) {
-    clickedGardens.push(gardenID);
+//Methode zum hinzufuegen von Elementen zu clickedLeftGardens
+//@params: buildingID: eine GartenID
+function pushToClickedLeftGardens(buildingID) {
+    clickedLeftGardens.push(buildingID);
+}
+
+//Methode zum hinzufuegen von Elementen zu clickedRightGardens
+//@params: buildingID: eine GartenID
+function pushToClickedRightGardens(buildingID) {
+    clickedRightGardens.push(buildingID);
+}
+
+//Methode zum Setzen von clickedRightGardens und clickedLeftGardens
+//@params: das Json, das im Link gespeichert worden ist der Form {camPos: json_mit_Camera_Position,
+//										leftGarden: array_mit_ID_der_linken_Gaerten,_die_an_sind,
+//										rightGarden: array_mit_ID_der_rechten_Gaerten,_die_an_sind
+//										scaling: json_von_legende}
+function setClickedGardens(aJson){
+	clickedLeftGardens = aJson.leftGarden;
+	clickedRightGardens = aJson.rightGarden;
 }
 
 //Hilfsmethode, um eine WebGL-Box zu malen
@@ -145,14 +163,26 @@ function addGarden(aBuilding, scene) {
 
 //Zeichnet alle Abhaengigkeiten, die von einem Garten ausgehen
 //@params: aGarden: der Garten, fuer den die Abhaengigkeit gezeichnet werden soll
-function drawLines(aGarden) {
-    aGarden.on = true;
-    var hashTable = getHashGarden();
+//			updateBoolean: true, wenn die Methode in gui.js aufgerufen wurde, sonst false
+function drawLines(aGarden, updateBoolean) {
+    if(updateBoolean){
+		aGarden.on = true;
+	}
+    //var hashTable = getHashGarden();
+	var hashMap = getBuildingsHashMap();
     for (var x in aGarden.linesTo) {
         for (var i = 0; i < aGarden.linesTo[x]; i++) {
-            if (hashTable[x].on == false) {
-                drawALine(aGarden, hashTable[x]);
-            }
+			if(aGarden.isLeftGarden == true){
+				if (hashMap[x]._rightGarden.on == false) {
+					drawALine(aGarden, hashMap[x]._rightGarden);
+				}
+			}
+			else{
+				if (hashMap[x]._leftGarden.on == false) {
+					drawALine(aGarden, hashMap[x]._leftGarden);
+				}
+			}
+            
         }
     }
 }
@@ -188,7 +218,7 @@ function drawALine(aGarden, destGarden) {
 //			destGarden: der Garten, zu dem die Linie geht
 //			curveObject: die Linie, die gezeichnet wurde
 function workUpGarden(aGarden, destGarden, curveObject) {
-    if (mapOfLines[aGarden.id] == undefined) {
+    /*if (mapOfLines[aGarden.id] == undefined) {
         mapOfLines[aGarden.id] = {};
         mapOfLines[aGarden.id][destGarden.id] = [curveObject];
     } else {
@@ -197,6 +227,11 @@ function workUpGarden(aGarden, destGarden, curveObject) {
         } else {
             mapOfLines[aGarden.id][destGarden.id].push(curveObject);
         }
+    }*/
+	if (aGarden.meshLines[destGarden.building._id] == undefined) {
+            aGarden.meshLines[destGarden.building._id] = [curveObject];
+        } else {
+            aGarden.meshLines[destGarden.building._id].push(curveObject);
     }
     setNextLinePos(aGarden);
 }
@@ -204,8 +239,9 @@ function workUpGarden(aGarden, destGarden, curveObject) {
 
 //Methode zum Löschen der Kanten, die von einem Garten ausgehen
 //@params aGarden: der Garten, von dem aus die Linien gelöscht werden sollen
-function removeLines(aGarden) {
-    var JsonOfLines = mapOfLines[aGarden.id];
+//		updateBoolean: true, wenn sie von einer Methode aus gui.js aufgerufen wurde, sonst false
+function removeLines(aGarden, updateBoolean) {
+    /*var JsonOfLines = mapOfLines[aGarden.id];
     var hashTable = getHashGarden();
     var object;
     for (var x in JsonOfLines) {
@@ -215,8 +251,28 @@ function removeLines(aGarden) {
             }
         }
     }
-    mapOfLines[aGarden.id] = {};
-    aGarden.on = false;
+	if(updateBoolean){
+		mapOfLines[aGarden.id] = {};
+		aGarden.on = false;
+	}*/
+	if(aGarden.isLeftGarden==true){
+		var gardenString = "_rightGarden";
+	}
+	else{
+		var gardenString = "_leftGarden";
+	}
+	var hashMap = getBuildingsHashMap();
+	for(var x in aGarden.meshLines){
+		if(hashMap[x][gardenString].on==false){
+			for(var i=0; i<aGarden.meshLines[x].length;i++){
+				scene.remove(aGarden.meshLines[x][i]);
+			}
+		}
+	}
+	if(updateBoolean){
+		aGarden.meshLines = {};
+		aGarden.on = false;
+	}
 }
 
 
@@ -301,13 +357,17 @@ function onDocumentMouseDown(event) {
     if (intersects.length > 0) { //wenn der Strahl ein Objekt schneidet
         if (intersects[0].object.material.name == "garden") {
             if (intersects[0].object.garden.on == false) {
-                drawLines(intersects[0].object.garden);
+                drawLines(intersects[0].object.garden, true);
                 intersects[0].object.material.color.setHex(0xA5DF00);
-                clickedGardens.push(intersects[0].object.garden.id);
+				if(intersects[0].object.garden.isLeftGarden == true){clickedLeftGardens.push(intersects[0].object.garden.building._id);}
+				else{clickedRightGardens.push(intersects[0].object.garden.building._id);}
+                
             } else {
-                removeLines(intersects[0].object.garden);
+                removeLines(intersects[0].object.garden, true);
                 intersects[0].object.material.color.setHex(0x088A08);
-                clickedGardens.splice(clickedGardens.indexOf(intersects[0].object.garden.id), 1);
+				if(intersects[0].object.garden.isLeftGarden == true){
+					clickedLeftGardens.splice(clickedLeftGardens.indexOf(intersects[0].object.garden.id), 1);}
+				else{clickedRightGardens.splice(clickedRightGardens.indexOf(intersects[0].object.garden.id), 1);}
             }
         } else {
             changeBuildingInformation(
@@ -340,7 +400,8 @@ function getScrollDistance(divElement) {
 function getJsonForCurrentLink() {
     var aJson = {};
     aJson.camPos = camera.position;
-    aJson.garden = clickedGardens;
+    aJson.leftGarden = clickedLeftGardens;
+	aJson.rightGarden = clickedRightGardens;
     aJson.scaling = getScalingBooleans();
     return aJson;
 }
