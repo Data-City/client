@@ -169,7 +169,10 @@ angular.module('datacityApp')
                 $scope.chosenView = null;
             } else {
                 $scope.chosenView = view;
-                $log.info(view);
+               // $log.info(view);
+                var link = "#/views/"+ view.collID + "/"+ view.name;
+                location.href = link;
+                return link;
             }
         };
 

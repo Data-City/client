@@ -71,6 +71,11 @@ angular
                 controller: 'ViewsCtrl',
                 controllerAs: 'views'
             })
+            .when('/views/:collID/:name', {
+                templateUrl: 'views/views.html',
+                controller: 'ViewsCtrl',
+                controllerAs: 'views'
+            })
             .when('/admin', {
                 templateUrl: 'views/admin.html',
                 controller: 'AdminCtrl',
