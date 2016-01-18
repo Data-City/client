@@ -145,9 +145,6 @@ function initBuilding(aBuilding) {
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
         var theLeftGarden = garden(true, aBuilding);
         var theRightGarden = garden(false, aBuilding);
-        //hashGarden[gardenID] = theLeftGarden;
-        //hashGarden[gardenID + 1] = theRightGarden;
-        //gardenID = gardenID + 2;
         aBuilding["_leftGarden"] = theLeftGarden;
         aBuilding["_rightGarden"] = theRightGarden;
         if (aBuilding[association["height"]] != undefined) {
@@ -156,6 +153,7 @@ function initBuilding(aBuilding) {
 		aBuilding._id = buildingID;
 		buildingsHashMap[buildingID] = aBuilding;
 		buildingID++;
+		aBuilding._isRemoved = false;
     }
 }
 

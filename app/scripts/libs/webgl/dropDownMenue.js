@@ -213,6 +213,7 @@ function removeOrAddDistrict(scene, value, aMesh, isFirstCall) {
 function removeOrAddObject(scene, aMesh){
 	storedBuilding = [];
 	storedBuilding.push(aMesh);
+	aMesh.building._isRemoved = true;
 	if(aMesh.building._leftGarden.mesh!=undefined){
 		storedBuilding.push(aMesh.building._leftGarden.mesh);
 		for(var x in aMesh.building._leftGarden.meshLines){

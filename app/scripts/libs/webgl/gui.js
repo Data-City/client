@@ -168,17 +168,16 @@ function drawLines(aGarden, updateBoolean) {
     if(updateBoolean){
 		aGarden.on = true;
 	}
-    //var hashTable = getHashGarden();
 	var hashMap = getBuildingsHashMap();
     for (var x in aGarden.linesTo) {
         for (var i = 0; i < aGarden.linesTo[x]; i++) {
 			if(aGarden.isLeftGarden == true){
-				if (hashMap[x]._rightGarden.on == false) {
+				if (hashMap[x]._rightGarden.on == false && hashMap[x]._isRemoved==false) {
 					drawALine(aGarden, hashMap[x]._rightGarden);
 				}
 			}
 			else{
-				if (hashMap[x]._leftGarden.on == false) {
+				if (hashMap[x]._leftGarden.on == false && hashMap[x]._isRemoved==false) {
 					drawALine(aGarden, hashMap[x]._leftGarden);
 				}
 			}
@@ -218,16 +217,6 @@ function drawALine(aGarden, destGarden) {
 //			destGarden: der Garten, zu dem die Linie geht
 //			curveObject: die Linie, die gezeichnet wurde
 function workUpGarden(aGarden, destGarden, curveObject) {
-    /*if (mapOfLines[aGarden.id] == undefined) {
-        mapOfLines[aGarden.id] = {};
-        mapOfLines[aGarden.id][destGarden.id] = [curveObject];
-    } else {
-        if (mapOfLines[aGarden.id][destGarden.id] == undefined) {
-            mapOfLines[aGarden.id][destGarden.id] = [curveObject];
-        } else {
-            mapOfLines[aGarden.id][destGarden.id].push(curveObject);
-        }
-    }*/
 	if (aGarden.meshLines[destGarden.building._id] == undefined) {
             aGarden.meshLines[destGarden.building._id] = [curveObject];
         } else {
@@ -241,20 +230,6 @@ function workUpGarden(aGarden, destGarden, curveObject) {
 //@params aGarden: der Garten, von dem aus die Linien gelöscht werden sollen
 //		updateBoolean: true, wenn sie von einer Methode aus gui.js aufgerufen wurde, sonst false
 function removeLines(aGarden, updateBoolean) {
-    /*var JsonOfLines = mapOfLines[aGarden.id];
-    var hashTable = getHashGarden();
-    var object;
-    for (var x in JsonOfLines) {
-        if (hashTable[x].on == false) {
-            for (var i = 0; i < JsonOfLines[x].length; i++) {
-                scene.remove(JsonOfLines[x][i]);
-            }
-        }
-    }
-	if(updateBoolean){
-		mapOfLines[aGarden.id] = {};
-		aGarden.on = false;
-	}*/
 	if(aGarden.isLeftGarden==true){
 		var gardenString = "_rightGarden";
 	}
