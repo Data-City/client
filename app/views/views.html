@@ -271,7 +271,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Name</span>
-                                                <select class="form-control" ng-model="chosenView.dimensions.name" ng-options="attr as attr.name for attr in (attributes | bychooseability) track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (attributes | bychooseability) track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -280,7 +280,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Fläche</span>
-                                                <select class="form-control" ng-model="chosenView.dimensions.area" ng-options="attr as attr.name for attr in (attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.area" ng-options="attr as attr.name for attr in (attributes | bychooseability | bytype:'number') track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -289,7 +289,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Höhe</span>
-                                                <select class="form-control" ng-model="chosenView.dimensions.height" ng-options="attr as attr.name for attr in (attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.height" ng-options="attr as attr.name for attr in (attributes | bychooseability | bytype:'number') track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -298,7 +298,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Farbe</span>
-                                                <select class="form-control" ng-model="chosenView.dimensions.color" ng-options="attr as attr.name for attr in (attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.color" ng-options="attr as attr.name for attr in (attributes | bychooseability | bytype:'number') track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -311,19 +311,10 @@
 
                     <button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
                     <button type="button" class="btn btn-danger btn-xs" ng-click="discardChanges()" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderungen verwerfen</button>
-                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="createAggregationForDisplay();">Aggregation erzeugen</button>
-                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="setDataForCity(collection,chosenView,'Stadt');"
+                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="drawCity();"
                     onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
                 </div>
                 </div>
-            </div>
-
-            <div ng-show="json">
-                <pre>
-db.persons.aggregate(
-{{json | json}}
-).pretty();
-                </pre>
             </div>
 
             <!-- Modal: "Popup", ob eine Ansicht gelöscht werden soll -->

@@ -13,7 +13,7 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-    .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST) {
+    .controller('ViewsCtrl', function ($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST) {
         //Standardeinstellungen
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
@@ -21,10 +21,10 @@ angular.module('datacityApp')
         var database = "einstellungen";
         var collection = "ansichten";
         var baseurl = "https://pegenau.com:16392";
+        
+        var WEBGL_DIV = 'Stadt';
 
         var dbWithCollections = "prelife";
-
-        $scope.json = null;
 
         /**
          *  Konstruktor für eine Ansicht
@@ -59,25 +59,25 @@ angular.module('datacityApp')
             this.field = null;
         }
 
-        $scope.addDistrict = function() {
+        $scope.addDistrict = function () {
             if (!$scope.chosenView.districts) {
                 $scope.chosenView.districts = [];
             }
             $scope.chosenView.districts.push(new District());
         };
 
-        $scope.deleteDistrict = function(arrayIndex) {
+        $scope.deleteDistrict = function (arrayIndex) {
             $scope.chosenView.districts.splice(arrayIndex, 1);
         };
 
         $scope.numberOfAggregations = 0;
 
-        $scope.addNewAggregation = function() {
+        $scope.addNewAggregation = function () {
             $scope.chosenView.aggregations.push(new Aggregation());
             $scope.numberOfAggregations += 1;
         };
 
-        $scope.removeAggregation = function(arrayIndex) {
+        $scope.removeAggregation = function (arrayIndex) {
             $scope.chosenView.aggregations.splice(arrayIndex, 1);
 
             //Zur Sicherheit
@@ -108,21 +108,21 @@ angular.module('datacityApp')
         /**
          * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
          */
-        $scope.setDataForCity = function(collection, view, divID) {
+        $scope.drawCity = function () {
+            var view = $scope.chosenView;
+            
+            
             var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
-            $scope.createAggregationForDisplay(function(response) {
-                REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function(response) {
-                    REST.getURL(relUrl, null, function(collection) {
-                        $scope.collection = collection;
-                        $scope.view = view;
-                        $scope.divID = divID;
-                        $log.info(view);
-                        view.dimensions.height = view.dimensions.height.name;
-                        view.dimensions.area = view.dimensions.area.name;
-                        view.dimensions.color = view.dimensions.color.name;
+            $scope.createAggregationForDisplay(function (response) {
+                REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function (response) {
+                    REST.getURL(relUrl, null, function (collection) {
+                        view.dimensions.height = view.dimensionSettings.height.name;
+                        view.dimensions.area = view.dimensionSettings.area.name;
+                        view.dimensions.color = view.dimensionSettings.color.name;
+                        
                         // Noch raus genommen, weil die Distrikte anders ausgewählt werdens
                         //view.dimensions.district = view.dimensions.district.name;
-                        drawCity(collection.data._embedded['rh:doc'], view, divID);
+                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV);
                     });
                 });
             });
@@ -131,8 +131,8 @@ angular.module('datacityApp')
         /**
          * Holt die Ansichten und speichert sie im Controller-Scope
          */
-        $scope.getViews = function() {
-            REST.getViewsOfCollection($scope.collID, function(views) {
+        $scope.getViews = function () {
+            REST.getViewsOfCollection($scope.collID, function (views) {
                 $scope.views = views;
                 $scope.numberOfViews = (views) ? count(views) : 0;
             });
@@ -141,12 +141,12 @@ angular.module('datacityApp')
         /**
          * Speichert Änderungen an den Einstellungen der Ansicht
          */
-        $scope.updateView = function() {
+        $scope.updateView = function () {
             //Wird für die Anzeige in Angular benötigt
             $scope.chosenView.lastModifiedBy = sharedLogin.getUsername();
             $scope.chosenView.timeOfLastModification = Date.now();
 
-            REST.updateView($scope.chosenView, function() {
+            REST.updateView($scope.chosenView, function () {
                 $scope.getViews();
             });
             //Versteckt die beiden Buttons wieder
@@ -156,7 +156,7 @@ angular.module('datacityApp')
         /**
          * Verwirft die Änderungen, die in dem Formular gemacht wurden
          */
-        $scope.discardChanges = function() {
+        $scope.discardChanges = function () {
             $scope.chosenView = angular.copy($scope.originalView);
             $scope.dimform.$setPristine();
         };
@@ -164,15 +164,17 @@ angular.module('datacityApp')
         /**
          * Wählt bei Klick auf eine Ansicht diese aus
          */
-        $scope.setChosenView = function(view) {
+        $scope.setChosenView = function (view) {
             if ($scope.chosenView === view) {
                 $scope.chosenView = null;
             } else {
                 $scope.chosenView = view;
-               // $log.info(view);
-                var link = "#/views/"+ view.collID + "/"+ view.name;
+                //$log.info(view);
+                /*
+                var link = "#/views/" + view.collID + "/" + view.name;
                 location.href = link;
                 return link;
+                */
             }
         };
 
@@ -183,9 +185,13 @@ angular.module('datacityApp')
         if ($routeParams.collID) {
             $scope.collID = $routeParams.collID;
             $scope.getViews();
-            REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
+            REST.getDocuments(dbWithCollections, $scope.collID, function (resp) {
                 $scope.collection = resp;
-                $scope.metaData = resp.data.metaData.data;
+                REST.getCollectionsMetaData(database, collection, function (metaData) {
+                    $scope.metaData = metaData;
+                });
+                //$scope.metaData = resp.data.metaData.data;
+                REST.getM
                 $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
             });
 
@@ -196,7 +202,7 @@ angular.module('datacityApp')
          * 
          * @return: Die Metadaten
          */
-        $scope.getMetaData = function(attrname, type) {
+        $scope.getMetaData = function (attrname, type) {
             if ($scope.metaData) {
                 return $scope.metaData[type + '_' + attrname];
             } else {
@@ -209,8 +215,8 @@ angular.module('datacityApp')
          * 
          * @param view Die Ansicht, die gelöscht werden soll
          */
-        $scope.deleteView = function(view) {
-            REST.deleteView(view, function(response) {
+        $scope.deleteView = function (view) {
+            REST.deleteView(view, function (response) {
                 $scope.getViews();
                 $scope.chosenView = null;
             });
@@ -221,9 +227,9 @@ angular.module('datacityApp')
          * 
          * @param collID Die ID des Datensatzes, zu dem die Ansicht hinzugefügt werden soll
          */
-        $scope.newView = function() {
+        $scope.newView = function () {
             var view = new View();
-            REST.createView(view, $scope.collID, function(response) {
+            REST.createView(view, $scope.collID, function (response) {
                 $scope.getViews();
                 $scope.setChosenView(view);
             });
@@ -248,11 +254,11 @@ angular.module('datacityApp')
          * 
          * @param collID Die ID des Datensatzes, der ausgewählt ist
          */
-        $scope.copyView = function(collID) {
+        $scope.copyView = function (collID) {
             var newView = new ViewCopy(collID);
             $log.info(newView);
             var url = baseurl + '/einstellungen/ansichten/' + newView.timeOfCreation;
-            $http.put(url, newView).then(function(response) {
+            $http.put(url, newView).then(function (response) {
                 $scope.getViews();
                 console.log(response);
             });
@@ -262,7 +268,7 @@ angular.module('datacityApp')
          * @param jstime JavaScriptTime
          * @return Schönere Darstellung der Zeit
          */
-        $scope.jstimeToFormatedTime = function(jstime) {
+        $scope.jstimeToFormatedTime = function (jstime) {
             var d = new Date(jstime);
             return d.toLocaleDateString() + " " + d.toLocaleTimeString();
         };
@@ -270,7 +276,7 @@ angular.module('datacityApp')
         /**
          * Erzeugt einen Text zum Download der ausgewählten Ansicht als JSON-Datei
          */
-        $scope.downloadJSON = function() {
+        $scope.downloadJSON = function () {
             var data = $scope.chosenView;
             var json = JSON.stringify(data);
             var blob = new Blob([json], {
@@ -290,11 +296,10 @@ angular.module('datacityApp')
         };
 
 
-        $scope.createAggregationForDisplay = function(fn) {
+        $scope.createAggregationForDisplay = function (fn) {
             var view = $scope.chosenView;
             var stages = [];
             stages.push(AGGR.createLimitStage(AGGR.MAX_DOCUMENTS_FOR_AGGREGATION));
-            $log.info(stages);
             stages.push(AGGR.projectStage($scope.attributes));
             stages.push(AGGR.matchStage($scope.attributes));
             if (view.districts.length > 0) {
@@ -302,10 +307,7 @@ angular.module('datacityApp')
             }
             var aggr = AGGR.buildAggregationPipe(view.collID, stages);
             aggr = AGGR.mongoDBCodeToRESTHeart(aggr);
-
-            $scope.json = aggr;
-            REST.addAggregation(dbWithCollections, view.collID, aggr, function(response) {
-                $log.info('Aggregation erzeugt');
+            REST.addAggregation(dbWithCollections, view.collID, aggr, function (response) {
                 if (fn) {
                     fn(response);
                 }
