@@ -1,11 +1,5 @@
 var association = {}; //hier wird die Legende gespeichert
-
-//Setter fuer association
-//@params: newAssociation: die Zuordnung
-function setAssociation(newAssociation) {
-    association = newAssociation;
-}
-
+var gui;
 //Variablen, die benoetigt werden, um Gebaeude/ Distrikte zu loeschen
 var storedMesh, storedLeftGarden, storedRightGarden;
 var storedDistrict = [];
@@ -36,12 +30,22 @@ var buildingInformation = {
     "isRemoved": false
 };
 
+//entsteht, wenn Nutzer die Legende aendert
+var changedLegend = undefined;
+
 //fuer den Ordner "Skalierung"
 var scaling = {
     "logarithmicHeight": false,
     "logarithmicWidth": false,
     "logarithmicColor": false
 };
+
+
+//Setter fuer association
+//@params: newAssociation: die Zuordnung
+function setAssociation(newAssociation) {
+    association = newAssociation;
+}
 
 //Getter für scaling
 function getScalingBooleans() {
@@ -53,6 +57,19 @@ function getScalingBooleans() {
 function setScalingBooleans(scalingObject) {
     scaling = scalingObject;
 }
+
+//Getter fuer removedBuildings
+//@params: Variable removedBuildings: Array, das die IDs aller geloeschten Gebaeude enthaelt
+function getRemovedBuildings(){
+	return removedBuildings;
+}
+
+//Setter fuer removedBuildings
+//@params: newRemovedBuildings: das neue Array, das die IDs aller geloeschten Gebaeude enthaelt
+function setRemovedBuildings(newRemovedBuildings){
+	removedBuildings = newRemovedBuildings;
+}
+
 
 //fuer den Ordner "Steuerung"
 var controlling = {
@@ -90,6 +107,12 @@ function changeLinkForCurrentView(aJson) {
     currentView['Link'] = 'http://dummylink.com/viewDataCity?webGLSettings=' + JSON.stringify(aJson);
 }
 
+//getter fuer gui (dropdownmenu)
+//@return: gui: das dropdownmenu
+function getGui(){
+	return gui;
+}
+
 
 //Methode, um das Dropdown-Menue oben rechts zu zeichnen
 //@params: legende: JSON-Objekt, das der Legende entspricht, sodass z.B. legende["breite"]="Anzahl Methoden" ist
@@ -100,7 +123,7 @@ function changeLinkForCurrentView(aJson) {
 //			control, controls: das Trackball bzw. OrbitControl fuer die Steuerung,die wir verwenden
 //			nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
 function setMenue(legende, scene, aDistrict, camera, extrema, control, controls, nameOfDivElement) {
-    var gui = new dat.GUI({
+    gui = new dat.GUI({
         width: 375,
         autoPlace: false
     });
@@ -128,7 +151,7 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
 
     h = gui.addFolder("Gebäudeinformationen");
     for (var i = 0; i < myDimensions.length; i++) {
-        h.add(buildingInformation, dimensionsFromDatabase[i]).name(legende[dimensionsFromDatabase[i]]).listen();
+		h.add(buildingInformation, dimensionsFromDatabase[i]).name(legende[dimensionsFromDatabase[i]]).listen();
     }
     h.add(buildingInformation, "isRemoved").name("löschen").listen().onChange(function(value) {
         if(buildingInformation.mesh.length!=0) removeOrAddDistrict(scene, newBuildingClicked, buildingInformation.mesh, true);
@@ -175,9 +198,24 @@ function setFolderLegende(h, i, gui){
 	h.add(legend, myDimensions[i]).onChange(
 		function(value){
 			gui.__folders["Gebäudeinformationen"].__listening[i].name(value);
+			changedLegend[myDimensions[i]]=value;
 		}
 	)
 }
+
+//Setter fuer changedLegend
+//@params: newchangedLegend: die neue Legende
+function setChangedLegend(newChangedLegend){
+	changedLegend = newChangedLegend;
+}
+
+
+//Getter fuer changedLegend
+//@params: changedLegend: die vom Nutzer veraenderte Legende
+function getChangedLegend(){
+	return changedLegend;
+}
+
 
 //Methode, um ein Distrikt oder ein Gebaeude zu loeschen
 //@params: scene: die Scene, auf der die Objekte gezeichnet wurden
@@ -268,7 +306,9 @@ function scale(value, aString, scene, aDistrict, camera, extrema) {
     shiftBack(aDistrict);
     scalingExtrema(extrema, aString);
     addCityToScene(aDistrict, scene, camera, extrema);
-    buildingInformation.mesh = buildingInformation.mesh.building.mesh;
+	if(buildingInformation.mesh != undefined){
+		buildingInformation.mesh = buildingInformation.mesh.building.mesh;
+	}
     updateControls(Math.max(aDistrict._width, extrema.maxHeight));
 }
 

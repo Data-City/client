@@ -382,6 +382,8 @@ function getJsonForCurrentLink() {
     aJson.leftGarden = clickedLeftGardens;
 	aJson.rightGarden = clickedRightGardens;
     aJson.scaling = getScalingBooleans();
+	aJson.removedBuildings = getRemovedBuildings();
+	aJson.changedLegend = getChangedLegend();
     return aJson;
 }
 

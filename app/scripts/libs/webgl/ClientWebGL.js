@@ -204,6 +204,12 @@ function updateControls(maxDistance) {
 //										garden: array_mit_ID_der_Gaerten,_die_an_sind,
 //										scaling: json_von_legende}
 function setSpecificView(aJson) {
+	var hashMap = getBuildingsHashMap();
+    setRemovedBuildings(aJson.removedBuildings);
+	for(var i=0; i<aJson.removedBuildings.length;i++){
+		hashMap[aJson.removedBuildings[i]]._isRemoved = true;
+	}
+	
     setScalingBooleans(aJson.scaling);
     var scaleArray = ["height", "width", "color"];
     var i = 0;
@@ -214,21 +220,23 @@ function setSpecificView(aJson) {
         i++;
     }
 
-    setCameraPosForLink(camera, aJson);
-
-    /*var theHashGarden = getHashGarden();
-    for (var i = 0; i < aJson.garden.length; i++) {
-        drawLines(theHashGarden[aJson.garden[i]]);
-        theHashGarden[aJson.garden[i]].mesh.material.color.setHex(0xA5DF00);
-        pushToClickedGardens(aJson.garden[i]);
-    }*/
-	var hashMap = getBuildingsHashMap();
 	var stringArray = ["leftGarden", "rightGarden"];
 	for(var j=0; j<stringArray.length; j++){
 		for(var i=0; i<aJson[stringArray[j]].length;i++){
-			drawLines(hashMap[aJson[stringArray[j]][i]]["_"+stringArray[j]], true);
-			hashMap[aJson[stringArray[j]][i]]["_"+stringArray[j]].mesh.material.color.setHex(0xA5DF00);
+			if(hashMap[aJson[stringArray[j]][i]]._isRemoved == false){
+				drawLines(hashMap[aJson[stringArray[j]][i]]["_"+stringArray[j]], true);
+				hashMap[aJson[stringArray[j]][i]]["_"+stringArray[j]].mesh.material.color.setHex(0xA5DF00);
+			}
 		}
 	}
 	setClickedGardens(aJson);
+	
+	setChangedLegend(aJson.changedLegend);
+	var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
+	var gui = getGui();
+	for(var i=0; i<4; i++){
+		gui.__folders["Legende"].__controllers[i].setValue(aJson.changedLegend[myDimensions[i]]);
+	}
+	
+	setCameraPosForLink(camera, aJson);
 }
