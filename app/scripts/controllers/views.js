@@ -116,13 +116,17 @@ angular.module('datacityApp')
             $scope.createAggregationForDisplay(function (response) {
                 REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function (response) {
                     REST.getURL(relUrl, null, function (collection) {
+                        view.dimensions.name = { name: view.dimensionSettings.name.name };
                         view.dimensions.height = view.dimensionSettings.height.name;
                         view.dimensions.area = view.dimensionSettings.area.name;
                         view.dimensions.color = view.dimensionSettings.color.name;
-                        
                         // Noch raus genommen, weil die Distrikte anders ausgewählt werdens
                         //view.dimensions.district = view.dimensions.district.name;
-                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV);
+                        if (!collection.data._embedded) {
+                            $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
+                        } else {
+                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV);
+                        }
                     });
                 });
             });
@@ -178,23 +182,6 @@ angular.module('datacityApp')
                         });
                     }
                 }, database, collection, view._id);
-                
-                
-                //$scope.metaData = resp.data.metaData.data;
-                /*
-                $log.info($scope.chosenView);
-                $log.info("Vorher:");
-                $log.info($scope.chosenView.attributes);
-                $log.info("Nachher:");
-                $log.info($scope.chosenView.attributes);
-                */
-                //jQuery.extend($scope.chosenView.attributes, getAttributesWithType($scope.collection.data._embedded['rh:doc']));
-                //$scope.chosenView.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
-                /*
-                var link = "#/views/" + view.collID + "/" + view.name;
-                location.href = link;
-                return link;
-                */
             }
         };
 
@@ -239,9 +226,9 @@ angular.module('datacityApp')
                         array.push(parseFloat(metaData["max_" + element.name]));
                     } else {
                         array.push(0);
-                        array.push(1); 
+                        array.push(1);
                     }
-                    
+
                     element.numberValueFilter = array;
                 });
                 REST.createView(view, $scope.collID, function (response) {
@@ -321,7 +308,9 @@ angular.module('datacityApp')
             stages.push(AGGR.createLimitStage(AGGR.MAX_DOCUMENTS_FOR_AGGREGATION));
             stages.push(AGGR.projectStage(view.attributes));
             stages.push(AGGR.matchStage(view.attributes));
-            if (view.districts.length > 0) {
+            if (view.districts.length > 1) {
+                $log.info("Districts:");
+                $log.info(view.districts);
                 stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
             }
             var aggr = AGGR.buildAggregationPipe(view.collID, stages);

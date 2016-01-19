@@ -248,7 +248,7 @@
                                         <tr ng-repeat="(index, district) in chosenView.districts">
                                             <td>{{index + 1}}</td>
                                             <td>
-                                                <select ng-model="district.field" ng-options="attr as attr.name for attr in (attributes | bychooseability) track by attr.name"></select>
+                                                <select ng-model="district.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-xs btn-danger" aria-label="Left Align" ng-click="deleteDistrict(index);">

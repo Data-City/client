@@ -133,7 +133,7 @@ angular.module('datacityApp')
                     }
                 }
             }
-            $log.info("Getting " + url);
+            //$log.info("Getting " + url);
             $http.get(url).then(
                 function (response) {
                     fn(response);
@@ -207,7 +207,7 @@ angular.module('datacityApp')
 
             var relUrl =  ANSICHTEN + '/' + view._id;
 
-            rest.getCurrentETag(relUrl, function (etag) {
+            rest.getCurrentETagForRelURL(relUrl, function (etag) {
                 var config = {
                     headers: {
                         "If-Match": etag
@@ -365,30 +365,12 @@ angular.module('datacityApp')
          * Fügt eine Aggregation zu den bestehenden hinzu
          */
         this.addAggregation = function (database, collection, aggr, fn) {
+            $log.info("Füge Aggregation hinzu: " + database + "\tcoll:" + collection);
             rest.getCurrentETag(database, collection, function (etag) {
                 rest.createAggregation(database, collection, etag, aggr, function (r) {
                     fn(r);
                 });
             });
-            /*
-            var existingAggregations = null;
-            this.getAggregations(database, collection, function(resp) {
-                existingAggregations = resp;
-                //$log.info("Vorhandene Aggregation:");
-                //$log.info(resp);
-                if (existingAggregations) {
-                    aggr.aggrs.push(existingAggregations);
-                }
-                //$log.info('Mit neuer Aggregation');
-                //$log.info(aggr);
-                
-                rest.getCurrentETag(database, collection, function(etag) {
-                    rest.createAggregation(database, collection, etag, aggr, function(r) {
-                        fn(r);
-                    });
-                });
-            });
-            */
         };
 
         /**
@@ -398,20 +380,6 @@ angular.module('datacityApp')
          * /db/collection/_aggrs/AGGR.META_DATA_AGGR_URI
          */
         this.callCollectionsMetaDataAggrURI = function (database, collection, fn) {
-            /*
-            setAuthHeader();
-            var relUrl = '/' + database + '/' + collection + '/_aggrs/' + AGGR.META_DATA_AGGR_URI;
-            var config = null;
-            $http.jsonp(BASEURL + relUrl, config).then(
-                function success(response) {
-                    fn(response);
-                }, function error(response) {
-                    $log.error('Evtl (!!!) Fehler bei callCollectionsMetaDataAggrURI');
-                    $log.error('Adresse: ' + BASEURL + relUrl);
-                    fn(response);
-                }
-            );
-            */
             this.callCollectionAggr(database, collection, AGGR.META_DATA_AGGR_URI, fn);
         };
 
@@ -686,6 +654,7 @@ angular.module('datacityApp')
         this.getCurrentETag = function (database, collection, fn) {
             setAuthHeader();
             var url = createURL(database, collection);
+            $log.info("getCurrentETag URL: " + url);
             $http.get(url).then(function (response) {
                 fn(response.data._etag.$oid);
             });
@@ -697,7 +666,7 @@ angular.module('datacityApp')
          * Nötig für _ALLE_ Änderungen
          * Siehe RESTHeart Doku
          */
-        this.getCurrentETag = function (relUrl, fn) {
+        this.getCurrentETagForRelURL = function (relUrl, fn) {
             setAuthHeader();
 
             $http.get(BASEURL + relUrl).then(function (response) {
