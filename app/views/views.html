@@ -115,7 +115,11 @@
                                         <td>
                                             <div ng-show="attr.toBeFiltered && attr.type === 'number'">
                                                 <div class="row">
-                                                    <minmaxavg min="{{getMetaData(attr.name, 'min')}}" avg="{{getMetaData(attr.name, 'avg')}}" max="{{getMetaData(attr.name, 'max')}}"></minmaxavg>
+                                                    <div class="row container">
+                                                        <div class="col-md-4 col-sm-4"> <span class="pull-left">Minimum: {{getMetaData(attr.name, 'min')}} </span></div>
+                                                        <div class="col-md-4 col-sm-4"> <span class="center-block text-center"> Durchschnitt: {{getMetaData(attr.name, 'avg')}}</span></div>
+                                                        <div class="col-md-4 col-sm-4"> <span class="pull-right"> Maximum: {{getMetaData(attr.name, 'max')}} </span></div>
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <slider class="container" ng-model="attr.numberValueFilter" min="getMetaData(attr.name, 'min')" max="getMetaData(attr.name, 'max')"
@@ -240,7 +244,7 @@
                                         <tr ng-repeat="(index, district) in chosenView.districts">
                                             <td>{{index + 1}}</td>
                                             <td>
-                                                 <select ng-model="district.field" ng-options="attr as attr.name for attr in (attributes | bychooseability) track by attr.name"></select>
+                                                <select ng-model="district.field" ng-options="attr as attr.name for attr in (attributes | bychooseability) track by attr.name"></select>
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-xs btn-danger" aria-label="Left Align" ng-click="deleteDistrict(index);">
@@ -311,8 +315,7 @@
 
                     <button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
                     <button type="button" class="btn btn-danger btn-xs" ng-click="discardChanges()" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderungen verwerfen</button>
-                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="drawCity();"
-                    onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
+                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="drawCity();" onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
                 </div>
                 </div>
             </div>

@@ -20,7 +20,7 @@ angular.module('datacityApp')
         // Wird zwischen den Namen der betreffenden Collection und das Suffix gesetzt
         // Beispiel: /db/coll_dc_stats
         this.META_DATA_PART = "_dc_";
-        this.META_DATA_SUFFIX = "metaData";
+        this.META_DATA_SUFFIX = "maxminavg";
         this.AGGREGATION_SUFFIX = "aggregation";
 
         var username = null;
@@ -651,15 +651,25 @@ angular.module('datacityApp')
          * null, falls nicht vorhanden
          */
         this.getCollectionsMetaData = function (database, collection, fn) {
-            var success = function (response) {
-                if (response.data[rest.META_DATA_SUFFIX]) {
-                    numberOfEntries = response.data._returned;
-                    fn(response.data[rest.META_DATA_SUFFIX]);
+            var relUrl = "/" + database + "/" + collection + this.META_DATA_PART + this.META_DATA_SUFFIX;
+
+            var funcSucc = function (response) {
+                $log.info(response);
+                if (response.data && response.data._embedded) {
+                    fn(response.data._embedded['rh:doc'][0]);
                 } else {
-                    fn(null);
+                    $log.error("Meta Daten enthalten unerwartete Daten: " + relUrl);
+                    $log.error(response);
+                    $log.error("Vermutlich fehlen Ergebnisse. Aggregation korrekt?");
                 }
             };
-            this.getData(success, database, collection, null);
+
+            var funcError = function (response) {
+                $log.error("Fehler beim Holen der Meta Daten: " + relUrl);
+                $log.error(response);
+            }
+
+            rest.getURL(relUrl, null, funcSucc, funcError);
         };
 
         /**

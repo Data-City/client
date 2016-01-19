@@ -187,11 +187,11 @@ angular.module('datacityApp')
             $scope.getViews();
             REST.getDocuments(dbWithCollections, $scope.collID, function (resp) {
                 $scope.collection = resp;
-                REST.getCollectionsMetaData(database, collection, function (metaData) {
+                REST.getCollectionsMetaData(dbWithCollections, $scope.collID, function (metaData) {
+                    $log.info(metaData);
                     $scope.metaData = metaData;
                 });
                 //$scope.metaData = resp.data.metaData.data;
-                REST.getM
                 $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
             });
 
@@ -204,7 +204,7 @@ angular.module('datacityApp')
          */
         $scope.getMetaData = function (attrname, type) {
             if ($scope.metaData) {
-                return $scope.metaData[type + '_' + attrname];
+                return parseFloat($scope.metaData[type + '_' + attrname]).toFixed(5);
             } else {
                 return null;
             }
