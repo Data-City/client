@@ -133,7 +133,7 @@ angular.module('datacityApp')
                     }
                 }
             }
-            //$log.info("Getting " + url);
+            $log.info("Getting " + url);
             $http.get(url).then(
                 function (response) {
                     fn(response);
@@ -202,25 +202,28 @@ angular.module('datacityApp')
 
 
         this.updateView = function (view, fn) {
+            $log.info(view);
             setAuthHeader();
-            var config = {
-                headers: {
-                    "If-Match": view._etag.$oid
-                }
-            };
 
-            var url = BASEURL + ANSICHTEN + '/' + view._id;
+            var relUrl =  ANSICHTEN + '/' + view._id;
 
-            $http.patch(url, view, config).then(
-                function success(response) {
-                    fn(response);
-                },
-                function errorCallback(response) {
-                    $log.error("Error updating view:");
-                    $log.error(view);
-                    $log.error("Response:");
-                    $log.error(response);
-                });
+            rest.getCurrentETag(relUrl, function (etag) {
+                var config = {
+                    headers: {
+                        "If-Match": etag
+                    }
+                };
+                $http.patch(BASEURL + relUrl, view, config).then(
+                    function success(response) {
+                        fn(response);
+                    },
+                    function errorCallback(response) {
+                        $log.error("Error updating view:");
+                        $log.error(view);
+                        $log.error("Response:");
+                        $log.error(response);
+                    });
+            });
         };
 
         /**
@@ -265,18 +268,21 @@ angular.module('datacityApp')
         };
 
         this.createAggregation = function (database, collection, etag, params, fn) {
+            $log.info("So far!");
             setAuthHeader();
             if (!params) {
                 return;
             }
 
-            setAuthHeader();
             var config = {
                 headers: {
                     "If-Match": etag,
                 }
             };
-            $http.put(createURL(database, collection), params, config).then(
+            
+            var url = createURL(database, collection);
+            $log.info(url);
+            $http.put(url, params, config).then(
                 function success(response) {
                     if (fn) {
                         fn(response);
@@ -324,7 +330,6 @@ angular.module('datacityApp')
                 url: BASEURL + relUrl,
                 params: parameters,
             };
-
             $http(req).then(funcSucc, funcError);
         };
 
@@ -413,6 +418,7 @@ angular.module('datacityApp')
         this.callCollectionAggr = function (database, collection, aggr, fn) {
             setAuthHeader();
             var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr;
+            $log.info(relUrl);
             var config = null;
             $http.jsonp(BASEURL + relUrl, config).then(
                 function success(response) {
@@ -654,7 +660,6 @@ angular.module('datacityApp')
             var relUrl = "/" + database + "/" + collection + this.META_DATA_PART + this.META_DATA_SUFFIX;
 
             var funcSucc = function (response) {
-                $log.info(response);
                 if (response.data && response.data._embedded) {
                     fn(response.data._embedded['rh:doc'][0]);
                 } else {
@@ -667,7 +672,7 @@ angular.module('datacityApp')
             var funcError = function (response) {
                 $log.error("Fehler beim Holen der Meta Daten: " + relUrl);
                 $log.error(response);
-            }
+            };
 
             rest.getURL(relUrl, null, funcSucc, funcError);
         };
@@ -680,8 +685,22 @@ angular.module('datacityApp')
          */
         this.getCurrentETag = function (database, collection, fn) {
             setAuthHeader();
+            var url = createURL(database, collection);
+            $http.get(url).then(function (response) {
+                fn(response.data._etag.$oid);
+            });
+        };
+        
+        /**
+         * Gibt den aktuellen ETag eines Dokuments zurück
+         * 
+         * Nötig für _ALLE_ Änderungen
+         * Siehe RESTHeart Doku
+         */
+        this.getCurrentETag = function (relUrl, fn) {
+            setAuthHeader();
 
-            $http.get(createURL(database, collection)).then(function (response) {
+            $http.get(BASEURL + relUrl).then(function (response) {
                 fn(response.data._etag.$oid);
             });
         };

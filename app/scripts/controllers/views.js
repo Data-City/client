@@ -21,7 +21,7 @@ angular.module('datacityApp')
         var database = "einstellungen";
         var collection = "ansichten";
         var baseurl = "https://pegenau.com:16392";
-        
+
         var WEBGL_DIV = 'Stadt';
 
         var dbWithCollections = "prelife";
@@ -43,6 +43,8 @@ angular.module('datacityApp')
                 district: null
             };
             this.attributesOfCollection = [];
+            this.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
+            this.metaData = {};
             this.aggregations = [];
             this.districts = [];
         }
@@ -100,7 +102,7 @@ angular.module('datacityApp')
         // Ein- & Ausklappen der Panels (Schritt 1-4)
         $scope.showStep1 = false; // Daten reduzieren
         $scope.showStep2 = false; // Verbindungen
-        $scope.showStep3 = true; // Blöcke
+        $scope.showStep3 = false; // Blöcke
         $scope.showStep4 = false; // Dimensionen
 
         $scope.availableAggregationOperations = AGGR.availableAggregationOperations;
@@ -110,8 +112,6 @@ angular.module('datacityApp')
          */
         $scope.drawCity = function () {
             var view = $scope.chosenView;
-            
-            
             var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
             $scope.createAggregationForDisplay(function (response) {
                 REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function (response) {
@@ -168,8 +168,28 @@ angular.module('datacityApp')
             if ($scope.chosenView === view) {
                 $scope.chosenView = null;
             } else {
-                $scope.chosenView = view;
-                //$log.info(view);
+                $log.info(view);
+                REST.getData(function (response) {
+                    if (response.data) {
+                        $scope.chosenView = response.data;
+                        REST.getCollectionsMetaData(dbWithCollections, $scope.collID, function (metaData) {
+                            $scope.chosenView.metaData = metaData;
+                            //$scope.chosenView.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
+                        });
+                    }
+                }, database, collection, view._id);
+                
+                
+                //$scope.metaData = resp.data.metaData.data;
+                /*
+                $log.info($scope.chosenView);
+                $log.info("Vorher:");
+                $log.info($scope.chosenView.attributes);
+                $log.info("Nachher:");
+                $log.info($scope.chosenView.attributes);
+                */
+                //jQuery.extend($scope.chosenView.attributes, getAttributesWithType($scope.collection.data._embedded['rh:doc']));
+                //$scope.chosenView.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
                 /*
                 var link = "#/views/" + view.collID + "/" + view.name;
                 location.href = link;
@@ -187,28 +207,9 @@ angular.module('datacityApp')
             $scope.getViews();
             REST.getDocuments(dbWithCollections, $scope.collID, function (resp) {
                 $scope.collection = resp;
-                REST.getCollectionsMetaData(dbWithCollections, $scope.collID, function (metaData) {
-                    $log.info(metaData);
-                    $scope.metaData = metaData;
-                });
-                //$scope.metaData = resp.data.metaData.data;
-                $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
             });
 
         }
-
-        /**
-         * Holt sich die Metadaten der Collection (Maximum, Minimum, etc...)
-         * 
-         * @return: Die Metadaten
-         */
-        $scope.getMetaData = function (attrname, type) {
-            if ($scope.metaData) {
-                return parseFloat($scope.metaData[type + '_' + attrname]).toFixed(5);
-            } else {
-                return null;
-            }
-        };
 
         /**
          * löscht eine Ansicht
@@ -229,9 +230,28 @@ angular.module('datacityApp')
          */
         $scope.newView = function () {
             var view = new View();
-            REST.createView(view, $scope.collID, function (response) {
-                $scope.getViews();
-                $scope.setChosenView(view);
+            REST.getCollectionsMetaData(dbWithCollections, $scope.collID, function (metaData) {
+                //$scope.chosenView.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
+                view.attributes.forEach(function (element) {
+                    var array = [];
+                    if (element.type === 'number') {
+                        array.push(parseFloat(metaData["min_" + element.name]));
+                        array.push(parseFloat(metaData["max_" + element.name]));
+                    } else {
+                        array.push(0);
+                        array.push(1); 
+                    }
+                    
+                    element.numberValueFilter = array;
+                });
+                REST.createView(view, $scope.collID, function (response) {
+                    $scope.getViews();
+                    $log.info(response);
+                    var url = response.config.url;
+                    var array = url.split('/');
+                    view._id = array[array.length - 1];
+                    $scope.setChosenView(view);
+                });
             });
         };
 
@@ -256,7 +276,6 @@ angular.module('datacityApp')
          */
         $scope.copyView = function (collID) {
             var newView = new ViewCopy(collID);
-            $log.info(newView);
             var url = baseurl + '/einstellungen/ansichten/' + newView.timeOfCreation;
             $http.put(url, newView).then(function (response) {
                 $scope.getViews();
@@ -300,10 +319,10 @@ angular.module('datacityApp')
             var view = $scope.chosenView;
             var stages = [];
             stages.push(AGGR.createLimitStage(AGGR.MAX_DOCUMENTS_FOR_AGGREGATION));
-            stages.push(AGGR.projectStage($scope.attributes));
-            stages.push(AGGR.matchStage($scope.attributes));
+            stages.push(AGGR.projectStage(view.attributes));
+            stages.push(AGGR.matchStage(view.attributes));
             if (view.districts.length > 0) {
-                stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, $scope.attributes));
+                stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
             }
             var aggr = AGGR.buildAggregationPipe(view.collID, stages);
             aggr = AGGR.mongoDBCodeToRESTHeart(aggr);

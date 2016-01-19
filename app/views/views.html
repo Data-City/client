@@ -89,11 +89,11 @@
                         <div class="panel-body" ng-show="showStep1">
                             <table class="table table-striped table-bordered table-condensed table-responsive">
                                 <colgroup>
-                                    <col span="1" style="width: 5%;">
-                                        <col span="1" style="width: 10%;">
-                                            <col span="1" style="width: 5%;">
-                                                <col span="1" style="width: 5%;">
-                                                    <col span="1" style="width: 75%;">
+                                    <col span="1" style="width: 5%;"></col>
+                                    <col span="1" style="width: 10%;"></col>
+                                    <col span="1" style="width: 5%;"></col>
+                                    <col span="1" style="width: 5%;"></col>
+                                    <col span="1" style="width: 75%;"></col>
                                 </colgroup>
                                 <thead>
                                     <th>Nutzen</th>
@@ -103,7 +103,7 @@
                                     <th>Optionen</th>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="attr in attributes">
+                                    <tr ng-repeat="attr in chosenView.attributes">
                                         <td>
                                             <input type="checkbox" ng-model="attr.chooseable">
                                         </td>
@@ -115,16 +115,20 @@
                                         <td>
                                             <div ng-show="attr.toBeFiltered && attr.type === 'number'">
                                                 <div class="row">
-                                                    <div class="row container">
-                                                        <div class="col-md-4 col-sm-4"> <span class="pull-left">Minimum: {{getMetaData(attr.name, 'min')}} </span></div>
-                                                        <div class="col-md-4 col-sm-4"> <span class="center-block text-center"> Durchschnitt: {{getMetaData(attr.name, 'avg')}}</span></div>
-                                                        <div class="col-md-4 col-sm-4"> <span class="pull-right"> Maximum: {{getMetaData(attr.name, 'max')}} </span></div>
+                                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
+                                                        <div class="row">
+                                                            <div class="col-md-4 col-sm-4"> <span class="pull-left">Minimum: {{chosenView.metaData['min_' + attr.name]}} </span></div>
+                                                            <div class="col-md-4 col-sm-4"> <span class="center-block text-center"> Durchschnitt: {{chosenView.metaData['avg_' + attr.name]}}</span></div>
+                                                            <div class="col-md-4 col-sm-4"> <span class="pull-right"> Maximum: {{chosenView.metaData['max_' + attr.name]}} </span></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <slider class="container" ng-model="attr.numberValueFilter" min="getMetaData(attr.name, 'min')" max="getMetaData(attr.name, 'max')"
-                                                    value="(attr.numberValueFilter.length > 0) ? attr.numberValueFilter : Array(getMetaData(attr.name, 'min'), getMetaData(attr.name, 'max'));"
-                                                    range="true"></slider>
+                                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
+                                                        <slider ng-model="attr.numberValueFilter" min="chosenView.metaData['min_' + attr.name]" max="chosenView.metaData['max_' + attr.name]"
+                                                        value="attr.numberValueFilter"
+                                                        range="true"></slider>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -275,7 +279,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Name</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (attributes | bychooseability) track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -284,7 +288,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Fläche</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.area" ng-options="attr as attr.name for attr in (attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.area" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -293,7 +297,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Höhe</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.height" ng-options="attr as attr.name for attr in (attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.height" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -302,7 +306,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Farbe</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.color" ng-options="attr as attr.name for attr in (attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.color" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>

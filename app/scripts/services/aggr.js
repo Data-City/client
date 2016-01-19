@@ -12,6 +12,7 @@ angular.module('datacityApp')
     .provider('AGGR', function AGGR() {
 
         var rest = null;
+        var $log;
 
         this.META_DATA_AGGR_URI = "maxminavg";
         var META_DATA_PART = "_dc_";
@@ -134,7 +135,7 @@ angular.module('datacityApp')
                     "$and": []
                 };
                 for (var i = 0; i < matchers.length; i++) {
-                    ret._$and.push(matchers[i]);
+                    ret.$and.push(matchers[i]);
                 }
             }
             ret = {
@@ -312,9 +313,14 @@ angular.module('datacityApp')
             });
             return aggrs;
         };
+        
+        this.setLog = function(log) {
+            $log = log;
+        }
 
         // Method for instantiating
-        this.$get = function() {
+        this.$get = function($log) {
+            this.setLog($log);
             return this;
         };
     });
