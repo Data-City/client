@@ -29,7 +29,7 @@
                 </tr>
                 <tr ng-repeat="collection in collections" ng-click="setChosenCollectionAndRedirect(collection._id)">
                     <td>{{collection._id}}</td>
-                    <td>{{formatTimeString(collection._created_on)}}</td>
+                    <td>{{formatTimeString(collection.metaData.timeOfCreation)}}</td>
                     <td>{{collection.metaData.numberOfEntries}}</td>
                     <td>
                         <button type="button" class="btn btn-xs btn-success" ng-click="getMyLink(collection._id)">Vorschau</button>
