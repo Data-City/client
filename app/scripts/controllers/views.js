@@ -46,6 +46,7 @@ angular.module('datacityApp')
             this.metaData = {};
             this.aggregations = [];
             this.districts = [];
+            this.districtType = 0; //"Keine Blöcke benutzen" ist voreingestellt
         }
 
         /**
@@ -119,7 +120,6 @@ angular.module('datacityApp')
                         view.dimensions.height = view.dimensionSettings.height.name;
                         view.dimensions.area = view.dimensionSettings.area.name;
                         view.dimensions.color = view.dimensionSettings.color.name;
-                        view.districtOption = view.districtType;
                         if (!collection.data._embedded) {
                             $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
                         } else {
