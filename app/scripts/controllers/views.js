@@ -308,7 +308,8 @@ angular.module('datacityApp')
             stages.push(AGGR.createLimitStage(AGGR.MAX_DOCUMENTS_FOR_AGGREGATION));
             stages.push(AGGR.projectStage(view.attributes));
             stages.push(AGGR.matchStage(view.attributes));
-            if (view.districts.length > 1) {
+            
+            if (view.districts.length > 0) {
                 $log.info("Districts:");
                 $log.info(view.districts);
                 stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
