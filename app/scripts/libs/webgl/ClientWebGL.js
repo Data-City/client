@@ -24,7 +24,7 @@ function getExtrema() {
 // @param data: JSON vom Datenbank-Team, das fuer jedes Gebaeude die Hoehe, Breite, Farbe, etc. gespeichert hat
 //			association: JSON fuer die Legende, damit man weiss, dass z.B. die Breite der Anzahl Methoden entspricht
 //			nameOfDivElement: Name vom Div-Element
-function drawCity(data, association, nameOfDivElement) {
+function drawCity(data, association, nameOfDivElement, settings) {
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement);
     window.addEventListener('resize', function() {
@@ -32,8 +32,10 @@ function drawCity(data, association, nameOfDivElement) {
         renderer.setSize(window.innerWidth, window.innerHeight);
     }, false);
     
-    association.dimensions.width = association.dimensions.area;
-    association.dimensions.name = association.dimensions.name.name;
+    association.dimensions.width = association.dimensionSettings.area.name;
+    association.dimensions.name = association.dimensionSettings.name.name;
+    association.dimensions.color = association.dimensionSettings.color.name;
+    association.dimensions.height = association.dimensionSettings.height.name;
     setAssociation(association["dimensions"]);
     associations = association;
 	
@@ -72,6 +74,10 @@ function drawCity(data, association, nameOfDivElement) {
     }
     updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
     animate();
+    
+    if(settings!=undefined){
+        setSpecificView(settings);
+    }
 }
 
 
