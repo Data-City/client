@@ -316,7 +316,7 @@ angular.module('datacityApp')
         
         this.setLog = function(log) {
             $log = log;
-        }
+        };
 
         // Method for instantiating
         this.$get = function($log) {
