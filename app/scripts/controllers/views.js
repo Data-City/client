@@ -39,8 +39,7 @@ angular.module('datacityApp')
             this.dimensions = {
                 height: null,
                 area: null,
-                color: null,
-                district: null
+                color: null
             };
             this.attributesOfCollection = [];
             this.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
@@ -120,8 +119,7 @@ angular.module('datacityApp')
                         view.dimensions.height = view.dimensionSettings.height.name;
                         view.dimensions.area = view.dimensionSettings.area.name;
                         view.dimensions.color = view.dimensionSettings.color.name;
-                        // Noch raus genommen, weil die Distrikte anders ausgewählt werdens
-                        //view.dimensions.district = view.dimensions.district.name;
+                        view.districtOption = view.districtType;
                         if (!collection.data._embedded) {
                             $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
                         } else {

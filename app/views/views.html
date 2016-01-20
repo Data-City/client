@@ -236,7 +236,27 @@
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep3" aria-hidden="true"></span>
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
                             </div>
-                            <div class="panel-body" ng-show="showStep3">
+                                <div ng-show="showStep3">
+                                    <fieldset class="formgroup">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" ng-model="chosenView.districtType" value=0 checked> Keine Blockbildung benutzen
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" ng-model="chosenView.districtType" value=1> Die Blöcke werden nach jedem Punkt erzeugt
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" ng-model="chosenView.districtType" value=2> Blöcke auswählen
+                                            </label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            
+                            <div class="panel-body" ng-show="chosenView.districtType == 2 && showStep3">
                                 Block Nr.1 entspricht dem innersten Block.
                                 <table class="table">
                                     <thead>
