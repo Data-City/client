@@ -11,7 +11,7 @@
 var App = angular.module('datacityApp');
 
 
-App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sharedLogin, REST) {
+App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sharedLogin, REST, SETTINGS) {
 
     /**
      * Die richtige Seite wird in der Navbar hervorgehoben
@@ -23,7 +23,7 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
 
 
     // Verbindungsdaten
-    var database = "prelife";
+    var database = SETTINGS.databaseForCollections;
     REST.setUsername(sharedLogin.getUsername());
     REST.setPassword(sharedLogin.getPassword());
 

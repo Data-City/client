@@ -10,17 +10,16 @@
  */
 
 angular.module('datacityApp')
-    .controller('StoredviewCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST) {
+    .controller('StoredviewCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST, SETTINGS) {
 
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
 
-        var databaseForCollections = "prelife";
-        var databaseForViews = "einstellungen";
-        var ansichten = "ansichten";
-        var baseurl = "https://pegenau.com:16392";
+        var databaseForCollections = SETTINGS.databaseForCollections;
+        var databaseForViews = SETTINGS.databaseForViews;
+        var ansichten = SETTINGS.collection;
 
-        var WEBGL_DIV = 'Stadt';
+        var WEBGL_DIV = SETTINGS.WEBGL_DIV;
 
         var url = window.location.href;
 

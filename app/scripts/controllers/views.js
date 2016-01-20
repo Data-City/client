@@ -13,18 +13,17 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-    .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST) {
+    .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST, SETTINGS) {
         //Standardeinstellungen
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
 
-        var database = "einstellungen";
-        var collection = "ansichten";
-        var baseurl = "https://pegenau.com:16392";
+        var database = SETTINGS.databaseForViews;
+        var dbWithCollections = SETTINGS.databaseForViews;
+        var collection = SETTINGS.collection;
+        var baseurl = SETTINGS.baseurl;
 
-        var WEBGL_DIV = 'Stadt';
-
-        var dbWithCollections = "prelife";
+        var WEBGL_DIV = SETTINGS.WEBGL_DIV;
 
         /**
          *  Konstruktor für eine Ansicht
