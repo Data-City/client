@@ -22,7 +22,8 @@
                     <th>Name</th>
                     <th>Erstellt</th>
                     <th>Einträge</th>
-                    <th></th>
+                    <th>Vorschau</th>
+                    <th>Löschen</th>
                 </tr>
                 <tr ng-show="numberOfCollections === 0">
                     <td colspan="4" align="center"><div class="alert alert-danger" role="alert">Keine Datensätze gefunden!</div></td>
@@ -31,10 +32,12 @@
                     <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection._id}}</td>
                     <td ng-show="collection.metaData" ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection.metaData.timeOfCreation)}}</td>
                     <td ng-show="collection.metaData" ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection.metaData.numberOfEntries}}</td>
-                    <td ng-hide="collection.metaData"<div class="alert alert-danger">Metadaten sind nicht vorhanden!</div></td>
-                    <td ng-hide="collection.metaData"<div class="alert alert-danger">Metadaten sind nicht vorhanden!</div></td>
+                    <td ng-hide="collection.metaData"> <div class="alert alert-danger">Metadaten sind nicht vorhanden!</div></td>
+                    <td ng-hide="collection.metaData"> <div class="alert alert-danger">Metadaten sind nicht vorhanden!</div></td>
                     <td>
                         <button type="button" class="btn btn-xs btn-success" ng-click="getMyLink(collection._id)"  ng-click="setChosenCollectionOnly(collection._id)">Vorschau</button>
+                    </td>
+                    <td>
                         <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#deleteCollectionModal" data-toggle="tooltip"
                         title="Löschen" ng-click="setChosenCollectionOnly(collection._id)">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
