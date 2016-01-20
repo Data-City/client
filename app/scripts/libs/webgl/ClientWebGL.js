@@ -44,10 +44,10 @@ function drawCity(data, association, nameOfDivElement) {
     }*/
 	
 	
-	if(association.districtType == 0){//Falls keine Blockbildung
+	if(association.districtType == "0"){//Falls keine Blockbildung
 		mainDistrict = {buildings: data};
 	}
-	else if (association.districtType == 1){ //Falls Blockbildung mit Punkten
+	else if (association.districtType == "1"){ //Falls Blockbildung mit Punkten
 		mainDistrict = createMainDistrict(data, association.dimensions);
 	}
 	else{
