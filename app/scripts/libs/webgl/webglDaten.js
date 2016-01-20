@@ -238,5 +238,27 @@ function beispielZuordnungen() {
 
 
 function getLinkJson() {
-    return {"camPos":{"x":37.94579920600104,"y":18.97289960300053,"z":56.918698809001576},"leftGarden":[],"rightGarden":[],"scaling":{"logarithmicHeight":false,"logarithmicWidth":false,"logarithmicColor":false},"removedBuildings":[],"changedLegend":{"Name":"Package","Breite":"Klassen","Höhe":"Methoden","Farbe":"Zeilen"},"collID":123456,"_id":342391};
+    return {
+        "camPos": {
+            "x": 37.94579920600104,
+            "y": 18.97289960300053,
+            "z": 56.918698809001576
+        },
+        "leftGarden": [],
+        "rightGarden": [],
+        "scaling": {
+            "logarithmicHeight": false,
+            "logarithmicWidth": false,
+            "logarithmicColor": false
+        },
+        "removedBuildings": [],
+        "changedLegend": {
+            "Name": "Package",
+            "Breite": "Klassen",
+            "Höhe": "Methoden",
+            "Farbe": "Zeilen"
+        },
+        "collID": 123456,
+        "_id": 342391
+    };
 }
