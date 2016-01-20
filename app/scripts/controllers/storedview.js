@@ -22,11 +22,6 @@ angular.module('datacityApp')
 
         var WEBGL_DIV = 'Stadt';
 
-        $scope.test = function() {
-            console.log("window.location: ");
-            console.log(window.location);
-        };
-
         var url = window.location.href;
 
         url = url.replace(/%7B/g, '{');
