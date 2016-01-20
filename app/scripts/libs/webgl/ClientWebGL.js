@@ -1,3 +1,4 @@
+var associations;
 var camera, scene, renderer, controls, control, raycaster;
 var mainDistrict;
 var mouse = new THREE.Vector2(),
@@ -34,7 +35,7 @@ function drawCity(data, association, nameOfDivElement) {
     association.dimensions.width = association.dimensions.area;
     association.dimensions.name = association.dimensions.name.name;
     setAssociation(association["dimensions"]);
-    
+    associations = association;
 	
     /*if(data[0].buildings == undefined){
 		mainDistrict = createMainDistrict(data, association.dimensions);
@@ -254,4 +255,11 @@ function setSpecificView(aJson) {
 	}
 	
 	setCameraPosForLink(camera, aJson);
+}
+
+
+//Getter fuer associations
+//@return: associations: die Zuordnungen
+function getOriginalAssociations(){
+    return associations;
 }

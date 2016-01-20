@@ -104,7 +104,7 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh
 //										garden: array_mit_ID_der_Gaerten,_die_an_sind,
 //										scaling: json_von_legende}
 function changeLinkForCurrentView(aJson) {
-    currentView['Link'] = 'http://dummylink.com/viewDataCity?webGLSettings=' + JSON.stringify(aJson);
+    currentView['Link'] = window.location.origin + '/#/storedView?webGLSettings=' + JSON.stringify(aJson);
 }
 
 //getter fuer gui (dropdownmenu)

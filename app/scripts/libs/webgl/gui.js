@@ -397,6 +397,8 @@ function getJsonForCurrentLink() {
     aJson.scaling = getScalingBooleans();
 	aJson.removedBuildings = getRemovedBuildings();
 	aJson.changedLegend = getChangedLegend();
+	aJson.collID = getOriginalAssociations().collID;
+	aJson._id = getOriginalAssociations()._id;
     return aJson;
 }
 
