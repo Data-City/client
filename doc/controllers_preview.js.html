@@ -45,22 +45,21 @@ angular.module('datacityApp')
 
         $log.info($routeParams.collID);
         $scope.collID = null;
+        $scope.results = null;
+        $scope.attributes = null;
+
+
         /**
          * Initialisierung
          */
         if ($routeParams.collID) {
             $scope.collID = $routeParams.collID;
-            //   $scope.getViews();
-            /**  REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
-                $scope.collection = resp;
-                $scope.metaData = resp.data.metaData;
-                $scope.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
-            });
-         */
         }
-        var database = "prelife";
-        REST.getDocuments(database, $scope.collId, function(response) {
-            $log.info(response);
+        REST.getDocuments(db, $scope.collID, function(collection) {
+            //          $log.info(collection);
+            $scope.results = collection.data._embedded['rh:doc'];
+            $scope.attributes = getProperties($scope.results[0]);
+            //        $log.info($scope.attributes);
         });
 
 
@@ -75,13 +74,13 @@ angular.module('datacityApp')
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jan 14 2016 10:53:11 GMT+0100 (Mitteleuropäische Zeit)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jan 20 2016 16:24:11 GMT+0100 (Mitteleuropäische Zeit)
 </footer>
 
 <script> prettyPrint(); </script>

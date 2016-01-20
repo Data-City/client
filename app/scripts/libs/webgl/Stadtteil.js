@@ -23,28 +23,28 @@ var buildingID = 0; //Counter fuer GebaeudeIDs
 
 //Getter fuer die Hashmap der Gebaeuden
 //@return: Hashmap fuer die Gebaeuden
-function getBuildingsHashMap(){
-	return buildingsHashMap;
+function getBuildingsHashMap() {
+    return buildingsHashMap;
 }
 
 //Konstruktor für einen Vorgarten
 //@params: isItLeftGarden: true, wenn es sich um einen linken Garten handelt, sonst false
 function garden(isItLeftGarden, aBuilding, connections) {
     var sumOfConnections = 0;
-    for(var x in connections){
-        sumOfConnections = sumOfConnections+connections[x];
+    for (var x in connections) {
+        sumOfConnections = sumOfConnections + connections[x];
     }
     var aGarden = {
-		building: aBuilding,
-        _width: sumOfConnections/10,
+        building: aBuilding,
+        _width: sumOfConnections / 10,
         _height: 0.01,
-        depth: sumOfConnections/20,
+        depth: sumOfConnections / 20,
         _centerPosition: [0, 0.05, 0],
         nextLinePos: [0, 0],
         on: false,
-		isLeftGarden: isItLeftGarden,
+        isLeftGarden: isItLeftGarden,
         linesTo: connections,
-		meshLines : {}
+        meshLines: {}
     };
     return aGarden;
 }
@@ -154,10 +154,10 @@ function initBuilding(aBuilding) {
         if (aBuilding[association["height"]] != undefined) {
             updateExtrema(aBuilding[association["width"]], aBuilding[association["height"]], aBuilding[association["color"]]);
         }
-		aBuilding._id = buildingID;
-		buildingsHashMap[buildingID] = aBuilding;
-		buildingID++;
-		aBuilding._isRemoved = false;
+        aBuilding._id = buildingID;
+        buildingsHashMap[buildingID] = aBuilding;
+        buildingID++;
+        aBuilding._isRemoved = false;
     }
 }
 
@@ -225,10 +225,10 @@ function setCenterPosition(aDistrict, newX, newY, newZ) {
 //Hilfsmethode, um Code zu sparen, gibt Breite eines Grundstücks (d.h. Gebaeude und Gaerten zusammen) zurueck
 //@params: i: i-te Eintrag in arrayOfBuildings
 //@return: Breite des Grundstuecks, das zum i-ten Gebaeude gehoert
-function getLandWidth(i){
-	return Math.max(arrayOfBuildings[i]._width+1+arrayOfBuildings[i]._leftGarden.depth,
-					arrayOfBuildings[i]._width+1+arrayOfBuildings[i]._rightGarden.depth,
-					arrayOfBuildings[i]._leftGarden._width+arrayOfBuildings[i]._rightGarden._width+2);
+function getLandWidth(i) {
+    return Math.max(arrayOfBuildings[i]._width + 1 + arrayOfBuildings[i]._leftGarden.depth,
+        arrayOfBuildings[i]._width + 1 + arrayOfBuildings[i]._rightGarden.depth,
+        arrayOfBuildings[i]._leftGarden._width + arrayOfBuildings[i]._rightGarden._width + 2);
 }
 
 
@@ -240,24 +240,23 @@ function setFirstBuilding(aDistrict) {
     //Setzen des ersten Elements
     setCenterPosition(
         arrayOfBuildings[0],
-        gap + getLandWidth(0)/2, 
-		(arrayOfBuildings[0]._height) / 2,
+        gap + getLandWidth(0) / 2, (arrayOfBuildings[0]._height) / 2,
         gap + (arrayOfBuildings[0]._width) / 2
     );
     maxWidth = 2 * gap + getLandWidth(0); // hier startet man, in X-Richtung zu bauen
     maxDepth = maxWidth; // baut man in Z-Richtung höher als maxDepth, muss man woanders eine neue Reihe starten
-    startToBuildInXDirection = maxWidth-gap; // hier startet man, in X-Richtung zu bauen
+    startToBuildInXDirection = maxWidth - gap; // hier startet man, in X-Richtung zu bauen
     startToBuildInZDirection = gap; // hier startet man, in Z-Richtung zu bauen
     extension = 0; //Falls maxBreiteXRichtung<maxBreiteZRichtung und wir in Z-Richtung bauen,
     // muessen wir rechts nebendran eine neue Reihe nach oben bauen
     // und diese Variable speichert die x Koordinate, an der wir weiterbauen muessen
     //analog, wenn wir in die andere Richtung bauen
     buildingInZDirection = true; // true, wenn wir gerade in Z-Richtung bauen
-    lastMaxWidth = maxWidth-3*gap; // in einem bestimmten Fall startet man von hier aus, in X-Richtung zu bauen
+    lastMaxWidth = maxWidth - 3 * gap; // in einem bestimmten Fall startet man von hier aus, in X-Richtung zu bauen
     width = maxWidth; //vom aDistrict
     if (arrayOfBuildings.length > 1) {
         initBuilding(arrayOfBuildings[1]);
-        extension = getLandWidth(1)+ gap;
+        extension = getLandWidth(1) + gap;
     }
 }
 

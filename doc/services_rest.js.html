@@ -48,7 +48,7 @@ angular.module('datacityApp')
         // Wird zwischen den Namen der betreffenden Collection und das Suffix gesetzt
         // Beispiel: /db/coll_dc_stats
         this.META_DATA_PART = "_dc_";
-        this.META_DATA_SUFFIX = "metaData";
+        this.META_DATA_SUFFIX = "maxminavg";
         this.AGGREGATION_SUFFIX = "aggregation";
 
         var username = null;
@@ -230,25 +230,28 @@ angular.module('datacityApp')
 
 
         this.updateView = function(view, fn) {
+            $log.info(view);
             setAuthHeader();
-            var config = {
-                headers: {
-                    "If-Match": view._etag.$oid
-                }
-            };
 
-            var url = BASEURL + ANSICHTEN + '/' + view._id;
+            var relUrl = ANSICHTEN + '/' + view._id;
 
-            $http.patch(url, view, config).then(
-                function success(response) {
-                    fn(response);
-                },
-                function errorCallback(response) {
-                    $log.error("Error updating view:");
-                    $log.error(view);
-                    $log.error("Response:");
-                    $log.error(response);
-                });
+            rest.getCurrentETagForRelURL(relUrl, function(etag) {
+                var config = {
+                    headers: {
+                        "If-Match": etag
+                    }
+                };
+                $http.patch(BASEURL + relUrl, view, config).then(
+                    function success(response) {
+                        fn(response);
+                    },
+                    function errorCallback(response) {
+                        $log.error("Error updating view:");
+                        $log.error(view);
+                        $log.error("Response:");
+                        $log.error(response);
+                    });
+            });
         };
 
         /**
@@ -293,18 +296,21 @@ angular.module('datacityApp')
         };
 
         this.createAggregation = function(database, collection, etag, params, fn) {
+            $log.info("So far!");
             setAuthHeader();
             if (!params) {
                 return;
             }
 
-            setAuthHeader();
             var config = {
                 headers: {
                     "If-Match": etag,
                 }
             };
-            $http.put(createURL(database, collection), params, config).then(
+
+            var url = createURL(database, collection);
+            $log.info(url);
+            $http.put(url, params, config).then(
                 function success(response) {
                     if (fn) {
                         fn(response);
@@ -352,7 +358,6 @@ angular.module('datacityApp')
                 url: BASEURL + relUrl,
                 params: parameters,
             };
-
             $http(req).then(funcSucc, funcError);
         };
 
@@ -388,21 +393,10 @@ angular.module('datacityApp')
          * Fügt eine Aggregation zu den bestehenden hinzu
          */
         this.addAggregation = function(database, collection, aggr, fn) {
-            var existingAggregations = null;
-            this.getAggregations(database, collection, function(resp) {
-                existingAggregations = resp;
-                //$log.info("Vorhandene Aggregation:");
-                //$log.info(resp);
-                if (existingAggregations) {
-                    aggr.aggrs.push(existingAggregations);
-                }
-                //$log.info('Mit neuer Aggregation');
-                //$log.info(aggr);
-
-                rest.getCurrentETag(database, collection, function(etag) {
-                    rest.createAggregation(database, collection, etag, aggr, function(r) {
-                        fn(r);
-                    });
+            $log.info("Füge Aggregation hinzu: " + database + "\tcoll:" + collection);
+            rest.getCurrentETag(database, collection, function(etag) {
+                rest.createAggregation(database, collection, etag, aggr, function(r) {
+                    fn(r);
                 });
             });
         };
@@ -414,26 +408,13 @@ angular.module('datacityApp')
          * /db/collection/_aggrs/AGGR.META_DATA_AGGR_URI
          */
         this.callCollectionsMetaDataAggrURI = function(database, collection, fn) {
-            /*
-            setAuthHeader();
-            var relUrl = '/' + database + '/' + collection + '/_aggrs/' + AGGR.META_DATA_AGGR_URI;
-            var config = null;
-            $http.jsonp(BASEURL + relUrl, config).then(
-                function success(response) {
-                    fn(response);
-                }, function error(response) {
-                    $log.error('Evtl (!!!) Fehler bei callCollectionsMetaDataAggrURI');
-                    $log.error('Adresse: ' + BASEURL + relUrl);
-                    fn(response);
-                }
-            );
-            */
             this.callCollectionAggr(database, collection, AGGR.META_DATA_AGGR_URI, fn);
         };
 
         this.callCollectionAggr = function(database, collection, aggr, fn) {
             setAuthHeader();
             var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr;
+            $log.info(relUrl);
             var config = null;
             $http.jsonp(BASEURL + relUrl, config).then(
                 function success(response) {
@@ -672,15 +653,24 @@ angular.module('datacityApp')
          * null, falls nicht vorhanden
          */
         this.getCollectionsMetaData = function(database, collection, fn) {
-            var success = function(response) {
-                if (response.data[rest.META_DATA_SUFFIX]) {
-                    numberOfEntries = response.data._returned;
-                    fn(response.data[rest.META_DATA_SUFFIX]);
+            var relUrl = "/" + database + "/" + collection + this.META_DATA_PART + this.META_DATA_SUFFIX;
+
+            var funcSucc = function(response) {
+                if (response.data &amp;&amp; response.data._embedded) {
+                    fn(response.data._embedded['rh:doc'][0]);
                 } else {
-                    fn(null);
+                    $log.error("Meta Daten enthalten unerwartete Daten: " + relUrl);
+                    $log.error(response);
+                    $log.error("Vermutlich fehlen Ergebnisse. Aggregation korrekt?");
                 }
             };
-            this.getData(success, database, collection, null);
+
+            var funcError = function(response) {
+                $log.error("Fehler beim Holen der Meta Daten: " + relUrl);
+                $log.error(response);
+            };
+
+            rest.getURL(relUrl, null, funcSucc, funcError);
         };
 
         /**
@@ -691,8 +681,23 @@ angular.module('datacityApp')
          */
         this.getCurrentETag = function(database, collection, fn) {
             setAuthHeader();
+            var url = createURL(database, collection);
+            $log.info("getCurrentETag URL: " + url);
+            $http.get(url).then(function(response) {
+                fn(response.data._etag.$oid);
+            });
+        };
 
-            $http.get(createURL(database, collection)).then(function(response) {
+        /**
+         * Gibt den aktuellen ETag eines Dokuments zurück
+         * 
+         * Nötig für _ALLE_ Änderungen
+         * Siehe RESTHeart Doku
+         */
+        this.getCurrentETagForRelURL = function(relUrl, fn) {
+            setAuthHeader();
+
+            $http.get(BASEURL + relUrl).then(function(response) {
                 fn(response.data._etag.$oid);
             });
         };
@@ -737,13 +742,13 @@ angular.module('datacityApp')
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jan 14 2016 10:53:11 GMT+0100 (Mitteleuropäische Zeit)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jan 20 2016 16:24:11 GMT+0100 (Mitteleuropäische Zeit)
 </footer>
 
 <script> prettyPrint(); </script>

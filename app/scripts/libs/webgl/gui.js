@@ -19,7 +19,7 @@ function setAssociation(newAssociation) {
 //Methode zum leeren der Arrays clickedLeft-/-RightGardens
 function setClickedGardensEmpty() {
     clickedLeftGardens = [];
-	clickedRightGardens = [];
+    clickedRightGardens = [];
 }
 
 
@@ -40,9 +40,9 @@ function pushToClickedRightGardens(buildingID) {
 //										leftGarden: array_mit_ID_der_linken_Gaerten,_die_an_sind,
 //										rightGarden: array_mit_ID_der_rechten_Gaerten,_die_an_sind
 //										scaling: json_von_legende}
-function setClickedGardens(aJson){
-	clickedLeftGardens = aJson.leftGarden;
-	clickedRightGardens = aJson.rightGarden;
+function setClickedGardens(aJson) {
+    clickedLeftGardens = aJson.leftGarden;
+    clickedRightGardens = aJson.rightGarden;
 }
 
 //Hilfsmethode, um eine WebGL-Box zu malen
@@ -57,7 +57,7 @@ function drawBox(aBuilding, material, scene) {
     cube.position.z = aBuilding._centerPosition[2];
     cube.building = aBuilding;
     aBuilding.mesh = cube;
-    if(aBuilding._isRemoved == false){
+    if (aBuilding._isRemoved == false) {
         scene.add(cube);
     }
 }
@@ -162,9 +162,9 @@ function addGarden(aBuilding, scene) {
         cube.position.z = aBuilding[gardens[i]]._centerPosition[2];
         cube.garden = aBuilding[gardens[i]];
         aBuilding[gardens[i]].mesh = cube;
-	if(aBuilding._isRemoved == false){
+        if (aBuilding._isRemoved == false) {
             scene.add(cube);
-	}
+        }
     }
 }
 
@@ -173,23 +173,22 @@ function addGarden(aBuilding, scene) {
 //@params: aGarden: der Garten, fuer den die Abhaengigkeit gezeichnet werden soll
 //			updateBoolean: true, wenn die Methode in gui.js aufgerufen wurde, sonst false
 function drawLines(aGarden, updateBoolean) {
-    if(updateBoolean){
-		aGarden.on = true;
-	}
-	var hashMap = getBuildingsHashMap();
+    if (updateBoolean) {
+        aGarden.on = true;
+    }
+    var hashMap = getBuildingsHashMap();
     for (var x in aGarden.linesTo) {
         for (var i = 0; i < aGarden.linesTo[x]; i++) {
-			if(aGarden.isLeftGarden == true){
-				if (hashMap[x]._rightGarden.on == false && hashMap[x]._isRemoved==false) {
-					drawALine(aGarden, hashMap[x]._rightGarden);
-				}
-			}
-			else{
-				if (hashMap[x]._leftGarden.on == false && hashMap[x]._isRemoved==false) {
-					drawALine(aGarden, hashMap[x]._leftGarden);
-				}
-			}
-            
+            if (aGarden.isLeftGarden == true) {
+                if (hashMap[x]._rightGarden.on == false && hashMap[x]._isRemoved == false) {
+                    drawALine(aGarden, hashMap[x]._rightGarden);
+                }
+            } else {
+                if (hashMap[x]._leftGarden.on == false && hashMap[x]._isRemoved == false) {
+                    drawALine(aGarden, hashMap[x]._leftGarden);
+                }
+            }
+
         }
     }
     currentPosInColorOfLines++;
@@ -204,22 +203,20 @@ function drawALine(aGarden, destGarden) {
     var curve = new THREE.CubicBezierCurve3(
         new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
         new THREE.Vector3(aGarden.nextLinePos[0] //+ 0.3 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[0])
-	, 2 * maximalHeight
-	, aGarden.nextLinePos[1] //+ 0.3 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[1])
-	  
-	),
+            , 2 * maximalHeight, aGarden.nextLinePos[1] //+ 0.3 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[1])
+
+        ),
         new THREE.Vector3(destGarden.nextLinePos[0] //+ 0.7 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[0])
-	, 3 * maximalHeight
-	, destGarden.nextLinePos[1] //+ 0.7 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[1])
-	  
-	),
+            , 3 * maximalHeight, destGarden.nextLinePos[1] //+ 0.7 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[1])
+
+        ),
         new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
     );
     var geometry = new THREE.Geometry();
     geometry.vertices = curve.getPoints(50);
 
     var material = new THREE.LineBasicMaterial({
-        color: colorOfLines[currentPosInColorOfLines%10]
+        color: colorOfLines[currentPosInColorOfLines % 10]
     });
     var curveObject = new THREE.Line(geometry, material);
     scene.add(curveObject);
@@ -234,10 +231,10 @@ function drawALine(aGarden, destGarden) {
 //			destGarden: der Garten, zu dem die Linie geht
 //			curveObject: die Linie, die gezeichnet wurde
 function workUpGarden(aGarden, destGarden, curveObject) {
-	if (aGarden.meshLines[destGarden.building._id] == undefined) {
-            aGarden.meshLines[destGarden.building._id] = [curveObject];
-        } else {
-            aGarden.meshLines[destGarden.building._id].push(curveObject);
+    if (aGarden.meshLines[destGarden.building._id] == undefined) {
+        aGarden.meshLines[destGarden.building._id] = [curveObject];
+    } else {
+        aGarden.meshLines[destGarden.building._id].push(curveObject);
     }
     setNextLinePos(aGarden);
 }
@@ -247,24 +244,23 @@ function workUpGarden(aGarden, destGarden, curveObject) {
 //@params aGarden: der Garten, von dem aus die Linien gelöscht werden sollen
 //		updateBoolean: true, wenn sie von einer Methode aus gui.js aufgerufen wurde, sonst false
 function removeLines(aGarden, updateBoolean) {
-	if(aGarden.isLeftGarden==true){
-		var gardenString = "_rightGarden";
-	}
-	else{
-		var gardenString = "_leftGarden";
-	}
-	var hashMap = getBuildingsHashMap();
-	for(var x in aGarden.meshLines){
-		if(hashMap[x][gardenString].on==false){
-			for(var i=0; i<aGarden.meshLines[x].length;i++){
-				scene.remove(aGarden.meshLines[x][i]);
-			}
-		}
-	}
-	if(updateBoolean){
-		aGarden.meshLines = {};
-		aGarden.on = false;
-	}
+    if (aGarden.isLeftGarden == true) {
+        var gardenString = "_rightGarden";
+    } else {
+        var gardenString = "_leftGarden";
+    }
+    var hashMap = getBuildingsHashMap();
+    for (var x in aGarden.meshLines) {
+        if (hashMap[x][gardenString].on == false) {
+            for (var i = 0; i < aGarden.meshLines[x].length; i++) {
+                scene.remove(aGarden.meshLines[x][i]);
+            }
+        }
+    }
+    if (updateBoolean) {
+        aGarden.meshLines = {};
+        aGarden.on = false;
+    }
 }
 
 
@@ -351,15 +347,20 @@ function onDocumentMouseDown(event) {
             if (intersects[0].object.garden.on == false) {
                 drawLines(intersects[0].object.garden, true);
                 intersects[0].object.material.color.setHex(0xA5DF00);
-				if(intersects[0].object.garden.isLeftGarden == true){clickedLeftGardens.push(intersects[0].object.garden.building._id);}
-				else{clickedRightGardens.push(intersects[0].object.garden.building._id);}
-                
+                if (intersects[0].object.garden.isLeftGarden == true) {
+                    clickedLeftGardens.push(intersects[0].object.garden.building._id);
+                } else {
+                    clickedRightGardens.push(intersects[0].object.garden.building._id);
+                }
+
             } else {
                 removeLines(intersects[0].object.garden, true);
                 intersects[0].object.material.color.setHex(0x088A08);
-				if(intersects[0].object.garden.isLeftGarden == true){
-					clickedLeftGardens.splice(clickedLeftGardens.indexOf(intersects[0].object.garden.id), 1);}
-				else{clickedRightGardens.splice(clickedRightGardens.indexOf(intersects[0].object.garden.id), 1);}
+                if (intersects[0].object.garden.isLeftGarden == true) {
+                    clickedLeftGardens.splice(clickedLeftGardens.indexOf(intersects[0].object.garden.id), 1);
+                } else {
+                    clickedRightGardens.splice(clickedRightGardens.indexOf(intersects[0].object.garden.id), 1);
+                }
             }
         } else {
             changeBuildingInformation(
@@ -393,12 +394,12 @@ function getJsonForCurrentLink() {
     var aJson = {};
     aJson.camPos = camera.position;
     aJson.leftGarden = clickedLeftGardens;
-	aJson.rightGarden = clickedRightGardens;
+    aJson.rightGarden = clickedRightGardens;
     aJson.scaling = getScalingBooleans();
-	aJson.removedBuildings = getRemovedBuildings();
-	aJson.changedLegend = getChangedLegend();
-	aJson.collID = getOriginalAssociations().collID;
-	aJson._id = getOriginalAssociations()._id;
+    aJson.removedBuildings = getRemovedBuildings();
+    aJson.changedLegend = getChangedLegend();
+    aJson.collID = getOriginalAssociations().collID;
+    aJson._id = getOriginalAssociations()._id;
     return aJson;
 }
 

@@ -16,8 +16,4 @@ describe('Controller: StoredviewCtrl', function () {
       // place here mocked dependencies
     });
   }));
-
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(StoredviewCtrl.awesomeThings.length).toBe(3);
-  });
 });

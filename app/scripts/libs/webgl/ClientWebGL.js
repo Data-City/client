@@ -31,31 +31,31 @@ function drawCity(data, association, nameOfDivElement, settings) {
         camera.aspect = window.innerWidth / window.innerHeight;
         renderer.setSize(window.innerWidth, window.innerHeight);
     }, false);
-    
+
     association.dimensions.width = association.dimensionSettings.area.name;
     association.dimensions.name = association.dimensionSettings.name.name;
     association.dimensions.color = association.dimensionSettings.color.name;
     association.dimensions.height = association.dimensionSettings.height.name;
     setAssociation(association["dimensions"]);
     associations = association;
-	
+
     /*if(data[0].buildings == undefined){
 		mainDistrict = createMainDistrict(data, association.dimensions);
     }
     else{
 		mainDistrict = data[0];
     }*/
-	
-	
-	if(association.districtType == "0"){//Falls keine Blockbildung
-		mainDistrict = {buildings: data};
-	}
-	else if (association.districtType == "1"){ //Falls Blockbildung mit Punkten
-		mainDistrict = createMainDistrict(data, association.dimensions);
-	}
-	else{
-		mainDistrict = data[0];
-	}
+
+
+    if (association.districtType == "0") { //Falls keine Blockbildung
+        mainDistrict = {
+            buildings: data
+        };
+    } else if (association.districtType == "1") { //Falls Blockbildung mit Punkten
+        mainDistrict = createMainDistrict(data, association.dimensions);
+    } else {
+        mainDistrict = data[0];
+    }
 
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict);
@@ -74,8 +74,8 @@ function drawCity(data, association, nameOfDivElement, settings) {
     }
     updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
     animate();
-    
-    if(settings!=undefined){
+
+    if (settings != undefined) {
         setSpecificView(settings);
     }
 }
@@ -85,46 +85,46 @@ function drawCity(data, association, nameOfDivElement, settings) {
 //@params: data: das Array, das aus den Gebaeuden besteht
 //			association: die Legende
 //@return: das Objekt, das aus District besteht
-function createMainDistrict(data, association){
-	var district = {};
-	var splitString, currentDistrict;
-	for(var i=0;i<data.length;i++){
-		currentDistrict = district;
-		splitString = data[i][association.name].toString().split(".");
-		for(var j=0;j<splitString.length-1;j++){
-			if(currentDistrict[splitString[j]]==undefined){
-				currentDistrict[splitString[j]]={};
-			}
-			currentDistrict=currentDistrict[splitString[j]];
-		}
-		if(currentDistrict.buildings == undefined){
-			currentDistrict.buildings = [data[i]];
-		}
-		else{
-			currentDistrict.buildings.push(data[i]);
-		}
-	}
-	district = getMainDistrictFromJSON(district);
-	return district;
+function createMainDistrict(data, association) {
+    var district = {};
+    var splitString, currentDistrict;
+    for (var i = 0; i < data.length; i++) {
+        currentDistrict = district;
+        splitString = data[i][association.name].toString().split(".");
+        for (var j = 0; j < splitString.length - 1; j++) {
+            if (currentDistrict[splitString[j]] == undefined) {
+                currentDistrict[splitString[j]] = {};
+            }
+            currentDistrict = currentDistrict[splitString[j]];
+        }
+        if (currentDistrict.buildings == undefined) {
+            currentDistrict.buildings = [data[i]];
+        } else {
+            currentDistrict.buildings.push(data[i]);
+        }
+    }
+    district = getMainDistrictFromJSON(district);
+    return district;
 }
 
 //rekursive Hilfsmethode, um aus dem Objekt, was in createMainDistrict erstellt wurde, ein Stadtobjekt zu erstellen
 //@params: aDistrict: ein Teil vom Objekt, was in createMainDistrict erstellt wurde
 //@return: ein stadtobjekt
-function getMainDistrictFromJSON(aDistrict){
-	var toReturn = {buildings: []};
-	for(var x in aDistrict){
-		if(x=="buildings"){
-			for(var i=0; i<aDistrict.buildings.length; i++){
-				toReturn.buildings.push(aDistrict.buildings[i]);
-			}
-		}
-		else{
-			toReturn.buildings.push(getMainDistrictFromJSON(aDistrict[x]));
-			toReturn.buildings[toReturn.buildings.length-1][association.name]=x;
-		}
-	}
-	return toReturn
+function getMainDistrictFromJSON(aDistrict) {
+    var toReturn = {
+        buildings: []
+    };
+    for (var x in aDistrict) {
+        if (x == "buildings") {
+            for (var i = 0; i < aDistrict.buildings.length; i++) {
+                toReturn.buildings.push(aDistrict.buildings[i]);
+            }
+        } else {
+            toReturn.buildings.push(getMainDistrictFromJSON(aDistrict[x]));
+            toReturn.buildings[toReturn.buildings.length - 1][association.name] = x;
+        }
+    }
+    return toReturn
 }
 
 // aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
@@ -223,49 +223,49 @@ function updateControls(maxDistance) {
 //										garden: array_mit_ID_der_Gaerten,_die_an_sind,
 //										scaling: json_von_legende}
 function setSpecificView(aJson) {
-	var gui = getGui();
-	
-	var hashMap = getBuildingsHashMap();
+    var gui = getGui();
+
+    var hashMap = getBuildingsHashMap();
     setRemovedBuildings(aJson.removedBuildings);
-	for(var i=0; i<aJson.removedBuildings.length;i++){
-		hashMap[aJson.removedBuildings[i]]._isRemoved = true;
-	}
-	
+    for (var i = 0; i < aJson.removedBuildings.length; i++) {
+        hashMap[aJson.removedBuildings[i]]._isRemoved = true;
+    }
+
     setScalingBooleans(aJson.scaling);
     var scaleArray = ["height", "width", "color"];
     var i = 0;
     for (var x in aJson.scaling) {
         if (aJson.scaling[x]) {
-	    gui.__folders["Skalierung"].__controllers[i].setValue(true);
+            gui.__folders["Skalierung"].__controllers[i].setValue(true);
             scale(true, scaleArray[i], scene, mainDistrict, camera, extrema);
         }
         i++;
     }
 
-	var stringArray = ["leftGarden", "rightGarden"];
-	for(var j=0; j<stringArray.length; j++){
-		for(var i=0; i<aJson[stringArray[j]].length;i++){
-			if(hashMap[aJson[stringArray[j]][i]]._isRemoved == false){
-				drawLines(hashMap[aJson[stringArray[j]][i]]["_"+stringArray[j]], true);
-				hashMap[aJson[stringArray[j]][i]]["_"+stringArray[j]].mesh.material.color.setHex(0xA5DF00);
-			}
-		}
-	}
-	setClickedGardens(aJson);
-	
-	setChangedLegend(aJson.changedLegend);
-	var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
+    var stringArray = ["leftGarden", "rightGarden"];
+    for (var j = 0; j < stringArray.length; j++) {
+        for (var i = 0; i < aJson[stringArray[j]].length; i++) {
+            if (hashMap[aJson[stringArray[j]][i]]._isRemoved == false) {
+                drawLines(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]], true);
+                hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]].mesh.material.color.setHex(0xA5DF00);
+            }
+        }
+    }
+    setClickedGardens(aJson);
 
-	for(var i=0; i<4; i++){
-		gui.__folders["Legende"].__controllers[i].setValue(aJson.changedLegend[myDimensions[i]]);
-	}
-	
-	setCameraPosForLink(camera, aJson);
+    setChangedLegend(aJson.changedLegend);
+    var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
+
+    for (var i = 0; i < 4; i++) {
+        gui.__folders["Legende"].__controllers[i].setValue(aJson.changedLegend[myDimensions[i]]);
+    }
+
+    setCameraPosForLink(camera, aJson);
 }
 
 
 //Getter fuer associations
 //@return: associations: die Zuordnungen
-function getOriginalAssociations(){
+function getOriginalAssociations() {
     return associations;
 }

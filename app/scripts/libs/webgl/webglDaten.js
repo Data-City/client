@@ -54,7 +54,9 @@ function getLegende() {
         "flaeche": "Anzahl Attribute",
         "farbe": "bisher noch nichts",
         "district": "Package",
-        "name": {"name" :"Klasse"}
+        "name": {
+            "name": "Klasse"
+        }
     };
     return legende;
 }
@@ -235,4 +237,26 @@ function beispielZuordnungen() {
 }
 
 
-function getLinkJson() { return {"camPos":{"x":-24.196024400730632,"y":292.14702577901534,"z":182.20028661718788},"leftGarden":[9],"rightGarden":[23,24],"scaling":{"logarithmicHeight":false,"logarithmicWidth":true,"logarithmicColor":false},"removedBuildings":[33,34,35,36,37,38,39,40,60,51,52,53,54,55,56,57,58,59,49,50,61,62,63,64,65,66,67,68,109,105,102,103,104,108,106,107],"changedLegend":{"Name":"Package","Breite":"Kladsag","Höhe":"Methoden","Farbe":"Zeilen"}};}
+function getLinkJson() {
+    return {
+        "camPos": {
+            "x": -24.196024400730632,
+            "y": 292.14702577901534,
+            "z": 182.20028661718788
+        },
+        "leftGarden": [9],
+        "rightGarden": [23, 24],
+        "scaling": {
+            "logarithmicHeight": false,
+            "logarithmicWidth": true,
+            "logarithmicColor": false
+        },
+        "removedBuildings": [33, 34, 35, 36, 37, 38, 39, 40, 60, 51, 52, 53, 54, 55, 56, 57, 58, 59, 49, 50, 61, 62, 63, 64, 65, 66, 67, 68, 109, 105, 102, 103, 104, 108, 106, 107],
+        "changedLegend": {
+            "Name": "Package",
+            "Breite": "Kladsag",
+            "Höhe": "Methoden",
+            "Farbe": "Zeilen"
+        }
+    };
+}

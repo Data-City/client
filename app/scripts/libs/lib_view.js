@@ -34,20 +34,20 @@ var getType = function(thing) {
 
 
 
- // Erzeugt ein Array aller Attribute, die nicht mit "_" beginnen und ihrem Typ
+// Erzeugt ein Array aller Attribute, die nicht mit "_" beginnen und ihrem Typ
 
-var getProperties = function (row) {
-	var attrs = [];
+var getProperties = function(row) {
+    var attrs = [];
     for (var key in row) {
         if (key[0] !== '_') {
-			var info = {
-				'name': key,
-				'type': getType(row[key]),
-			};
-			attrs.push(info);
+            var info = {
+                'name': key,
+                'type': getType(row[key]),
+            };
+            attrs.push(info);
         }
-      }
-return attrs;
+    }
+    return attrs;
 };
 
 

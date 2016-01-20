@@ -20,7 +20,7 @@ angular.module('datacityApp')
         $scope.results = null;
         $scope.attributes = null;
 
-        
+
         /**
          * Initialisierung
          */
@@ -28,10 +28,10 @@ angular.module('datacityApp')
             $scope.collID = $routeParams.collID;
         }
         REST.getDocuments(db, $scope.collID, function(collection) {
-  //          $log.info(collection);
+            //          $log.info(collection);
             $scope.results = collection.data._embedded['rh:doc'];
             $scope.attributes = getProperties($scope.results[0]);
-    //        $log.info($scope.attributes);
+            //        $log.info($scope.attributes);
         });
 
 

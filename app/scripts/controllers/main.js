@@ -11,12 +11,12 @@
 var App = angular.module('datacityApp');
 
 
-App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, sharedLogin, REST) {
+App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sharedLogin, REST) {
 
     /**
      * Die richtige Seite wird in der Navbar hervorgehoben
      */
-    $(".nav a").on("click", function () {
+    $(".nav a").on("click", function() {
         $(".nav").find(".active").removeClass("active");
         $(this).parent().addClass("active");
     });
@@ -38,11 +38,11 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
      * 
      * @param colid ID der gewählten Collection
      */
-    $scope.setChosenCollectionAndRedirect = function (collId) {
-        REST.getDocuments(database, collId, function (collection) {
+    $scope.setChosenCollectionAndRedirect = function(collId) {
+        REST.getDocuments(database, collId, function(collection) {
             $scope.chosenCollection = collection;
             $scope.collections = null;
-            REST.ensureCollectionsMetaData(database, collId, function (metaData) {
+            REST.ensureCollectionsMetaData(database, collId, function(metaData) {
                 //Weiterleiten
                 window.location = "#/views/" + $scope.chosenCollection.data._id;
             });
@@ -54,30 +54,30 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
      * 
      * @param colid ID der gewählten Collection
      */
-    $scope.setChosenCollectionOnly = function (collId) {
-        REST.getDocuments(database, collId, function (collection) {
+    $scope.setChosenCollectionOnly = function(collId) {
+        REST.getDocuments(database, collId, function(collection) {
             $log.info(collection);
             $scope.chosenCollection = collection;
         });
     };
 
-    $scope.getMyLink = function (collId) {
+    $scope.getMyLink = function(collId) {
         var link = "#/data/preview/" + collId;
         location.href = link;
         return link;
     };
 
-    $scope.getIdOfCollection = function (collection) {
+    $scope.getIdOfCollection = function(collection) {
         return collection ? collection.data._id : null;
     };
 
     /**
      * Löscht die ausgewählte Collection
      */
-    $scope.deleteCollection = function () {
+    $scope.deleteCollection = function() {
 
         // Die eigentliche Collection löschen
-        REST.deleteCollection(database, $scope.chosenCollection.data._id, function (response) {
+        REST.deleteCollection(database, $scope.chosenCollection.data._id, function(response) {
             $scope.getCollections();
         });
 
@@ -95,9 +95,9 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     /**
      * Holt alle Collections
      */
-    $scope.getCollections = function () {
+    $scope.getCollections = function() {
         $scope.loader = true;
-        REST.getCollections(database, function (resp) {
+        REST.getCollections(database, function(resp) {
             if (resp.data && resp.data._embedded) {
                 $scope.allCollections = resp.data._embedded['rh:coll'];
                 $scope.collections = $filter('colsbydisplayability')($scope.allCollections);
@@ -112,7 +112,7 @@ App.controller('MainCtrl', function ($scope, $http, $rootScope, $log, $filter, s
     /**
      * @return Eine schönere Anzeige des Datums
      */
-    $scope.formatTimeString = function (timeString) {
+    $scope.formatTimeString = function(timeString) {
         if (timeString) {
             var d = new Date(timeString);
             return d.toLocaleDateString() + " " + d.toLocaleTimeString();

@@ -92,9 +92,9 @@ angular
                 controllerAs: 'playground'
             })
             .when('/storedView', {
-              templateUrl: 'views/storedview.html',
-              controller: 'StoredviewCtrl',
-              controllerAs: 'storedView'
+                templateUrl: 'views/storedview.html',
+                controller: 'StoredviewCtrl',
+                controllerAs: 'storedView'
             })
             .otherwise({
                 redirectTo: '/data'

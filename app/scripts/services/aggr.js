@@ -1,4 +1,3 @@
-
 'use strict';
 
 /**
@@ -313,7 +312,7 @@ angular.module('datacityApp')
             });
             return aggrs;
         };
-        
+
         this.setLog = function(log) {
             $log = log;
         };
