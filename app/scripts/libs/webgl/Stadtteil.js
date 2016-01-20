@@ -6,7 +6,7 @@ function setAssociation(newAssociation) {
     association = newAssociation;
 }
 
-var gap = 30; //Abstand zwischen den Gebaeuden
+var gap = 5; //Abstand zwischen den Gebaeuden
 //var gardenID = 0; //counter fuer die GartenIDs
 //var hashGarden = {}; //hashed GartenID mit Garten
 
@@ -29,17 +29,21 @@ function getBuildingsHashMap(){
 
 //Konstruktor für einen Vorgarten
 //@params: isItLeftGarden: true, wenn es sich um einen linken Garten handelt, sonst false
-function garden(isItLeftGarden, aBuilding) {
+function garden(isItLeftGarden, aBuilding, connections) {
+    var sumOfConnections = 0;
+    for(var x in connections){
+        sumOfConnections = sumOfConnections+connections[x];
+    }
     var aGarden = {
 		building: aBuilding,
-        _width: 10,
+        _width: sumOfConnections/10,
         _height: 0.01,
-        depth: 5,
+        depth: sumOfConnections/20,
         _centerPosition: [0, 0.05, 0],
         nextLinePos: [0, 0],
         on: false,
 		isLeftGarden: isItLeftGarden,
-        linesTo: abhaengigkeiten(),
+        linesTo: connections,
 		meshLines : {}
     };
     return aGarden;
@@ -143,8 +147,8 @@ function initBuilding(aBuilding) {
             }
         }
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
-        var theLeftGarden = garden(true, aBuilding);
-        var theRightGarden = garden(false, aBuilding);
+        var theLeftGarden = garden(true, aBuilding, abhaengigkeiten());
+        var theRightGarden = garden(false, aBuilding, abhaengigkeiten());
         aBuilding["_leftGarden"] = theLeftGarden;
         aBuilding["_rightGarden"] = theRightGarden;
         if (aBuilding[association["height"]] != undefined) {
@@ -182,7 +186,7 @@ function setOneDistrict(aDistrict) {
 
             }
         } else { //wenn wir gerade in X-Richtung bauen (nach links)
-            if (startToBuildInXDirection - arrayOfBuildings[i]._width >= gap) { //wenn wir noch nicht am Rand angekommen sind
+            if (startToBuildInXDirection - getLandWidth(i) >= gap) { //wenn wir noch nicht am Rand angekommen sind
                 continueBuildingNormallyInXDirection(i);
             } else { //wenn eine weitere Box links nebendran nicht mehr hinpassen würde
 
@@ -218,6 +222,15 @@ function setCenterPosition(aDistrict, newX, newY, newZ) {
     aDistrict._centerPosition = [newX, newY, newZ];
 }
 
+//Hilfsmethode, um Code zu sparen, gibt Breite eines Grundstücks (d.h. Gebaeude und Gaerten zusammen) zurueck
+//@params: i: i-te Eintrag in arrayOfBuildings
+//@return: Breite des Grundstuecks, das zum i-ten Gebaeude gehoert
+function getLandWidth(i){
+	return Math.max(arrayOfBuildings[i]._width+1+arrayOfBuildings[i]._leftGarden.depth,
+					arrayOfBuildings[i]._width+1+arrayOfBuildings[i]._rightGarden.depth,
+					arrayOfBuildings[i]._leftGarden._width+arrayOfBuildings[i]._rightGarden._width+2);
+}
+
 
 //Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des ersten Gebaeudes
 //@params: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
@@ -227,23 +240,24 @@ function setFirstBuilding(aDistrict) {
     //Setzen des ersten Elements
     setCenterPosition(
         arrayOfBuildings[0],
-        gap + (arrayOfBuildings[0]._width) / 2, (arrayOfBuildings[0]._height) / 2,
+        gap + getLandWidth(0)/2, 
+		(arrayOfBuildings[0]._height) / 2,
         gap + (arrayOfBuildings[0]._width) / 2
     );
-    maxWidth = 2 * gap + arrayOfBuildings[0]._width; // hier startet man, in X-Richtung zu bauen
-    maxDepth = 2 * gap + arrayOfBuildings[0]._width; // baut man in Z-Richtung höher als maxDepth, muss man woanders eine neue Reihe starten
-    startToBuildInXDirection = arrayOfBuildings[0]._width + gap; // hier startet man, in X-Richtung zu bauen
+    maxWidth = 2 * gap + getLandWidth(0); // hier startet man, in X-Richtung zu bauen
+    maxDepth = maxWidth; // baut man in Z-Richtung höher als maxDepth, muss man woanders eine neue Reihe starten
+    startToBuildInXDirection = maxWidth-gap; // hier startet man, in X-Richtung zu bauen
     startToBuildInZDirection = gap; // hier startet man, in Z-Richtung zu bauen
     extension = 0; //Falls maxBreiteXRichtung<maxBreiteZRichtung und wir in Z-Richtung bauen,
     // muessen wir rechts nebendran eine neue Reihe nach oben bauen
     // und diese Variable speichert die x Koordinate, an der wir weiterbauen muessen
     //analog, wenn wir in die andere Richtung bauen
     buildingInZDirection = true; // true, wenn wir gerade in Z-Richtung bauen
-    lastMaxWidth = arrayOfBuildings[0]._width - gap; // in einem bestimmten Fall startet man von hier aus, in X-Richtung zu bauen
-    width = arrayOfBuildings[0]._width + 2 * gap; //vom aDistrict
+    lastMaxWidth = maxWidth-3*gap; // in einem bestimmten Fall startet man von hier aus, in X-Richtung zu bauen
+    width = maxWidth; //vom aDistrict
     if (arrayOfBuildings.length > 1) {
         initBuilding(arrayOfBuildings[1]);
-        extension = arrayOfBuildings[1]._width + gap;
+        extension = getLandWidth(1)+ gap;
     }
 }
 
@@ -257,14 +271,14 @@ function setFirstBuilding(aDistrict) {
 function continueBuildingInXDirection(i) {
     //bauen wir weiter in x-Richtung
     setCenterPosition(arrayOfBuildings[i],
-        startToBuildInXDirection - (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2,
+        startToBuildInXDirection - (1 / 2) * getLandWidth(i), (arrayOfBuildings[i]._height) / 2,
         maxDepth + (1 / 2) * arrayOfBuildings[i]._width);
-    width = Math.max(startToBuildInZDirection, maxDepth + arrayOfBuildings[i]._width, maxWidth + extension);
+    width = Math.max(startToBuildInZDirection, maxDepth + getLandWidth(i), maxWidth + extension);
     buildingInZDirection = false;
     maxWidth = maxWidth + extension;
-    extension = arrayOfBuildings[i]._width + gap;
+    extension = getLandWidth(i) + gap;
     startToBuildInZDirection = gap;
-    startToBuildInXDirection = startToBuildInXDirection - arrayOfBuildings[i]._width - gap;
+    startToBuildInXDirection = startToBuildInXDirection - getLandWidth(i) - gap;
 
 }
 
@@ -275,11 +289,11 @@ function continueBuildingInXDirection(i) {
 function buildANewBuildingRowOnTheRightInZDirection(i) {
     // Dann fangen wir rechts von der letzten Gebaeudereihe an, eine neue Gebaeudereihe aufzubauen
     setCenterPosition(arrayOfBuildings[i],
-        maxWidth + extension + (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2, (1 / 2) * arrayOfBuildings[i]._width + gap);
+        maxWidth + extension + (1 / 2) * getLandWidth(i), (arrayOfBuildings[i]._height) / 2, (1 / 2) * arrayOfBuildings[i]._width + gap);
     width = Math.max(startToBuildInZDirection, maxWidth + extension);
     maxWidth = maxWidth + extension;
-    extension = arrayOfBuildings[i]._width + gap;
-    startToBuildInZDirection = arrayOfBuildings[i]._width + gap * 2;
+    extension = getLandWidth(i) + gap;
+    startToBuildInZDirection = getLandWidth(i) + gap * 2;
 }
 
 
@@ -288,9 +302,9 @@ function buildANewBuildingRowOnTheRightInZDirection(i) {
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
 function continueBuildingNormallyInZDirection(i, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
     setCenterPosition(arrayOfBuildings[i],
-        maxWidth + (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2,
+        maxWidth + (1 / 2) * getLandWidth(i), (arrayOfBuildings[i]._height) / 2,
         startToBuildInZDirection + (1 / 2) * arrayOfBuildings[i]._width);
-    startToBuildInZDirection = startToBuildInZDirection + arrayOfBuildings[i]._width + gap;
+    startToBuildInZDirection = startToBuildInZDirection + getLandWidth(i) + gap;
     width = Math.max(startToBuildInZDirection, maxWidth + extension, maxDepth);
 }
 
@@ -300,10 +314,10 @@ function continueBuildingNormallyInZDirection(i, nodesOfStreetsSortByXCoord, nod
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
 function continueBuildingNormallyInXDirection(i) {
     setCenterPosition(arrayOfBuildings[i],
-        startToBuildInXDirection - (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2,
+        startToBuildInXDirection - (1 / 2) * getLandWidth(i), (arrayOfBuildings[i]._height) / 2,
         maxDepth + (1 / 2) * arrayOfBuildings[i]._width);
     width = Math.max(maxDepth + extension, maxWidth);
-    startToBuildInXDirection = startToBuildInXDirection - arrayOfBuildings[i]._width - gap;
+    startToBuildInXDirection = startToBuildInXDirection - getLandWidth(i) - gap;
 
 }
 
@@ -314,11 +328,11 @@ function continueBuildingNormallyInXDirection(i) {
 //@params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
 function buildAgainDownOnTheRightInZDirection(i) {
     setCenterPosition(arrayOfBuildings[i],
-        maxWidth + (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2, (1 / 2) * arrayOfBuildings[i]._width + gap);
+        maxWidth + (1 / 2) * getLandWidth(i), (arrayOfBuildings[i]._height) / 2, (1 / 2) * arrayOfBuildings[i]._width + gap);
     maxDepth = maxDepth + extension;
-    startToBuildInZDirection = arrayOfBuildings[i]._width + gap + 2 * gap;
+    startToBuildInZDirection = getLandWidth(i) + gap + 2 * gap;
     startToBuildInXDirection = maxWidth - gap;
-    extension = arrayOfBuildings[i]._width + gap;
+    extension = getLandWidth(i) + gap;
     buildingInZDirection = true;
     lastMaxWidth = maxWidth - 2 * gap;
     width = Math.max(maxWidth + extension, maxDepth);
@@ -332,11 +346,11 @@ function buildAgainDownOnTheRightInZDirection(i) {
 function buildANewRowOnTheTopInXDirection(i) {
     startToBuildInXDirection = lastMaxWidth + 2 * gap;
     maxDepth = maxDepth + extension;
-    extension = arrayOfBuildings[i]._width + gap;
+    extension = getLandWidth(i) + gap;
     setCenterPosition(arrayOfBuildings[i],
-        startToBuildInXDirection - (1 / 2) * arrayOfBuildings[i]._width, (arrayOfBuildings[i]._height) / 2,
+        startToBuildInXDirection - (1 / 2) * getLandWidth(i), (arrayOfBuildings[i]._height) / 2,
         maxDepth + (1 / 2) * arrayOfBuildings[i]._width);
-    startToBuildInXDirection = startToBuildInXDirection - arrayOfBuildings[i]._width - gap;
+    startToBuildInXDirection = startToBuildInXDirection - getLandWidth(i) - gap;
     width = Math.max(maxWidth, maxDepth + extension);
 
 }

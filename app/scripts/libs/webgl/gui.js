@@ -3,6 +3,10 @@ var mapOfLines = {}; //hier werden alle gezeichneteten Linien gespeichert von je
 var clickedLeftGardens = []; //Array aus ID der Gebaeude, dessen Gaerten an sind
 var clickedRightGardens = [];
 
+//moegliche Farben der Linien
+var colorOfLines = [0xFF0000, 0xFF4000, 0xFF8000, 0xFFBF00, 0xFFFF00, 0xBFFF00, 0x80FF00, 0x40FF00, 0x04B404, 0x088A08];
+var currentPosInColorOfLines = 0;
+
 var association = {}; //hier wird die Legende gespeichert
 
 //Setter fuer association
@@ -188,6 +192,7 @@ function drawLines(aGarden, updateBoolean) {
             
         }
     }
+    currentPosInColorOfLines++;
 }
 
 
@@ -197,16 +202,24 @@ function drawLines(aGarden, updateBoolean) {
 //			destGarden: der Ziel-Garten
 function drawALine(aGarden, destGarden) {
     var curve = new THREE.CubicBezierCurve3(
-        new THREE.Vector3(aGarden.nextLinePos[0], 0, aGarden.nextLinePos[1]),
-        new THREE.Vector3(aGarden.nextLinePos[0] + 0.3 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[0]), 2 * maximalHeight, aGarden.nextLinePos[1] + 0.3 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[1])),
-        new THREE.Vector3(aGarden.nextLinePos[0] + 0.7 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[0]), 2 * maximalHeight, aGarden.nextLinePos[1] + 0.7 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[1])),
-        new THREE.Vector3(destGarden.nextLinePos[0], 0, destGarden.nextLinePos[1])
+        new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
+        new THREE.Vector3(aGarden.nextLinePos[0] //+ 0.3 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[0])
+	, 2 * maximalHeight
+	, aGarden.nextLinePos[1] //+ 0.3 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[1])
+	  
+	),
+        new THREE.Vector3(destGarden.nextLinePos[0] //+ 0.7 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[0])
+	, 3 * maximalHeight
+	, destGarden.nextLinePos[1] //+ 0.7 * (destGarden.nextLinePos[0] - aGarden.nextLinePos[1])
+	  
+	),
+        new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
     );
     var geometry = new THREE.Geometry();
     geometry.vertices = curve.getPoints(50);
 
     var material = new THREE.LineBasicMaterial({
-        color: 0xff0000
+        color: colorOfLines[currentPosInColorOfLines%10]
     });
     var curveObject = new THREE.Line(geometry, material);
     scene.add(curveObject);

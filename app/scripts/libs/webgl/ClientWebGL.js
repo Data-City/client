@@ -35,12 +35,24 @@ function drawCity(data, association, nameOfDivElement) {
     association.dimensions.name = association.dimensions.name.name;
     setAssociation(association["dimensions"]);
     
-    if(data[0].buildings == undefined){
+	
+    /*if(data[0].buildings == undefined){
 		mainDistrict = createMainDistrict(data, association.dimensions);
     }
     else{
 		mainDistrict = data[0];
-    }
+    }*/
+	
+	
+	if(association.districtType == 0){//Falls keine Blockbildung
+		mainDistrict = {buildings: data};
+	}
+	else if (association.districtType == 1){ //Falls Blockbildung mit Punkten
+		mainDistrict = createMainDistrict(data, association.dimensions);
+	}
+	else{
+		mainDistrict = data[0];
+	}
 
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict);
@@ -204,6 +216,8 @@ function updateControls(maxDistance) {
 //										garden: array_mit_ID_der_Gaerten,_die_an_sind,
 //										scaling: json_von_legende}
 function setSpecificView(aJson) {
+	var gui = getGui();
+	
 	var hashMap = getBuildingsHashMap();
     setRemovedBuildings(aJson.removedBuildings);
 	for(var i=0; i<aJson.removedBuildings.length;i++){
@@ -215,6 +229,7 @@ function setSpecificView(aJson) {
     var i = 0;
     for (var x in aJson.scaling) {
         if (aJson.scaling[x]) {
+	    gui.__folders["Skalierung"].__controllers[i].setValue(true);
             scale(true, scaleArray[i], scene, mainDistrict, camera, extrema);
         }
         i++;
@@ -233,7 +248,7 @@ function setSpecificView(aJson) {
 	
 	setChangedLegend(aJson.changedLegend);
 	var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
-	var gui = getGui();
+
 	for(var i=0; i<4; i++){
 		gui.__folders["Legende"].__controllers[i].setValue(aJson.changedLegend[myDimensions[i]]);
 	}

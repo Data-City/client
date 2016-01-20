@@ -3123,7 +3123,11 @@ function getLaenderZuordnungen() {
             "district": "gender",
             "name": {"name": "country"},
             "area": "weight"
-        }
+        },
+		_id: 0123456789,
+		name: "bla",
+		collID: 123456,
+		districtType : 2
     };
     return zuordnungen;
 }
