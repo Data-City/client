@@ -213,7 +213,12 @@ function setChangedLegend(newChangedLegend) {
 //Getter fuer changedLegend
 //@params: changedLegend: die vom Nutzer veraenderte Legende
 function getChangedLegend() {
-    return changedLegend;
+    if(changedLegend == undefined){
+        return legend;
+      }
+    else{
+        return changedLegend;
+    }
 }
 
 
