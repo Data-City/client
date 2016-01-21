@@ -24,7 +24,7 @@ angular.module('datacityApp')
         var baseurl = SETTINGS.baseurl;
 
         var WEBGL_DIV = SETTINGS.WEBGL_DIV;
-
+        
         /**
          *  Konstruktor für eine Ansicht
          */
@@ -106,6 +106,16 @@ angular.module('datacityApp')
 
         $scope.availableAggregationOperations = AGGR.availableAggregationOperations;
 
+        $scope.verbindungenVorhanden = function () {
+            REST.getDocuments(dbWithCollections, $scope.collID + "_dc_connections_incoming", function(incoming) {
+                    if (incoming) {
+                        $scope.verbindungenVorhanden = true;
+                    } else {
+                        $scope.verbindungenVorhanden = false;
+                    }
+                });    
+        }
+        
         /**
          * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
          */
@@ -208,7 +218,7 @@ angular.module('datacityApp')
             REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
                 $scope.collection = resp;
             });
-
+            $scope.verbindungenVorhanden();
         }
 
         /**

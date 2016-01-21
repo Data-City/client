@@ -143,13 +143,13 @@
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
                             </div>
-                            <div class="panel-body" ng-show="showStep2">
+                            <div class="panel-body" ng-show="showStep2 && verbindungenVorhanden">
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" ng-model="chosenView.useConnections"> Verbindungen nutzen</input>
                                     </label>
                                 </div>
-
+                                <div class="alert alert-warning" ng-hide="verbindungenVorhanden">Da es keine Verbindungen gibt, kann man keine auswählen</div>
                             </div>
                         </div>
                         <!-- SCHRITT 3 - Blöcke bilden -->
