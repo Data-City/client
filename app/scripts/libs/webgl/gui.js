@@ -231,10 +231,10 @@ function drawALine(aGarden, destGarden) {
 //			destGarden: der Garten, zu dem die Linie geht
 //			curveObject: die Linie, die gezeichnet wurde
 function workUpGarden(aGarden, destGarden, curveObject) {
-    if (aGarden.meshLines[destGarden.building._id] == undefined) {
-        aGarden.meshLines[destGarden.building._id] = [curveObject];
+    if (aGarden.meshLines[destGarden.building[association.name]] == undefined) {
+        aGarden.meshLines[destGarden.building[association.name]] = [curveObject];
     } else {
-        aGarden.meshLines[destGarden.building._id].push(curveObject);
+        aGarden.meshLines[destGarden.building[association.name]].push(curveObject);
     }
     setNextLinePos(aGarden);
 }
@@ -348,9 +348,9 @@ function onDocumentMouseDown(event) {
                 drawLines(intersects[0].object.garden, true);
                 intersects[0].object.material.color.setHex(0xA5DF00);
                 if (intersects[0].object.garden.isLeftGarden == true) {
-                    clickedLeftGardens.push(intersects[0].object.garden.building._id);
+                    clickedLeftGardens.push(intersects[0].object.garden.building[association.name]);
                 } else {
-                    clickedRightGardens.push(intersects[0].object.garden.building._id);
+                    clickedRightGardens.push(intersects[0].object.garden.building[association.name]);
                 }
 
             } else {

@@ -24,9 +24,9 @@ function getExtrema() {
 // @param data: JSON vom Datenbank-Team, das fuer jedes Gebaeude die Hoehe, Breite, Farbe, etc. gespeichert hat
 //			association: JSON fuer die Legende, damit man weiss, dass z.B. die Breite der Anzahl Methoden entspricht
 //			nameOfDivElement: Name vom Div-Element
-function drawCity(data, association, nameOfDivElement, settings) {
+function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
-    init(nameOfDivElement);
+    init(nameOfDivElement, incomingCalls, outgoingCalls);
     window.addEventListener('resize', function() {
         camera.aspect = window.innerWidth / window.innerHeight;
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -146,7 +146,7 @@ function updateExtrema(width, height, color) {
 //Initialisiert das Bild, d.h. malt die Zeichenflaeche, erstellt die Kamera, setzt das Licht, 
 //aktiviert das Beobachten der Mausaktivitaeten und das Zoomen, Drehen, Verschieben
 //@params nameOfDivElement: der Name vom Div-Element
-function init(nameOfDivElement) {
+function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
     // Erstelle einen neuen Renderer
     renderer = new THREE.WebGLRenderer();
@@ -175,6 +175,10 @@ function init(nameOfDivElement) {
 
     //Zum Zoomen, Drehen, Verschieben
     setControls();
+	
+	if(incomingCalls != undefined && outgoingCalls != undefined){
+		setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
+	}
 }
 
 
@@ -268,4 +272,34 @@ function setSpecificView(aJson) {
 //@return: associations: die Zuordnungen
 function getOriginalAssociations() {
     return associations;
+}
+
+
+//Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
+//@return neues JSON fuer Verbindungen
+function getIncomingConnections(connectionData){
+	var newJson = {};
+	for(var i=0; i<connectionData.connections.length; i++){
+		newJson[connectionData.connections[i].Ziel] = {};
+		newJson[connectionData.connections[i].Ziel].connections = {};
+		for (var j=0;j<connectionData.connections[i].incomingConnections.length; j++){
+			newJson[connectionData.connections[i].Ziel].connections[connectionData.connections[i].incomingConnections[j].Start] = connectionData.connections[i].incomingConnections[j].Gewichtung;
+		}
+		newJson[connectionData.connections[i].Ziel].sumOfConnections = connectionData.connections[i].Gewichtung;
+	}
+	return newJson;
+}
+
+function getOutgoingConnections(connectionData){
+	var newJSON = {};
+	for(var i=0; i<connectionData.connections.length; i++){
+		newJSON[connectionData.connections[i].Start] = {};
+		newJSON[connectionData.connections[i].Start].connections = {};
+		for (var j=0;j<connectionData.connections[i].outgoingConnections.length; j++){
+			newJSON[connectionData.connections[i].Start].connections[connectionData.connections[i].outgoingConnections[j].Ziel] = 
+			connectionData.connections[i].outgoingConnections[j].Gewichtung;
+		}
+		newJSON[connectionData.connections[i].Start].sumOfConnections = connectionData.connections[i].Gewichtung;
+	}
+	return newJSON;
 }

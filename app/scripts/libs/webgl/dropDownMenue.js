@@ -245,7 +245,7 @@ function removeOrAddDistrict(scene, value, aMesh, isFirstCall) {
             scene.add(storedDistrict[i]);
             if (storedDistrict[i].building != undefined) {
                 storedDistrict[i].building._isRemoved = false;
-                removedBuildings.splice(removedBuildings.indexOf(storedDistrict[i].building._id), 1);
+                removedBuildings.splice(removedBuildings.indexOf(storedDistrict[i].building[association.name]), 1);
             }
         }
     }
@@ -260,7 +260,7 @@ function removeOrAddObject(scene, aMesh) {
     storedBuilding = [];
     storedBuilding.push(aMesh);
     aMesh.building._isRemoved = true;
-    removedBuildings.push(aMesh.building._id);
+    removedBuildings.push(aMesh.building[association.name]);
     if (aMesh.building._leftGarden.mesh != undefined) {
         storedBuilding.push(aMesh.building._leftGarden.mesh);
         for (var x in aMesh.building._leftGarden.meshLines) {
