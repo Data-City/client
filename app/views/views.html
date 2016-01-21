@@ -163,12 +163,12 @@
                                     <fieldset class="formgroup">
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" ng-model="chosenView.districtType" value=0> Keine Blockbildung benutzen
+                                                <input type="radio" ng-model="chosenView.districtType" value=0 ng-click="chosenView.districts = []"> Keine Blockbildung benutzen
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" ng-model="chosenView.districtType" value=1 disabled> Die Blöcke werden nach jedem Punkt erzeugt
+                                                <input type="radio" ng-model="chosenView.districtType" value=1 ng-click="chosenView.districts = []"> Die Blöcke werden nach jedem Punkt erzeugt
                                             </label>
                                         </div>
                                         <div class="radio">
