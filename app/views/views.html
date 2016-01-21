@@ -110,7 +110,7 @@
                                         <td>{{attr.name}}</td>
                                         <td>{{attr.type}}</td>
                                         <td>
-                                            <input type="checkbox" ng-model="attr.toBeFiltered">
+                                            <input type="checkbox" ng-model="attr.toBeFiltered" ng-show="attr.type === 'number'">
                                         </td>
                                         <td>
                                             <div ng-show="attr.toBeFiltered && attr.type === 'number'">
