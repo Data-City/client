@@ -19,7 +19,7 @@ angular.module('datacityApp')
         REST.setPassword(sharedLogin.getPassword());
 
         var database = SETTINGS.databaseForViews;
-        var dbWithCollections = SETTINGS.databaseForViews;
+        var dbWithCollections = SETTINGS.databaseForCollections;
         var collection = SETTINGS.collection;
         var baseurl = SETTINGS.baseurl;
 
