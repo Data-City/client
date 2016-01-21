@@ -117,6 +117,7 @@ angular.module('datacityApp')
                     REST.getURL(relUrl, null, function(collection) {
                         REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
+                                console.log(view);
                                 var incomingConnections = incoming.data._embedded['rh:doc'][0];
                                 var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
                                 view.numberOfEntries = collection.data._returned;
@@ -129,7 +130,13 @@ angular.module('datacityApp')
                                 if (!collection.data._embedded) {
                                     $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
                                 } else {
-                                    drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
+                                    if (view.useConnections) {
+                                        //Verbindungen übergeben
+                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);    
+                                    } else {
+                                        //Keine Verbindungen übergeben
+                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);    
+                                    }                                    
                                 }
                             });
                         });

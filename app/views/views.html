@@ -146,90 +146,12 @@
                             <div class="panel-body" ng-show="showStep2">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" ng-model="chosenView.useConnections"> Verbindungen nutzen
+                                        <input type="checkbox" ng-model="chosenView.useConnections"> Verbindungen nutzen</input>
                                     </label>
                                 </div>
-                                <div ng-show="chosenView.useConnections">
-                                    <fieldset class="formgroup">
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" ng-model="chosenView.connectionType" value="asSingleField"> Ein Feld des Datensatzes nutzen, dass die Summe der Verbindungen enthält.
-                                                Die Verbindungsrichtung geht dabei verloren
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" ng-model="chosenView.connectionType" value="asAggregation"> Verbindungsrichtungen nutzen:
-                                                <br /> Jede Zeile enthält ein Feld, in dem das Ziel spezifiziert wird. Die Verbindungen
-                                                entstehen, indem diese Felder aggregiert werden.
-                                            </label>
-                                        </div>
-                                    </fieldset>
-                                </div>
 
                             </div>
                         </div>
-                        <!-- SCHRITT 2 - Daten aggregieren
-                        <div class="panel panel-default">
-                            <div class="panel-heading" ng-click="showStep2 = !showStep2;">
-                                <span class="panel-title">2. Daten aggregieren</span>
-                                <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
-                                <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
-                            </div>
-                            <div class="panel-body" ng-show="showStep2">
-                                <table class="table">
-                                    <thead>
-                                        <th>Nr.</th>
-                                        <th></th>
-                                        <th>Löschen</th>
-                                    </thead>
-                                    <tr ng-repeat="(arrayIndex, aggregation) in chosenView.aggregations">
-                                        <td><b>{{arrayIndex + 1}}</b></td>
-                                        <td>
-                                            <table class="table">
-                                                <thead>
-                                                    <th>Beschreibung</th>
-                                                    <th>Attribut</th>
-                                                    <th>Operation</th>
-                                                    <th>Neuer Name</th>
-                                                </thead>
-                                                <tr>
-                                                    <td>Gruppieren über</td>
-                                                    <td>
-                                                        <select ng-model="aggregation.groupOverField" ng-options="attr as attr.name for attr in (attributes | bychooseability) track by attr.name"></select>
-                                                    </td>
-                                                    <td></td>
-                                                    <td>
-                                                        <input type="text"></input>
-                                                    </td>
-                                                </tr>
-                                                <tr ng-show="aggregation.groupOverField" ng-repeat="(key, attr) in (attributes | bychooseability | attrbyname:aggregation.groupOverField)">
-                                                    <td></td>
-                                                    <td>{{attr.name}}</td>
-                                                    <td>
-                                                        <select ng-options="option as option.name for option in availableAggregationOperations track by option.cmd" ng-model="selected"></select>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text"></input>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-danger pull-right" aria-label="Left Align" ng-click="removeAggregation(key);">
-                                                <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <!-- Button: Neue Aggregation 
-                                <button type="button" class="btn btn-success pull-right" aria-label="Left Align" ng-click="addNewAggregation()">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true">Aggregationsschritt hinzufügen</span>
-                                </button>
-                            </div>
-                        </div>
-                        -->
                         <!-- SCHRITT 3 - Blöcke bilden -->
                         <div class="panel panel-default">
                             <div class="panel-heading" ng-click="showStep3 = !showStep3;">
