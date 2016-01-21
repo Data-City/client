@@ -115,17 +115,24 @@ angular.module('datacityApp')
             $scope.createAggregationForDisplay(function(response) {
                 REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function(response) {
                     REST.getURL(relUrl, null, function(collection) {
-                        view.dimensions.name = {
-                            name: view.dimensionSettings.name.name
-                        };
-                        view.dimensions.height = view.dimensionSettings.height.name;
-                        view.dimensions.area = view.dimensionSettings.area.name;
-                        view.dimensions.color = view.dimensionSettings.color.name;
-                        if (!collection.data._embedded) {
-                            $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
-                        } else {
-                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV);
-                        }
+                        REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
+                            REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
+                                var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                                var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
+                                view.numberOfEntries = collection.data._returned;
+                                view.dimensions.name = {
+                                    name: view.dimensionSettings.name.name
+                                };
+                                view.dimensions.height = view.dimensionSettings.height.name;
+                                view.dimensions.area = view.dimensionSettings.area.name;
+                                view.dimensions.color = view.dimensionSettings.color.name;
+                                if (!collection.data._embedded) {
+                                    $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
+                                } else {
+                                    drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
+                                }
+                            });
+                        });
                     });
                 });
             });

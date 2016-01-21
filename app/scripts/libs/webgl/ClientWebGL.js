@@ -38,6 +38,8 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     association.dimensions.height = association.dimensionSettings.height.name;
     setAssociation(association["dimensions"]);
     associations = association;
+    
+    setNumOfEntries(association.numberOfEntries);
 
     /*if(data[0].buildings == undefined){
 		mainDistrict = createMainDistrict(data, association.dimensions);

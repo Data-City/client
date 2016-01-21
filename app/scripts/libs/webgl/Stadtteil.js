@@ -1,6 +1,7 @@
 var association = {}; //Hier wird die Legende gespeichert
 var incomingCalls = {};
 var outgoingCalls = {};
+var numOfEntries;
 
 //Setter fuer association
 //@params: newAssociation: die Zuordnung
@@ -29,6 +30,12 @@ function getBuildingsHashMap() {
     return buildingsHashMap;
 }
 
+//Setter fuer numOfEntries
+//@params: numOfEntries: Anzahl aller gebaeude
+function setNumOfEntries(newNum){
+    numOfEntries = newNum;
+}
+
 
 //Setter fuer incomingCalls, outgoingCalls
 //@params: income: neues Objekt fuer incomingCalls
@@ -46,9 +53,9 @@ function garden(isItLeftGarden, aBuilding, connections) {
 	}
     var aGarden = {
         building: aBuilding,
-        _width: connections.sumOfConnections / 1/50,
+        _width: connections.sumOfConnections / numOfEntries,
         _height: 0.01,
-        depth: connections.sumOfConnections / 2/50,
+        depth: connections.sumOfConnections / 2/numOfEntries,
         _centerPosition: [0, 0.05, 0],
         nextLinePos: [0, 0],
         on: false,
