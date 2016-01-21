@@ -41,18 +41,17 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-    .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST) {
+    .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST, SETTINGS) {
         //Standardeinstellungen
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
 
-        var database = "einstellungen";
-        var collection = "ansichten";
-        var baseurl = "https://pegenau.com:16392";
+        var database = SETTINGS.databaseForViews;
+        var dbWithCollections = SETTINGS.databaseForCollections;
+        var collection = SETTINGS.collection;
+        var baseurl = SETTINGS.baseurl;
 
-        var WEBGL_DIV = 'Stadt';
-
-        var dbWithCollections = "prelife";
+        var WEBGL_DIV = SETTINGS.WEBGL_DIV;
 
         /**
          *  Konstruktor für eine Ansicht
@@ -135,6 +134,16 @@ angular.module('datacityApp')
 
         $scope.availableAggregationOperations = AGGR.availableAggregationOperations;
 
+        $scope.verbindungenVorhanden = function() {
+            REST.getDocuments(dbWithCollections, $scope.collID + "_dc_connections_incoming", function(incoming) {
+                if (incoming) {
+                    $scope.verbindungenVorhanden = true;
+                } else {
+                    $scope.verbindungenVorhanden = false;
+                }
+            });
+        };
+
         /**
          * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
          */
@@ -144,17 +153,31 @@ angular.module('datacityApp')
             $scope.createAggregationForDisplay(function(response) {
                 REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function(response) {
                     REST.getURL(relUrl, null, function(collection) {
-                        view.dimensions.name = {
-                            name: view.dimensionSettings.name.name
-                        };
-                        view.dimensions.height = view.dimensionSettings.height.name;
-                        view.dimensions.area = view.dimensionSettings.area.name;
-                        view.dimensions.color = view.dimensionSettings.color.name;
-                        if (!collection.data._embedded) {
-                            $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
-                        } else {
-                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV);
-                        }
+                        REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
+                            REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
+                                console.log(view);
+                                var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                                var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
+                                view.numberOfEntries = collection.data._returned;
+                                view.dimensions.name = {
+                                    name: view.dimensionSettings.name.name
+                                };
+                                view.dimensions.height = view.dimensionSettings.height.name;
+                                view.dimensions.area = view.dimensionSettings.area.name;
+                                view.dimensions.color = view.dimensionSettings.color.name;
+                                if (!collection.data._embedded) {
+                                    $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
+                                } else {
+                                    if (view.useConnections) {
+                                        //Verbindungen übergeben
+                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
+                                    } else {
+                                        //Keine Verbindungen übergeben
+                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
+                                    }
+                                }
+                            });
+                        });
                     });
                 });
             });
@@ -223,7 +246,7 @@ angular.module('datacityApp')
             REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
                 $scope.collection = resp;
             });
-
+            $scope.verbindungenVorhanden();
         }
 
         /**
@@ -368,7 +391,7 @@ angular.module('datacityApp')
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jan 20 2016 17:42:54 GMT+0100 (Mitteleuropäische Zeit)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jan 21 2016 17:54:28 GMT+0100 (Mitteleuropäische Zeit)
 </footer>
 
 <script> prettyPrint(); </script>

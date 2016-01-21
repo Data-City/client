@@ -41,7 +41,7 @@ angular.module('datacityApp')
                     var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
                     console.log(incomingConnections);
                     console.log(outgoingConnections);
-                    
+
                     $scope.chosenCollection = collection;
 
                     //DIE ANSICHT WIRD GEHOLT

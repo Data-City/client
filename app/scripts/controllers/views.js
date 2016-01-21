@@ -24,7 +24,7 @@ angular.module('datacityApp')
         var baseurl = SETTINGS.baseurl;
 
         var WEBGL_DIV = SETTINGS.WEBGL_DIV;
-        
+
         /**
          *  Konstruktor für eine Ansicht
          */
@@ -106,16 +106,16 @@ angular.module('datacityApp')
 
         $scope.availableAggregationOperations = AGGR.availableAggregationOperations;
 
-        $scope.verbindungenVorhanden = function () {
+        $scope.verbindungenVorhanden = function() {
             REST.getDocuments(dbWithCollections, $scope.collID + "_dc_connections_incoming", function(incoming) {
-                    if (incoming) {
-                        $scope.verbindungenVorhanden = true;
-                    } else {
-                        $scope.verbindungenVorhanden = false;
-                    }
-                });    
-        }
-        
+                if (incoming) {
+                    $scope.verbindungenVorhanden = true;
+                } else {
+                    $scope.verbindungenVorhanden = false;
+                }
+            });
+        };
+
         /**
          * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
          */
@@ -142,11 +142,11 @@ angular.module('datacityApp')
                                 } else {
                                     if (view.useConnections) {
                                         //Verbindungen übergeben
-                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);    
+                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
                                     } else {
                                         //Keine Verbindungen übergeben
-                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);    
-                                    }                                    
+                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
+                                    }
                                 }
                             });
                         });

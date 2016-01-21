@@ -25,6 +25,13 @@ function getExtrema() {
 //			association: JSON fuer die Legende, damit man weiss, dass z.B. die Breite der Anzahl Methoden entspricht
 //			nameOfDivElement: Name vom Div-Element
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
+
+    console.log("data");
+    console.log(data);
+
+    console.log("assoc");
+    console.log(association);
+
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls);
     window.addEventListener('resize', function() {
@@ -38,7 +45,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     association.dimensions.height = association.dimensionSettings.height.name;
     setAssociation(association["dimensions"]);
     associations = association;
-    
+
     setNumOfEntries(association.numberOfEntries);
 
     /*if(data[0].buildings == undefined){
@@ -177,10 +184,10 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
     //Zum Zoomen, Drehen, Verschieben
     setControls();
-	
-	if(incomingCalls != undefined && outgoingCalls != undefined){
-		setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
-	}
+
+    if (incomingCalls != undefined && outgoingCalls != undefined) {
+        setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
+    }
 }
 
 
@@ -279,29 +286,29 @@ function getOriginalAssociations() {
 
 //Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
 //@return neues JSON fuer Verbindungen
-function getIncomingConnections(connectionData){
-	var newJson = {};
-	for(var i=0; i<connectionData.connections.length; i++){
-		newJson[connectionData.connections[i].Ziel] = {};
-		newJson[connectionData.connections[i].Ziel].connections = {};
-		for (var j=0;j<connectionData.connections[i].incomingConnections.length; j++){
-			newJson[connectionData.connections[i].Ziel].connections[connectionData.connections[i].incomingConnections[j].Start] = connectionData.connections[i].incomingConnections[j].Gewichtung;
-		}
-		newJson[connectionData.connections[i].Ziel].sumOfConnections = connectionData.connections[i].Gewichtung;
-	}
-	return newJson;
+function getIncomingConnections(connectionData) {
+    var newJson = {};
+    for (var i = 0; i < connectionData.connections.length; i++) {
+        newJson[connectionData.connections[i].Ziel] = {};
+        newJson[connectionData.connections[i].Ziel].connections = {};
+        for (var j = 0; j < connectionData.connections[i].incomingConnections.length; j++) {
+            newJson[connectionData.connections[i].Ziel].connections[connectionData.connections[i].incomingConnections[j].Start] = connectionData.connections[i].incomingConnections[j].Gewichtung;
+        }
+        newJson[connectionData.connections[i].Ziel].sumOfConnections = connectionData.connections[i].Gewichtung;
+    }
+    return newJson;
 }
 
-function getOutgoingConnections(connectionData){
-	var newJSON = {};
-	for(var i=0; i<connectionData.connections.length; i++){
-		newJSON[connectionData.connections[i].Start] = {};
-		newJSON[connectionData.connections[i].Start].connections = {};
-		for (var j=0;j<connectionData.connections[i].outgoingConnections.length; j++){
-			newJSON[connectionData.connections[i].Start].connections[connectionData.connections[i].outgoingConnections[j].Ziel] = 
-			connectionData.connections[i].outgoingConnections[j].Gewichtung;
-		}
-		newJSON[connectionData.connections[i].Start].sumOfConnections = connectionData.connections[i].Gewichtung;
-	}
-	return newJSON;
+function getOutgoingConnections(connectionData) {
+    var newJSON = {};
+    for (var i = 0; i < connectionData.connections.length; i++) {
+        newJSON[connectionData.connections[i].Start] = {};
+        newJSON[connectionData.connections[i].Start].connections = {};
+        for (var j = 0; j < connectionData.connections[i].outgoingConnections.length; j++) {
+            newJSON[connectionData.connections[i].Start].connections[connectionData.connections[i].outgoingConnections[j].Ziel] =
+                connectionData.connections[i].outgoingConnections[j].Gewichtung;
+        }
+        newJSON[connectionData.connections[i].Start].sumOfConnections = connectionData.connections[i].Gewichtung;
+    }
+    return newJSON;
 }

@@ -32,7 +32,7 @@ function getBuildingsHashMap() {
 
 //Setter fuer numOfEntries
 //@params: numOfEntries: Anzahl aller gebaeude
-function setNumOfEntries(newNum){
+function setNumOfEntries(newNum) {
     numOfEntries = newNum;
 }
 
@@ -40,22 +40,25 @@ function setNumOfEntries(newNum){
 //Setter fuer incomingCalls, outgoingCalls
 //@params: income: neues Objekt fuer incomingCalls
 //			outgoing: neues Objekt fuer outgoingCalls
-function setCalls(income, outgoing){
-	incomingCalls = income;
-	outgoingCalls = outgoing;
+function setCalls(income, outgoing) {
+    incomingCalls = income;
+    outgoingCalls = outgoing;
 }
 
 //Konstruktor für einen Vorgarten
 //@params: isItLeftGarden: true, wenn es sich um einen linken Garten handelt, sonst false
 function garden(isItLeftGarden, aBuilding, connections) {
-	if(connections==undefined){
-		connections = {sumOfConnections: 0, connections: {}};
-	}
+    if (connections == undefined) {
+        connections = {
+            sumOfConnections: 0,
+            connections: {}
+        };
+    }
     var aGarden = {
         building: aBuilding,
         _width: connections.sumOfConnections / numOfEntries,
         _height: 0.01,
-        depth: connections.sumOfConnections / 2/numOfEntries,
+        depth: connections.sumOfConnections / 2 / numOfEntries,
         _centerPosition: [0, 0.05, 0],
         nextLinePos: [0, 0],
         on: false,
@@ -145,9 +148,9 @@ function sortBuildings(aDistrict) {
             } else {
                 return (getLandWidth(building2) - getLandWidth(building1));
             }*/
-			initBuilding(building1);
-			initBuilding(building2);
-			return (getLandWidth(building2) - getLandWidth(building1));
+            initBuilding(building1);
+            initBuilding(building2);
+            return (getLandWidth(building2) - getLandWidth(building1));
         }
     );
     return aDistrict;
@@ -251,12 +254,12 @@ function getLandWidth(aBuilding) {
 
 //Hilfsmethode, um xPosition von den Gebaeuden zu bestimmen
 //@params: i: i-te Eintrag in arrayOfBuildings
-function getXPosOfBuildingsFromLeft(i){
-	return Math.max(arrayOfBuildings[i]._width/2, arrayOfBuildings[i]._leftGarden._width+1);
+function getXPosOfBuildingsFromLeft(i) {
+    return Math.max(arrayOfBuildings[i]._width / 2, arrayOfBuildings[i]._leftGarden._width + 1);
 }
 
-function getXPosOfBuildingsFromRight(i){
-	return Math.max(arrayOfBuildings[i]._width/2, arrayOfBuildings[i]._rightGarden._width+1);
+function getXPosOfBuildingsFromRight(i) {
+    return Math.max(arrayOfBuildings[i]._width / 2, arrayOfBuildings[i]._rightGarden._width + 1);
 }
 
 
