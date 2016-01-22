@@ -113,7 +113,7 @@
                                             <input type="checkbox" ng-model="attr.toBeFiltered" ng-show="attr.type === 'number'">
                                         </td>
                                         <td>
-                                            <div ng-show="attr.toBeFiltered && attr.type === 'number'">
+                                            <div ng-if="attr.toBeFiltered && attr.type === 'number'">
                                                 <div class="row">
                                                     <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
                                                         <div class="row">
