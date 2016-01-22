@@ -54,8 +54,7 @@
         <div class="panel panel-primary" id="dimensions" ng-show="chosenView">
             <div class="panel-heading">
                 <h4 class="panel-title">
-					Ansicht bearbeiten: {{chosenView.name}}
-					
+					Ansicht bearbeiten: {{chosenView.name}}		
 					<!-- Die Bearbeitungs-Icons -->
 					<div class="btn-group btn-group-xs pull-right" role="group" aria-label="...">
 						<!-- Reihenfolge der beiden "data-toggle"'s nicht verändern! Funktioniert nur so! -->
@@ -98,7 +97,7 @@
                                 <thead>
                                     <th>Nutzen</th>
                                     <th>Name</th>
-                                    <th>Typ</th>
+                                    <th>Typ <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Strings können nicht reduziert werden. "></span></th>
                                     <th>Filtern</th>
                                     <th>Optionen</th>
                                 </thead>
@@ -156,7 +155,8 @@
                         <div class="panel panel-default">
                             <div class="panel-heading" ng-click="showStep3 = !showStep3;">
                                 <span class="panel-title">3. Blöcke definieren</span>
-                                <button type="button" class="btn btn-primary btn-xs"> <span class="glyphicon glyphicon-question-sign" ng-click="" data-toggle="tooltip" title="Text"></span></button>
+                                <button type="button" class="btn btn-primary btn-xs"> 
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Die Blockbildung dient zur zweckgebundenen Visualisierung der Datensätze"></span></button>
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep3" aria-hidden="true"></span>
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
                             </div>
@@ -170,13 +170,13 @@
                                         <div class="radio">
                                             <label>
                                                 <input type="radio" ng-model="chosenView.districtType" value=1 ng-click="chosenView.districts = []"> Die Blöcke werden nach jedem Punkt erzeugt
-                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Text"></span>
+                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Hiermit werden die Gebäude nach den Namen gruppiert."></span>
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
                                                 <input type="radio" ng-model="chosenView.districtType" value=2> Blöcke auswählen
-                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Text"></span>
+                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Hier können Sie Gebäude nach der ausgewählten Dimension gruppieren."></span>
                                             </label>
                                         </div>
                                     </fieldset>
