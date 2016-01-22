@@ -156,6 +156,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading" ng-click="showStep3 = !showStep3;">
                                 <span class="panel-title">3. Blöcke definieren</span>
+                                <button type="button" class="btn btn-primary btn-xs"> <span class="glyphicon glyphicon-question-sign" ng-click="" data-toggle="tooltip" title="Text"></span></button>
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep3" aria-hidden="true"></span>
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
                             </div>
@@ -169,15 +170,17 @@
                                         <div class="radio">
                                             <label>
                                                 <input type="radio" ng-model="chosenView.districtType" value=1 ng-click="chosenView.districts = []"> Die Blöcke werden nach jedem Punkt erzeugt
+                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Text"></span>
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
                                                 <input type="radio" ng-model="chosenView.districtType" value=2> Blöcke auswählen
+                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Text"></span>
                                             </label>
                                         </div>
                                     </fieldset>
-                                </div>
+                                  </div>
                             
                             <div class="panel-body" ng-show="chosenView.districtType == 2 && showStep3">
                                 Block Nr.1 entspricht dem innersten Block.
