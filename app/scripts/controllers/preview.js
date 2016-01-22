@@ -27,11 +27,13 @@ angular.module('datacityApp')
         if ($routeParams.collID) {
             $scope.collID = $routeParams.collID;
         }
+        
+        /**
+         * Holt die Collection und die Attribute
+         */
         REST.getDocuments(db, $scope.collID, function(collection) {
-            //          $log.info(collection);
             $scope.results = collection.data._embedded['rh:doc'];
             $scope.attributes = getProperties($scope.results[0]);
-            //        $log.info($scope.attributes);
         });
 
 

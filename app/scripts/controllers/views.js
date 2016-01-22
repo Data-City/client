@@ -56,10 +56,16 @@ angular.module('datacityApp')
             this.aggregationOperations = [];
         }
 
+        /**
+         * Konstruktor für einen Block
+         */
         function District() {
             this.field = null;
         }
 
+        /**
+         * Fügt eine neue Ebene (Block) zur Auswahl hinzu
+         */
         $scope.addDistrict = function() {
             if (!$scope.chosenView.districts) {
                 $scope.chosenView.districts = [];
@@ -67,17 +73,30 @@ angular.module('datacityApp')
             $scope.chosenView.districts.push(new District());
         };
 
+        /**
+         * Löscht die angegebene Ebene
+         * 
+         * @param: arrayIndex: Der Index vom Array, das gelöscht werden soll
+         */
         $scope.deleteDistrict = function(arrayIndex) {
             $scope.chosenView.districts.splice(arrayIndex, 1);
         };
 
         $scope.numberOfAggregations = 0;
 
+        /**
+         * Fügt eine neue Aggregation hinzu
+         */
         $scope.addNewAggregation = function() {
             $scope.chosenView.aggregations.push(new Aggregation());
             $scope.numberOfAggregations += 1;
         };
 
+        /**
+         * Löscht eine Aggregation
+         * 
+         * @param
+         */
         $scope.removeAggregation = function(arrayIndex) {
             $scope.chosenView.aggregations.splice(arrayIndex, 1);
 
@@ -106,6 +125,9 @@ angular.module('datacityApp')
 
         $scope.availableAggregationOperations = AGGR.availableAggregationOperations;
 
+        /**
+         * Fragt beim Server ab, ob eine Collection mit den (eingehenden) Verbindungen vorhanden sind
+         */
         $scope.verbindungenVorhanden = function() {
             REST.getDocuments(dbWithCollections, $scope.collID + "_dc_connections_incoming", function(incoming) {
                 if (incoming) {
@@ -324,7 +346,10 @@ angular.module('datacityApp')
             myWindow.document.getElementById('jsonDownload').appendChild(a);
         };
 
-
+        /**
+         * Aus den ausgewählten Blöcken (Radio Button Option 3) wird die Stadt so zusammengebaut,
+         * dass sie wie gewünscht mehrere Ebenen enthält. 
+         */
         $scope.createAggregationForDisplay = function(fn) {
             var view = $scope.chosenView;
             var stages = [];

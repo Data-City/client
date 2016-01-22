@@ -61,18 +61,32 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
         });
     };
 
+    /**
+     * bekommt eine Collection ID und linkt zu der entsprechenden "preview"-Seite 
+     * 
+     * @param: collID: ID der Collection, zu der weiter geleitet werden soll
+     * 
+     * @return: Gibt den Link zurück
+     */
     $scope.getMyLink = function(collId) {
         var link = "#/data/preview/" + collId;
         location.href = link;
         return link;
     };
 
+    /**
+     * Gibt die id der Collection zurück
+     * 
+     * @param: Ein Objekt "Collection"
+     * 
+     * @return: die ID des übergebenen Objektes
+     */
     $scope.getIdOfCollection = function(collection) {
         return collection ? collection.data._id : null;
     };
 
     /**
-     * Löscht die ausgewählte Collection
+     * Löscht die ausgewählte Collection samt ihren Ansichten und der Collections, die im Hintergrund benötigt werden
      */
     $scope.deleteCollection = function() {
 
@@ -93,7 +107,7 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
     };
 
     /**
-     * Holt alle Collections
+     * Holt alle Collections und speichert sie in "$scope.Collections"
      */
     $scope.getCollections = function() {
         $scope.loader = true;

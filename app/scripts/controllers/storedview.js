@@ -33,35 +33,26 @@ angular.module('datacityApp')
 
         console.log(storedJSON);
 
-        // DIE COLLECTION WIRD GEHOLT (DU MUSST DIE COLLID SETZEN)
+        /**
+         * Liest die Parameter aus dem JSON aus (Winkel der Kamera etc), holt alle benötigten Datenbanken (Collection, Verbindungen, die Ansicht)
+         * und übergibt sie an das WebGL, damit die Stadt gezeichnet werden kann
+         */
         REST.getDocuments(databaseForCollections, storedJSON.collID, function(collection) {
             REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_incoming", function(incoming) {
                 REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_outgoing", function(outgoing) {
                     var incomingConnections = incoming.data._embedded['rh:doc'][0];
                     var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
-                    console.log(incomingConnections);
-                    console.log(outgoingConnections);
 
                     $scope.chosenCollection = collection;
 
-                    //DIE ANSICHT WIRD GEHOLT
                     REST.getData(function(response) {
                         if (response.data) {
                             $scope.chosenView = response.data;
                             $scope.chosenView.numberOfEntries = collection.data._returned;
                         }
 
-                        // CODE HIER DRIN 
-
-                        console.log("Ausgewählte Collection: ");
-                        console.log($scope.chosenCollection);
-
-                        console.log("Ausgewählte Ansicht:");
-                        console.log($scope.chosenView);
-
                         var settings = storedJSON;
-
-                        // drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings);
+                        
                         drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings, incomingConnections, outgoingConnections);
 
                     }, databaseForViews, ansichten, storedJSON._id);
