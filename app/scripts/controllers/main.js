@@ -73,12 +73,20 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
         location.href = link;
         return link;
     };
-
+    /**
+     * Gibt entweder Datensatz oder Datensätze an
+     * 
+     * @param: Anzahl der vorliegenden Datensätze
+     * 
+     * @return: einen String
+     */
     $scope.getDatasOrData = function(numberOfCollections){
         var string = "";
-        if(numberOfCollections=1){
+        if(numberOfCollections === 1){
             string ="Datensatz";
-        } else{
+        } else if(numberOfCollections === 0){
+            string = "Es liegen keine Datensätze vor.";
+        }else{
             string = "Datensätze";
         }
         return string;
