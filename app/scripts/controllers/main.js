@@ -74,6 +74,16 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
         return link;
     };
 
+    $scope.getDatasOrData = function(numberOfCollections){
+        var string = "";
+        if(numberOfCollections=1){
+            string ="Datensatz";
+        } else{
+            string = "Datensätze";
+        }
+        return string;
+    };
+
     /**
      * Gibt die id der Collection zurück
      * 

@@ -13,7 +13,7 @@
     <!-- Panel zur Anzeige der Datensätze -->
     <div class="panel panel-default" ng-show="loggedIn && !loader">
         <div class="panel-heading">
-            <h3 class="panel-title">{{numberOfCollections}} Datensätze</h3>
+            <h3 class="panel-title">{{numberOfCollections}} {{getDatasOrData(numberOfCollections)}}</h3>
         </div>
         <!-- Tabelle für die Datensätze -->
         <div class="panel-body">
