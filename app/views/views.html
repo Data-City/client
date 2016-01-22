@@ -113,7 +113,7 @@
                                             <input type="checkbox" ng-model="attr.toBeFiltered" ng-show="attr.type === 'number'">
                                         </td>
                                         <td>
-                                            <div ng-show="attr.toBeFiltered && attr.type === 'number'">
+                                            <div ng-if="attr.toBeFiltered && attr.type === 'number'">
                                                 <div class="row">
                                                     <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
                                                         <div class="row">
@@ -225,7 +225,8 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Name</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name"
+                                                ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -234,7 +235,8 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Fläche</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.area" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.area"
+                                                ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -243,7 +245,8 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Höhe</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.height" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.height"
+                                                ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -252,7 +255,8 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Farbe</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.color" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.color"
+                                                ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>

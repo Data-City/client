@@ -144,37 +144,59 @@ angular.module('datacityApp')
         $scope.drawCity = function() {
             var view = $scope.chosenView;
             var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
-            $scope.createAggregationForDisplay(function(response) {
-                REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function(response) {
-                    REST.getURL(relUrl, null, function(collection) {
-                        REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
-                            REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
-                                console.log(view);
-                                var incomingConnections = incoming.data._embedded['rh:doc'][0];
-                                var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
-                                view.numberOfEntries = collection.data._returned;
-                                view.dimensions.name = {
-                                    name: view.dimensionSettings.name.name
-                                };
-                                view.dimensions.height = view.dimensionSettings.height.name;
-                                view.dimensions.area = view.dimensionSettings.area.name;
-                                view.dimensions.color = view.dimensionSettings.color.name;
-                                if (!collection.data._embedded) {
-                                    $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
-                                } else {
-                                    if (view.useConnections) {
-                                        //Verbindungen übergeben
-                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
+            
+            var validate = true;
+            
+            for (var key in view.districts) {
+                if (view.districts[key].field === null){
+                    validate = false;
+                    window.alert("Schritt 3: \nEs wurden eine oder mehrere Blöcke hinzugefügt, aber keine Einstellungen vorgenommen!");  
+                    break;                 
+                }
+            }
+            
+            if (view.districts[0] === undefined && view.districtType === "2") {
+                validate = false;
+                window.alert("Schritt 3: \nBei der Blockbildung wurde Option 3 festgelegt, aber keine Blöcke ausgewählt. \nFalls Sie keine Blockbildung möchten, bitte wählen Sie Option 1");
+            }
+            
+            if (!view.dimensionSettings || !view.dimensionSettings.area || !view.dimensionSettings.color || !view.dimensionSettings.height || !view.dimensionSettings.name) {
+                validate = false;
+                window.alert("Schritt 4: \nEs wurden eine oder mehr Dimensionen nicht ausgewählt!");
+            }
+            
+            if (validate){
+                $scope.createAggregationForDisplay(function(response) {
+                    REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function(response) {
+                        REST.getURL(relUrl, null, function(collection) {
+                            REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
+                                REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
+                                    var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                                    var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
+                                    view.numberOfEntries = collection.data._returned;
+                                    view.dimensions.name = {
+                                        name: view.dimensionSettings.name.name
+                                    };
+                                    view.dimensions.height = view.dimensionSettings.height.name;
+                                    view.dimensions.area = view.dimensionSettings.area.name;
+                                    view.dimensions.color = view.dimensionSettings.color.name;
+                                    if (!collection.data._embedded) {
+                                        $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
                                     } else {
-                                        //Keine Verbindungen übergeben
-                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
+                                        if (view.useConnections) {
+                                            //Verbindungen übergeben
+                                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
+                                        } else {
+                                            //Keine Verbindungen übergeben
+                                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
+                                        }
                                     }
-                                }
+                                });
                             });
                         });
                     });
                 });
-            });
+            }
         };
 
         /**

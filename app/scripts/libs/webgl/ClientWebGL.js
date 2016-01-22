@@ -26,12 +26,6 @@ function getExtrema() {
 //			nameOfDivElement: Name vom Div-Element
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
 
-    console.log("data");
-    console.log(data);
-
-    console.log("assoc");
-    console.log(association);
-
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls);
     window.addEventListener('resize', function() {
