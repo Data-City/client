@@ -155,8 +155,6 @@
                         <div class="panel panel-default">
                             <div class="panel-heading" ng-click="showStep3 = !showStep3;">
                                 <span class="panel-title">3. Blöcke definieren</span>
-                                <button type="button" class="btn btn-primary btn-xs"> 
-                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Die Blockbildung dient zur zweckgebundenen Visualisierung der Datensätze"></span></button>
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep3" aria-hidden="true"></span>
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep3" aria-hidden="true"></span>
                             </div>
@@ -169,8 +167,7 @@
                                         </div>
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" ng-model="chosenView.districtType" value=1 ng-click="chosenView.districts = []"> Die Blöcke werden nach jedem Punkt erzeugt
-                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Hiermit werden die Gebäude nach den Namen gruppiert."></span>
+                                                <input type="radio" ng-model="chosenView.districtType" value=1 ng-click="chosenView.districts = []"> Blöcke nach Namen gruppiert
                                             </label>
                                         </div>
                                         <div class="radio">
