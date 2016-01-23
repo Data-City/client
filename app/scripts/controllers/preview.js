@@ -2,9 +2,9 @@
 /*jshint -W117 */
 /**
  * @ngdoc function
- * @name datacityApp.controller:PlaygroundCtrl
+ * @name datacityApp.controller:PreviewCtrl
  * @description
- * # PlaygroundCtrl
+ * # PreviewCtrl
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
