@@ -79,6 +79,8 @@ var controlling = {
 
 //fuer den Ordner "aktuelle Ansicht"
 var currentView = {
+    "initialView" : function(){goToInitialView();},
+    "goToArielView" : function(){goToArielView();},
     "Link": ''
 }
 
@@ -197,8 +199,10 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
 	
 	//********************************************************************
 
-    h = gui.addFolder("aktuelle Ansicht");
-    h.add(currentView, "Link").name("Link markieren Strg+A").listen();
+    h = gui.addFolder("Ansicht");
+	h.add(currentView, "initialView").name("Anfangsansicht");
+	h.add(currentView, "goToArielView").name("Vogelperspektive");
+    h.add(currentView, "Link").name("aktuelle Ansicht").listen();
     h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
 }
 

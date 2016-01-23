@@ -133,6 +133,19 @@ function setLight(scene) {
 }
 
 
+//setzt Camera auf die Vogelperspektive
+function goToArielView(){
+    camera.position.x = 0;
+    camera.position.y = maximalHeight;
+    camera.position.z = 0;
+}
+
+
+//setzt Camera auf die erste Ansicht
+function goToInitialView(){
+    setCameraPos(camera, getMainDistrict(), getExtrema());
+}
+
 
 //Methode, um die Stadt auf die WebGL-scene zu zeichnen, wenn wir die Daten bekommen haben
 //@params:	mainDistrict: das Stadtteil, das der unteren Grundflaeche entspricht mit allen zu zeichnenden Stadtteilen und Gebaeuden

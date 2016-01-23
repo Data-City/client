@@ -18,6 +18,11 @@ function getExtrema() {
     return extrema;
 }
 
+//Getter fuer mainDistrict
+function getMainDistrict(){
+    return mainDistrict;
+}
+
 
 
 // wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
