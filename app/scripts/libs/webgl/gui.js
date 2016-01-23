@@ -69,8 +69,8 @@ function drawBox(aBuilding, material, scene) {
 function getMaterial(aColor) {
     var material = new THREE.MeshPhongMaterial({
         color: aColor,
-        specular: 0x333333,
-        shininess: 50,
+        //specular: 0x333333,
+        //shininess: 50,
         side: THREE.DoubleSide,
         vertexColors: THREE.VertexColors,
         shading: THREE.SmoothShading
