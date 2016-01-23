@@ -52,7 +52,7 @@ angular.module('datacityApp')
                         }
 
                         var settings = storedJSON;
-                        
+
                         drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings, incomingConnections, outgoingConnections);
 
                     }, databaseForViews, ansichten, storedJSON._id);

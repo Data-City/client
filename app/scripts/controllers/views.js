@@ -144,28 +144,28 @@ angular.module('datacityApp')
         $scope.drawCity = function() {
             var view = $scope.chosenView;
             var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
-            
+
             var validate = true;
-            
+
             for (var key in view.districts) {
-                if (view.districts[key].field === null){
+                if (view.districts[key].field === null) {
                     validate = false;
-                    window.alert("Schritt 3: \nEs wurden eine oder mehrere Blöcke hinzugefügt, aber keine Einstellungen vorgenommen!");  
-                    break;                 
+                    window.alert("Schritt 3: \nEs wurden eine oder mehrere Blöcke hinzugefügt, aber keine Einstellungen vorgenommen!");
+                    break;
                 }
             }
-            
+
             if (view.districts[0] === undefined && view.districtType === "2") {
                 validate = false;
                 window.alert("Schritt 3: \nBei der Blockbildung wurde Option 3 festgelegt, aber keine Blöcke ausgewählt. \nFalls Sie keine Blockbildung möchten, bitte wählen Sie Option 1");
             }
-            
+
             if (!view.dimensionSettings || !view.dimensionSettings.area || !view.dimensionSettings.color || !view.dimensionSettings.height || !view.dimensionSettings.name) {
                 validate = false;
                 window.alert("Schritt 4: \nEs wurden eine oder mehr Dimensionen nicht ausgewählt!");
             }
-            
-            if (validate){
+
+            if (validate) {
                 $scope.createAggregationForDisplay(function(response) {
                     REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, 'data', function(response) {
                         REST.getURL(relUrl, null, function(collection) {
@@ -392,7 +392,7 @@ angular.module('datacityApp')
                 }
             });
         };
-        $(document).ready(function(){
-             $('[data-toggle="tooltip"]').tooltip(); 
-            });
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
     });

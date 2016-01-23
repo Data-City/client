@@ -80,13 +80,13 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
      * 
      * @return: einen String
      */
-    $scope.getDatasOrData = function(numberOfCollections){
+    $scope.getDatasOrData = function(numberOfCollections) {
         var string = "";
-        if(numberOfCollections === 1){
-            string ="Datensatz";
-        } else if(numberOfCollections === 0){
+        if (numberOfCollections === 1) {
+            string = "Datensatz";
+        } else if (numberOfCollections === 0) {
             string = "Es liegen keine Datensätze vor.";
-        }else{
+        } else {
             string = "Datensätze";
         }
         return string;

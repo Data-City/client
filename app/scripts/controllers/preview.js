@@ -27,7 +27,7 @@ angular.module('datacityApp')
         if ($routeParams.collID) {
             $scope.collID = $routeParams.collID;
         }
-        
+
         /**
          * Holt die Collection und die Attribute
          */
