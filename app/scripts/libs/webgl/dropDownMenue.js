@@ -82,6 +82,12 @@ var currentView = {
     "Link": ''
 }
 
+//fuer den Ordner "Gebaeudesuche"
+var searchBuilding = {
+    "search" : "Bitte Gebäudenamen eingeben",
+	"showBuilding" : function(){showBuilding();}
+}
+
 //aendert bei den Gebaeudeinformationen in der Legende die Werte, die angezeigt werden sollen
 //@params: newHeight: die neue Hoehe, die angezeigt werden soll
 //			newWidth: die neue Breite, die angezeigt werden soll
@@ -184,11 +190,19 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
     });
 
     //********************************************************************
+	
+	h = gui.addFolder("Gebäudesuche");
+	h.add(searchBuilding, "search").name("Suche").onFinishChange(function(value){highlightBuilding(value);});
+	h.add(searchBuilding, "showBuilding").name("Gehe zu diesem Gebäude");
+	
+	//********************************************************************
 
     h = gui.addFolder("aktuelle Ansicht");
     h.add(currentView, "Link").name("Link markieren Strg+A").listen();
     h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
 }
+
+
 
 //Hilfsmethode, um den Ordner "Legende" in dat gui zu setzen
 //@params: h: Ordner Legende

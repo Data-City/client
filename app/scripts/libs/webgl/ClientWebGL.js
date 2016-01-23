@@ -168,6 +168,7 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
     //erstelle Kamera
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000000);
     camera.position.set(0, 10, 30);
+	setCamera(camera);
 
     //Lichtquellen setzen
     setLight(scene);
