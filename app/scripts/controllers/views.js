@@ -261,7 +261,7 @@ angular.module('datacityApp')
             $scope.collID = $routeParams.collID;
             $scope.getViews();
             REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
-                $scope.collection = resp;       
+                $scope.collection = resp;
             });
             $scope.verbindungenVorhanden();
         }

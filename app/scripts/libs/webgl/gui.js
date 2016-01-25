@@ -13,35 +13,34 @@ var highlightedBuildingID;
 var camera;
 
 //Setter fuer camera
-function setCamera(aCam){
+function setCamera(aCam) {
     camera = aCam;
 }
 
 //highlighted ein Gebaeude
 //@params: buildingID: ID vom Gebaeude, das gehighlighted werden soll
-function highlightBuilding(buildingID){
+function highlightBuilding(buildingID) {
     var hashMap = getBuildingsHashMap();
-    if(highlightedBuildingID != undefined){
-	    hashMap[highlightedBuildingID].mesh.material.emissive.setHex(null);
+    if (highlightedBuildingID != undefined) {
+        hashMap[highlightedBuildingID].mesh.material.emissive.setHex(null);
     }
-	if(hashMap[buildingID]!=undefined){
+    if (hashMap[buildingID] != undefined) {
         highlightedBuildingID = buildingID;
         hashMap[buildingID].mesh.material.emissive.setHex(0xffff00);
-	}
-	else{
-	    highlightedBuildingID = undefined;
+    } else {
+        highlightedBuildingID = undefined;
     }
 }
 
 
 //positioniert die Kamera vor das Gebaeude, das in highlightedBuildingID gespeichert ist
-function showBuilding(){
-    if(highlightedBuildingID != undefined){
+function showBuilding() {
+    if (highlightedBuildingID != undefined) {
         var hashMap = getBuildingsHashMap();
         camera.position.x = hashMap[highlightedBuildingID]._centerPosition[0];
-        camera.position.y = hashMap[highlightedBuildingID]._centerPosition[1]+hashMap[highlightedBuildingID]._height;
-        camera.position.z = hashMap[highlightedBuildingID]._centerPosition[2]+hashMap[highlightedBuildingID]._height*2;
-	}
+        camera.position.y = hashMap[highlightedBuildingID]._centerPosition[1] + hashMap[highlightedBuildingID]._height;
+        camera.position.z = hashMap[highlightedBuildingID]._centerPosition[2] + hashMap[highlightedBuildingID]._height * 2;
+    }
 }
 
 //Setter fuer association
@@ -134,7 +133,7 @@ function setLight(scene) {
 
 
 //setzt Camera auf die Vogelperspektive
-function goToArielView(){
+function goToArielView() {
     camera.position.x = 0;
     camera.position.y = maximalHeight;
     camera.position.z = 0;
@@ -142,7 +141,7 @@ function goToArielView(){
 
 
 //setzt Camera auf die erste Ansicht
-function goToInitialView(){
+function goToInitialView() {
     setCameraPos(camera, getMainDistrict(), getExtrema());
 }
 

@@ -79,15 +79,21 @@ var controlling = {
 
 //fuer den Ordner "aktuelle Ansicht"
 var currentView = {
-    "initialView" : function(){goToInitialView();},
-    "goToArielView" : function(){goToArielView();},
+    "initialView": function() {
+        goToInitialView();
+    },
+    "goToArielView": function() {
+        goToArielView();
+    },
     "Link": ''
 }
 
 //fuer den Ordner "Gebaeudesuche"
 var searchBuilding = {
-    "search" : "Bitte Gebäudenamen eingeben",
-	"showBuilding" : function(){showBuilding();}
+    "search": "Bitte Gebäudenamen eingeben",
+    "showBuilding": function() {
+        showBuilding();
+    }
 }
 
 //aendert bei den Gebaeudeinformationen in der Legende die Werte, die angezeigt werden sollen
@@ -192,16 +198,18 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
     });
 
     //********************************************************************
-	
-	h = gui.addFolder("Gebäudesuche");
-	h.add(searchBuilding, "search").name("Suche").onFinishChange(function(value){highlightBuilding(value);});
-	h.add(searchBuilding, "showBuilding").name("Gehe zu diesem Gebäude");
-	
-	//********************************************************************
+
+    h = gui.addFolder("Gebäudesuche");
+    h.add(searchBuilding, "search").name("Suche").onFinishChange(function(value) {
+        highlightBuilding(value);
+    });
+    h.add(searchBuilding, "showBuilding").name("Gehe zu diesem Gebäude");
+
+    //********************************************************************
 
     h = gui.addFolder("Ansicht");
-	h.add(currentView, "initialView").name("Anfangsansicht");
-	h.add(currentView, "goToArielView").name("Vogelperspektive");
+    h.add(currentView, "initialView").name("Anfangsansicht");
+    h.add(currentView, "goToArielView").name("Vogelperspektive");
     h.add(currentView, "Link").name("aktuelle Ansicht").listen();
     h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
 }

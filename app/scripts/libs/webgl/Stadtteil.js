@@ -73,9 +73,9 @@ function garden(isItLeftGarden, aBuilding, connections) {
 //Mathode zum Setzen der nächsten Position, von der aus man eine Linea zeichnen kann im Garten
 //@params: aGarden: ein Garten
 function setNextLinePos(aGarden) {
-    if (aGarden.nextLinePos[0] + 0.01 > aGarden._centerPosition[0] + aGarden._width/2) {
+    if (aGarden.nextLinePos[0] + 0.01 > aGarden._centerPosition[0] + aGarden._width / 2) {
         aGarden.nextLinePos[0] = aGarden._centerPosition[0] - aGarden._width / 2;
-        if (aGarden.nextLinePos[1] + 0.01 > aGarden._centerPosition[2] + aGarden.depth/2) {
+        if (aGarden.nextLinePos[1] + 0.01 > aGarden._centerPosition[2] + aGarden.depth / 2) {
             aGarden.nextLinePos[1] = aGarden._centerPosition[1] - aGarden.depth / 2;
         } else {
             aGarden.nextLinePos[1] = aGarden.nextLinePos[1] + 0.01;
