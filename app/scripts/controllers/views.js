@@ -145,6 +145,7 @@ angular.module('datacityApp')
             var view = $scope.chosenView;
             var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
 
+            //Fehlermeldungen, falls eine Option vom Nutzer nicht ausgewählt wurde
             var validate = true;
 
             for (var key in view.districts) {
@@ -173,7 +174,7 @@ angular.module('datacityApp')
                                 REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
                                     var incomingConnections = incoming.data._embedded['rh:doc'][0];
                                     var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
-                                    view.numberOfEntries = collection.data._returned;
+                                    view.numberOfEntries = $scope.collection.data._returned;
                                     view.dimensions.name = {
                                         name: view.dimensionSettings.name.name
                                     };
@@ -260,7 +261,7 @@ angular.module('datacityApp')
             $scope.collID = $routeParams.collID;
             $scope.getViews();
             REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
-                $scope.collection = resp;
+                $scope.collection = resp;       
             });
             $scope.verbindungenVorhanden();
         }
@@ -380,8 +381,6 @@ angular.module('datacityApp')
             stages.push(AGGR.matchStage(view.attributes));
 
             if (view.districts.length > 0) {
-                $log.info("Districts:");
-                $log.info(view.districts);
                 stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
             }
             var aggr = AGGR.buildAggregationPipe(view.collID, stages);
