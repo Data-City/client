@@ -37,6 +37,8 @@ function highlightBuilding(buildingID){
 //positioniert die Kamera vor das Gebaeude, das in highlightedBuildingID gespeichert ist
 function showBuilding(){
     if(highlightedBuildingID != undefined){
+		getControls().reset();
+		getControls().reset();
         var hashMap = getBuildingsHashMap();
         camera.position.x = hashMap[highlightedBuildingID]._centerPosition[0];
         camera.position.y = hashMap[highlightedBuildingID]._centerPosition[1]+hashMap[highlightedBuildingID]._height;
@@ -132,18 +134,29 @@ function setLight(scene) {
     scene.add(light2);
 }
 
+//Stellt AnfangsKameraeinstellung wieder her
+function restoreCamera(position, rotation){
+    var controls = getControls();
+	controls.reset();
+	camera.position.set(position.x, position.y, position.z);
+    camera.rotation.set(rotation.x, rotation.y, rotation.z);
+    controls.update();
+
+    render();
+}
+
 
 //setzt Camera auf die Vogelperspektive
 function goToArielView(){
-    camera.position.x = 0;
-    camera.position.y = maximalHeight;
-    camera.position.z = 0;
+    var camToSave = getCamToSave();
+	restoreCamera({x:0, y:maximalHeight, z:0}, camToSave.rotation);
 }
 
 
 //setzt Camera auf die erste Ansicht
 function goToInitialView(){
-    setCameraPos(camera, getMainDistrict(), getExtrema());
+    var camToSave = getCamToSave();
+    restoreCamera(camToSave.position, camToSave.rotation, camToSave.controlCenter);
 }
 
 
@@ -341,9 +354,11 @@ function setCameraPos(camera, mainDistrict, extrema) {
 //										garden: array_mit_ID_der_Gaerten,_die_an_sind,
 //										scaling: json_von_legende}
 function setCameraPosForLink(camera, aJson) {
-    camera.position.x = aJson.camPos.x;
-    camera.position.y = aJson.camPos.y;
-    camera.position.z = aJson.camPos.z;
+    camera.position.set(aJson.position.x, aJson.position.y, aJson.position.z);
+	camera.rotation.set(aJson.rotation.x, aJson.rotation.y, aJson.rotation.z);
+	getControls().target = new THREE.Vector3(aJson.target.x, aJson.target.y, aJson.target.z);
+	getControls().matrix = aJson.matrix;
+	camera.lookAt(getControls().target);
 }
 
 
@@ -440,7 +455,10 @@ function getScrollDistance(divElement) {
 //@return: das gewuenschte Json
 function getJsonForCurrentLink() {
     var aJson = {};
-    aJson.camPos = camera.position;
+	aJson.position = camera.position.clone();
+    aJson.rotation = camera.rotation.clone();
+    aJson.target = getControls().target;//.clone();
+	aJson.matrix = getControls().matrix;
     aJson.leftGarden = clickedLeftGardens;
     aJson.rightGarden = clickedRightGardens;
     aJson.scaling = getScalingBooleans();

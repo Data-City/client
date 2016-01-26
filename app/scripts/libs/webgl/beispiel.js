@@ -3129,7 +3129,15 @@ function getLaenderZuordnungen() {
         _id: 0123456789,
         name: "bla",
         collID: 123456,
-        districtType: 2
+        districtType: 2,
+		numberOfEntries: 80,
+		dimensionSettings: {
+		  "height": {name: "size"},
+		  "area": {name: "weight"},
+		  "color": {name: "age"},
+		  "district": {name: "gender"},
+		  "name": {"name" : "country"}
+		}
     };
     return zuordnungen;
 }

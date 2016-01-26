@@ -11,6 +11,7 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
     minHeigth: Number.MAX_VALUE,
     minColor: Number.MAX_VALUE
 };
+var camToSave = {};
 
 
 //gibt die Extremwerte zurueck
@@ -23,6 +24,10 @@ function getMainDistrict(){
     return mainDistrict;
 }
 
+//Getter fuer OrbitControls
+function getControls(){
+    return controls;
+}
 
 
 // wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
@@ -82,10 +87,22 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     }
     updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
     animate();
-
+    saveCamera();
     if (settings != undefined) {
         setSpecificView(settings);
     }
+}
+
+//speichert Kameraeinstellung
+function saveCamera(){
+    camToSave.position = camera.position.clone();
+    camToSave.rotation = camera.rotation.clone();
+    camToSave.target = control.target.clone();
+}
+
+//Getter fuer Kameraeinstellung
+function getCamToSave(){
+    return camToSave;
 }
 
 
