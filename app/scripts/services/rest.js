@@ -12,16 +12,17 @@ angular.module('datacityApp')
         // Private
         var $http = null;
         var $log = null;
+        var SETTINGS = null;
         var AGGR = null;
         // Basis-URL zu RESTHeart
-        var BASEURL = "https://pegenau.com:16392";
-        var ANSICHTEN = "/einstellungen/ansichten";
+        var BASEURL = null;
+        var ANSICHTEN = null;
 
         // Wird zwischen den Namen der betreffenden Collection und das Suffix gesetzt
         // Beispiel: /db/coll_dc_stats
-        this.META_DATA_PART = "_dc_";
-        this.META_DATA_SUFFIX = "maxminavg";
-        this.AGGREGATION_SUFFIX = "aggregation";
+        this.META_DATA_PART = null;
+        this.META_DATA_SUFFIX = null;
+        this.AGGREGATION_SUFFIX = null;
 
         var username = null;
         var password = null;
@@ -253,7 +254,7 @@ angular.module('datacityApp')
          */
         this.createView = function(view, collection, fn) {
             setAuthHeader();
-            var url = BASEURL + '/einstellungen/ansichten/' + view.timeOfCreation;
+            var url = BASEURL + ANSICHTEN + view.timeOfCreation;
             $http.put(url, view).then(
                 function success(response) {
                     if (fn) {
@@ -693,14 +694,30 @@ angular.module('datacityApp')
             AGGR = aggr;
         };
 
+        this.setSETTINGS = function(settings) {
+            SETTINGS = settings;
+
+
+            // Basis-URL zu RESTHeart
+            BASEURL = SETTINGS.baseurl;
+            ANSICHTEN = '/' + SETTINGS.databaseForViews + '/' + SETTINGS.collection;
+
+            // Wird zwischen den Namen der betreffenden Collection und das Suffix gesetzt
+            // Beispiel: /db/coll_dc_stats
+            this.META_DATA_PART = SETTINGS.meta_data_part;
+            this.META_DATA_SUFFIX = SETTINGS.meta_data_suffix;
+            this.AGGREGATION_SUFFIX = SETTINGS.aggregation_suffix;
+        };
+
         /**
          * Instanziert Provider
          */
-        this.$get = function($http, $log, AGGR) {
+        this.$get = function($http, $log, AGGR, SETTINGS) {
             rest = this;
             this.setHTTP($http);
             this.setLOG($log);
             this.setAGGR(AGGR);
+            this.setSETTINGS(SETTINGS);
             return this;
         };
     });
