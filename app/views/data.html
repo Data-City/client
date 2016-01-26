@@ -20,8 +20,8 @@
             <table class="table">
                 <tr>
                     <th>Name</th>
-                    <th>Erstellt</th>
-                    <th>Einträge</th>
+                    <!-- <th>Erstellt</th>
+                    <th>Einträge</th> -->
                     <th>Vorschau</th>
                     <th>Löschen</th>
                 </tr>
@@ -30,10 +30,10 @@
                 </tr>
                 <tr ng-repeat="collection in collections">
                     <td ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection._id}}</td>
-                    <td ng-show="collection.metaData" ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection.metaData.timeOfCreation)}}</td>
-                    <td ng-show="collection.metaData" ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection.metaData.numberOfEntries}}</td>
+                    <!-- <td ng-show="collection.metaData" ng-click="setChosenCollectionAndRedirect(collection._id)">{{formatTimeString(collection.metaData.timeOfCreation)}}</td>
+                    <!--<td ng-show="collection.metaData" ng-click="setChosenCollectionAndRedirect(collection._id)">{{collection.metaData.numberOfEntries}}</td>
                     <td ng-hide="collection.metaData"> <div class="alert alert-danger">Metadaten sind nicht vorhanden!</div></td>
-                    <td ng-hide="collection.metaData"> <div class="alert alert-danger">Metadaten sind nicht vorhanden!</div></td>
+                    <td ng-hide="collection.metaData"> <div class="alert alert-danger">Metadaten sind nicht vorhanden!</div></td> -->
                     <td>
                         <button type="button" class="btn btn-xs btn-success" data-toggle="tooltip" title="Hier werden die ersten 80 Datensätze der Datei in einer Tabelle dargestellt." ng-click="getMyLink(collection._id)">Vorschau</button>
                     </td>
