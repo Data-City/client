@@ -394,8 +394,8 @@ angular.module('datacityApp')
                     fn(response);
                 },
                 function error(response) {
-                    $log.error('Evtl (!!!) Fehler bei callCollectionAggr');
-                    $log.error('Adresse: ' + BASEURL + relUrl);
+                    //$log.error('Evtl (!!!) Fehler bei callCollectionAggr');
+                    //$log.error('Adresse: ' + BASEURL + relUrl);
                     fn(response);
                 }
             );
