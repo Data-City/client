@@ -20,7 +20,7 @@ function getExtrema() {
 }
 
 //Getter fuer mainDistrict
-function getMainDistrict(){
+function getMainDistrict() {
     return mainDistrict;
 }
 
@@ -93,6 +93,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     }
 }
 
+
 //speichert Kameraeinstellung
 function saveCamera(){
     camToSave.position = camera.position.clone();
@@ -104,6 +105,29 @@ function saveCamera(){
 function getCamToSave(){
     return camToSave;
 }
+
+
+/*** ADDING SCREEN SHOT ABILITY ***/
+window.addEventListener("keyup", function(e){
+    var imgData, imgNode;
+    //Listen to 'P' key
+    if(e.which !== 80) return;  
+    try {
+        imgData = renderer.domElement.toDataURL();      
+        console.log(imgData);
+    } 
+    catch(e) {
+        console.log("Browser does not support taking screenshot of 3d context");
+        return;
+    }
+    
+    imgNode = document.createElement("img");
+    imgNode.src = imgData;
+   
+    var myWindow = window.open("", "");
+    myWindow.document.write("<div id='imageDownload'></div>");
+    myWindow.document.getElementById('imageDownload').appendChild(imgNode);
+});
 
 
 //Methode, um aus einem Array aus Gebaeuden Districts zu erstellen, die nach Packagenamen sortiert sind
@@ -174,7 +198,11 @@ function updateExtrema(width, height, color) {
 function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
     // Erstelle einen neuen Renderer
-    renderer = new THREE.WebGLRenderer();
+    renderer   = new THREE.WebGLRenderer({
+        preserveDrawingBuffer   : true   // required to support .toDataURL()
+    });
+
+    //renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0xbdbdbd); //0x222222);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -190,7 +218,7 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
     //erstelle Kamera
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000000);
     camera.position.set(0, 10, 30);
-	setCamera(camera);
+    setCamera(camera);
 
     //Lichtquellen setzen
     setLight(scene);

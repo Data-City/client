@@ -34,6 +34,7 @@ angular.module('datacityApp')
         REST.getDocuments(db, $scope.collID, function(collection) {
             $scope.results = collection.data._embedded['rh:doc'];
             $scope.attributes = getProperties($scope.results[0]);
+            $scope.numberOfEntries = collection.data._returned;
         });
 
 

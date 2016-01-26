@@ -10,6 +10,15 @@ Der Betrieb kann grundsätzlich mit einem beliebigen Webserver erfolgen. Der in 
 Alle auszuliefernden Inhalte liegen im Unterordner *dist*. Falls ein anderer Webserver genutzt wird, muss er diese Inhalte ausliefern.
 
 ## Konfiguration
+Die Konfiguration des Clients erfolgt in der Datei *dist/scripts/controllers/settings ... .js* (Aus Caching-Gründen fügt Grunt zwischen *settings* und *.js* einen Hash ein).
+
+Parameter | Bedeutung
+----------|-----------
+databaseForCollections | In welcher Datenbank der MongoDB liegen die Datensätze?
+databaseForViews | In welcher Datenbank liegen die Einstellungen zu den Ansichten. **WICHTIG:** Ansichten und Datensätze müssen in zwei verschiedenen Datenbanken liegen!
+collection | In welcher Collection liegen die Ansichten (in der Datenbank databaseForViews)
+baseurl | Basis-URL zum RESTHEart Server. Beispiel: https://rest.server.net:1234
+max_docs_per_aggregation | Wie viele Datensätze sollen in der Stadt maximal angezeigt werden? Hängt mit der maximalen Datengröße (16MB) zwischen den einzelnen MongoDB-Aggregationsstufen zusammen, die die binäre BSON-Darstellung der Daten nicht übersteigen darf.
 
 ## Anleitung für Entwickler
 ### Anlegen der Entwicklungsumgebung

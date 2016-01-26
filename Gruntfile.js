@@ -297,7 +297,8 @@ module.exports = function (grunt) {
             dist: {
                 files: {
                     '<%= yeoman.dist %>/scripts/scripts.js': [
-                        '<%= yeoman.dist %>/scripts/scripts.js'
+                        '<%= yeoman.dist %>/scripts/scripts.js',
+                        '!<%= yeoman.dist %>/scripts/controllers/settings.js'
                     ]
                 }
             }
@@ -408,6 +409,9 @@ module.exports = function (grunt) {
                         cwd: 'bower_components/bootstrap/dist',
                         src: 'fonts/*',
                         dest: '<%= yeoman.dist %>'
+                    }, {
+                        src: ['app/scripts/controllers/settings.js'],
+                        dest: 'dist/scripts/controllers/settings.js'
                     }]
             },
             styles: {

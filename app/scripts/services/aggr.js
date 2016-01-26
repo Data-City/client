@@ -11,12 +11,14 @@ angular.module('datacityApp')
     .provider('AGGR', function AGGR() {
 
         var rest = null;
+        var SETTINGS = null;
         var $log;
 
-        this.META_DATA_AGGR_URI = "maxminavg";
-        var META_DATA_PART = "_dc_";
-
-        this.MAX_DOCUMENTS_FOR_AGGREGATION = 100000;
+        // Wird in setSETTINGS gesetzt
+        this.META_DATA_AGGR_URI = null;
+        var META_DATA_PART = null;
+        this.MAX_DOCUMENTS_FOR_AGGREGATION = null;
+        var DATA_SUFFIX = null;
 
         /**
          * Counts the elements in obj
@@ -156,7 +158,7 @@ angular.module('datacityApp')
             };
 
             aggr.aggrs[0].stages.push({
-                "$out": collection + META_DATA_PART + 'data'
+                "$out": collection + META_DATA_PART + DATA_SUFFIX
             });
 
             return aggr;
@@ -308,7 +310,7 @@ angular.module('datacityApp')
             });
             aggrs.aggrs[0].stages[0]._$group = ops;
             aggrs.aggrs[0].stages.push({
-                "_$out": colname + "_dc_" + this.META_DATA_AGGR_URI
+                "_$out": colname + META_DATA_PART + this.META_DATA_AGGR_URI
             });
             return aggrs;
         };
@@ -317,9 +319,20 @@ angular.module('datacityApp')
             $log = log;
         };
 
+        this.setSettings = function(s) {
+            SETTINGS = s;
+
+            this.META_DATA_AGGR_URI = SETTINGS.meta_data_suffix;
+            META_DATA_PART = SETTINGS.meta_data_part;
+
+            this.MAX_DOCUMENTS_FOR_AGGREGATION = SETTINGS.max_docs_per_aggregation;
+            DATA_SUFFIX = SETTINGS.data_suffix;
+        };
+
         // Method for instantiating
-        this.$get = function($log) {
+        this.$get = function($log, SETTINGS) {
             this.setLog($log);
+            this.setSettings(SETTINGS);
             return this;
         };
     });
