@@ -31,13 +31,11 @@ angular.module('datacityApp')
 
         var storedJSON = JSON.parse(url.split("?webGLSettings=")[1]);
 
-        console.log(storedJSON);
-
         /**
          * Liest die Parameter aus dem JSON aus (Winkel der Kamera etc), holt alle benötigten Datenbanken (Collection, Verbindungen, die Ansicht)
          * und übergibt sie an das WebGL, damit die Stadt gezeichnet werden kann
          */
-        REST.getDocuments(databaseForCollections, storedJSON.collID, function(collection) {
+        REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_data", function(collection) {
             REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_incoming", function(incoming) {
                 REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_outgoing", function(outgoing) {
                     var incomingConnections = incoming.data._embedded['rh:doc'][0];
@@ -45,16 +43,13 @@ angular.module('datacityApp')
 
                     $scope.chosenCollection = collection;
 
-                    REST.getData(function(response) {
-                        if (response.data) {
-                            $scope.chosenView = response.data;
-                            $scope.chosenView.numberOfEntries = collection.data._returned;
+                    REST.getData(function(viewResponse) {
+                        if (viewResponse.data) {
+                            $scope.chosenView = viewResponse.data;
+                            
+                            var settings = storedJSON;
+                            drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings, incomingConnections, outgoingConnections);
                         }
-
-                        var settings = storedJSON;
-
-                        drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings, incomingConnections, outgoingConnections);
-
                     }, databaseForViews, ansichten, storedJSON._id);
                 });
             });
