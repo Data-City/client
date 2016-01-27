@@ -390,6 +390,10 @@ angular.module('datacityApp')
                 }
             });
         };
+        
+        /**
+         * Aktiviert die Tooltops
+         */
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
