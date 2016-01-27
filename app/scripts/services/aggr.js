@@ -14,12 +14,12 @@ angular.module('datacityApp')
         var SETTINGS = null;
         var $log;
 
-        // Wird in setSETTINGS gesetzt
+        // Wird in SETTINGS gesetzt
         this.META_DATA_AGGR_URI = null;
         var META_DATA_PART = null;
         this.MAX_DOCUMENTS_FOR_AGGREGATION = null;
         var DATA_SUFFIX = null;
-
+        
         /**
          * Counts the elements in obj
          */

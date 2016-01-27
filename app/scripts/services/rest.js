@@ -26,6 +26,7 @@ angular.module('datacityApp')
 
         var username = null;
         var password = null;
+        var token = null;
 
         var rest = null;
 
@@ -40,6 +41,13 @@ angular.module('datacityApp')
         };
 
         var getAuthorizationHeader = function () {
+            var pw = null
+            if(token) {
+                pw = token;
+            } else {
+                pw = password;
+            }
+            //$log.info("PW: " + pw);
             return "Basic " + btoa(username + ":" + password);
         };
 
@@ -96,6 +104,7 @@ angular.module('datacityApp')
             };
             $http.get(BASEURL + ANSICHTEN, config).then(
                 function success(response) {
+                    rest.setAuthToken(response);
                     if (fn) {
                         if (response.data._returned > 0) {
                             fn(response.data._embedded['rh:doc']);
@@ -137,6 +146,7 @@ angular.module('datacityApp')
             //$log.info("Getting " + url);
             $http.get(url).then(
                 function (response) {
+                    rest.setAuthToken(response);
                     fn(response);
                 },
                 function error(response) {
@@ -193,6 +203,7 @@ angular.module('datacityApp')
             //$log.info("Getting " + url);
             $http.delete(url, config).then(
                 function (response) {
+                    rest.setAuthToken(response);
                     fn(response);
                 },
                 function error(response) {
@@ -216,6 +227,7 @@ angular.module('datacityApp')
                 };
                 $http.patch(BASEURL + relUrl, view, config).then(
                     function success(response) {
+                        rest.setAuthToken(response);
                         fn(response);
                     },
                     function errorCallback(response) {
@@ -243,6 +255,7 @@ angular.module('datacityApp')
             var url = BASEURL + ANSICHTEN + '/' + view._id;
 
             $http.delete(url, config).then(function (response) {
+                rest.setAuthToken(response);
                 if (fn) {
                     fn(response);
                 }
@@ -255,8 +268,10 @@ angular.module('datacityApp')
         this.createView = function (view, collection, fn) {
             setAuthHeader();
             var url = BASEURL + ANSICHTEN + '/' + view.timeOfCreation;
+
             $http.put(url, view).then(
                 function success(response) {
+                    rest.setAuthToken(response);
                     if (fn) {
                         fn(response);
                     }
@@ -285,6 +300,7 @@ angular.module('datacityApp')
             $log.info(url);
             $http.put(url, params, config).then(
                 function success(response) {
+                    rest.setAuthToken(response);
                     if (fn) {
                         fn(response);
                     }
@@ -310,6 +326,7 @@ angular.module('datacityApp')
             };
             $http.put(createURL(database, collection), params, config).then(
                 function success(response) {
+                    rest.setAuthToken(response);
                     if (fn) {
                         fn(response);
                     }
@@ -386,9 +403,13 @@ angular.module('datacityApp')
 
         this.callCollectionAggr = function (database, collection, aggr, fn) {
             setAuthHeader();
-            var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr;
+            var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr + '?noauthchallenge';
             $log.info(relUrl);
-            var config = null;
+            var config = {
+                headers: {
+                    
+                }
+            };
             $http.jsonp(BASEURL + relUrl, config).then(
                 function success(response) {
                     fn(response);
@@ -712,6 +733,16 @@ angular.module('datacityApp')
         this.stackTrace = function () {
             var err = new Error();
             return err.stack;
+        };
+
+        this.setAuthToken = function (response) {
+            if (response) {
+                var responseHeader = response.headers();
+                var authToken = responseHeader['auth-token'];
+                if (authToken) {
+                    token = authToken;
+                }
+            }
         }
 
         /**
