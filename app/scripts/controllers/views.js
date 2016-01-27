@@ -239,12 +239,12 @@ angular.module('datacityApp')
         $scope.setChosenView = function(view) {
             if ($scope.chosenView === view) {
                 $scope.chosenView = null;
-            } else {
-                $log.info(view);
+            } else {               
                 REST.getData(function(response) {
                     if (response.data) {
                         $scope.chosenView = response.data;
                         REST.getCollectionsMetaData(dbWithCollections, $scope.collID, function(metaData) {
+                            $log.info(metaData);
                             $scope.chosenView.metaData = metaData;
                             //$scope.chosenView.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
                         });
@@ -301,7 +301,6 @@ angular.module('datacityApp')
                 });
                 REST.createView(view, $scope.collID, function(response) {
                     $scope.getViews();
-                    $log.info(response);
                     var url = response.config.url;
                     var array = url.split('/');
                     view._id = array[array.length - 1];
