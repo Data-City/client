@@ -43,7 +43,6 @@ function highlightBuilding(buildingID) {
 function showBuilding(){
     if (highlightedBuildingID != undefined) {
         getControls().reset();
-        getControls().reset();
         var hashMap = getBuildingsHashMap();
         camera.position.x = hashMap[highlightedBuildingID]._centerPosition[0];
         camera.position.y = hashMap[highlightedBuildingID]._centerPosition[1] + hashMap[highlightedBuildingID]._height;
@@ -471,6 +470,7 @@ function onDocumentMouseDown(event) {
             );
         }
     }
+
 
 }
 

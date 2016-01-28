@@ -265,6 +265,7 @@ function setControls() {
     control.dampingFactor = 0.5;
     control.enableZoom = false;
     control.rotateSpeed = 1;
+    control.noPan = true;
 }
 
 
