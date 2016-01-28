@@ -392,7 +392,7 @@ angular.module('datacityApp')
         };
         
         /**
-         * Aktiviert die Tooltops
+         * Aktiviert die Tooltips
          */
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();

@@ -41,7 +41,7 @@ angular.module('datacityApp')
         };
 
         var getAuthorizationHeader = function () {
-            var pw = null
+            var pw = null;
             if(token) {
                 pw = token;
             } else {
@@ -743,7 +743,7 @@ angular.module('datacityApp')
                     token = authToken;
                 }
             }
-        }
+        };
 
         /**
          * Instanziert Provider
