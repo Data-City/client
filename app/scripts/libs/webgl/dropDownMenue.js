@@ -339,6 +339,7 @@ function scale(value, aString, scene, aDistrict, camera, extrema) {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
     }
     updateControls(Math.max(aDistrict._width, extrema.maxHeight));
+    saveCamera();
 }
 
 
