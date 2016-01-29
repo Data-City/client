@@ -14,9 +14,10 @@ angular.module('datacityApp')
         var $log = null;
         var SETTINGS = null;
         var AGGR = null;
-        // Basis-URL zu RESTHeart
+        // Basis-URL zu RESTHeart (Wird in "setSettings" gesetzt)
         var BASEURL = null;
         var ANSICHTEN = null;
+        var DATABASEFORCOLLECTIONS = null;
 
         // Wird zwischen den Namen der betreffenden Collection und das Suffix gesetzt
         // Beispiel: /db/coll_dc_stats
@@ -281,7 +282,26 @@ angular.module('datacityApp')
                     $log.error("PUT auf " + url);
                     $log.error(response);
                 });
+                this.createCollectionForView(view, collection, null);
         };
+        
+        this.createCollectionForView = function(view, collection, fn) {
+            setAuthHeader();
+            var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + "_dc_data" + "_" + view.timeOfCreation;
+            
+            $http.put(url, view).then(
+                function success(response) {
+                    rest.setAuthToken(response);
+                    if (fn) {
+                        fn(response);
+                    }
+                },
+                function error(response) {
+                    $log.error("Fehler beim Erzeugen der Collection für die Ansicht");
+                    $log.error("PUT auf " + url);
+                    $log.error(response);
+                });
+        }; 
 
         this.createAggregation = function(database, collection, etag, params, fn) {
             $log.info("So far!");
@@ -722,6 +742,7 @@ angular.module('datacityApp')
             // Basis-URL zu RESTHeart
             BASEURL = SETTINGS.baseurl;
             ANSICHTEN = '/' + SETTINGS.databaseForViews + '/' + SETTINGS.collection;
+            DATABASEFORCOLLECTIONS = SETTINGS.databaseForCollections;
 
             // Wird zwischen den Namen der betreffenden Collection und das Suffix gesetzt
             // Beispiel: /db/coll_dc_stats
