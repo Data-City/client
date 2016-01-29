@@ -19,7 +19,7 @@ angular.module('datacityApp')
         var META_DATA_PART = null;
         this.MAX_DOCUMENTS_FOR_AGGREGATION = null;
         var DATA_SUFFIX = null;
-        
+
         /**
          * Counts the elements in obj
          */

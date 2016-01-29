@@ -178,6 +178,7 @@ angular.module('datacityApp')
                                     view.dimensions.name = {
                                         name: view.dimensionSettings.name.name
                                     };
+                                    view.metaData = $scope.chosenView.metaData;
                                     view.dimensions.height = view.dimensionSettings.height.name;
                                     view.dimensions.area = view.dimensionSettings.area.name;
                                     view.dimensions.color = view.dimensionSettings.color.name;
@@ -239,7 +240,7 @@ angular.module('datacityApp')
         $scope.setChosenView = function(view) {
             if ($scope.chosenView === view) {
                 $scope.chosenView = null;
-            } else {               
+            } else {
                 REST.getData(function(response) {
                     if (response.data) {
                         $scope.chosenView = response.data;
@@ -390,7 +391,7 @@ angular.module('datacityApp')
                 }
             });
         };
-        
+
         /**
          * Aktiviert die Tooltips
          */

@@ -239,7 +239,37 @@ function beispielZuordnungen() {
 
 function getLinkJson() {
     return {
-	    "position": {
-		    "x":427.59010069593205,
-			"y":25.74297112608531,"z":-217.43847431433937},"rotation":{"_x":-0.08828438631174954,"_y":1.039652521140842,"_z":0.07617200725448385,"_order":"XYZ"},"target":{"x":-1009.5299941941093,"y":-48.69368313452841,"z":-1058.3931421879865},"leftGarden":[],"rightGarden":[],"scaling":{"logarithmicHeight":false,"logarithmicWidth":false,"logarithmicColor":false},"removedBuildings":[],"changedLegend":{"Name":"Package","Breite":"Klassen","Höhe":"Methoden","Farbe":"Zeilen"},"collID":123456,"_id":342391};
+        "position": {
+            "x": 427.59010069593205,
+            "y": 25.74297112608531,
+            "z": -217.43847431433937
+        },
+        "rotation": {
+            "_x": -0.08828438631174954,
+            "_y": 1.039652521140842,
+            "_z": 0.07617200725448385,
+            "_order": "XYZ"
+        },
+        "target": {
+            "x": -1009.5299941941093,
+            "y": -48.69368313452841,
+            "z": -1058.3931421879865
+        },
+        "leftGarden": [],
+        "rightGarden": [],
+        "scaling": {
+            "logarithmicHeight": false,
+            "logarithmicWidth": false,
+            "logarithmicColor": false
+        },
+        "removedBuildings": [],
+        "changedLegend": {
+            "Name": "Package",
+            "Breite": "Klassen",
+            "Höhe": "Methoden",
+            "Farbe": "Zeilen"
+        },
+        "collID": 123456,
+        "_id": 342391
+    };
 }

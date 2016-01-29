@@ -3130,14 +3130,24 @@ function getLaenderZuordnungen() {
         name: "bla",
         collID: 123456,
         districtType: 2,
-		numberOfEntries: 80,
-		dimensionSettings: {
-		  "height": {name: "size"},
-		  "area": {name: "weight"},
-		  "color": {name: "age"},
-		  "district": {name: "gender"},
-		  "name": {"name" : "country"}
-		}
+        numberOfEntries: 80,
+        dimensionSettings: {
+            "height": {
+                name: "size"
+            },
+            "area": {
+                name: "weight"
+            },
+            "color": {
+                name: "age"
+            },
+            "district": {
+                name: "gender"
+            },
+            "name": {
+                "name": "country"
+            }
+        }
     };
     return zuordnungen;
 }
