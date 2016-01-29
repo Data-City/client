@@ -247,6 +247,7 @@ angular.module('datacityApp')
          * @param fn Funktion, die nach erfolgreichem Löschen aufgerufen wird
          */
         this.deleteView = function(view, fn) {
+            console.log(view);
             setAuthHeader();
             var config = {
                 headers: {
@@ -261,6 +262,8 @@ angular.module('datacityApp')
                     fn(response);
                 }
             });
+            //Die dazugehörige Collection löschen
+            this.deleteCollection(DATABASEFORCOLLECTIONS, view.collID + this.META_DATA_PART +"_" + view._id,null);
         };
 
         /**
@@ -287,7 +290,7 @@ angular.module('datacityApp')
         
         this.createCollectionForView = function(view, collection, fn) {
             setAuthHeader();
-            var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + "_dc_data" + "_" + view.timeOfCreation;
+            var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + this.META_DATA_PART + "_" + view.timeOfCreation;
             
             $http.put(url, view).then(
                 function success(response) {
