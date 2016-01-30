@@ -1,5 +1,5 @@
 var associations;
-var camera, scene, renderer, controls, control, raycaster;
+var camera, scene, renderer, trackballControls, orbitControls, raycaster;
 var mainDistrict;
 var mouse = new THREE.Vector2(),
     INTERSECTED, SELECTED;
@@ -28,9 +28,9 @@ function getMainDistrict() {
     return mainDistrict;
 }
 
-//Getter fuer OrbitControls
+//Getter fuer trackballControls
 function getControls() {
-    return controls;
+    return trackballControls;
 }
 
 
@@ -87,7 +87,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
         if (ourDivElement.children["dropdownmenu"] != undefined) {
             ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
         }
-        setMenue(association["dimensions"], scene, mainDistrict, camera, extrema, control, controls, nameOfDivElement);
+        setMenue(association["dimensions"], scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);
     }
     updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
     animate();
@@ -103,7 +103,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
 function saveCamera() {
     camToSave.position = camera.position.clone();
     camToSave.rotation = camera.rotation.clone();
-    camToSave.target = control.target.clone();
+    camToSave.target = orbitControls.target.clone();
 }
 
 //Getter fuer Kameraeinstellung
@@ -248,35 +248,40 @@ function animate() {
     requestAnimationFrame(animate);
     requestAnimationFrame(update);
     // update
-    control.update();
-    controls.update();
+    orbitControls.update();
+    trackballControls.update();
     //malt neu
     render();
 }
 
 
-//Methode zum Setzen der Controls fuer das Zoomen, Drehen, Verschieben
+//Methode zum Setzen der trackballControls fuer das Zoomen, Drehen, Verschieben
 function setControls() {
-    // für das Zoomen
-    controls = new THREE.TrackballControls(camera, renderer.domElement);
-    controls.minDistance = 10;
-    controls.noRotate = true;
-    controls.zoomSpeed = 1;
+    // für das Zoomen und Verschieben
+    trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
+    trackballControls.minDistance = 10;
+    trackballControls.noRotate = true;
+    trackballControls.zoomSpeed = 1;
 
-    //fuer das Verschieben und Drehen
-    control = new THREE.OrbitControls(camera, renderer.domElement);
-    control.enableDamping = true;
-    control.dampingFactor = 0.5;
-    control.enableZoom = false;
-    control.rotateSpeed = 1;
-    control.noPan = true;
+    //fuer das Drehen
+    orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+    orbitControls.enableDamping = true;
+    orbitControls.dampingFactor = 0.5;
+    orbitControls.enableZoom = false;
+    orbitControls.rotateSpeed = 1;
+    orbitControls.noPan = true;
+}
+
+//Getter fuer orbitcontrols
+function getOrbitControls(){
+    return orbitControls;
 }
 
 
 //update vom maximalen Abstand fuer den Zoom, damit man noch die hoechsten Gebaeude sehen kann
 //@param maxDistance: der Abstand zum Koordinatenursprung, zu dem man maximal wegzoomen kann
 function updateControls(maxDistance) {
-    controls.maxDistance = maxDistance * 3;
+    trackballControls.maxDistance = maxDistance * 3;
 }
 
 

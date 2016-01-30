@@ -40,12 +40,15 @@ function highlightBuilding(buildingID) {
  */
 function showBuilding() {
     if (highlightedBuildingID != undefined) {
-        getControls().reset();
-        var hashMap = getBuildingsHashMap();
-        camera.position.x = hashMap[highlightedBuildingID]._centerPosition[0];
-        camera.position.y = hashMap[highlightedBuildingID]._centerPosition[1] + hashMap[highlightedBuildingID]._height;
-        camera.position.z = hashMap[highlightedBuildingID]._centerPosition[2] + hashMap[highlightedBuildingID]._height * hashMap[highlightedBuildingID]._width;
-    }
+		var hashMap = getBuildingsHashMap();
+		getControls().target.x = hashMap[highlightedBuildingID]._centerPosition[0];
+		getControls().target.y = hashMap[highlightedBuildingID]._centerPosition[1];
+		getControls().target.z = hashMap[highlightedBuildingID]._centerPosition[2];
+		camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0], 
+			hashMap[highlightedBuildingID]._centerPosition[1] + 10*Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width), 
+			hashMap[highlightedBuildingID]._centerPosition[2] + 10*Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width));
+		camera.rotation.set(0,0,0);
+    }        
 }
 
 /**
@@ -163,11 +166,11 @@ function setLight(scene) {
  *@param: rotation: die Rotation von der Kamera
  */
 function restoreCamera(position, rotation) {
-    var controls = getControls();
-    controls.reset();
+    var trackballControls = getControls();
+    trackballControls.reset();
     camera.position.set(position.x, position.y, position.z);
     camera.rotation.set(rotation.x, rotation.y, rotation.z);
-    controls.update();
+    trackballControls.update();
 
     render();
 }
@@ -197,10 +200,9 @@ function goToInitialView() {
  *@param: mainDistrict: das Stadtteil, das der unteren Grundflaeche entspricht mit allen zu zeichnenden Stadtteilen und Gebaeuden
  *@param: scene: die scene, der man die Zeichnungen hinzufuegen moechte
  *@param: camera: die Kamera, die wir nach dem Malen anders positionieren moechten
- *@param: extrema: ein JSON-Objekt, das die Extremwerte der Daten enhtaelt, dass man darauf zugreifen kann
  */
-function addCityToScene(mainDistrict, scene, camera, extrema) {
-
+function addCityToScene(mainDistrict, scene, camera) {
+    var extrema = getExtrema();
     // nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
     for (var i = 0; i < mainDistrict["buildings"].length; i++) {
         addEachDistrict(mainDistrict["buildings"][i], scene, extrema, 0);
@@ -446,7 +448,7 @@ function render() {
  */
 function onDocumentMouseDown(event) {
 
-    event.preventDefault(); // schaltet controls aus
+    event.preventDefault(); // schaltet trackballControls aus
 
     raycaster.setFromCamera(mouse, camera); //schaut, was die Maus durch die Kamera so erwischt
 

@@ -91,9 +91,6 @@ var currentView = {
 //fuer den Ordner "Gebaeudesuche"
 var searchBuilding = {
     "search": "Bitte Gebäudenamen eingeben",
-    "showBuilding": function() {
-        showBuilding();
-    }
 }
 
 //aendert bei den Gebaeudeinformationen in der Legende die Werte, die angezeigt werden sollen
@@ -133,10 +130,9 @@ function getGui() {
 //			scene: die scene, mit der man arbeiten moechte und auf die man reagieren moechte
 //			aDistrict: das JSON vom Typ Stadtteil, mit dem ich agieren moechte, wenn der Nutzer das mit der Legende machen moechte
 //			camera: die Kamera, die neu positioniert wird, falls das district bearbeitet wird
-//			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
-//			control, controls: das Trackball bzw. OrbitControl fuer die Steuerung,die wir verwenden
+//			orbitControls, trackballControls: das Trackball bzw. OrbitControl fuer die Steuerung,die wir verwenden
 //			nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
-function setMenue(legende, scene, aDistrict, camera, extrema, control, controls, nameOfDivElement) {
+function setMenue(legende, scene, aDistrict, camera, orbitControls, trackballControls, nameOfDivElement) {
     gui = new dat.GUI({
         width: 375,
         autoPlace: false
@@ -176,34 +172,33 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
     h = gui.addFolder("Skalierung");
     h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(function(value) {
         scaling["logarithmicHeight"] = value;
-        scale(value, "height", scene, aDistrict, camera, extrema);
+        scale(value, "height", scene, aDistrict, camera);
     });
     h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(function(value) {
         scaling["logarithmicWidth"] = value;
-        scale(value, "width", scene, aDistrict, camera, extrema);
+        scale(value, "width", scene, aDistrict, camera);
     });
     h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(function(value) {
         scaling["logarithmicColor"] = value;
-        scale(value, "color", scene, aDistrict, camera, extrema);
+        scale(value, "color", scene, aDistrict, camera);
     });
 
     //********************************************************************
 
     h = gui.addFolder("Steuerung");
     h.add(controlling, "zoomSpeed", 0.1, 2).name("Zoomgeschwindigkeit").onChange(function(value) {
-        controls.zoomSpeed = value;
+        trackballControls.zoomSpeed = value;
     });
     h.add(controlling, "rotateSpeed", 0.1, 2).name("Rotationsgeschwindigkeit").onChange(function(value) {
-        control.rotateSpeed = value;
+        orbitControls.rotateSpeed = value;
     });
 
     //********************************************************************
 
     h = gui.addFolder("Gebäudesuche");
     h.add(searchBuilding, "search").name("Suche").onFinishChange(function(value) {
-        highlightBuilding(value);
+        highlightBuilding(value); showBuilding();
     });
-    h.add(searchBuilding, "showBuilding").name("Gehe zu diesem Gebäude");
 
     //********************************************************************
 
@@ -316,8 +311,7 @@ var update = function() {
 //			scene: die scene, auf die neu gemalt werden soll
 //			aDistrict: das JSON vom Typ district, dessen Gebaeude skaliert werden soll
 //			camera: die Kamera, die nach dem Zeichnen neu positioniert werden soll
-//			extrema: die Extremwerte, die sich aus den Daten ergeben, als JSON
-function scale(value, aString, scene, aDistrict, camera, extrema) {
+function scale(value, aString, scene, aDistrict, camera) {
     if (value) {
         var scalingMethod = scaleLogarithmically;
         var scalingExtrema = takeLogarithmOfExtrema;
@@ -333,12 +327,12 @@ function scale(value, aString, scene, aDistrict, camera, extrema) {
     setLight(scene);
     setMainDistrict(aDistrict);
     shiftBack(aDistrict);
-    scalingExtrema(extrema, aString);
-    addCityToScene(aDistrict, scene, camera, extrema);
+    scalingExtrema(aString);
+    addCityToScene(aDistrict, scene, camera);
     if (buildingInformation.mesh != undefined) {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
     }
-    updateControls(Math.max(aDistrict._width, extrema.maxHeight));
+    updateControls(Math.max(aDistrict._width, getExtrema().maxHeight));
     saveCamera();
 }
 
@@ -356,9 +350,9 @@ function scaleRemovedBuildings(scalingMethod, aString, theBuildingHashMap) {
 
 
 //Methode, um die Extremwerte ebenfalls zu skalieren
-//@params: extrema: das JSON, das die alten Extremwerte enthaelt
-//		aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-function takeLogarithmOfExtrema(extrema, aString) {
+//@params: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
+function takeLogarithmOfExtrema(aString) {
+    var extrema = getExtrema();
     if (aString == "width") {
         extrema.maxWidth = Math.log(extrema.maxWidth) / Math.log(2);
         extrema.minWidth = Math.log(extrema.minWidth) / Math.log(2);
@@ -373,9 +367,9 @@ function takeLogarithmOfExtrema(extrema, aString) {
 
 
 //Methode, um die Extremwerte wieder normal zu skalieren
-//@params: extrema: das JSON, das die alten Extremwerte enthaelt
-//		aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-function linearizeExtrema(extrema, aString) {
+//@params: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
+function linearizeExtrema(aString) {
+    var extrema = getExtrema();
     if (aString == "width") {
         extrema.maxWidth = Math.pow(2, extrema.maxWidth);
         extrema.minWidth = Math.pow(2, extrema.minWidth);
