@@ -211,7 +211,6 @@ function setMenue(legende, scene, aDistrict, camera, extrema, control, controls,
     h.add(currentView, "initialView").name("Anfangsansicht");
     h.add(currentView, "goToArielView").name("Vogelperspektive");
     h.add(currentView, "Link").name("aktuelle Ansicht").listen();
-    console.log(currentView);
     h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
 }
 

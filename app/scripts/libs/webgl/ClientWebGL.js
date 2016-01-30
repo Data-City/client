@@ -7,9 +7,13 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
     maxWidth: 0,
     maxHeight: 0,
     maxColor: 0,
+	maxConnections: 0,
+	maxSumOfConn: 0,
     minWidth: Number.MAX_VALUE,
     minHeigth: Number.MAX_VALUE,
-    minColor: Number.MAX_VALUE
+    minColor: Number.MAX_VALUE,
+	minConnections: Number.MAX_VALUE,
+	minSumOfConn: Number.MAX_VALUE
 };
 var camToSave = {};
 
@@ -35,9 +39,6 @@ function getControls() {
 //			association: JSON fuer die Legende, damit man weiss, dass z.B. die Breite der Anzahl Methoden entspricht
 //			nameOfDivElement: Name vom Div-Element
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
-
-    console.log("assoc");
-    console.log(association);
 
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls);
@@ -94,6 +95,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     if (settings != undefined) {
         setSpecificView(settings);
     }
+	goToInitialView();
 }
 
 
@@ -336,13 +338,17 @@ function getOriginalAssociations() {
 //@return neues JSON fuer Verbindungen
 function getIncomingConnections(connectionData) {
     var newJson = {};
+	var ithConn;
     for (var i = 0; i < connectionData.connections.length; i++) {
-        newJson[connectionData.connections[i].Ziel] = {};
-        newJson[connectionData.connections[i].Ziel].connections = {};
-        for (var j = 0; j < connectionData.connections[i].incomingConnections.length; j++) {
-            newJson[connectionData.connections[i].Ziel].connections[connectionData.connections[i].incomingConnections[j].Start] = connectionData.connections[i].incomingConnections[j].Gewichtung;
+		ithConn = connectionData.connections[i];
+        newJson[ithConn.Ziel] = {};
+        newJson[ithConn.Ziel].connections = {};
+        for (var j = 0; j < ithConn.incomingConnections.length; j++) {
+            newJson[ithConn.Ziel].connections[ithConn.incomingConnections[j].Start] = ithConn.incomingConnections[j].Gewichtung;
+			updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung, "Connections");
         }
-        newJson[connectionData.connections[i].Ziel].sumOfConnections = connectionData.connections[i].Gewichtung;
+        newJson[ithConn.Ziel].sumOfConnections = ithConn.Gewichtung;
+		updateConnectionExtrema(ithConn.Gewichtung, "SumOfConn");
     }
     return newJson;
 }
@@ -357,6 +363,22 @@ function getOutgoingConnections(connectionData) {
                 connectionData.connections[i].outgoingConnections[j].Gewichtung;
         }
         newJSON[connectionData.connections[i].Start].sumOfConnections = connectionData.connections[i].Gewichtung;
+		updateConnectionExtrema(connectionData.connections[i].Gewichtung, "SumOfConn");
     }
     return newJSON;
+}
+
+
+/**
+* aktualisiert in extrema die min- bzq. maxConnections bzw. -SumOfCon
+* @param: weight: die Gewichtung von der Verbindung, die bei extrema aktualisiert werden soll
+* @param: string: "Connections" oder "SumOfConn"
+*/
+function updateConnectionExtrema(weight, string){
+    if(extrema["max"+string] < weight){
+        extrema["max"+string] = weight;
+    }
+    if(extrema["min"+string] > weight && weight > 0){
+	    extrema["min"+string] = weight;
+	}
 }
