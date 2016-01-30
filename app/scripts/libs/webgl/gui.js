@@ -251,19 +251,21 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
 function addGarden(aBuilding, scene) {
     var gardens = ["_leftGarden", "_rightGarden"];
     for (var i = 0; i < 2; i++) {
-		var factor = getColor(getExtrema(), aBuilding[gardens[i]].color, "SumOfConn");
-        var gardenMaterial = getMaterial(new THREE.Color(1-factor,1,1-factor));
-        gardenMaterial.name = "garden";
-        var geometry = new THREE.BoxGeometry(aBuilding[gardens[i]]._width, aBuilding[gardens[i]]._height, aBuilding[gardens[i]].depth);
-        var cube = new THREE.Mesh(geometry, gardenMaterial);
-        cube.position.x = aBuilding[gardens[i]]._centerPosition[0];
-        cube.position.y = aBuilding[gardens[i]]._centerPosition[1];
-        cube.position.z = aBuilding[gardens[i]]._centerPosition[2];
-        cube.garden = aBuilding[gardens[i]];
-        aBuilding[gardens[i]].mesh = cube;
-        if (aBuilding._isRemoved == false) {
-            scene.add(cube);
-        }
+	    if(aBuilding[gardens[i]].color>0){
+		    var factor = getColor(getExtrema(), aBuilding[gardens[i]].color, "SumOfConn");
+            var gardenMaterial = getMaterial(new THREE.Color(1-factor, 1, 1-factor));
+            gardenMaterial.name = "garden";
+	    	var geometry = new THREE.CylinderGeometry(aBuilding[gardens[i]]._width/2, aBuilding[gardens[i]]._width/2, aBuilding[gardens[i]]._height, 3, 1, false, i*Math.PI);
+            var cube = new THREE.Mesh(geometry, gardenMaterial);
+            cube.position.x = aBuilding[gardens[i]]._centerPosition[0];
+            cube.position.y = aBuilding[gardens[i]]._centerPosition[1];
+            cube.position.z = aBuilding[gardens[i]]._centerPosition[2];
+            cube.garden = aBuilding[gardens[i]];
+            aBuilding[gardens[i]].mesh = cube;
+            if (aBuilding._isRemoved == false) {
+                scene.add(cube);
+            }
+		}
     }
 }
 
@@ -278,7 +280,7 @@ function drawLines(aGarden, updateBoolean) {
     }
     var hashMap = getBuildingsHashMap();
     for (var x in aGarden.linesTo) {
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 5; i++) {
             if (aGarden.isLeftGarden == true) {
                 if (hashMap[x]._rightGarden.on == false && hashMap[x]._isRemoved == false) {
                     drawALine(aGarden, hashMap[x]._rightGarden);
@@ -288,8 +290,8 @@ function drawLines(aGarden, updateBoolean) {
                     drawALine(aGarden, hashMap[x]._leftGarden);
                 }
             }
-
         }
+		setNextLinePosForNextPackage(aGarden);
     }
     currentPosInColorOfLines++;
 }
