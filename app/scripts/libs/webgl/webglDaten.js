@@ -255,17 +255,19 @@ function getLinkJson() {
             "y": -48.69368313452841,
             "z": -1058.3931421879865
         },
-        "leftGarden": [],
+        "leftGarden": ["de.ruv.vrrente.validator.group"],
         "rightGarden": [],
         "scaling": {
             "logarithmicHeight": false,
-            "logarithmicWidth": false,
+            "logarithmicWidth": true,
             "logarithmicColor": false
         },
-        "removedBuildings": [],
+        "removedBuildings": [
+		    "de.ruv.baustein."
+		],
         "changedLegend": {
             "Name": "Package",
-            "Breite": "Klassen",
+            "Breite": "Blabla",
             "Höhe": "Methoden",
             "Farbe": "Zeilen"
         },

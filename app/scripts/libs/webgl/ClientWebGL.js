@@ -18,6 +18,11 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
 var camToSave = {};
 
 
+//Getter fuer scene
+function getScene(){
+    return scene;
+}
+
 //gibt die Extremwerte zurueck
 function getExtrema() {
     return extrema;
@@ -75,7 +80,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     }
 
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
-    setMainDistrict(mainDistrict);
+    setMainDistrict(mainDistrict, "");
     shiftBack(mainDistrict);
 
     //zeichnen nun auch die Stadt
@@ -92,10 +97,11 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
     animate();
     saveCamera();
+	goToInitialView();
     if (settings != undefined) {
         setSpecificView(settings);
     }
-	goToInitialView();
+	
 }
 
 
@@ -174,7 +180,7 @@ function getMainDistrictFromJSON(aDistrict) {
             }
         } else {
             toReturn.buildings.push(getMainDistrictFromJSON(aDistrict[x]));
-            toReturn.buildings[toReturn.buildings.length - 1][association.name] = x;
+            toReturn.buildings[toReturn.buildings.length - 1].name = x;
         }
     }
     return toReturn
@@ -287,16 +293,24 @@ function updateControls(maxDistance) {
 
 //wenn ein Link fuer eine spezielle Ansicht aufgerufen wurde, wird diese Methode aufgerufen, 
 // um die alte Ansicht (mit Kameraposition etc.) wiederherzustellen, nachdem drawCity(...) aufgerufen wurde
-//@params: das Json, das im Link gespeichert worden ist der Form {camPos: json_mit_Camera_Position,
-//										garden: array_mit_ID_der_Gaerten,_die_an_sind,
-//										scaling: json_von_legende}
+//@params: das Json, das im Link gespeichert worden ist der Form 
+/*{"position": {"x": xCamPos, "y": yCamPos, "z": zCamPos},
+ "rotation": {"_x": xRotation, "_y": yRotation, "_z": zRotation, "_order": "XYZ" },
+ "target": { "x": xPanPos,"y": yPanPos,"z": zPanPos},
+ "leftGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
+ "rightGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
+ "scaling": { "logarithmicHeight": boolean,"logarithmicWidth": boolean,"logarithmicColor": boolean},
+ "removedBuildings": ArrayAusIDsDerGeloeschtenGebaeuden,
+ "changedLegend": {"Name": "Package","Breite": "Klassen","Höhe": "Methoden","Farbe": "Zeilen" },
+ "collID": CollectionID,
+ "_id": AnsichtsID};*/
 function setSpecificView(aJson) {
     var gui = getGui();
 
     var hashMap = getBuildingsHashMap();
-    setRemovedBuildings(aJson.removedBuildings);
-    for (var i = 0; i < aJson.removedBuildings.length; i++) {
-        hashMap[aJson.removedBuildings[i]]._isRemoved = true;
+
+    for (var j = 0; j < aJson.removedBuildings.length; j++) {
+		remove(hashMap[aJson.removedBuildings[j]].mesh);
     }
 
     setScalingBooleans(aJson.scaling);

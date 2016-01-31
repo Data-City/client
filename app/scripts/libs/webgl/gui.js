@@ -116,9 +116,9 @@ function drawBox(aBuilding, material, scene) {
     cube.position.z = aBuilding._centerPosition[2];
     cube.building = aBuilding;
     aBuilding.mesh = cube;
-    if (aBuilding._isRemoved == false) {
+    //if (aBuilding._isRemoved == false) {
         scene.add(cube);
-    }
+    //}
 }
 
 /**
@@ -264,9 +264,9 @@ function addGarden(aBuilding, scene) {
             cube.position.z = aBuilding[gardens[i]]._centerPosition[2];
             cube.garden = aBuilding[gardens[i]];
             aBuilding[gardens[i]].mesh = cube;
-            if (aBuilding._isRemoved == false) {
+            //if (aBuilding._isRemoved == false) {
                 scene.add(cube);
-            }
+            //}
 		}
     }
 }
@@ -398,11 +398,11 @@ function setCameraPos(camera, mainDistrict, extrema) {
  "target": { "x": xPanPos,"y": yPanPos,"z": zPanPos},};
  */
 function setCameraPosForLink(camera, aJson) {
-    camera.position.set(aJson.position.x, aJson.position.y, aJson.position.z);
-    camera.rotation.set(aJson.rotation.x, aJson.rotation.y, aJson.rotation.z);
-    getControls().target = new THREE.Vector3(aJson.target.x, aJson.target.y, aJson.target.z);
-    getControls().matrix = aJson.matrix;
-    camera.lookAt(getControls().target);
+	getControls().target.x = aJson.target.x;
+	getControls().target.y = aJson.target.y;
+	getControls().target.z = aJson.target.z;
+	camera.position.set(aJson.position.x, aJson.position.y, aJson.position.z);
+	camera.rotation.set(aJson.rotation._x,aJson.rotation._y,aJson.rotation._z);
 }
 
 

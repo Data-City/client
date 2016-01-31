@@ -139,15 +139,16 @@ function setGardenPos(aBuilding) {
 
 //Methode, um fuer jedes Stadtteil die einzelnen Gebaeude zu positionieren und die Stadtteile auch zu positionieren
 //@params: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
-function setMainDistrict(mainDistrict) {
+//@param: namePrefix: Praefix vom Namen der Form "maindistrict.package1.package2."
+function setMainDistrict(mainDistrict, namePrefix) {
     if (mainDistrict["buildings"] != undefined) {
         for (var i = 0; i < mainDistrict["buildings"].length; i++) {
-            setMainDistrict(mainDistrict["buildings"][i]);
+            setMainDistrict(mainDistrict["buildings"][i], namePrefix + mainDistrict.buildings[i].name + ".");
             if (mainDistrict["buildings"][i]["buildings"] != undefined) {
                 setOneDistrict(mainDistrict["buildings"][i]);
             }
         }
-        setOneDistrict(mainDistrict);
+        setOneDistrict(mainDistrict, namePrefix);
     }
 }
 
@@ -172,11 +173,11 @@ function shiftBack(mainDistrict) {
 //Hilfsmethode zum Sortieren der Gebaeude nach Breite absteigend
 //@params: aDistrict: das Stadtteil, dessen Gebaeude sortiert werden sollen
 //@return: das district mit einem sortierten Gebaeudearray
-function sortBuildings(aDistrict) {
+function sortBuildings(aDistrict, namePrefix) {
     aDistrict["buildings"].sort(
         function(building1, building2) {
-            initBuilding(building1);
-            initBuilding(building2);
+            initBuilding(building1, namePrefix);
+            initBuilding(building2, namePrefix);
             return (getLandWidth(building2) - getLandWidth(building1));
         }
     );
@@ -185,7 +186,7 @@ function sortBuildings(aDistrict) {
 
 //Methode zur Initialisierung des Districts bzw. des Gebaeudes
 //@params: aBuilding: Das Gebaeude bzw. District, das initialisiert werden soll
-function initBuilding(aBuilding) {
+function initBuilding(aBuilding, namePrefix) {
     if (aBuilding._height == undefined) {
         var stringarray = ["height", "width", "color"];
         for (var i = 0; i < stringarray.length; i++) {
@@ -203,7 +204,10 @@ function initBuilding(aBuilding) {
         if (aBuilding[association["height"]] != undefined) {
             updateExtrema(aBuilding[association["width"]], aBuilding[association["height"]], aBuilding[association["color"]]);
         }
-        buildingsHashMap[aBuilding[association.name]] = aBuilding;
+		else {
+		    aBuilding[association.name] = namePrefix;
+		}
+		buildingsHashMap[aBuilding[association.name]] = aBuilding;
         aBuilding._isRemoved = false;
     }
 }
@@ -213,12 +217,12 @@ function initBuilding(aBuilding) {
 // Sie berechnet fuer die Gebaeude von einem Stadtteil die Position und speichert sie in buildings._centerPosition
 // anschließend wird noch das Stadtteil vergroessert, damit alle Gebaeude auf das Stadtteil draufpassen
 //@params: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
-function setOneDistrict(aDistrict) {
-    initBuilding(aDistrict);
-    aDistrict = sortBuildings(aDistrict); //zunaechst muessen wir das gebaudearray sortieren absteigend nach der Breite der Boxen
-    setFirstBuilding(aDistrict); //Initialisiert globale Variablen
+function setOneDistrict(aDistrict, namePrefix) {
+    initBuilding(aDistrict, namePrefix);
+    aDistrict = sortBuildings(aDistrict, namePrefix); //zunaechst muessen wir das gebaudearray sortieren absteigend nach der Breite der Boxen
+    setFirstBuilding(aDistrict, namePrefix); //Initialisiert globale Variablen
     for (var i = 1; i < arrayOfBuildings.length; i++) {
-        initBuilding(arrayOfBuildings[i]);
+        initBuilding(arrayOfBuildings[i], namePrefix);
         if (buildingInZDirection == true) { //wenn wir gerade in Z-Richtung bauen
 
             if (startToBuildInZDirection > maxDepth) { //wenn wir bereits ueber den Rand (Tiefe des letzten Blocks) sind
@@ -292,9 +296,9 @@ function getXPosOfBuildingsFromRight(i) {
 
 //Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des ersten Gebaeudes
 //@params: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
-function setFirstBuilding(aDistrict) {
+function setFirstBuilding(aDistrict, namePrefix) {
     arrayOfBuildings = aDistrict["buildings"];
-    initBuilding(arrayOfBuildings[0]);
+    initBuilding(arrayOfBuildings[0], namePrefix);
     //Setzen des ersten Elements
     setCenterPosition(
         arrayOfBuildings[0],
@@ -313,7 +317,7 @@ function setFirstBuilding(aDistrict) {
     lastMaxWidth = maxWidth - 3 * gap; // in einem bestimmten Fall startet man von hier aus, in X-Richtung zu bauen
     width = maxWidth; //vom aDistrict
     if (arrayOfBuildings.length > 1) {
-        initBuilding(arrayOfBuildings[1]);
+        initBuilding(arrayOfBuildings[1], namePrefix);
         extension = getLandWidth(arrayOfBuildings[1]) + gap;
     }
 }

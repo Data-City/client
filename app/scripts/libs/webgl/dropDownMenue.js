@@ -4,8 +4,9 @@ var gui;
 var storedMesh, storedLeftGarden, storedRightGarden;
 var storedDistrict = [];
 var storedBuilding = [];
-var newBuildingClicked = true;
+//var newBuildingClicked = true;
 var removedBuildings = [];
+var arrayOfRemovedBuildings = [];
 
 // Dimensionen, die wir abbilden
 var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
@@ -27,8 +28,20 @@ var buildingInformation = {
     "width": "Klicken Sie bitte auf ein Gebäude",
     "color": "Klicken Sie bitte auf ein Gebäude",
     "name": "Klicken Sie bitte auf ein Gebäude",
-    "isRemoved": false
+    "remove": function(){ remove(buildingInformation.mesh);
+	},
+	"undo": function(){
+	    //storedDistrict = arrayOfRemovedBuildings.pop();
+	    undoRemoving(getScene());
+	}
 };
+
+function remove(mesh){
+ if (mesh.length != 0){
+			removeDistrict(getScene(), mesh, true);
+			arrayOfRemovedBuildings.push(storedDistrict);
+	}
+}
 
 //entsteht, wenn Nutzer die Legende aendert
 var changedLegend = undefined;
@@ -105,8 +118,8 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh
     buildingInformation["width"] = newWidth;
     buildingInformation["color"] = newColor;
     buildingInformation["name"] = newName;
-    buildingInformation["isRemoved"] = false;
-    newBuildingClicked = true;
+    //buildingInformation["isRemoved"] = false;
+    //newBuildingClicked = true;
     buildingInformation.mesh = aMesh;
 }
 
@@ -163,9 +176,8 @@ function setMenue(legende, scene, aDistrict, camera, orbitControls, trackballCon
     for (var i = 0; i < myDimensions.length; i++) {
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(legende[dimensionsFromDatabase[i]]).listen();
     }
-    h.add(buildingInformation, "isRemoved").name("löschen").listen().onChange(function(value) {
-        if (buildingInformation.mesh.length != 0) removeOrAddDistrict(scene, newBuildingClicked, buildingInformation.mesh, true);
-    });
+    h.add(buildingInformation, "remove").name("löschen");
+	h.add(buildingInformation, "undo").name("Löschen rückgängig");
 
     //*****************************************************************
 
@@ -244,44 +256,44 @@ function getChangedLegend() {
 
 //Methode, um ein Distrikt oder ein Gebaeude zu loeschen
 //@params: scene: die Scene, auf der die Objekte gezeichnet wurden
-//	    		value: true oder false, ob das Distrikt oder Gebaeude bereits geloescht wurde
 //			aMesh: Mesh vom Distrikt oder Gebaeude, das geloescht werden soll
 //			isFirstCall: true, wenn es der Initialaufruf dieser Methode ist
-function removeOrAddDistrict(scene, value, aMesh, isFirstCall) {
-    if (value) { //wenn es geloescht werden soll
+function removeDistrict(scene, aMesh, isFirstCall) {
         if (isFirstCall) {
             storedDistrict = [];
+			removedBuildings.push(aMesh.building[association.name]);
         }
-        removeOrAddObject(scene, aMesh);
+        removeObject(scene, aMesh);
         storedDistrict = storedDistrict.concat(storedBuilding);
         if (aMesh.building.buildings != undefined) {
             for (var i = 0; i < aMesh.building.buildings.length; i++) {
                 if (scene.children.indexOf(aMesh.building.buildings[i].mesh) != -1) {
-                    removeOrAddDistrict(scene, value, aMesh.building.buildings[i].mesh, false);
+                    removeDistrict(scene, aMesh.building.buildings[i].mesh, false);
                 }
             }
         }
-    } else {
+}
+
+function undoRemoving(scene) {
+    storedDistrict = arrayOfRemovedBuildings.pop();
+	removedBuildings.splice(removedBuildings.indexOf(storedDistrict[0].building[association.name]), 1);
         for (var i = 0; i < storedDistrict.length; i++) {
             scene.add(storedDistrict[i]);
             if (storedDistrict[i].building != undefined) {
                 storedDistrict[i].building._isRemoved = false;
-                removedBuildings.splice(removedBuildings.indexOf(storedDistrict[i].building[association.name]), 1);
+                //removedBuildings.splice(removedBuildings.indexOf(storedDistrict[i].building[association.name]), 1);
             }
         }
-    }
-    newBuildingClicked = !value;
-
 }
 
 //Methode, um Gebaeude zu loeschen
 //@params: scene: die Scene, auf die die Objekte gezeichnet wurden
 //			aMesh: das Mesh zum Gebaeude
-function removeOrAddObject(scene, aMesh) {
+function removeObject(scene, aMesh) {
     storedBuilding = [];
     storedBuilding.push(aMesh);
     aMesh.building._isRemoved = true;
-    removedBuildings.push(aMesh.building[association.name]);
+    //removedBuildings.push(aMesh.building[association.name]);
     if (aMesh.building._leftGarden.mesh != undefined) {
         storedBuilding.push(aMesh.building._leftGarden.mesh);
         for (var x in aMesh.building._leftGarden.meshLines) {
@@ -320,7 +332,7 @@ function scale(value, aString, scene, aDistrict, camera) {
         var scalingExtrema = linearizeExtrema;
     }
     removeAllObjects(scene, aString, scalingMethod);
-    scaleRemovedBuildings(scalingMethod, aString, getBuildingsHashMap());
+	scaleAll(aString, scalingMethod);
     storedDistrict = [];
     storedBuilding = [];
     setClickedGardensEmpty();
@@ -329,6 +341,7 @@ function scale(value, aString, scene, aDistrict, camera) {
     shiftBack(aDistrict);
     scalingExtrema(aString);
     addCityToScene(aDistrict, scene, camera);
+	updateRemovedBuildings();
     if (buildingInformation.mesh != undefined) {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
     }
@@ -336,17 +349,6 @@ function scale(value, aString, scene, aDistrict, camera) {
     saveCamera();
 }
 
-
-
-//skaliert auch die geloeschten Gebaeude, um die Gebaeude so wie immer zu setzen
-//@params: scalingMethod: die Methode, mit der skaliert wird (scaleLinearly oder scaleLogarithmically)
-//		aString: "width" order "height" oder "color"
-//		theBuildingHashMap: aus getBuildingsHashMap()
-function scaleRemovedBuildings(scalingMethod, aString, theBuildingHashMap) {
-    for (var i = 0; i < removedBuildings.length; i++) {
-        theBuildingHashMap[removedBuildings[i]]["_" + aString] = scalingMethod(theBuildingHashMap[removedBuildings[i]], aString);
-    }
-}
 
 
 //Methode, um die Extremwerte ebenfalls zu skalieren
@@ -402,16 +404,37 @@ function scaleLinearly(aDistrict, aString) {
     }
 }
 
+
 //Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen
 //@params: scene: die Scene, auf der alle Objekte geloescht werden soll
 function removeAllObjects(scene, aString, scalingMethod) {
     for (var i = scene.children.length - 1; i >= 0; i--) {
-        if (scene.children[i].building != undefined) {
-            scene.children[i].building._centerPosition = [0, scene.children[i].building._height / 2 - 1.5, 0];
-            if (scene.children[i].building.buildings == undefined) {
-                scene.children[i].building["_" + aString] = scalingMethod(scene.children[i].building, aString);
-            }
-        }
         scene.remove(scene.children[i]);
     }
+}
+
+//skaliert alle Gebaeuden
+function scaleAll(aString, scalingMethod){
+    var hashMap = getBuildingsHashMap();
+	for(var x in hashMap){
+	    hashMap[x]._centerPosition = [0, hashMap[x]._height / 2 - 1.5, 0];
+		if (hashMap[x].buildings == undefined) {
+                hashMap[x]["_" + aString] = scalingMethod(hashMap[x], aString);
+        }
+	}
+}
+
+//nach dem Skalieren update der geloeschten Objekte, damit sie auch wiederhergestellt werden koennen
+function updateRemovedBuildings(){
+    for(var i=0; i<arrayOfRemovedBuildings.length; i++){
+	    for(var j=0; j<arrayOfRemovedBuildings[i].length; j++){
+		    if (arrayOfRemovedBuildings[i][j].building != undefined) {
+		        arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].building.mesh;
+			    scene.remove(arrayOfRemovedBuildings[i][j].building.mesh);
+			} else {
+			    arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].garden.mesh;
+			    scene.remove(arrayOfRemovedBuildings[i][j].garden.mesh);
+			}
+		}
+	}
 }
