@@ -324,6 +324,21 @@ function setSpecificView(aJson) {
         i++;
     }
 
+    drawStoredLines(aJson);
+
+    setChangedLegend(aJson.changedLegend);
+    var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
+
+    for (var i = 0; i < 4; i++) {
+        gui.__folders["Legende"].__controllers[i].setValue(aJson.changedLegend[myDimensions[i]]);
+    }
+
+    setCameraPosForLink(camera, aJson);
+}
+
+
+function drawStoredLines(aJson){
+    var hashMap = getBuildingsHashMap();
     var stringArray = ["leftGarden", "rightGarden"];
     for (var j = 0; j < stringArray.length; j++) {
         for (var i = 0; i < aJson[stringArray[j]].length; i++) {
@@ -334,15 +349,6 @@ function setSpecificView(aJson) {
         }
     }
     setClickedGardens(aJson);
-
-    setChangedLegend(aJson.changedLegend);
-    var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
-
-    for (var i = 0; i < 4; i++) {
-        gui.__folders["Legende"].__controllers[i].setValue(aJson.changedLegend[myDimensions[i]]);
-    }
-
-    setCameraPosForLink(camera, aJson);
 }
 
 

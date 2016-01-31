@@ -335,12 +335,12 @@ function scale(value, aString, scene, aDistrict, camera) {
 	scaleAll(aString, scalingMethod);
     storedDistrict = [];
     storedBuilding = [];
-    setClickedGardensEmpty();
     setLight(scene);
     setMainDistrict(aDistrict);
     shiftBack(aDistrict);
     scalingExtrema(aString);
     addCityToScene(aDistrict, scene, camera);
+	drawStoredLines(getJsonForCurrentLink());
 	updateRemovedBuildings();
     if (buildingInformation.mesh != undefined) {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
