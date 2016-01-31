@@ -83,11 +83,11 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
     $scope.getDatasOrData = function(numberOfCollections) {
         var string = "";
         if (numberOfCollections === 1) {
-            string = "Datensatz";
+            string = numberOfCollections + " Datensatz";
         } else if (numberOfCollections === 0) {
             string = "Es liegen keine Datensätze vor.";
         } else {
-            string = "Datensätze";
+            string = numberOfCollections + " Datensätze";
         }
         return string;
     };
