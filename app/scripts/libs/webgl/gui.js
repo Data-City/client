@@ -30,10 +30,10 @@ function highlightBuilding(buildingID) {
     if (hashMap[buildingID] != undefined) {
         highlightedBuildingID = buildingID;
         hashMap[buildingID].mesh.material.emissive.setHex(0xffff00);
-    } else if (hashMap[buildingID + "."] != undefined){
-	    highlightedBuildingID = buildingID + ".";
+    } else if (hashMap[buildingID + "."] != undefined) {
+        highlightedBuildingID = buildingID + ".";
         hashMap[buildingID + "."].mesh.material.emissive.setHex(0xffff00);
-	} else {
+    } else {
         highlightedBuildingID = undefined;
     }
 }
@@ -43,21 +43,21 @@ function highlightBuilding(buildingID) {
  */
 function showBuilding() {
     if (highlightedBuildingID != undefined) {
-		var hashMap = getBuildingsHashMap();
-		getControls().target.x = hashMap[highlightedBuildingID]._centerPosition[0];
-		getControls().target.y = hashMap[highlightedBuildingID]._centerPosition[1];
-		getControls().target.z = hashMap[highlightedBuildingID]._centerPosition[2];
-		if(hashMap[highlightedBuildingID].buildings==undefined){
-	    	camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0], 
-			    hashMap[highlightedBuildingID]._centerPosition[1] + 10*Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width), 
-			    hashMap[highlightedBuildingID]._centerPosition[2] + 10*Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width));
-		} else {
-		    camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0], 
-			    hashMap[highlightedBuildingID]._centerPosition[1] + 1.5 * hashMap[highlightedBuildingID]._width, 
-			    hashMap[highlightedBuildingID]._centerPosition[2] + 1.5 * hashMap[highlightedBuildingID]._width);
-		}
-		camera.rotation.set(0,0,0);
-    }        
+        var hashMap = getBuildingsHashMap();
+        getControls().target.x = hashMap[highlightedBuildingID]._centerPosition[0];
+        getControls().target.y = hashMap[highlightedBuildingID]._centerPosition[1];
+        getControls().target.z = hashMap[highlightedBuildingID]._centerPosition[2];
+        if (hashMap[highlightedBuildingID].buildings == undefined) {
+            camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0],
+                hashMap[highlightedBuildingID]._centerPosition[1] + 10 * Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width),
+                hashMap[highlightedBuildingID]._centerPosition[2] + 10 * Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width));
+        } else {
+            camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0],
+                hashMap[highlightedBuildingID]._centerPosition[1] + 1.5 * hashMap[highlightedBuildingID]._width,
+                hashMap[highlightedBuildingID]._centerPosition[2] + 1.5 * hashMap[highlightedBuildingID]._width);
+        }
+        camera.rotation.set(0, 0, 0);
+    }
 }
 
 /**
@@ -126,7 +126,7 @@ function drawBox(aBuilding, material, scene) {
     cube.building = aBuilding;
     aBuilding.mesh = cube;
     //if (aBuilding._isRemoved == false) {
-        scene.add(cube);
+    scene.add(cube);
     //}
 }
 
@@ -262,11 +262,11 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
 function addGarden(aBuilding, scene) {
     var gardens = ["_leftGarden", "_rightGarden"];
     for (var i = 0; i < 2; i++) {
-	    if(aBuilding[gardens[i]].color>0){
-		    var factor = getColor(getExtrema(), aBuilding[gardens[i]].color, "SumOfConn");
-            var gardenMaterial = getMaterial(new THREE.Color(1-factor, 1, 1-factor));
+        if (aBuilding[gardens[i]].color > 0) {
+            var factor = getColor(getExtrema(), aBuilding[gardens[i]].color, "SumOfConn");
+            var gardenMaterial = getMaterial(new THREE.Color(1 - factor, 1, 1 - factor));
             gardenMaterial.name = "garden";
-	    	var geometry = new THREE.CylinderGeometry(aBuilding[gardens[i]]._width/2, aBuilding[gardens[i]]._width/2, aBuilding[gardens[i]]._height, 3, 1, false, i*Math.PI);
+            var geometry = new THREE.CylinderGeometry(aBuilding[gardens[i]]._width / 2, aBuilding[gardens[i]]._width / 2, aBuilding[gardens[i]]._height, 3, 1, false, i * Math.PI);
             var cube = new THREE.Mesh(geometry, gardenMaterial);
             cube.position.x = aBuilding[gardens[i]]._centerPosition[0];
             cube.position.y = aBuilding[gardens[i]]._centerPosition[1];
@@ -274,9 +274,9 @@ function addGarden(aBuilding, scene) {
             cube.garden = aBuilding[gardens[i]];
             aBuilding[gardens[i]].mesh = cube;
             //if (aBuilding._isRemoved == false) {
-                scene.add(cube);
+            scene.add(cube);
             //}
-		}
+        }
     }
 }
 
@@ -302,7 +302,7 @@ function drawLines(aGarden, updateBoolean) {
                 }
             }
         }
-		setNextLinePosForNextPackage(aGarden);
+        setNextLinePosForNextPackage(aGarden);
     }
     currentPosInColorOfLines++;
 }
@@ -323,9 +323,9 @@ function drawALine(aGarden, destGarden) {
     var geometry = new THREE.Geometry();
     geometry.vertices = curve.getPoints(50);
 
-	var factor = getColor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
+    var factor = getColor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
     var material = new THREE.LineBasicMaterial({
-		color: new THREE.Color(1, 1-factor, 1-factor)
+        color: new THREE.Color(1, 1 - factor, 1 - factor)
     });
     var curveObject = new THREE.Line(geometry, material);
     scene.add(curveObject);
@@ -407,11 +407,11 @@ function setCameraPos(camera, mainDistrict, extrema) {
  "target": { "x": xPanPos,"y": yPanPos,"z": zPanPos},};
  */
 function setCameraPosForLink(camera, aJson) {
-	getControls().target.x = aJson.target.x;
-	getControls().target.y = aJson.target.y;
-	getControls().target.z = aJson.target.z;
-	camera.position.set(aJson.position.x, aJson.position.y, aJson.position.z);
-	camera.rotation.set(aJson.rotation._x,aJson.rotation._y,aJson.rotation._z);
+    getControls().target.x = aJson.target.x;
+    getControls().target.y = aJson.target.y;
+    getControls().target.z = aJson.target.z;
+    camera.position.set(aJson.position.x, aJson.position.y, aJson.position.z);
+    camera.rotation.set(aJson.rotation._x, aJson.rotation._y, aJson.rotation._z);
 }
 
 
@@ -424,7 +424,7 @@ function setCameraPosForLink(camera, aJson) {
  *@return: die berechnet den HSV-Wert, den man fuer den Farbton braucht HSV-Farbe(faktor, faktor, 1)
  */
 function getColor(extrema, colorValue, string) {
-    return (colorValue - extrema["min"+string]) / (extrema["max"+string] - extrema["min"+string]);
+    return (colorValue - extrema["min" + string]) / (extrema["max" + string] - extrema["min" + string]);
 }
 
 
@@ -486,7 +486,7 @@ function onDocumentMouseDown(event) {
  * Der Garten bekommt dann eine andere Farbe und es werden die Verbindungen gezeichnet.
  *@param: aMesh: Das Mesh vom Garten
  */
-function setGardenOn(aMesh){
+function setGardenOn(aMesh) {
     drawLines(aMesh.object.garden, true);
     aMesh.object.material.color.setHex(0xA5DF00);
     if (aMesh.object.garden.isLeftGarden == true) {
@@ -503,17 +503,17 @@ function setGardenOn(aMesh){
  * Der Garten bekommt dann die urspruengliche Farbe und es werden die Verbindungen geloescht.
  *@param: aMesh: Das Mesh vom Garten
  */
-function setGardenOff(aMesh){
+function setGardenOff(aMesh) {
     removeLines(aMesh.object.garden, true);
-	var factor = getColor(getExtrema(), aMesh.object.garden.color, "SumOfConn");
-    aMesh.object.material.color.set(new THREE.Color(1-factor,1,1-factor));
+    var factor = getColor(getExtrema(), aMesh.object.garden.color, "SumOfConn");
+    aMesh.object.material.color.set(new THREE.Color(1 - factor, 1, 1 - factor));
     if (aMesh.object.garden.isLeftGarden == true) {
         clickedLeftGardens.splice(clickedLeftGardens.indexOf(aMesh.object.garden.id), 1);
     } else {
         clickedRightGardens.splice(clickedRightGardens.indexOf(aMesh.object.garden.id), 1);
     }
 }
-		
+
 
 /**
  *Eine Methode, um den Abstand von einem DivElement zum linken bzw. oberen Rand des Fensters zu bekommen

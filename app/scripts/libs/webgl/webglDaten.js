@@ -263,8 +263,8 @@ function getLinkJson() {
             "logarithmicColor": false
         },
         "removedBuildings": [
-		    "de.ruv.baustein."
-		],
+            "de.ruv.baustein."
+        ],
         "changedLegend": {
             "Name": "Package",
             "Breite": "Blabla",

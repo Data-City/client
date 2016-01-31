@@ -144,8 +144,8 @@ angular.module('datacityApp')
          */
         $scope.drawCity = function() {
             var view = $scope.chosenView;
-         var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
-         //   var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
+            var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
+            //   var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
 
             //Fehlermeldungen, falls eine Option vom Nutzer nicht ausgewählt wurde
             var validate = true;
@@ -170,8 +170,8 @@ angular.module('datacityApp')
 
             if (validate) {
                 $scope.createAggregationForDisplay(function(response) {
-                   // REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data", function(response) {
-                    
+                    // REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data", function(response) {
+
                     REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data_" + view._id, function(response) {
                         REST.getURL(relUrl, null, function(collection) {
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
@@ -186,6 +186,7 @@ angular.module('datacityApp')
                                     view.dimensions.height = view.dimensionSettings.height.name;
                                     view.dimensions.area = view.dimensionSettings.area.name;
                                     view.dimensions.color = view.dimensionSettings.color.name;
+                                    view.buildingcolor = SETTINGS.farbefuerGebauede;
                                     if (!collection.data._embedded) {
                                         $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
                                     } else {

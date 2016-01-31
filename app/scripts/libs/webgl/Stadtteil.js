@@ -49,11 +49,11 @@ function garden(isItLeftGarden, aBuilding, connections) {
     }
     var aGarden = {
         building: aBuilding,
-        _width: (6+6*Math.sin(Math.PI/6))/Math.cos(Math.PI/6),
-		radius : gardenRadius, 
+        _width: (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6),
+        radius: gardenRadius,
         _height: 0.01,
-        depth: 6+6*Math.sin(Math.PI/6),
-		color: connections.sumOfConnections,
+        depth: 6 + 6 * Math.sin(Math.PI / 6),
+        color: connections.sumOfConnections,
         _centerPosition: [0, 0.05, 0],
         nextLinePos: [0, 0],
         on: false,
@@ -61,10 +61,10 @@ function garden(isItLeftGarden, aBuilding, connections) {
         linesTo: connections.connections,
         meshLines: {}
     };
-	if (aGarden.color == 0) {
-		aGarden._width = 0;
-		aGarden.depth = 0;
-	}
+    if (aGarden.color == 0) {
+        aGarden._width = 0;
+        aGarden.depth = 0;
+    }
     return aGarden;
 }
 
@@ -73,59 +73,56 @@ function garden(isItLeftGarden, aBuilding, connections) {
 //@params: aGarden: ein Garten
 function setNextLinePos(aGarden) {
     var nextLineObj = computeDistancesForNextLinePos(aGarden);
-	if (aGarden.nextLinePos[0] + 1 > aGarden._centerPosition[0] + nextLineObj.currentTriangleWidth) {
-	    if (nextLineObj.aFactor * (aGarden.nextLinePos[1] + nextLineObj.aFactor) > nextLineObj.aFactor * (aGarden._centerPosition[2] + nextLineObj.aFactor * aGarden.radius)) {
-	        aGarden.nextLinePos[0] = aGarden._centerPosition[0] - aGarden._width / 2 + 1;
+    if (aGarden.nextLinePos[0] + 1 > aGarden._centerPosition[0] + nextLineObj.currentTriangleWidth) {
+        if (nextLineObj.aFactor * (aGarden.nextLinePos[1] + nextLineObj.aFactor) > nextLineObj.aFactor * (aGarden._centerPosition[2] + nextLineObj.aFactor * aGarden.radius)) {
+            aGarden.nextLinePos[0] = aGarden._centerPosition[0] - aGarden._width / 2 + 1;
             aGarden.nextLinePos[1] = aGarden._centerPosition[2] - nextLineObj.aFactor * (aGarden.depth - aGarden.radius) + nextLineObj.aFactor;
-		}
-		else {
-			aGarden.nextLinePos[0] = aGarden._centerPosition[0] - nextLineObj.currentTriangleWidth + 1;
-			aGarden.nextLinePos[1] = aGarden.nextLinePos[1] + nextLineObj.aFactor * 0.1;
-		}
-	}
-	else{
-	    aGarden.nextLinePos[0] = aGarden.nextLinePos[0] + 0.1;
-	}
+        } else {
+            aGarden.nextLinePos[0] = aGarden._centerPosition[0] - nextLineObj.currentTriangleWidth + 1;
+            aGarden.nextLinePos[1] = aGarden.nextLinePos[1] + nextLineObj.aFactor * 0.1;
+        }
+    } else {
+        aGarden.nextLinePos[0] = aGarden.nextLinePos[0] + 0.1;
+    }
 }
 
 /**
-* Hilfsmethode zum initialiseren der Variablen fuer setNextLinePos-Methoden
-* @param: aGarden: ein Garten
-* @return: ein Objekt mit den keys distancePosToPeak, currentTriangleWidth, aFactor
-*/
+ * Hilfsmethode zum initialiseren der Variablen fuer setNextLinePos-Methoden
+ * @param: aGarden: ein Garten
+ * @return: ein Objekt mit den keys distancePosToPeak, currentTriangleWidth, aFactor
+ */
 function computeDistancesForNextLinePos(aGarden) {
     var nextLineObj = {};
-	if (aGarden.isLeftGarden) {
-	    nextLineObj.distancePosToPeak = aGarden.depth - (aGarden.nextLinePos[1] - (aGarden._centerPosition[2] + aGarden.radius - aGarden.depth));
-	    nextLineObj.currentTriangleWidth = nextLineObj.distancePosToPeak * Math.tan(Math.PI/6);
-		nextLineObj.aFactor = 1;
-	}
-	else {
-	    nextLineObj.distancePosToPeak = aGarden.nextLinePos[1] - (aGarden._centerPosition[2] - aGarden.radius);
-	    nextLineObj.currentTriangleWidth = nextLineObj.distancePosToPeak * Math.tan(Math.PI/6);
-		nextLineObj.aFactor = -1;
-	}
-	return nextLineObj;
+    if (aGarden.isLeftGarden) {
+        nextLineObj.distancePosToPeak = aGarden.depth - (aGarden.nextLinePos[1] - (aGarden._centerPosition[2] + aGarden.radius - aGarden.depth));
+        nextLineObj.currentTriangleWidth = nextLineObj.distancePosToPeak * Math.tan(Math.PI / 6);
+        nextLineObj.aFactor = 1;
+    } else {
+        nextLineObj.distancePosToPeak = aGarden.nextLinePos[1] - (aGarden._centerPosition[2] - aGarden.radius);
+        nextLineObj.currentTriangleWidth = nextLineObj.distancePosToPeak * Math.tan(Math.PI / 6);
+        nextLineObj.aFactor = -1;
+    }
+    return nextLineObj;
 }
 
 /**
-* verschiebt die NextLinePos solange, bis 5 Linien nebeneinander passen
-* @param: aGarden: ein Garten
-*/
+ * verschiebt die NextLinePos solange, bis 5 Linien nebeneinander passen
+ * @param: aGarden: ein Garten
+ */
 function setNextLinePosForNextPackage(aGarden) {
     var nextLineObj = computeDistancesForNextLinePos(aGarden);
-    while( aGarden.nextLinePos[0] + 1.5 > aGarden._centerPosition[0] + nextLineObj.currentTriangleWidth){
-	    setNextLinePos(aGarden);
-	}
+    while (aGarden.nextLinePos[0] + 1.5 > aGarden._centerPosition[0] + nextLineObj.currentTriangleWidth) {
+        setNextLinePos(aGarden);
+    }
 }
 
 //Methode zum setzen der GartenPosition in Abhängigkeit vom Gebaeude
 //@params: aBuilding: ein Gebaeude oder District
 function setGardenPos(aBuilding) {
-    aBuilding._rightGarden._centerPosition[0] = aBuilding._centerPosition[0] + aBuilding._rightGarden._width / 2 - aBuilding._rightGarden.radius/2;
+    aBuilding._rightGarden._centerPosition[0] = aBuilding._centerPosition[0] + aBuilding._rightGarden._width / 2 - aBuilding._rightGarden.radius / 2;
     aBuilding._rightGarden._centerPosition[1] = aBuilding._centerPosition[1] - aBuilding._height / 2 + 0.05;
     aBuilding._rightGarden._centerPosition[2] = aBuilding._centerPosition[2] + 1 + aBuilding._rightGarden.radius + aBuilding._width / 2;
-    aBuilding._leftGarden._centerPosition[0] = aBuilding._centerPosition[0] - aBuilding._leftGarden._width / 2 ;
+    aBuilding._leftGarden._centerPosition[0] = aBuilding._centerPosition[0] - aBuilding._leftGarden._width / 2;
     aBuilding._leftGarden._centerPosition[1] = aBuilding._centerPosition[1] - aBuilding._height / 2 + 0.05;
     aBuilding._leftGarden._centerPosition[2] = aBuilding._centerPosition[2] + 1 + aBuilding._leftGarden.depth - aBuilding._leftGarden.radius + aBuilding._width / 2;
 
@@ -203,11 +200,10 @@ function initBuilding(aBuilding, namePrefix) {
         aBuilding["_rightGarden"] = theRightGarden;
         if (aBuilding[association["height"]] != undefined) {
             updateExtrema(aBuilding[association["width"]], aBuilding[association["height"]], aBuilding[association["color"]]);
+        } else {
+            aBuilding[association.name] = namePrefix;
         }
-		else {
-		    aBuilding[association.name] = namePrefix;
-		}
-		buildingsHashMap[aBuilding[association.name]] = aBuilding;
+        buildingsHashMap[aBuilding[association.name]] = aBuilding;
         aBuilding._isRemoved = false;
     }
 }

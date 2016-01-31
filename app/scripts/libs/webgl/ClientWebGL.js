@@ -7,19 +7,19 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
     maxWidth: 0,
     maxHeight: 0,
     maxColor: 0,
-	maxConnections: 0,
-	maxSumOfConn: 0,
+    maxConnections: 0,
+    maxSumOfConn: 0,
     minWidth: Number.MAX_VALUE,
     minHeigth: Number.MAX_VALUE,
     minColor: Number.MAX_VALUE,
-	minConnections: Number.MAX_VALUE,
-	minSumOfConn: Number.MAX_VALUE
+    minConnections: Number.MAX_VALUE,
+    minSumOfConn: Number.MAX_VALUE
 };
 var camToSave = {};
 
 
 //Getter fuer scene
-function getScene(){
+function getScene() {
     return scene;
 }
 
@@ -97,11 +97,11 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
     animate();
     saveCamera();
-	goToInitialView();
+    goToInitialView();
     if (settings != undefined) {
         setSpecificView(settings);
     }
-	
+
 }
 
 
@@ -279,7 +279,7 @@ function setControls() {
 }
 
 //Getter fuer orbitcontrols
-function getOrbitControls(){
+function getOrbitControls() {
     return orbitControls;
 }
 
@@ -310,7 +310,7 @@ function setSpecificView(aJson) {
     var hashMap = getBuildingsHashMap();
 
     for (var j = 0; j < aJson.removedBuildings.length; j++) {
-		remove(hashMap[aJson.removedBuildings[j]].mesh);
+        remove(hashMap[aJson.removedBuildings[j]].mesh);
     }
 
     setScalingBooleans(aJson.scaling);
@@ -337,7 +337,7 @@ function setSpecificView(aJson) {
 }
 
 
-function drawStoredLines(aJson){
+function drawStoredLines(aJson) {
     var hashMap = getBuildingsHashMap();
     var stringArray = ["leftGarden", "rightGarden"];
     for (var j = 0; j < stringArray.length; j++) {
@@ -363,17 +363,17 @@ function getOriginalAssociations() {
 //@return neues JSON fuer Verbindungen
 function getIncomingConnections(connectionData) {
     var newJson = {};
-	var ithConn;
+    var ithConn;
     for (var i = 0; i < connectionData.connections.length; i++) {
-		ithConn = connectionData.connections[i];
+        ithConn = connectionData.connections[i];
         newJson[ithConn.Ziel] = {};
         newJson[ithConn.Ziel].connections = {};
         for (var j = 0; j < ithConn.incomingConnections.length; j++) {
             newJson[ithConn.Ziel].connections[ithConn.incomingConnections[j].Start] = ithConn.incomingConnections[j].Gewichtung;
-			updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung, "Connections");
+            updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung, "Connections");
         }
         newJson[ithConn.Ziel].sumOfConnections = ithConn.Gewichtung;
-		updateConnectionExtrema(ithConn.Gewichtung, "SumOfConn");
+        updateConnectionExtrema(ithConn.Gewichtung, "SumOfConn");
     }
     return newJson;
 }
@@ -388,22 +388,22 @@ function getOutgoingConnections(connectionData) {
                 connectionData.connections[i].outgoingConnections[j].Gewichtung;
         }
         newJSON[connectionData.connections[i].Start].sumOfConnections = connectionData.connections[i].Gewichtung;
-		updateConnectionExtrema(connectionData.connections[i].Gewichtung, "SumOfConn");
+        updateConnectionExtrema(connectionData.connections[i].Gewichtung, "SumOfConn");
     }
     return newJSON;
 }
 
 
 /**
-* aktualisiert in extrema die min- bzq. maxConnections bzw. -SumOfCon
-* @param: weight: die Gewichtung von der Verbindung, die bei extrema aktualisiert werden soll
-* @param: string: "Connections" oder "SumOfConn"
-*/
-function updateConnectionExtrema(weight, string){
-    if(extrema["max"+string] < weight){
-        extrema["max"+string] = weight;
+ * aktualisiert in extrema die min- bzq. maxConnections bzw. -SumOfCon
+ * @param: weight: die Gewichtung von der Verbindung, die bei extrema aktualisiert werden soll
+ * @param: string: "Connections" oder "SumOfConn"
+ */
+function updateConnectionExtrema(weight, string) {
+    if (extrema["max" + string] < weight) {
+        extrema["max" + string] = weight;
     }
-    if(extrema["min"+string] > weight && weight > 0){
-	    extrema["min"+string] = weight;
-	}
+    if (extrema["min" + string] > weight && weight > 0) {
+        extrema["min" + string] = weight;
+    }
 }

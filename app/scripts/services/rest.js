@@ -263,7 +263,7 @@ angular.module('datacityApp')
                 }
             });
             //Die dazugehörige Collection löschen
-            this.deleteCollection(DATABASEFORCOLLECTIONS, view.collID + this.META_DATA_PART +"_" + view._id,null);
+            this.deleteCollection(DATABASEFORCOLLECTIONS, view.collID + this.META_DATA_PART + "_" + view._id, null);
         };
 
         /**
@@ -285,27 +285,27 @@ angular.module('datacityApp')
                     $log.error("PUT auf " + url);
                     $log.error(response);
                 });
-             //   this.createCollectionForView(view, collection, null);
+            //   this.createCollectionForView(view, collection, null);
         };
-    /**    
-        this.createCollectionForView = function(view, collection, fn) {
-            setAuthHeader();
-            var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + "_dc_data" + "_" + view.timeOfCreation;
-            //var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + this.META_DATA_PART + "_" + view.timeOfCreation;
-            
-            $http.put(url, view).then(
-                function success(response) {
-                    rest.setAuthToken(response);
-                    if (fn) {
-                        fn(response);
-                    }
-                },
-                function error(response) {
-                    $log.error("Fehler beim Erzeugen der Collection für die Ansicht");
-                    $log.error("PUT auf " + url);
-                    $log.error(response);
-                });
-        }; */
+        /**    
+            this.createCollectionForView = function(view, collection, fn) {
+                setAuthHeader();
+                var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + "_dc_data" + "_" + view.timeOfCreation;
+                //var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + this.META_DATA_PART + "_" + view.timeOfCreation;
+                
+                $http.put(url, view).then(
+                    function success(response) {
+                        rest.setAuthToken(response);
+                        if (fn) {
+                            fn(response);
+                        }
+                    },
+                    function error(response) {
+                        $log.error("Fehler beim Erzeugen der Collection für die Ansicht");
+                        $log.error("PUT auf " + url);
+                        $log.error(response);
+                    });
+            }; */
 
         this.createAggregation = function(database, collection, etag, params, fn) {
             $log.info("So far!");

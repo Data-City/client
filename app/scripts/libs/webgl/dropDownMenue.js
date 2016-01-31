@@ -28,19 +28,20 @@ var buildingInformation = {
     "width": "Klicken Sie bitte auf ein Gebäude",
     "color": "Klicken Sie bitte auf ein Gebäude",
     "name": "Klicken Sie bitte auf ein Gebäude",
-    "remove": function(){ remove(buildingInformation.mesh);
-	},
-	"undo": function(){
-	    //storedDistrict = arrayOfRemovedBuildings.pop();
-	    undoRemoving(getScene());
-	}
+    "remove": function() {
+        remove(buildingInformation.mesh);
+    },
+    "undo": function() {
+        //storedDistrict = arrayOfRemovedBuildings.pop();
+        undoRemoving(getScene());
+    }
 };
 
-function remove(mesh){
- if (mesh.length != 0){
-			removeDistrict(getScene(), mesh, true);
-			arrayOfRemovedBuildings.push(storedDistrict);
-	}
+function remove(mesh) {
+    if (mesh.length != 0) {
+        removeDistrict(getScene(), mesh, true);
+        arrayOfRemovedBuildings.push(storedDistrict);
+    }
 }
 
 //entsteht, wenn Nutzer die Legende aendert
@@ -177,7 +178,7 @@ function setMenue(legende, scene, aDistrict, camera, orbitControls, trackballCon
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(legende[dimensionsFromDatabase[i]]).listen();
     }
     h.add(buildingInformation, "remove").name("löschen");
-	h.add(buildingInformation, "undo").name("Löschen rückgängig");
+    h.add(buildingInformation, "undo").name("Löschen rückgängig");
 
     //*****************************************************************
 
@@ -209,7 +210,8 @@ function setMenue(legende, scene, aDistrict, camera, orbitControls, trackballCon
 
     h = gui.addFolder("Gebäudesuche");
     h.add(searchBuilding, "search").name("Suche").onFinishChange(function(value) {
-        highlightBuilding(value); showBuilding();
+        highlightBuilding(value);
+        showBuilding();
     });
 
     //********************************************************************
@@ -259,31 +261,31 @@ function getChangedLegend() {
 //			aMesh: Mesh vom Distrikt oder Gebaeude, das geloescht werden soll
 //			isFirstCall: true, wenn es der Initialaufruf dieser Methode ist
 function removeDistrict(scene, aMesh, isFirstCall) {
-        if (isFirstCall) {
-            storedDistrict = [];
-			removedBuildings.push(aMesh.building[association.name]);
-        }
-        removeObject(scene, aMesh);
-        storedDistrict = storedDistrict.concat(storedBuilding);
-        if (aMesh.building.buildings != undefined) {
-            for (var i = 0; i < aMesh.building.buildings.length; i++) {
-                if (scene.children.indexOf(aMesh.building.buildings[i].mesh) != -1) {
-                    removeDistrict(scene, aMesh.building.buildings[i].mesh, false);
-                }
+    if (isFirstCall) {
+        storedDistrict = [];
+        removedBuildings.push(aMesh.building[association.name]);
+    }
+    removeObject(scene, aMesh);
+    storedDistrict = storedDistrict.concat(storedBuilding);
+    if (aMesh.building.buildings != undefined) {
+        for (var i = 0; i < aMesh.building.buildings.length; i++) {
+            if (scene.children.indexOf(aMesh.building.buildings[i].mesh) != -1) {
+                removeDistrict(scene, aMesh.building.buildings[i].mesh, false);
             }
         }
+    }
 }
 
 function undoRemoving(scene) {
     storedDistrict = arrayOfRemovedBuildings.pop();
-	removedBuildings.splice(removedBuildings.indexOf(storedDistrict[0].building[association.name]), 1);
-        for (var i = 0; i < storedDistrict.length; i++) {
-            scene.add(storedDistrict[i]);
-            if (storedDistrict[i].building != undefined) {
-                storedDistrict[i].building._isRemoved = false;
-                //removedBuildings.splice(removedBuildings.indexOf(storedDistrict[i].building[association.name]), 1);
-            }
+    removedBuildings.splice(removedBuildings.indexOf(storedDistrict[0].building[association.name]), 1);
+    for (var i = 0; i < storedDistrict.length; i++) {
+        scene.add(storedDistrict[i]);
+        if (storedDistrict[i].building != undefined) {
+            storedDistrict[i].building._isRemoved = false;
+            //removedBuildings.splice(removedBuildings.indexOf(storedDistrict[i].building[association.name]), 1);
         }
+    }
 }
 
 //Methode, um Gebaeude zu loeschen
@@ -332,7 +334,7 @@ function scale(value, aString, scene, aDistrict, camera) {
         var scalingExtrema = linearizeExtrema;
     }
     removeAllObjects(scene, aString, scalingMethod);
-	scaleAll(aString, scalingMethod);
+    scaleAll(aString, scalingMethod);
     storedDistrict = [];
     storedBuilding = [];
     setLight(scene);
@@ -340,8 +342,8 @@ function scale(value, aString, scene, aDistrict, camera) {
     shiftBack(aDistrict);
     scalingExtrema(aString);
     addCityToScene(aDistrict, scene, camera);
-	drawStoredLines(getJsonForCurrentLink());
-	updateRemovedBuildings();
+    drawStoredLines(getJsonForCurrentLink());
+    updateRemovedBuildings();
     if (buildingInformation.mesh != undefined) {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
     }
@@ -414,27 +416,27 @@ function removeAllObjects(scene, aString, scalingMethod) {
 }
 
 //skaliert alle Gebaeuden
-function scaleAll(aString, scalingMethod){
+function scaleAll(aString, scalingMethod) {
     var hashMap = getBuildingsHashMap();
-	for(var x in hashMap){
-	    hashMap[x]._centerPosition = [0, hashMap[x]._height / 2 - 1.5, 0];
-		if (hashMap[x].buildings == undefined) {
-                hashMap[x]["_" + aString] = scalingMethod(hashMap[x], aString);
+    for (var x in hashMap) {
+        hashMap[x]._centerPosition = [0, hashMap[x]._height / 2 - 1.5, 0];
+        if (hashMap[x].buildings == undefined) {
+            hashMap[x]["_" + aString] = scalingMethod(hashMap[x], aString);
         }
-	}
+    }
 }
 
 //nach dem Skalieren update der geloeschten Objekte, damit sie auch wiederhergestellt werden koennen
-function updateRemovedBuildings(){
-    for(var i=0; i<arrayOfRemovedBuildings.length; i++){
-	    for(var j=0; j<arrayOfRemovedBuildings[i].length; j++){
-		    if (arrayOfRemovedBuildings[i][j].building != undefined) {
-		        arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].building.mesh;
-			    scene.remove(arrayOfRemovedBuildings[i][j].building.mesh);
-			} else {
-			    arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].garden.mesh;
-			    scene.remove(arrayOfRemovedBuildings[i][j].garden.mesh);
-			}
-		}
-	}
+function updateRemovedBuildings() {
+    for (var i = 0; i < arrayOfRemovedBuildings.length; i++) {
+        for (var j = 0; j < arrayOfRemovedBuildings[i].length; j++) {
+            if (arrayOfRemovedBuildings[i][j].building != undefined) {
+                arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].building.mesh;
+                scene.remove(arrayOfRemovedBuildings[i][j].building.mesh);
+            } else {
+                arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].garden.mesh;
+                scene.remove(arrayOfRemovedBuildings[i][j].garden.mesh);
+            }
+        }
+    }
 }
