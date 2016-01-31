@@ -13,6 +13,7 @@ angular.module('datacityApp')
         databaseForViews: "einstellungen",
         collection: "ansichten",
         baseurl: "https://pegenau.com:16392",
+        farbefuerGebauede: 	"#00008B",
 
         // Max. 16MB bei BSON in Aggregation 
         max_docs_per_aggregation: 100000,
