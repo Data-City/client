@@ -8,11 +8,11 @@
  * Der Service hilft, um die Logindaten über alle Controller hinweg zu realisieren
  */
 angular.module('datacityApp')
-    .service('sharedLogin', function() {
+    .service('sharedLogin', function(SETTINGS) {
 
         // Aus Testzwecken ist man immer eingeloggt
-        var username = "a";
-        var password = "a";
+        var username = SETTINGS.benutzername;
+        var password = SETTINGS.passwort;
         // */
 
         /* SPÄTER WIEDER REIN NEHMEN!!!
