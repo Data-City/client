@@ -148,17 +148,17 @@ angular.module('datacityApp')
         /**
          * Setzt einzelne Aggregationsschritte zu einem vollständigen Aggregationsparameter zusammen
          */
-        this.buildAggregationPipe = function(collection, stages) {
+        this.buildAggregationPipe = function(collection, stages, viewID) {
             var aggr = {
                 "aggrs": [{
                     "type": "pipeline",
-                    "uri": "data",
+                    "uri": "data_" + viewID,
                     "stages": stages
                 }]
             };
 
             aggr.aggrs[0].stages.push({
-                "$out": collection + META_DATA_PART + DATA_SUFFIX
+                "$out": collection + META_DATA_PART + DATA_SUFFIX + "_" + viewID
             });
 
             return aggr;

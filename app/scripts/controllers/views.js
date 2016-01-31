@@ -130,7 +130,6 @@ angular.module('datacityApp')
          */
         $scope.verbindungenVorhanden = function() {
             REST.getDocuments(dbWithCollections, $scope.collID + "_dc_connections_incoming", function(incoming) {
-                console.log(incoming);
                 if (incoming) {
                     $scope.verbindungenVorhanden = true;
                 } else {
@@ -388,7 +387,7 @@ angular.module('datacityApp')
             if (view.districts.length > 0) {
                 stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
             }
-            var aggr = AGGR.buildAggregationPipe(view.collID, stages);
+            var aggr = AGGR.buildAggregationPipe(view.collID, stages, view._id);
             aggr = AGGR.mongoDBCodeToRESTHeart(aggr);
             REST.addAggregation(dbWithCollections, view.collID, aggr, function(response) {
                 if (fn) {

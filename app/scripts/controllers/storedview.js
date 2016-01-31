@@ -35,7 +35,7 @@ angular.module('datacityApp')
          * Liest die Parameter aus dem JSON aus (Winkel der Kamera etc), holt alle benötigten Datenbanken (Collection, Verbindungen, die Ansicht)
          * und übergibt sie an das WebGL, damit die Stadt gezeichnet werden kann
          */
-        REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_data", function(collection) {
+        REST.getDocuments(databaseForCollections, storedJSON.collID +  "data_" + storedJSON._id, function(collection) {
             REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_incoming", function(incoming) {
                 REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_outgoing", function(outgoing) {
                     var incomingConnections = incoming.data._embedded['rh:doc'][0];
