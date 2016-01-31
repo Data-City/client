@@ -30,7 +30,10 @@ function highlightBuilding(buildingID) {
     if (hashMap[buildingID] != undefined) {
         highlightedBuildingID = buildingID;
         hashMap[buildingID].mesh.material.emissive.setHex(0xffff00);
-    } else {
+    } else if (hashMap[buildingID + "."] != undefined){
+	    highlightedBuildingID = buildingID + ".";
+        hashMap[buildingID + "."].mesh.material.emissive.setHex(0xffff00);
+	} else {
         highlightedBuildingID = undefined;
     }
 }
@@ -44,9 +47,15 @@ function showBuilding() {
 		getControls().target.x = hashMap[highlightedBuildingID]._centerPosition[0];
 		getControls().target.y = hashMap[highlightedBuildingID]._centerPosition[1];
 		getControls().target.z = hashMap[highlightedBuildingID]._centerPosition[2];
-		camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0], 
-			hashMap[highlightedBuildingID]._centerPosition[1] + 10*Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width), 
-			hashMap[highlightedBuildingID]._centerPosition[2] + 10*Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width));
+		if(hashMap[highlightedBuildingID].buildings==undefined){
+	    	camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0], 
+			    hashMap[highlightedBuildingID]._centerPosition[1] + 10*Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width), 
+			    hashMap[highlightedBuildingID]._centerPosition[2] + 10*Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width));
+		} else {
+		    camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0], 
+			    hashMap[highlightedBuildingID]._centerPosition[1] + 1.5 * hashMap[highlightedBuildingID]._width, 
+			    hashMap[highlightedBuildingID]._centerPosition[2] + 1.5 * hashMap[highlightedBuildingID]._width);
+		}
 		camera.rotation.set(0,0,0);
     }        
 }
