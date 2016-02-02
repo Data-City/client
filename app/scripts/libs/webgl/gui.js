@@ -1,3 +1,6 @@
+var buildingColor = new THREE.Color(0x0000FF);
+var white = new THREE.Color(0xFFFFFF);
+var alphaForDistrictColor = 0.2;
 var maximalHeight; //speichert max. hoehe der Gebaeude, um Linien in dieser Hoehe zu zeichnen, ohne extrema zu uebergeben
 var mapOfLines = {}; //hier werden alle gezeichneteten Linien gespeichert von jedem Garten
 var clickedLeftGardens = []; //Array aus ID der Gebaeude, dessen Gaerten an sind
@@ -9,6 +12,15 @@ var association = {}; //hier wird die Legende gespeichert
 
 var highlightedBuildingID;
 var camera;
+
+/**
+* Setter fuer die Farbe der Gebaeude aus settings.js
+*@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
+*/
+function setBuildingColor(hexColor){
+	if(hexColor != undefined) buildingColor = new THREE.Color(parseInt(hexColor));
+}
+
 
 /**
  *Setter fuer camera
@@ -218,11 +230,13 @@ function addCityToScene(mainDistrict, scene, camera) {
     }
     //Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
     mainDistrict._centerPosition[1] = -1.5;
-    addBoxes(0xB5BCDE, mainDistrict, scene);
+    addBoxes(white.clone().lerp(buildingColor.clone(), alphaForDistrictColor), mainDistrict, scene);
     setCameraPos(camera, mainDistrict, extrema);
 
     maximalHeight = getExtrema().maxHeight;
 }
+
+
 
 /**
  *rekursive Hilfsmethode fuer addCityToScene
@@ -233,18 +247,18 @@ function addCityToScene(mainDistrict, scene, camera) {
  */
 function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
     if (aDistrict["buildings"] == undefined) {
-        var faktor = getColor(extrema, aDistrict._color, "Color");
-        addBoxes(new THREE.Color(faktor, faktor, 1), aDistrict, scene);
+        var faktor = getColorFactor(extrema, aDistrict._color, "Color");
+		addBoxes(white.clone().lerp(buildingColor.clone(), faktor), aDistrict, scene);
         addGarden(aDistrict, scene);
     } else {
         if (colorBoolean == 0) {
-            addBoxes(0x768dff, aDistrict, scene);
+			addBoxes(0xDBDBDC, aDistrict, scene);
             addGarden(aDistrict, scene);
             for (var j = 0; j < aDistrict["buildings"].length; j++) {
                 addEachDistrict(aDistrict["buildings"][j], scene, extrema, 1);
             }
         } else {
-            addBoxes(0xB5BCDE, aDistrict, scene, 0);
+			addBoxes(white.clone().lerp(buildingColor.clone(), alphaForDistrictColor), aDistrict, scene);
             addGarden(aDistrict, scene);
             for (var j = 0; j < aDistrict["buildings"].length; j++) {
                 addEachDistrict(aDistrict["buildings"][j], scene, extrema, 0);
@@ -263,7 +277,7 @@ function addGarden(aBuilding, scene) {
     var gardens = ["_leftGarden", "_rightGarden"];
     for (var i = 0; i < 2; i++) {
         if (aBuilding[gardens[i]].color > 0) {
-            var factor = getColor(getExtrema(), aBuilding[gardens[i]].color, "SumOfConn");
+            var factor = getColorFactor(getExtrema(), aBuilding[gardens[i]].color, "SumOfConn");
             var gardenMaterial = getMaterial(new THREE.Color(1 - factor, 1, 1 - factor));
             gardenMaterial.name = "garden";
             var geometry = new THREE.CylinderGeometry(aBuilding[gardens[i]]._width / 2, aBuilding[gardens[i]]._width / 2, aBuilding[gardens[i]]._height, 3, 1, false, i * Math.PI);
@@ -323,7 +337,7 @@ function drawALine(aGarden, destGarden) {
     var geometry = new THREE.Geometry();
     geometry.vertices = curve.getPoints(50);
 
-    var factor = getColor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
+    var factor = getColorFactor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
     var material = new THREE.LineBasicMaterial({
         color: new THREE.Color(1, 1 - factor, 1 - factor)
     });
@@ -423,7 +437,7 @@ function setCameraPosForLink(camera, aJson) {
  *@param: string: "Color" oder "Connections"
  *@return: die berechnet den HSV-Wert, den man fuer den Farbton braucht HSV-Farbe(faktor, faktor, 1)
  */
-function getColor(extrema, colorValue, string) {
+function getColorFactor(extrema, colorValue, string) {
     return (colorValue - extrema["min" + string]) / (extrema["max" + string] - extrema["min" + string]);
 }
 
@@ -470,13 +484,15 @@ function onDocumentMouseDown(event) {
                 setGardenOff(intersects[0]);
             }
         } else {
-            changeBuildingInformation(
-                intersects[0].object.building[association["height"]],
-                intersects[0].object.building[association["width"]],
-                intersects[0].object.building[association["color"]],
-                intersects[0].object.building[association["name"]],
-                intersects[0].object
-            );
+            if (intersects[0].object.building != undefined) {
+                changeBuildingInformation(
+                    intersects[0].object.building[association["height"]],
+                    intersects[0].object.building[association["width"]],
+                    intersects[0].object.building[association["color"]],
+                    intersects[0].object.building[association["name"]],
+                    intersects[0].object
+                );
+            }
         }
     }
 }
@@ -505,7 +521,7 @@ function setGardenOn(aMesh) {
  */
 function setGardenOff(aMesh) {
     removeLines(aMesh.object.garden, true);
-    var factor = getColor(getExtrema(), aMesh.object.garden.color, "SumOfConn");
+    var factor = getColorFactor(getExtrema(), aMesh.object.garden.color, "SumOfConn");
     aMesh.object.material.color.set(new THREE.Color(1 - factor, 1, 1 - factor));
     if (aMesh.object.garden.isLeftGarden == true) {
         clickedLeftGardens.splice(clickedLeftGardens.indexOf(aMesh.object.garden.id), 1);

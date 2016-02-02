@@ -13,7 +13,7 @@ angular.module('datacityApp')
         databaseForViews: "einstellungen",
         collection: "ansichten",
         baseurl: "https://pegenau.com:16392",
-        farbefuerGebauede: 	"#00008B",
+        farbefuerGebauede: "0x0000FF",
         
         //Standard-Passwort und Standard-Benutzername für die MongoDB
         benutzername: "a",

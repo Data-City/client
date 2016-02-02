@@ -60,7 +60,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     associations = association;
 
     setNumOfEntries(association.numberOfEntries);
-
+    setBuildingColor(association.buildingcolor);
     /*if(data[0].buildings == undefined){
 		mainDistrict = createMainDistrict(data, association.dimensions);
     }
@@ -92,7 +92,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
         if (ourDivElement.children["dropdownmenu"] != undefined) {
             ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
         }
-        setMenue(association["dimensions"], scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);
+        setMenue(scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);
     }
     updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
     animate();

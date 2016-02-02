@@ -32,8 +32,7 @@ var buildingInformation = {
         remove(buildingInformation.mesh);
     },
     "undo": function() {
-        //storedDistrict = arrayOfRemovedBuildings.pop();
-        undoRemoving(getScene());
+        if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
     }
 };
 
@@ -140,13 +139,12 @@ function getGui() {
 
 
 //Methode, um das Dropdown-Menue oben rechts zu zeichnen
-//@params: legende: JSON-Objekt, das der Legende entspricht, sodass z.B. legende["breite"]="Anzahl Methoden" ist
-//			scene: die scene, mit der man arbeiten moechte und auf die man reagieren moechte
+//@params: scene: die scene, mit der man arbeiten moechte und auf die man reagieren moechte
 //			aDistrict: das JSON vom Typ Stadtteil, mit dem ich agieren moechte, wenn der Nutzer das mit der Legende machen moechte
 //			camera: die Kamera, die neu positioniert wird, falls das district bearbeitet wird
 //			orbitControls, trackballControls: das Trackball bzw. OrbitControl fuer die Steuerung,die wir verwenden
 //			nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
-function setMenue(legende, scene, aDistrict, camera, orbitControls, trackballControls, nameOfDivElement) {
+function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, nameOfDivElement) {
     gui = new dat.GUI({
         width: 375,
         autoPlace: false
@@ -175,7 +173,7 @@ function setMenue(legende, scene, aDistrict, camera, orbitControls, trackballCon
 
     h = gui.addFolder("Gebäudeinformationen");
     for (var i = 0; i < myDimensions.length; i++) {
-        h.add(buildingInformation, dimensionsFromDatabase[i]).name(legende[dimensionsFromDatabase[i]]).listen();
+        h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
     h.add(buildingInformation, "remove").name("löschen");
     h.add(buildingInformation, "undo").name("Löschen rückgängig");
