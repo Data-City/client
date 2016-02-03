@@ -18,7 +18,7 @@ var camera;
 *@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
 */
 function setBuildingColor(hexColor){
-	if(hexColor != undefined) buildingColor = new THREE.Color(parseInt(hexColor));
+	if(!isNaN(parseInt(hexColor))) buildingColor = new THREE.Color(parseInt(hexColor));
 }
 
 
