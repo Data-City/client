@@ -234,6 +234,7 @@ angular.module('datacityApp')
          * Verwirft die Änderungen, die in dem Formular gemacht wurden
          */
         $scope.discardChanges = function() {
+            document.getElementById("Stadt").innerHTML = "";
             $scope.chosenView = angular.copy($scope.originalView);
             $scope.dimform.$setPristine();
         };
