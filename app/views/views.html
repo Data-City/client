@@ -153,8 +153,6 @@
                                         <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ist 'Verbindungen nutzen' ausgewählt, erscheinen diese als zwei Vorgärten vor dem Gebäude."></span>
                                         <br></br>
                                     </label>
-                                    <!--Hinweis: welcher Vorgarten Eingaenge bzw. Ausgaenge hat -->
-                                    <div>Aus der Sicht des Gebäudes liegen links die eingehenden Verbindungen und rechts die ausgehenden Verbindungen. </div>
                                     <br></br>
                                     <table ng-if = "chosenView.useConnections" class="table table-striped table-bordered table-condensed table-responsive">
                                         <colgroup>
@@ -186,12 +184,12 @@
                                         </div>
                                     </tbody>
                                     </table>
+                                    
                                     <table ng-if = "chosenView.useConnections" class="table table-striped table-bordered table-condensed table-responsive">
                                         <colgroup>
                                             <col span="1" style="width: 25%;"></col>
                                             <col span="1" style="width: 75%;"></col>
                                         </colgroup>
-                                    <!--Filtert die eingehende Verbindungen-->
                                         <tbody>
                                             <div>
                                         <!--Filtert die ausgehende Verbindungen-->
@@ -337,7 +335,7 @@
 
                     <button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
                     <button type="button" class="btn btn-danger btn-xs" ng-click="discardChanges()" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderungen verwerfen</button>
-                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="drawCity();" onclick="this.innerHTML='Stadt aktualisieren'">Stadt anzeigen</button>
+                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="drawCity();" onclick="this.innerHTML='Stadt aktualisieren'" ng-hide="dimform.$dirty">Stadt anzeigen</button>
                 </div>
                 </div>
             </div>
