@@ -1,5 +1,12 @@
-var buildingColor = new THREE.Color(0x0000FF);
-var white = new THREE.Color(0xFFFFFF);
+/**
+ * @ngdoc function
+ * @name datacityApp.controller:MainCtrl
+ * @description
+ * # MainCtrl
+ * Controller of the datacityApp
+ */
+
+var buildingColor = 0x0000FF;
 var alphaForDistrictColor = 0.2;
 var maximalHeight; //speichert max. hoehe der Gebaeude, um Linien in dieser Hoehe zu zeichnen, ohne extrema zu uebergeben
 var mapOfLines = {}; //hier werden alle gezeichneteten Linien gespeichert von jedem Garten
@@ -18,7 +25,7 @@ var camera;
 *@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
 */
 function setBuildingColor(hexColor){
-	if(!isNaN(parseInt(hexColor))) buildingColor = new THREE.Color(parseInt(hexColor));
+    if(!isNaN(parseInt(hexColor))) buildingColor = parseInt(hexColor);
 }
 
 
@@ -230,7 +237,7 @@ function addCityToScene(mainDistrict, scene, camera) {
     }
     //Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
     mainDistrict._centerPosition[1] = -1.5;
-    addBoxes(white.clone().lerp(buildingColor.clone(), alphaForDistrictColor), mainDistrict, scene);
+    addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, scene);
     setCameraPos(camera, mainDistrict, extrema);
 
     maximalHeight = getExtrema().maxHeight;
@@ -248,7 +255,7 @@ function addCityToScene(mainDistrict, scene, camera) {
 function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
     if (aDistrict["buildings"] == undefined) {
         var faktor = getColorFactor(extrema, aDistrict._color, "Color");
-		addBoxes(white.clone().lerp(buildingColor.clone(), faktor), aDistrict, scene);
+		addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene);
         addGarden(aDistrict, scene);
     } else {
         if (colorBoolean == 0) {
@@ -258,7 +265,7 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
                 addEachDistrict(aDistrict["buildings"][j], scene, extrema, 1);
             }
         } else {
-			addBoxes(white.clone().lerp(buildingColor.clone(), alphaForDistrictColor), aDistrict, scene);
+			addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
             addGarden(aDistrict, scene);
             for (var j = 0; j < aDistrict["buildings"].length; j++) {
                 addEachDistrict(aDistrict["buildings"][j], scene, extrema, 0);
