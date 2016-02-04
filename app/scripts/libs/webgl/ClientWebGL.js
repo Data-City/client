@@ -1,6 +1,6 @@
-var associations;
-var camera, scene, renderer, trackballControls, orbitControls, raycaster;
-var mainDistrict;
+var associations; //die Legende
+var camera, scene, renderer, trackballControls, orbitControls, raycaster; //WebGL-Variablen
+var mainDistrict; //Json, das das District darstellt
 var mouse = new THREE.Vector2(),
     INTERSECTED, SELECTED;
 var extrema = { //enthaelt die Extremwerte aus den Daten
@@ -15,34 +15,54 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
     minConnections: Number.MAX_VALUE,
     minSumOfConn: Number.MAX_VALUE
 };
-var camToSave = {};
+var camToSave = {}; //speichert Anfangseinstellung
 
-
-//Getter fuer scene
+/**
+* Getter fuer scene
+* @return: scene: die Scene fuer die WebGL-Canvas, auf die gezeichnet wird
+*/
 function getScene() {
     return scene;
 }
 
-//gibt die Extremwerte zurueck
+/**
+*gibt die Extremwerte zurueck
+* @return: extreme: die Extremwerte von den Gebaeuden fuer Hoehe, Breite, Farbe, Verbindungen
+*/
 function getExtrema() {
     return extrema;
 }
 
-//Getter fuer mainDistrict
+/**
+*Getter fuer mainDistrict
+ @return: mainDistrict: das Json fuer das District
+*/
 function getMainDistrict() {
     return mainDistrict;
 }
 
-//Getter fuer trackballControls
+/**
+*Getter fuer trackballControls
+* @return: trackballControls: die TrackballControls von THREE.js
+*/
 function getControls() {
     return trackballControls;
 }
 
 
-// wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
-// @param data: JSON vom Datenbank-Team, das fuer jedes Gebaeude die Hoehe, Breite, Farbe, etc. gespeichert hat
-//			association: JSON fuer die Legende, damit man weiss, dass z.B. die Breite der Anzahl Methoden entspricht
-//			nameOfDivElement: Name vom Div-Element
+/**
+* wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
+* @param: data: JSON vom Datenbank-Team, das fuer jedes Gebaeude die Hoehe, Breite, Farbe, etc. gespeichert hat der Form
+* { name: "", buildings: [district_1, ..., district_n]}
+* wobei ein district die Form {name: NameVomDistrict, buildings: [district_0, ..., district_m]}
+* oder die Form {name: eineID, HoehenDimension: h, BreitenDimension: b, FarbenDimension: f}
+* @param: association: JSON fuer die Legende, damit man weiss, dass z.B. die Breite der Anzahl Methoden entspricht der Form
+* {name: {name : DimensionName}, area: {name: DimensionFlaeche}, height: {name: DimensionHoehe}, color: {name: DimensionFarbe}}
+* @param: nameOfDivElement: Name vom Div-Element
+* @param: settings: undefined oder ein JSON zum Wiederaufrufen einer bestimmten Ansicht, siehe setSpecificView()
+* @param: incomingCalls: 
+* @param: outgoingCalls: 
+*/
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
 
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
@@ -61,12 +81,6 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
 
     setNumOfEntries(association.numberOfEntries);
     setBuildingColor(association.buildingcolor);
-    /*if(data[0].buildings == undefined){
-		mainDistrict = createMainDistrict(data, association.dimensions);
-    }
-    else{
-		mainDistrict = data[0];
-    }*/
 
 
     if (association.districtType == "0") { //Falls keine Blockbildung
@@ -105,20 +119,24 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
 }
 
 
-//speichert Kameraeinstellung
+/**
+*speichert Kameraeinstellung
+*/
 function saveCamera() {
     camToSave.position = camera.position.clone();
     camToSave.rotation = camera.rotation.clone();
     camToSave.target = orbitControls.target.clone();
 }
 
-//Getter fuer Kameraeinstellung
+/**
+*Getter fuer Kameraeinstellung
+*/
 function getCamToSave() {
     return camToSave;
 }
 
 
-/*** ADDING SCREEN SHOT ABILITY ***/
+/**** ADDING SCREEN SHOT ABILITY ***/
 window.addEventListener("keyup", function(e) {
     var imgData, imgNode;
     //Listen to 'P' key
@@ -140,10 +158,12 @@ window.addEventListener("keyup", function(e) {
 });
 
 
-//Methode, um aus einem Array aus Gebaeuden Districts zu erstellen, die nach Packagenamen sortiert sind
-//@params: data: das Array, das aus den Gebaeuden besteht
-//			association: die Legende
-//@return: das Objekt, das aus District besteht
+/**
+*Methode, um aus einem Array aus Gebaeuden Districts zu erstellen, die nach Packagenamen sortiert sind
+*@params: data: das Array, das aus den Gebaeuden besteht
+*			association: die Legende
+*@return: das Objekt, das aus District besteht
+*/
 function createMainDistrict(data, association) {
     var district = {};
     var splitString, currentDistrict;
@@ -166,9 +186,11 @@ function createMainDistrict(data, association) {
     return district;
 }
 
-//rekursive Hilfsmethode, um aus dem Objekt, was in createMainDistrict erstellt wurde, ein Stadtobjekt zu erstellen
-//@params: aDistrict: ein Teil vom Objekt, was in createMainDistrict erstellt wurde
-//@return: ein stadtobjekt
+/**
+*rekursive Hilfsmethode, um aus dem Objekt, was in createMainDistrict erstellt wurde, ein Stadtobjekt zu erstellen
+*@params: aDistrict: ein Teil vom Objekt, was in createMainDistrict erstellt wurde
+*@return: ein stadtobjekt
+*/
 function getMainDistrictFromJSON(aDistrict) {
     var toReturn = {
         buildings: []
@@ -186,10 +208,12 @@ function getMainDistrictFromJSON(aDistrict) {
     return toReturn
 }
 
-// aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
-//@params: width: Breite, die evtl. geupdatet werden soll
-//			height: Hoehe, die ggf. geupdatet werden soll
-//			color: Farbe, die ggf. geupdatet werden soll<<y
+/**
+* aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
+*@params: width: Breite, die evtl. geupdatet werden soll
+*			height: Hoehe, die ggf. geupdatet werden soll
+*			color: Farbe, die ggf. geupdatet werden soll
+*/
 function updateExtrema(width, height, color) {
     if (width > extrema.maxWidth) extrema.maxWidth = width + 1.5;
     if (height > extrema.maxHeight) extrema.maxHeight = height + 1.5;
@@ -202,9 +226,11 @@ function updateExtrema(width, height, color) {
 
 
 
-//Initialisiert das Bild, d.h. malt die Zeichenflaeche, erstellt die Kamera, setzt das Licht, 
-//aktiviert das Beobachten der Mausaktivitaeten und das Zoomen, Drehen, Verschieben
-//@params nameOfDivElement: der Name vom Div-Element
+/**
+*Initialisiert das Bild, d.h. malt die Zeichenflaeche, erstellt die Kamera, setzt das Licht, 
+*aktiviert das Beobachten der Mausaktivitaeten und das Zoomen, Drehen, Verschieben
+*@params nameOfDivElement: der Name vom Div-Element
+*/
 function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
     // Erstelle einen neuen Renderer
@@ -247,8 +273,9 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
 
 
-
-//schaut regelmäßig, ob was passiert und updatet und zeichnet neu
+/**
+*schaut regelmäßig, ob was passiert und updatet und zeichnet neu
+*/
 function animate() {
     // schaut, ob was passiert ist
     requestAnimationFrame(animate);
@@ -261,7 +288,9 @@ function animate() {
 }
 
 
-//Methode zum Setzen der trackballControls fuer das Zoomen, Drehen, Verschieben
+/**
+*Methode zum Setzen der trackballControls fuer das Zoomen, Drehen, Verschieben
+*/
 function setControls() {
     // für das Zoomen und Verschieben
     trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
@@ -278,23 +307,28 @@ function setControls() {
     orbitControls.noPan = true;
 }
 
-//Getter fuer orbitcontrols
+/**
+*Getter fuer orbitcontrols
+*/
 function getOrbitControls() {
     return orbitControls;
 }
 
 
-//update vom maximalen Abstand fuer den Zoom, damit man noch die hoechsten Gebaeude sehen kann
-//@param maxDistance: der Abstand zum Koordinatenursprung, zu dem man maximal wegzoomen kann
+/**
+*update vom maximalen Abstand fuer den Zoom, damit man noch die hoechsten Gebaeude sehen kann
+*@param maxDistance: der Abstand zum Koordinatenursprung, zu dem man maximal wegzoomen kann
+*/
 function updateControls(maxDistance) {
     trackballControls.maxDistance = maxDistance * 3;
 }
 
 
-//wenn ein Link fuer eine spezielle Ansicht aufgerufen wurde, wird diese Methode aufgerufen, 
-// um die alte Ansicht (mit Kameraposition etc.) wiederherzustellen, nachdem drawCity(...) aufgerufen wurde
-//@params: das Json, das im Link gespeichert worden ist der Form 
-/*{"position": {"x": xCamPos, "y": yCamPos, "z": zCamPos},
+/**
+*wenn ein Link fuer eine spezielle Ansicht aufgerufen wurde, wird diese Methode aufgerufen, 
+* um die alte Ansicht (mit Kameraposition etc.) wiederherzustellen, nachdem drawCity(...) aufgerufen wurde
+*@params: das Json, das im Link gespeichert worden ist der Form 
+{"position": {"x": xCamPos, "y": yCamPos, "z": zCamPos},
  "rotation": {"_x": xRotation, "_y": yRotation, "_z": zRotation, "_order": "XYZ" },
  "target": { "x": xPanPos,"y": yPanPos,"z": zPanPos},
  "leftGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
@@ -352,15 +386,19 @@ function drawStoredLines(aJson) {
 }
 
 
-//Getter fuer associations
-//@return: associations: die Zuordnungen
+/**
+*Getter fuer associations
+*@return: associations: die Zuordnungen
+*/
 function getOriginalAssociations() {
     return associations;
 }
 
 
-//Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
-//@return neues JSON fuer Verbindungen
+/**
+*Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
+*@return neues JSON fuer Verbindungen
+*/
 function getIncomingConnections(connectionData) {
     var newJson = {};
     var ithConn;
