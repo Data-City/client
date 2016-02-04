@@ -1,6 +1,10 @@
 'use strict';
 
 /**
+ * Filter für Attribute
+ * 
+ * Gibt alle Attribute zurück, außer dem benannten
+ * 
  * @ngdoc filter
  * @name datacityApp.filter:attrbyname
  * @function

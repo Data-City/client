@@ -124,8 +124,56 @@ angular.module('datacityApp')
         $scope.showStep3 = false; // Blöcke
         $scope.showStep4 = false; // Dimensionen
 
-        $scope.availableAggregationOperations = AGGR.availableAggregationOperations;
-
+         /**
+         * Alle für MongoDB verfügbaren Gruppierungsoperationen
+         * 
+         * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
+         */
+        $scope.availableAggrOps = [
+            {
+                name: 'Vergessen',
+                cmd: null,
+            },
+            {
+                name: 'Summe',
+                cmd: '$sum',
+            },
+            {
+                name: 'Durchschnitt',
+                cmd: '$avg',
+            },
+            {
+                name: 'Erster Wert',
+                cmd: '$first',
+            },
+            {
+                name: 'Letzter Wert',
+                cmd: '$last',
+            },
+            {
+                name: 'Maximum',
+                cmd: '$max',
+            },
+            /*
+            * Macht in diesem Zusammenhang keinen Sinn!
+            {
+                name: 'Push',
+                cmd: '$push',
+            },
+            {
+                name: 'Zur Menge hinzufügen',
+                cmd: '$addToSet',
+            },
+            */
+            {
+                name: 'Standardabweichung',
+                cmd: '$stdDevPop',
+            },
+            {
+                name: 'Stichprobenabweichung',
+                cmd: '$stdDevSamp',
+            }
+        ];
         /**
          * Fragt beim Server ab, ob eine Collection mit den (eingehenden) Verbindungen vorhanden sind
          */

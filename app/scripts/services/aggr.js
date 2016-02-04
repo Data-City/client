@@ -35,48 +35,48 @@ angular.module('datacityApp')
          * 
          * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
          */
-        this.availableAggregationOperations = {
-            'forgot': {
+        this.availableAggregationOperations = [
+            {
                 name: 'Vergessen',
                 cmd: null,
             },
-            'sum': {
+            {
                 name: 'Summe',
                 cmd: '$sum',
             },
-            'avg': {
+            {
                 name: 'Durchschnitt',
                 cmd: '$avg',
             },
-            'first': {
+            {
                 name: 'Erster Wert',
                 cmd: '$first',
             },
-            'last': {
+            {
                 name: 'Letzter Wert',
                 cmd: '$last',
             },
-            'max': {
+            {
                 name: 'Maximum',
                 cmd: '$max',
             },
-            'push': {
+            {
                 name: 'Push',
                 cmd: '$push',
             },
-            'addToSet': {
+            {
                 name: 'Zur Menge hinzufügen',
                 cmd: '$addToSet',
             },
-            'stdDevPop': {
+            {
                 name: 'Standardabweichung',
                 cmd: '$stdDevPop',
             },
-            'stdDevSamp': {
+            {
                 name: 'Stichprobenabweichung',
                 cmd: '$stdDevSamp',
             }
-        };
+        ];
 
         /**
          * Erzeugt Project-Stage

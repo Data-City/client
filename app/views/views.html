@@ -235,16 +235,25 @@
                                     </div>
                                 </fieldset>
                                 <div class="panel-body" ng-show="chosenView.useGrouping == 1">
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            Gruppieren über
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <select class="form-control" ng-model="chosenView.grouping.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                    </div>
+                                    <table class="table table-condensed table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td>Gruppieren über</td>
+                                                <td>
+                                                    <select class="form-control" ng-model="chosenView.grouping.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
+                                                </td>
+                                            </tr>
+                                            <tr ng-repeat="(key, attr) in (chosenView.attributes | bychooseability | attrbyname:chosenView.grouping.field)">
+                                                <td>{{attr.name}} ({{attr.type}})</td>
+                                                <td>
+                                                    <select class="form-control" ng-show="attr.type !== 'string'">
+                                                        <option ng-repeat="(i, op) in availableAggrOps" value="op.cmd">{{op.name}}</option>
+                                                    </select>
+                                                    <span ng-show="attr.type === 'string'"> Für Strings gibt es keine Operationen: Feld wird verworfen!</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
