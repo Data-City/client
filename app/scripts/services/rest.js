@@ -426,7 +426,8 @@ angular.module('datacityApp')
 
         this.callCollectionAggr = function(database, collection, aggr, fn) {
             setAuthHeader();
-            var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr + '?noauthchallenge';
+            //var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr + '?noauthchallenge';
+            var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr;
             $log.info(relUrl);
             var config = {
                 headers: {

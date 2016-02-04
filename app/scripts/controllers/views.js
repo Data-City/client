@@ -143,7 +143,7 @@ angular.module('datacityApp')
          */
         $scope.drawCity = function() {
             var view = $scope.chosenView;
-            var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
+            var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data" + "_" + view._id;
             //   var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
 
             //Fehlermeldungen, falls eine Option vom Nutzer nicht ausgewählt wurde
@@ -171,7 +171,7 @@ angular.module('datacityApp')
                 $scope.createAggregationForDisplay(function(response) {
                     // REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data", function(response) {
 
-                    REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data_" + view._id, function(response) {
+                    REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data" + "_" + view._id, function(response) {
                         REST.getURL(relUrl, null, function(collection) {
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
                                 REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
