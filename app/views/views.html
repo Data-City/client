@@ -289,10 +289,9 @@
                                     <!-- NAME -->
                                     <tr>
                                         <td>
+                                            <p><i>Hinweis: Wenn die Namen nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. Suche)</i></p>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Name</span>
-                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right"
-                                                title="Wenn die Namen nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. Suche)"></span>
                                                 <select class="form-control" ng-model="chosenView.dimensionSettings.name"
                                                 ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
                                             </div>
