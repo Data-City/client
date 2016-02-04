@@ -46,6 +46,7 @@ angular.module('datacityApp')
             this.aggregations = [];
             this.districts = [];
             this.districtType = 0; //"Keine Blöcke benutzen" ist voreingestellt
+            this.useGrouping = 0;
         }
 
         /**
