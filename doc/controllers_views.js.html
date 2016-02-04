@@ -74,6 +74,7 @@ angular.module('datacityApp')
             this.aggregations = [];
             this.districts = [];
             this.districtType = 0; //"Keine Blöcke benutzen" ist voreingestellt
+            this.useGrouping = 0;
         }
 
         /**
@@ -151,14 +152,54 @@ angular.module('datacityApp')
         $scope.showStep3 = false; // Blöcke
         $scope.showStep4 = false; // Dimensionen
 
-        $scope.availableAggregationOperations = AGGR.availableAggregationOperations;
-
+        /**
+         * Alle für MongoDB verfügbaren Gruppierungsoperationen
+         * 
+         * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
+         */
+        $scope.availableAggrOps = [{
+                name: 'Vergessen',
+                cmd: null,
+            }, {
+                name: 'Summe',
+                cmd: '$sum',
+            }, {
+                name: 'Durchschnitt',
+                cmd: '$avg',
+            }, {
+                name: 'Erster Wert',
+                cmd: '$first',
+            }, {
+                name: 'Letzter Wert',
+                cmd: '$last',
+            }, {
+                name: 'Maximum',
+                cmd: '$max',
+            },
+            /*
+            * Macht in diesem Zusammenhang keinen Sinn!
+            {
+                name: 'Push',
+                cmd: '$push',
+            },
+            {
+                name: 'Zur Menge hinzufügen',
+                cmd: '$addToSet',
+            },
+            */
+            {
+                name: 'Standardabweichung',
+                cmd: '$stdDevPop',
+            }, {
+                name: 'Stichprobenabweichung',
+                cmd: '$stdDevSamp',
+            }
+        ];
         /**
          * Fragt beim Server ab, ob eine Collection mit den (eingehenden) Verbindungen vorhanden sind
          */
         $scope.verbindungenVorhanden = function() {
             REST.getDocuments(dbWithCollections, $scope.collID + "_dc_connections_incoming", function(incoming) {
-                console.log(incoming);
                 if (incoming) {
                     $scope.verbindungenVorhanden = true;
                 } else {
@@ -172,7 +213,7 @@ angular.module('datacityApp')
          */
         $scope.drawCity = function() {
             var view = $scope.chosenView;
-            var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data";
+            var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data" + "_" + view._id;
             //   var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
 
             //Fehlermeldungen, falls eine Option vom Nutzer nicht ausgewählt wurde
@@ -200,7 +241,7 @@ angular.module('datacityApp')
                 $scope.createAggregationForDisplay(function(response) {
                     // REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data", function(response) {
 
-                    REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data_" + view._id, function(response) {
+                    REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data" + "_" + view._id, function(response) {
                         REST.getURL(relUrl, null, function(collection) {
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
                                 REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
@@ -214,6 +255,7 @@ angular.module('datacityApp')
                                     view.dimensions.height = view.dimensionSettings.height.name;
                                     view.dimensions.area = view.dimensionSettings.area.name;
                                     view.dimensions.color = view.dimensionSettings.color.name;
+                                    view.buildingcolor = SETTINGS.farbefuerGebauede;
                                     if (!collection.data._embedded) {
                                         $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
                                     } else {
@@ -262,6 +304,7 @@ angular.module('datacityApp')
          * Verwirft die Änderungen, die in dem Formular gemacht wurden
          */
         $scope.discardChanges = function() {
+            document.getElementById("Stadt").innerHTML = "";
             $scope.chosenView = angular.copy($scope.originalView);
             $scope.dimform.$setPristine();
         };
@@ -415,7 +458,7 @@ angular.module('datacityApp')
             if (view.districts.length > 0) {
                 stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
             }
-            var aggr = AGGR.buildAggregationPipe(view.collID, stages);
+            var aggr = AGGR.buildAggregationPipe(view.collID, stages, view._id);
             aggr = AGGR.mongoDBCodeToRESTHeart(aggr);
             REST.addAggregation(dbWithCollections, view.collID, aggr, function(response) {
                 if (fn) {
@@ -441,13 +484,13 @@ angular.module('datacityApp')
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createAggregation">createAggregation</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Jan 31 2016 20:58:46 GMT+0100 (Mitteleuropäische Zeit)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Feb 04 2016 16:52:26 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

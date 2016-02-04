@@ -366,7 +366,7 @@ Main module of the application.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line409">line 409</a>
+        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line408">line 408</a>
     </li></ul></dd>
     
 
@@ -448,7 +448,7 @@ Main module of the application.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line151">line 151</a>
+        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line140">line 140</a>
     </li></ul></dd>
     
 
@@ -533,7 +533,7 @@ Beispiel:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line424">line 424</a>
+        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line423">line 423</a>
     </li></ul></dd>
     
 
@@ -616,105 +616,6 @@ Beispiel:
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="libs_lib_view.js.html">libs/lib_view.js</a>, <a href="libs_lib_view.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="createAggregation"><span class="type-signature"></span>createAggregation<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    this.createCollectionForView = function(view, collection, fn) {
-                setAuthHeader();
-                var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + "_dc_data" + "_" + view.timeOfCreation;
-                //var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + this.META_DATA_PART + "_" + view.timeOfCreation;
-                
-                $http.put(url, view).then(
-                    function success(response) {
-                        rest.setAuthToken(response);
-                        if (fn) {
-                            fn(response);
-                        }
-                    },
-                    function error(response) {
-                        $log.error("Fehler beim Erzeugen der Collection für die Ansicht");
-                        $log.error("PUT auf " + url);
-                        $log.error(response);
-                    });
-            };
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line310">line 310</a>
     </li></ul></dd>
     
 
@@ -878,7 +779,7 @@ Beispiel:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line272">line 272</a>
+        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line271">line 271</a>
     </li></ul></dd>
     
 
@@ -1353,7 +1254,7 @@ ruft die Funktion mit diesen auf
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line381">line 381</a>
+        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line380">line 380</a>
     </li></ul></dd>
     
 
@@ -2647,7 +2548,7 @@ true	=>	boolean
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line399">line 399</a>
+        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line398">line 398</a>
     </li></ul></dd>
     
 
@@ -3039,7 +2940,7 @@ true	=>	boolean
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line111">line 111</a>
+        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -3121,7 +3022,7 @@ true	=>	boolean
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line84">line 84</a>
+        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line73">line 73</a>
     </li></ul></dd>
     
 
@@ -3327,13 +3228,13 @@ true	=>	boolean
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createAggregation">createAggregation</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Jan 31 2016 20:58:46 GMT+0100 (Mitteleuropäische Zeit)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Feb 04 2016 16:52:26 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

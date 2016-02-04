@@ -63,48 +63,37 @@ angular.module('datacityApp')
          * 
          * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
          */
-        this.availableAggregationOperations = {
-            'forgot': {
-                name: 'Vergessen',
-                cmd: null,
-            },
-            'sum': {
-                name: 'Summe',
-                cmd: '$sum',
-            },
-            'avg': {
-                name: 'Durchschnitt',
-                cmd: '$avg',
-            },
-            'first': {
-                name: 'Erster Wert',
-                cmd: '$first',
-            },
-            'last': {
-                name: 'Letzter Wert',
-                cmd: '$last',
-            },
-            'max': {
-                name: 'Maximum',
-                cmd: '$max',
-            },
-            'push': {
-                name: 'Push',
-                cmd: '$push',
-            },
-            'addToSet': {
-                name: 'Zur Menge hinzufügen',
-                cmd: '$addToSet',
-            },
-            'stdDevPop': {
-                name: 'Standardabweichung',
-                cmd: '$stdDevPop',
-            },
-            'stdDevSamp': {
-                name: 'Stichprobenabweichung',
-                cmd: '$stdDevSamp',
-            }
-        };
+        this.availableAggregationOperations = [{
+            name: 'Vergessen',
+            cmd: null,
+        }, {
+            name: 'Summe',
+            cmd: '$sum',
+        }, {
+            name: 'Durchschnitt',
+            cmd: '$avg',
+        }, {
+            name: 'Erster Wert',
+            cmd: '$first',
+        }, {
+            name: 'Letzter Wert',
+            cmd: '$last',
+        }, {
+            name: 'Maximum',
+            cmd: '$max',
+        }, {
+            name: 'Push',
+            cmd: '$push',
+        }, {
+            name: 'Zur Menge hinzufügen',
+            cmd: '$addToSet',
+        }, {
+            name: 'Standardabweichung',
+            cmd: '$stdDevPop',
+        }, {
+            name: 'Stichprobenabweichung',
+            cmd: '$stdDevSamp',
+        }];
 
         /**
          * Erzeugt Project-Stage
@@ -176,17 +165,17 @@ angular.module('datacityApp')
         /**
          * Setzt einzelne Aggregationsschritte zu einem vollständigen Aggregationsparameter zusammen
          */
-        this.buildAggregationPipe = function(collection, stages) {
+        this.buildAggregationPipe = function(collection, stages, viewID) {
             var aggr = {
                 "aggrs": [{
                     "type": "pipeline",
-                    "uri": "data",
+                    "uri": "data_" + viewID,
                     "stages": stages
                 }]
             };
 
             aggr.aggrs[0].stages.push({
-                "$out": collection + META_DATA_PART + DATA_SUFFIX
+                "$out": collection + META_DATA_PART + DATA_SUFFIX + "_" + viewID
             });
 
             return aggr;
@@ -374,13 +363,13 @@ angular.module('datacityApp')
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createAggregation">createAggregation</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Jan 31 2016 20:58:46 GMT+0100 (Mitteleuropäische Zeit)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Feb 04 2016 16:52:26 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
