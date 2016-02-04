@@ -1,10 +1,9 @@
 var association = {}; //hier wird die Legende gespeichert
-var gui;
+var gui; //das Dropdownmenue
 //Variablen, die benoetigt werden, um Gebaeude/ Distrikte zu loeschen
 var storedMesh, storedLeftGarden, storedRightGarden;
 var storedDistrict = [];
 var storedBuilding = [];
-//var newBuildingClicked = true;
 var removedBuildings = [];
 var arrayOfRemovedBuildings = [];
 
@@ -36,13 +35,6 @@ var buildingInformation = {
     }
 };
 
-function remove(mesh) {
-    if (mesh.length != 0) {
-        removeDistrict(getScene(), mesh, true);
-        arrayOfRemovedBuildings.push(storedDistrict);
-    }
-}
-
 //entsteht, wenn Nutzer die Legende aendert
 var changedLegend = undefined;
 
@@ -52,6 +44,18 @@ var scaling = {
     "logarithmicWidth": false,
     "logarithmicColor": false
 };
+
+
+/**
+* loescht ein District von der Bildflaeche und speichert dies
+* @param: mesh: das Mesh-Objekt, auf das geklickt wurde und das geloescht werden soll
+*/
+function remove(mesh) {
+    if (mesh.length != 0) {
+        removeDistrict(getScene(), mesh, true);
+        arrayOfRemovedBuildings.push(storedDistrict);
+    }
+}
 
 
 //Setter fuer association

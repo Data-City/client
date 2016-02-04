@@ -60,38 +60,20 @@ function getControls() {
 * {name: {name : DimensionName}, area: {name: DimensionFlaeche}, height: {name: DimensionHoehe}, color: {name: DimensionFarbe}}
 * @param: nameOfDivElement: Name vom Div-Element
 * @param: settings: undefined oder ein JSON zum Wiederaufrufen einer bestimmten Ansicht, siehe setSpecificView()
-* @param: incomingCalls: 
-* @param: outgoingCalls: 
+* @param: incomingCalls: JSON fuer die eingehenden Verbindungen, siehe getIncomingConnections(...) oder undefined
+* @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
 */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
 
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
-    init(nameOfDivElement, incomingCalls, outgoingCalls);
+    init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
+
     window.addEventListener('resize', function() {
         camera.aspect = window.innerWidth / window.innerHeight;
         renderer.setSize(window.innerWidth, window.innerHeight);
     }, false);
 
-    association.dimensions.width = association.dimensionSettings.area.name;
-    association.dimensions.name = association.dimensionSettings.name.name;
-    association.dimensions.color = association.dimensionSettings.color.name;
-    association.dimensions.height = association.dimensionSettings.height.name;
-    setAssociation(association["dimensions"]);
-    associations = association;
-
-    setNumOfEntries(association.numberOfEntries);
-    setBuildingColor(association.buildingcolor);
-
-
-    if (association.districtType == "0") { //Falls keine Blockbildung
-        mainDistrict = {
-            buildings: data
-        };
-    } else if (association.districtType == "1") { //Falls Blockbildung mit Punkten
-        mainDistrict = createMainDistrict(data, association.dimensions);
-    } else {
-        mainDistrict = data[0];
-    }
+    initData(data, association, incomingCalls, outgoingCalls);
 
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
@@ -112,10 +94,53 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     animate();
     saveCamera();
     goToInitialView();
-    if (settings != undefined) {
-        setSpecificView(settings);
-    }
+    if (settings != undefined) setSpecificView(settings);
+}
 
+
+/**
+* Hilfsmethode bereitet Daten wie Legende, MainDistrict und Verbindungen vor
+* @param: data: die Daten, die an drawCity gehen
+* @param: association: die Legende und sonstige Einstellungen, die an drawCity gehen
+* @param: incomingCalls: eingehende Verbindungen
+* @param: outgoingCalls: ausgehende Verbindungen
+*/
+function initData(data, association, incomingCalls, outgoingCalls){
+    if (incomingCalls != undefined && outgoingCalls != undefined) {
+        setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
+    }
+    initAssociation(association); 
+    initMainDistrict(data, association);
+}
+
+/**
+* Hilfsmethode, um die Legende richtig vorzubereiten
+* @param: association: die vom Client uebergebene Legende
+*/
+function initAssociation(association){
+    association.dimensions.width = association.dimensionSettings.area.name;
+    association.dimensions.name = association.dimensionSettings.name.name;
+    association.dimensions.color = association.dimensionSettings.color.name;
+    association.dimensions.height = association.dimensionSettings.height.name;
+    setAssociation(association["dimensions"]);
+    associations = association;
+    setBuildingColor(association.buildingcolor);
+}
+
+/**
+* initialisiert mainDistrict je nachdem, welche Blockbildung gefordert ist
+* @param: association: hierin wird der Districttyp gespeichert
+*/
+function initMainDistrict(data, association){
+    if (association.districtType == "0") { //Falls keine Blockbildung
+        mainDistrict = {
+            buildings: data
+        };
+    } else if (association.districtType == "1") { //Falls Blockbildung mit Punkten
+        mainDistrict = createMainDistrict(data, association.dimensions);
+    } else {
+        mainDistrict = data[0];
+    }
 }
 
 
@@ -129,7 +154,8 @@ function saveCamera() {
 }
 
 /**
-*Getter fuer Kameraeinstellung
+* Getter fuer Kameraeinstellung
+* @return: camToSave: die gespeicherte (Anfangs-)Kameraeinstellung
 */
 function getCamToSave() {
     return camToSave;
@@ -159,10 +185,10 @@ window.addEventListener("keyup", function(e) {
 
 
 /**
-*Methode, um aus einem Array aus Gebaeuden Districts zu erstellen, die nach Packagenamen sortiert sind
-*@params: data: das Array, das aus den Gebaeuden besteht
-*			association: die Legende
-*@return: das Objekt, das aus District besteht
+* Methode, um aus einem Array aus Gebaeuden Districts zu erstellen, die nach Packagenamen sortiert sind
+* @param: data: das Array, das aus den Gebaeuden besteht
+* @param: association: die Legende
+* @return: das Objekt, das aus District besteht
 */
 function createMainDistrict(data, association) {
     var district = {};
@@ -189,7 +215,7 @@ function createMainDistrict(data, association) {
 /**
 *rekursive Hilfsmethode, um aus dem Objekt, was in createMainDistrict erstellt wurde, ein Stadtobjekt zu erstellen
 *@params: aDistrict: ein Teil vom Objekt, was in createMainDistrict erstellt wurde
-*@return: ein stadtobjekt
+*@return: ein Stadtobjekt
 */
 function getMainDistrictFromJSON(aDistrict) {
     var toReturn = {
@@ -210,9 +236,9 @@ function getMainDistrictFromJSON(aDistrict) {
 
 /**
 * aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
-*@params: width: Breite, die evtl. geupdatet werden soll
-*			height: Hoehe, die ggf. geupdatet werden soll
-*			color: Farbe, die ggf. geupdatet werden soll
+* @param: width: Breite, die evtl. geupdatet werden soll
+* @param: height: Hoehe, die ggf. geupdatet werden soll
+* @param: color: Farbe, die ggf. geupdatet werden soll
 */
 function updateExtrema(width, height, color) {
     if (width > extrema.maxWidth) extrema.maxWidth = width + 1.5;
@@ -229,7 +255,9 @@ function updateExtrema(width, height, color) {
 /**
 *Initialisiert das Bild, d.h. malt die Zeichenflaeche, erstellt die Kamera, setzt das Licht, 
 *aktiviert das Beobachten der Mausaktivitaeten und das Zoomen, Drehen, Verschieben
-*@params nameOfDivElement: der Name vom Div-Element
+* @param: nameOfDivElement: der Name vom Div-Element
+* @param: incomingCalls: undefined oder eingehende Verbindungen, Form siehe getIncomingConnections(...)
+* @param: outgoingCalls: undefined oder ausgehende Verbindungen, Form siehe getOutgoingConnections(...)
 */
 function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
@@ -265,10 +293,6 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
     //Zum Zoomen, Drehen, Verschieben
     setControls();
-
-    if (incomingCalls != undefined && outgoingCalls != undefined) {
-        setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
-    }
 }
 
 
@@ -308,7 +332,8 @@ function setControls() {
 }
 
 /**
-*Getter fuer orbitcontrols
+*Getter fuer OrbitControls
+* @return: orbitControls
 */
 function getOrbitControls() {
     return orbitControls;
@@ -327,17 +352,18 @@ function updateControls(maxDistance) {
 /**
 *wenn ein Link fuer eine spezielle Ansicht aufgerufen wurde, wird diese Methode aufgerufen, 
 * um die alte Ansicht (mit Kameraposition etc.) wiederherzustellen, nachdem drawCity(...) aufgerufen wurde
-*@params: das Json, das im Link gespeichert worden ist der Form 
-{"position": {"x": xCamPos, "y": yCamPos, "z": zCamPos},
- "rotation": {"_x": xRotation, "_y": yRotation, "_z": zRotation, "_order": "XYZ" },
- "target": { "x": xPanPos,"y": yPanPos,"z": zPanPos},
- "leftGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
- "rightGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
- "scaling": { "logarithmicHeight": boolean,"logarithmicWidth": boolean,"logarithmicColor": boolean},
- "removedBuildings": ArrayAusIDsDerGeloeschtenGebaeuden,
- "changedLegend": {"Name": "Package","Breite": "Klassen","Höhe": "Methoden","Farbe": "Zeilen" },
- "collID": CollectionID,
- "_id": AnsichtsID};*/
+* @param: das Json, das im Link gespeichert worden ist der Form 
+*{"position": {"x": xCamPos, "y": yCamPos, "z": zCamPos},
+* "rotation": {"_x": xRotation, "_y": yRotation, "_z": zRotation, "_order": "XYZ" },
+* "target": { "x": xPanPos,"y": yPanPos,"z": zPanPos},
+* "leftGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
+* "rightGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
+* "scaling": { "logarithmicHeight": boolean,"logarithmicWidth": boolean,"logarithmicColor": boolean},
+* "removedBuildings": ArrayAusIDsDerGeloeschtenGebaeuden,
+* "changedLegend": {"Name": "Package","Breite": "Klassen","Höhe": "Methoden","Farbe": "Zeilen" },
+* "collID": CollectionID,
+* "_id": AnsichtsID};
+*/
 function setSpecificView(aJson) {
     var gui = getGui();
 
@@ -370,7 +396,10 @@ function setSpecificView(aJson) {
     setCameraPosForLink(camera, aJson);
 }
 
-
+/**
+* Hilfsmethode, um gespeicherte Linien wieder zu zeichnen
+* @param: aJson: aJson.leftGarden und aJson.rightGarden soll ein Array aus GebaeudeIDs sein, dessen Gaerten gezeichnet werden soll
+*/
 function drawStoredLines(aJson) {
     var hashMap = getBuildingsHashMap();
     var stringArray = ["leftGarden", "rightGarden"];
@@ -396,8 +425,15 @@ function getOriginalAssociations() {
 
 
 /**
-*Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
-*@return neues JSON fuer Verbindungen
+* Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
+* @param: connectionData: Json der Form
+* {"connections" : [ 
+*    { "Ziel": GebaeudeID_1,
+*     "incomingConnections": [{"Start" : GebaeudeID_2, "Gewichtung" : g1},{"Start" : GebaeudeID_3, "Gewichtung" : g2}],
+*     "Gewichtung" : Summe_der_Verbindungen
+*    },
+*    etc.]}
+* @return neues JSON fuer Verbindungen
 */
 function getIncomingConnections(connectionData) {
     var newJson = {};
@@ -416,6 +452,17 @@ function getIncomingConnections(connectionData) {
     return newJson;
 }
 
+/**
+* Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
+* @param: connectionData: Json der Form
+* {"connections" : [ 
+*    { "Ziel": GebaeudeID_1,
+*     "outgoingConnections": [{"Start" : GebaeudeID_2, "Gewichtung" : g1},{"Start" : GebaeudeID_3, "Gewichtung" : g2}],
+*     "Gewichtung" : Summe_der_Verbindungen
+*    },
+*    etc.]}
+* @return neues JSON fuer Verbindungen
+*/
 function getOutgoingConnections(connectionData) {
     var newJSON = {};
     for (var i = 0; i < connectionData.connections.length; i++) {
