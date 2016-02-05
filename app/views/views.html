@@ -144,7 +144,7 @@
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
                             </div>
-                            <div class="panel-body" ng-show="showStep2 && verbindungenVorhanden">
+                            <div class="panel-body" ng-show="showStep2 && chosenView.metaData.connectionsAvailable === 'true'">
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" ng-model="chosenView.useConnections"> Verbindungen nutzen</input>
@@ -152,7 +152,9 @@
                                         <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ist 'Verbindungen nutzen' ausgewählt, erscheinen diese als zwei Vorgärten vor dem Gebäude."></span>
                                         <br></br>
                                     </label>
-                                    <br></br>
+                                    <br>
+                                    <p><i>Hinweis: Noch nicht implementiert</i></p>
+                                    </br>
                                     <table ng-if="chosenView.useConnections" class="table table-striped table-bordered table-condensed table-responsive">
                                         <colgroup>
                                             <col span="1" style="width: 25%;"></col>
@@ -211,8 +213,8 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="alert alert-warning" ng-hide="verbindungenVorhanden">Da es keine Verbindungen gibt, kann man keine auswählen</div>
                             </div>
+                            <div class="alert alert-warning" ng-show="showStep2 && chosenView.metaData.connectionsAvailable === 'false'">Da es keine Verbindungen gibt, kann man keine auswählen</div>
                         </div>
                         <!-- SCHRITT 3 - Daten gruppieren -->
                         <div class="panel panel-default">
@@ -223,6 +225,7 @@
                             </div>
                             <div ng-show="showStep3">
                                 <fieldset class="formgroup">
+                                    <p><i>Hinweis: Noch nicht implementiert</i></p>
                                     <div class="radio">
                                         <label>
                                             <input type="radio" ng-model="chosenView.useGrouping" value=0> Keine Gruppierung

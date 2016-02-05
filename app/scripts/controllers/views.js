@@ -124,33 +124,27 @@ angular.module('datacityApp')
         $scope.showStep3 = false; // Blöcke
         $scope.showStep4 = false; // Dimensionen
 
-         /**
+        /**
          * Alle für MongoDB verfügbaren Gruppierungsoperationen
          * 
          * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
          */
-        $scope.availableAggrOps = [
-            {
+        $scope.availableAggrOps = [{
                 name: 'Vergessen',
                 cmd: null,
-            },
-            {
+            }, {
                 name: 'Summe',
                 cmd: '$sum',
-            },
-            {
+            }, {
                 name: 'Durchschnitt',
                 cmd: '$avg',
-            },
-            {
+            }, {
                 name: 'Erster Wert',
                 cmd: '$first',
-            },
-            {
+            }, {
                 name: 'Letzter Wert',
                 cmd: '$last',
-            },
-            {
+            }, {
                 name: 'Maximum',
                 cmd: '$max',
             },
@@ -168,24 +162,11 @@ angular.module('datacityApp')
             {
                 name: 'Standardabweichung',
                 cmd: '$stdDevPop',
-            },
-            {
+            }, {
                 name: 'Stichprobenabweichung',
                 cmd: '$stdDevSamp',
             }
         ];
-        /**
-         * Fragt beim Server ab, ob eine Collection mit den (eingehenden) Verbindungen vorhanden sind
-         */
-        $scope.verbindungenVorhanden = function() {
-            REST.getDocuments(dbWithCollections, $scope.collID + "_dc_connections_incoming", function(incoming) {
-                if (incoming) {
-                    $scope.verbindungenVorhanden = true;
-                } else {
-                    $scope.verbindungenVorhanden = false;
-                }
-            });
-        };
 
         /**
          * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
@@ -218,36 +199,29 @@ angular.module('datacityApp')
 
             if (validate) {
                 $scope.createAggregationForDisplay(function(response) {
-                    // REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data", function(response) {
-
                     REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data" + "_" + view._id, function(response) {
                         REST.getURL(relUrl, null, function(collection) {
-                            REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
-                                REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
-                                    var incomingConnections = incoming.data._embedded['rh:doc'][0];
-                                    var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
-                                    view.numberOfEntries = $scope.collection.data._returned;
-                                    view.dimensions.name = {
-                                        name: view.dimensionSettings.name.name
-                                    };
-                                    view.metaData = $scope.chosenView.metaData;
-                                    view.dimensions.height = view.dimensionSettings.height.name;
-                                    view.dimensions.area = view.dimensionSettings.area.name;
-                                    view.dimensions.color = view.dimensionSettings.color.name;
-                                    view.buildingcolor = SETTINGS.farbefuerGebauede;
-                                    if (!collection.data._embedded) {
-                                        $log.error("Keine Datensätze erhalten! Bitte Filter anpassen");
-                                    } else {
-                                        if (view.useConnections) {
-                                            //Verbindungen übergeben
-                                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
-                                        } else {
-                                            //Keine Verbindungen übergeben
-                                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
-                                        }
-                                    }
-                                });
-                            });
+                            view.numberOfEntries = $scope.collection.data._returned;
+                            view.dimensions.name = {
+                                name: view.dimensionSettings.name.name
+                            };
+                            view.metaData = $scope.chosenView.metaData;
+                            view.dimensions.height = view.dimensionSettings.height.name;
+                            view.dimensions.area = view.dimensionSettings.area.name;
+                            view.dimensions.color = view.dimensionSettings.color.name;
+                            view.buildingcolor = SETTINGS.farbefuerGebauede;
+                            
+                            if (view.metaData.connectionsAvailable === "true") {
+                                REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
+                                    REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
+                                        var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                                        var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
+                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);    
+                                    });
+                                });    
+                            } else {
+                                drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);   
+                            }
                         });
                     });
                 });
@@ -301,7 +275,6 @@ angular.module('datacityApp')
                         REST.getCollectionsMetaData(dbWithCollections, $scope.collID, function(metaData) {
                             $log.info(metaData);
                             $scope.chosenView.metaData = metaData;
-                            //$scope.chosenView.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
                         });
                     }
                 }, database, collection, view._id);
@@ -318,7 +291,6 @@ angular.module('datacityApp')
             REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
                 $scope.collection = resp;
             });
-            $scope.verbindungenVorhanden();
         }
 
         /**
