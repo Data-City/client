@@ -18,17 +18,17 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
 var camToSave = {}; //speichert Anfangseinstellung
 
 /**
-* Getter fuer scene
-* @return: scene: die Scene fuer die WebGL-Canvas, auf die gezeichnet wird
-*/
+ * Getter fuer scene
+ * @return: scene: die Scene fuer die WebGL-Canvas, auf die gezeichnet wird
+ */
 function getScene() {
     return scene;
 }
 
 /**
-*gibt die Extremwerte zurueck
-* @return: extreme: die Extremwerte von den Gebaeuden fuer Hoehe, Breite, Farbe, Verbindungen
-*/
+ *gibt die Extremwerte zurueck
+ * @return: extreme: die Extremwerte von den Gebaeuden fuer Hoehe, Breite, Farbe, Verbindungen
+ */
 function getExtrema() {
     return extrema;
 }
@@ -42,27 +42,27 @@ function getMainDistrict() {
 }
 
 /**
-*Getter fuer trackballControls
-* @return: trackballControls: die TrackballControls von THREE.js
-*/
+ *Getter fuer trackballControls
+ * @return: trackballControls: die TrackballControls von THREE.js
+ */
 function getControls() {
     return trackballControls;
 }
 
 
 /**
-* wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
-* @param: data: JSON vom Datenbank-Team, das fuer jedes Gebaeude die Hoehe, Breite, Farbe, etc. gespeichert hat der Form
-* { name: "", buildings: [district_1, ..., district_n]}
-* wobei ein district die Form {name: NameVomDistrict, buildings: [district_0, ..., district_m]}
-* oder die Form {name: eineID, HoehenDimension: h, BreitenDimension: b, FarbenDimension: f}
-* @param: association: JSON fuer die Legende, damit man weiss, dass z.B. die Breite der Anzahl Methoden entspricht der Form
-* {name: {name : DimensionName}, area: {name: DimensionFlaeche}, height: {name: DimensionHoehe}, color: {name: DimensionFarbe}}
-* @param: nameOfDivElement: Name vom Div-Element
-* @param: settings: undefined oder ein JSON zum Wiederaufrufen einer bestimmten Ansicht, siehe setSpecificView()
-* @param: incomingCalls: JSON fuer die eingehenden Verbindungen, siehe getIncomingConnections(...) oder undefined
-* @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
-*/
+ * wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
+ * @param: data: JSON vom Datenbank-Team, das fuer jedes Gebaeude die Hoehe, Breite, Farbe, etc. gespeichert hat der Form
+ * { name: "", buildings: [district_1, ..., district_n]}
+ * wobei ein district die Form {name: NameVomDistrict, buildings: [district_0, ..., district_m]}
+ * oder die Form {name: eineID, HoehenDimension: h, BreitenDimension: b, FarbenDimension: f}
+ * @param: association: JSON fuer die Legende, damit man weiss, dass z.B. die Breite der Anzahl Methoden entspricht der Form
+ * {name: {name : DimensionName}, area: {name: DimensionFlaeche}, height: {name: DimensionHoehe}, color: {name: DimensionFarbe}}
+ * @param: nameOfDivElement: Name vom Div-Element
+ * @param: settings: undefined oder ein JSON zum Wiederaufrufen einer bestimmten Ansicht, siehe setSpecificView()
+ * @param: incomingCalls: JSON fuer die eingehenden Verbindungen, siehe getIncomingConnections(...) oder undefined
+ * @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
+ */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
 
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
@@ -99,25 +99,25 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
 
 
 /**
-* Hilfsmethode bereitet Daten wie Legende, MainDistrict und Verbindungen vor
-* @param: data: die Daten, die an drawCity gehen
-* @param: association: die Legende und sonstige Einstellungen, die an drawCity gehen
-* @param: incomingCalls: eingehende Verbindungen
-* @param: outgoingCalls: ausgehende Verbindungen
-*/
-function initData(data, association, incomingCalls, outgoingCalls){
+ * Hilfsmethode bereitet Daten wie Legende, MainDistrict und Verbindungen vor
+ * @param: data: die Daten, die an drawCity gehen
+ * @param: association: die Legende und sonstige Einstellungen, die an drawCity gehen
+ * @param: incomingCalls: eingehende Verbindungen
+ * @param: outgoingCalls: ausgehende Verbindungen
+ */
+function initData(data, association, incomingCalls, outgoingCalls) {
     if (incomingCalls != undefined && outgoingCalls != undefined) {
         setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
     }
-    initAssociation(association); 
+    initAssociation(association);
     initMainDistrict(data, association);
 }
 
 /**
-* Hilfsmethode, um die Legende richtig vorzubereiten
-* @param: association: die vom Client uebergebene Legende
-*/
-function initAssociation(association){
+ * Hilfsmethode, um die Legende richtig vorzubereiten
+ * @param: association: die vom Client uebergebene Legende
+ */
+function initAssociation(association) {
     association.dimensions.width = association.dimensionSettings.area.name;
     association.dimensions.name = association.dimensionSettings.name.name;
     association.dimensions.color = association.dimensionSettings.color.name;
@@ -128,10 +128,10 @@ function initAssociation(association){
 }
 
 /**
-* initialisiert mainDistrict je nachdem, welche Blockbildung gefordert ist
-* @param: association: hierin wird der Districttyp gespeichert
-*/
-function initMainDistrict(data, association){
+ * initialisiert mainDistrict je nachdem, welche Blockbildung gefordert ist
+ * @param: association: hierin wird der Districttyp gespeichert
+ */
+function initMainDistrict(data, association) {
     if (association.districtType == "0") { //Falls keine Blockbildung
         mainDistrict = {
             buildings: data
@@ -145,8 +145,8 @@ function initMainDistrict(data, association){
 
 
 /**
-*speichert Kameraeinstellung
-*/
+ *speichert Kameraeinstellung
+ */
 function saveCamera() {
     camToSave.position = camera.position.clone();
     camToSave.rotation = camera.rotation.clone();
@@ -154,9 +154,9 @@ function saveCamera() {
 }
 
 /**
-* Getter fuer Kameraeinstellung
-* @return: camToSave: die gespeicherte (Anfangs-)Kameraeinstellung
-*/
+ * Getter fuer Kameraeinstellung
+ * @return: camToSave: die gespeicherte (Anfangs-)Kameraeinstellung
+ */
 function getCamToSave() {
     return camToSave;
 }
@@ -185,11 +185,11 @@ window.addEventListener("keyup", function(e) {
 
 
 /**
-* Methode, um aus einem Array aus Gebaeuden Districts zu erstellen, die nach Packagenamen sortiert sind
-* @param: data: das Array, das aus den Gebaeuden besteht
-* @param: association: die Legende
-* @return: das Objekt, das aus District besteht
-*/
+ * Methode, um aus einem Array aus Gebaeuden Districts zu erstellen, die nach Packagenamen sortiert sind
+ * @param: data: das Array, das aus den Gebaeuden besteht
+ * @param: association: die Legende
+ * @return: das Objekt, das aus District besteht
+ */
 function createMainDistrict(data, association) {
     var district = {};
     var splitString, currentDistrict;
@@ -213,10 +213,10 @@ function createMainDistrict(data, association) {
 }
 
 /**
-*rekursive Hilfsmethode, um aus dem Objekt, was in createMainDistrict erstellt wurde, ein Stadtobjekt zu erstellen
-*@params: aDistrict: ein Teil vom Objekt, was in createMainDistrict erstellt wurde
-*@return: ein Stadtobjekt
-*/
+ *rekursive Hilfsmethode, um aus dem Objekt, was in createMainDistrict erstellt wurde, ein Stadtobjekt zu erstellen
+ *@params: aDistrict: ein Teil vom Objekt, was in createMainDistrict erstellt wurde
+ *@return: ein Stadtobjekt
+ */
 function getMainDistrictFromJSON(aDistrict) {
     var toReturn = {
         buildings: []
@@ -235,11 +235,11 @@ function getMainDistrictFromJSON(aDistrict) {
 }
 
 /**
-* aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
-* @param: width: Breite, die evtl. geupdatet werden soll
-* @param: height: Hoehe, die ggf. geupdatet werden soll
-* @param: color: Farbe, die ggf. geupdatet werden soll
-*/
+ * aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
+ * @param: width: Breite, die evtl. geupdatet werden soll
+ * @param: height: Hoehe, die ggf. geupdatet werden soll
+ * @param: color: Farbe, die ggf. geupdatet werden soll
+ */
 function updateExtrema(width, height, color) {
     if (width > extrema.maxWidth) extrema.maxWidth = width + 1.5;
     if (height > extrema.maxHeight) extrema.maxHeight = height + 1.5;
@@ -253,12 +253,12 @@ function updateExtrema(width, height, color) {
 
 
 /**
-*Initialisiert das Bild, d.h. malt die Zeichenflaeche, erstellt die Kamera, setzt das Licht, 
-*aktiviert das Beobachten der Mausaktivitaeten und das Zoomen, Drehen, Verschieben
-* @param: nameOfDivElement: der Name vom Div-Element
-* @param: incomingCalls: undefined oder eingehende Verbindungen, Form siehe getIncomingConnections(...)
-* @param: outgoingCalls: undefined oder ausgehende Verbindungen, Form siehe getOutgoingConnections(...)
-*/
+ *Initialisiert das Bild, d.h. malt die Zeichenflaeche, erstellt die Kamera, setzt das Licht, 
+ *aktiviert das Beobachten der Mausaktivitaeten und das Zoomen, Drehen, Verschieben
+ * @param: nameOfDivElement: der Name vom Div-Element
+ * @param: incomingCalls: undefined oder eingehende Verbindungen, Form siehe getIncomingConnections(...)
+ * @param: outgoingCalls: undefined oder ausgehende Verbindungen, Form siehe getOutgoingConnections(...)
+ */
 function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
     // Erstelle einen neuen Renderer
@@ -298,8 +298,8 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
 
 /**
-*schaut regelmäßig, ob was passiert und updatet und zeichnet neu
-*/
+ *schaut regelmäßig, ob was passiert und updatet und zeichnet neu
+ */
 function animate() {
     // schaut, ob was passiert ist
     requestAnimationFrame(animate);
@@ -313,8 +313,8 @@ function animate() {
 
 
 /**
-*Methode zum Setzen der trackballControls fuer das Zoomen, Drehen, Verschieben
-*/
+ *Methode zum Setzen der trackballControls fuer das Zoomen, Drehen, Verschieben
+ */
 function setControls() {
     // für das Zoomen und Verschieben
     trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
@@ -332,38 +332,38 @@ function setControls() {
 }
 
 /**
-*Getter fuer OrbitControls
-* @return: orbitControls
-*/
+ *Getter fuer OrbitControls
+ * @return: orbitControls
+ */
 function getOrbitControls() {
     return orbitControls;
 }
 
 
 /**
-*update vom maximalen Abstand fuer den Zoom, damit man noch die hoechsten Gebaeude sehen kann
-*@param maxDistance: der Abstand zum Koordinatenursprung, zu dem man maximal wegzoomen kann
-*/
+ *update vom maximalen Abstand fuer den Zoom, damit man noch die hoechsten Gebaeude sehen kann
+ *@param maxDistance: der Abstand zum Koordinatenursprung, zu dem man maximal wegzoomen kann
+ */
 function updateControls(maxDistance) {
     trackballControls.maxDistance = maxDistance * 3;
 }
 
 
 /**
-*wenn ein Link fuer eine spezielle Ansicht aufgerufen wurde, wird diese Methode aufgerufen, 
-* um die alte Ansicht (mit Kameraposition etc.) wiederherzustellen, nachdem drawCity(...) aufgerufen wurde
-* @param: das Json, das im Link gespeichert worden ist der Form 
-*{"position": {"x": xCamPos, "y": yCamPos, "z": zCamPos},
-* "rotation": {"_x": xRotation, "_y": yRotation, "_z": zRotation, "_order": "XYZ" },
-* "target": { "x": xPanPos,"y": yPanPos,"z": zPanPos},
-* "leftGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
-* "rightGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
-* "scaling": { "logarithmicHeight": boolean,"logarithmicWidth": boolean,"logarithmicColor": boolean},
-* "removedBuildings": ArrayAusIDsDerGeloeschtenGebaeuden,
-* "changedLegend": {"Name": "Package","Breite": "Klassen","Höhe": "Methoden","Farbe": "Zeilen" },
-* "collID": CollectionID,
-* "_id": AnsichtsID};
-*/
+ *wenn ein Link fuer eine spezielle Ansicht aufgerufen wurde, wird diese Methode aufgerufen, 
+ * um die alte Ansicht (mit Kameraposition etc.) wiederherzustellen, nachdem drawCity(...) aufgerufen wurde
+ * @param: das Json, das im Link gespeichert worden ist der Form 
+ *{"position": {"x": xCamPos, "y": yCamPos, "z": zCamPos},
+ * "rotation": {"_x": xRotation, "_y": yRotation, "_z": zRotation, "_order": "XYZ" },
+ * "target": { "x": xPanPos,"y": yPanPos,"z": zPanPos},
+ * "leftGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
+ * "rightGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
+ * "scaling": { "logarithmicHeight": boolean,"logarithmicWidth": boolean,"logarithmicColor": boolean},
+ * "removedBuildings": ArrayAusIDsDerGeloeschtenGebaeuden,
+ * "changedLegend": {"Name": "Package","Breite": "Klassen","Höhe": "Methoden","Farbe": "Zeilen" },
+ * "collID": CollectionID,
+ * "_id": AnsichtsID};
+ */
 function setSpecificView(aJson) {
     var gui = getGui();
 
@@ -397,9 +397,9 @@ function setSpecificView(aJson) {
 }
 
 /**
-* Hilfsmethode, um gespeicherte Linien wieder zu zeichnen
-* @param: aJson: aJson.leftGarden und aJson.rightGarden soll ein Array aus GebaeudeIDs sein, dessen Gaerten gezeichnet werden soll
-*/
+ * Hilfsmethode, um gespeicherte Linien wieder zu zeichnen
+ * @param: aJson: aJson.leftGarden und aJson.rightGarden soll ein Array aus GebaeudeIDs sein, dessen Gaerten gezeichnet werden soll
+ */
 function drawStoredLines(aJson) {
     var hashMap = getBuildingsHashMap();
     var stringArray = ["leftGarden", "rightGarden"];
@@ -416,25 +416,25 @@ function drawStoredLines(aJson) {
 
 
 /**
-*Getter fuer associations
-*@return: associations: die Zuordnungen
-*/
+ *Getter fuer associations
+ *@return: associations: die Zuordnungen
+ */
 function getOriginalAssociations() {
     return associations;
 }
 
 
 /**
-* Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
-* @param: connectionData: Json der Form
-* {"connections" : [ 
-*    { "Ziel": GebaeudeID_1,
-*     "incomingConnections": [{"Start" : GebaeudeID_2, "Gewichtung" : g1},{"Start" : GebaeudeID_3, "Gewichtung" : g2}],
-*     "Gewichtung" : Summe_der_Verbindungen
-*    },
-*    etc.]}
-* @return neues JSON fuer Verbindungen
-*/
+ * Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
+ * @param: connectionData: Json der Form
+ * {"connections" : [ 
+ *    { "Ziel": GebaeudeID_1,
+ *     "incomingConnections": [{"Start" : GebaeudeID_2, "Gewichtung" : g1},{"Start" : GebaeudeID_3, "Gewichtung" : g2}],
+ *     "Gewichtung" : Summe_der_Verbindungen
+ *    },
+ *    etc.]}
+ * @return neues JSON fuer Verbindungen
+ */
 function getIncomingConnections(connectionData) {
     var newJson = {};
     var ithConn;
@@ -453,16 +453,16 @@ function getIncomingConnections(connectionData) {
 }
 
 /**
-* Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
-* @param: connectionData: Json der Form
-* {"connections" : [ 
-*    { "Ziel": GebaeudeID_1,
-*     "outgoingConnections": [{"Start" : GebaeudeID_2, "Gewichtung" : g1},{"Start" : GebaeudeID_3, "Gewichtung" : g2}],
-*     "Gewichtung" : Summe_der_Verbindungen
-*    },
-*    etc.]}
-* @return neues JSON fuer Verbindungen
-*/
+ * Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
+ * @param: connectionData: Json der Form
+ * {"connections" : [ 
+ *    { "Ziel": GebaeudeID_1,
+ *     "outgoingConnections": [{"Start" : GebaeudeID_2, "Gewichtung" : g1},{"Start" : GebaeudeID_3, "Gewichtung" : g2}],
+ *     "Gewichtung" : Summe_der_Verbindungen
+ *    },
+ *    etc.]}
+ * @return neues JSON fuer Verbindungen
+ */
 function getOutgoingConnections(connectionData) {
     var newJSON = {};
     for (var i = 0; i < connectionData.connections.length; i++) {

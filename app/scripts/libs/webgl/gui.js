@@ -21,11 +21,11 @@ var highlightedBuildingID;
 var camera;
 
 /**
-* Setter fuer die Farbe der Gebaeude aus settings.js
-*@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
-*/
-function setBuildingColor(hexColor){
-    if(!isNaN(parseInt(hexColor))) buildingColor = parseInt(hexColor);
+ * Setter fuer die Farbe der Gebaeude aus settings.js
+ *@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
+ */
+function setBuildingColor(hexColor) {
+    if (!isNaN(parseInt(hexColor))) buildingColor = parseInt(hexColor);
 }
 
 
@@ -255,17 +255,17 @@ function addCityToScene(mainDistrict, scene, camera) {
 function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
     if (aDistrict["buildings"] == undefined) {
         var faktor = getColorFactor(extrema, aDistrict._color, "Color");
-		addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene);
+        addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene);
         addGarden(aDistrict, scene);
     } else {
         if (colorBoolean == 0) {
-			addBoxes(0xDBDBDC, aDistrict, scene);
+            addBoxes(0xDBDBDC, aDistrict, scene);
             addGarden(aDistrict, scene);
             for (var j = 0; j < aDistrict["buildings"].length; j++) {
                 addEachDistrict(aDistrict["buildings"][j], scene, extrema, 1);
             }
         } else {
-			addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
+            addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
             addGarden(aDistrict, scene);
             for (var j = 0; j < aDistrict["buildings"].length; j++) {
                 addEachDistrict(aDistrict["buildings"][j], scene, extrema, 0);

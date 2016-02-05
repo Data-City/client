@@ -210,17 +210,17 @@ angular.module('datacityApp')
                             view.dimensions.area = view.dimensionSettings.area.name;
                             view.dimensions.color = view.dimensionSettings.color.name;
                             view.buildingcolor = SETTINGS.farbefuerGebauede;
-                            
+
                             if (view.metaData.connectionsAvailable === "true") {
                                 REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
                                     REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
                                         var incomingConnections = incoming.data._embedded['rh:doc'][0];
                                         var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
-                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);    
+                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
                                     });
-                                });    
+                                });
                             } else {
-                                drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);   
+                                drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
                             }
                         });
                     });

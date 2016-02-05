@@ -35,48 +35,37 @@ angular.module('datacityApp')
          * 
          * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
          */
-        this.availableAggregationOperations = [
-            {
-                name: 'Vergessen',
-                cmd: null,
-            },
-            {
-                name: 'Summe',
-                cmd: '$sum',
-            },
-            {
-                name: 'Durchschnitt',
-                cmd: '$avg',
-            },
-            {
-                name: 'Erster Wert',
-                cmd: '$first',
-            },
-            {
-                name: 'Letzter Wert',
-                cmd: '$last',
-            },
-            {
-                name: 'Maximum',
-                cmd: '$max',
-            },
-            {
-                name: 'Push',
-                cmd: '$push',
-            },
-            {
-                name: 'Zur Menge hinzufügen',
-                cmd: '$addToSet',
-            },
-            {
-                name: 'Standardabweichung',
-                cmd: '$stdDevPop',
-            },
-            {
-                name: 'Stichprobenabweichung',
-                cmd: '$stdDevSamp',
-            }
-        ];
+        this.availableAggregationOperations = [{
+            name: 'Vergessen',
+            cmd: null,
+        }, {
+            name: 'Summe',
+            cmd: '$sum',
+        }, {
+            name: 'Durchschnitt',
+            cmd: '$avg',
+        }, {
+            name: 'Erster Wert',
+            cmd: '$first',
+        }, {
+            name: 'Letzter Wert',
+            cmd: '$last',
+        }, {
+            name: 'Maximum',
+            cmd: '$max',
+        }, {
+            name: 'Push',
+            cmd: '$push',
+        }, {
+            name: 'Zur Menge hinzufügen',
+            cmd: '$addToSet',
+        }, {
+            name: 'Standardabweichung',
+            cmd: '$stdDevPop',
+        }, {
+            name: 'Stichprobenabweichung',
+            cmd: '$stdDevSamp',
+        }];
 
         /**
          * Erzeugt Project-Stage

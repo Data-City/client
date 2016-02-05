@@ -69,17 +69,17 @@ var searchBuilding = {
 }
 
 /**
-* Hilfsvariable als Methode zum Reagieren auf das DropDown-Menue
-*/
+ * Hilfsvariable als Methode zum Reagieren auf das DropDown-Menue
+ */
 var update = function() {
     requestAnimationFrame(update);
 };
 
 
 /**
-* loescht ein District von der Bildflaeche und speichert dies
-* @param: mesh: das Mesh-Objekt, auf das geklickt wurde und das geloescht werden soll
-*/
+ * loescht ein District von der Bildflaeche und speichert dies
+ * @param: mesh: das Mesh-Objekt, auf das geklickt wurde und das geloescht werden soll
+ */
 function remove(mesh) {
     if (mesh.length != 0) {
         removeDistrict(getScene(), mesh, true);
@@ -89,42 +89,42 @@ function remove(mesh) {
 
 
 /**
-* Setter fuer association
-* @param: newAssociation: die neue Zuordnung
-*/
+ * Setter fuer association
+ * @param: newAssociation: die neue Zuordnung
+ */
 function setAssociation(newAssociation) {
     association = newAssociation;
 }
 
 /**
-* Getter für scaling
-* @return: scaling: Object { logarithmicHeight: boolean, logarithmicWidth: boolean, logarithmicColor: boolean }
-*/
+ * Getter für scaling
+ * @return: scaling: Object { logarithmicHeight: boolean, logarithmicWidth: boolean, logarithmicColor: boolean }
+ */
 function getScalingBooleans() {
     return scaling;
 }
 
 /**
-* Setter fuer scaling
-* @param: scalingObject: Object, mit dem Scaling ueberschrieben werden soll der Form 
-* { logarithmicHeight: boolean, logarithmicWidth: boolean, logarithmicColor: boolean }
-*/
+ * Setter fuer scaling
+ * @param: scalingObject: Object, mit dem Scaling ueberschrieben werden soll der Form 
+ * { logarithmicHeight: boolean, logarithmicWidth: boolean, logarithmicColor: boolean }
+ */
 function setScalingBooleans(scalingObject) {
     scaling = scalingObject;
 }
 
 /**
-* Getter fuer removedBuildings
-* @param: Variable removedBuildings: Array, das die IDs aller geloeschten Gebaeude enthaelt
-*/
+ * Getter fuer removedBuildings
+ * @param: Variable removedBuildings: Array, das die IDs aller geloeschten Gebaeude enthaelt
+ */
 function getRemovedBuildings() {
     return removedBuildings;
 }
 
 /**
-* Setter fuer removedBuildings
-* @param: newRemovedBuildings: das neue Array, das die IDs aller geloeschten Gebaeude enthaelt
-*/
+ * Setter fuer removedBuildings
+ * @param: newRemovedBuildings: das neue Array, das die IDs aller geloeschten Gebaeude enthaelt
+ */
 function setRemovedBuildings(newRemovedBuildings) {
     removedBuildings = newRemovedBuildings;
 }
@@ -132,13 +132,13 @@ function setRemovedBuildings(newRemovedBuildings) {
 
 
 /**
-* aendert bei den Gebaeudeinformationen in der Legende die Werte, die angezeigt werden sollen
-* @param: newHeight: die neue Hoehe, die angezeigt werden soll
-* @param: newWidth: die neue Breite, die angezeigt werden soll
-* @param: newColor: die neue Farbe, die angezeigt werden soll
-* @param: newName: der neue Name vom Gebaeude, der angezeigt werden soll
-* @param: aMesh: Mesh von dem Gebaeude, auf das geklickt worden ist
-*/
+ * aendert bei den Gebaeudeinformationen in der Legende die Werte, die angezeigt werden sollen
+ * @param: newHeight: die neue Hoehe, die angezeigt werden soll
+ * @param: newWidth: die neue Breite, die angezeigt werden soll
+ * @param: newColor: die neue Farbe, die angezeigt werden soll
+ * @param: newName: der neue Name vom Gebaeude, der angezeigt werden soll
+ * @param: aMesh: Mesh von dem Gebaeude, auf das geklickt worden ist
+ */
 function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh) {
     buildingInformation["height"] = newHeight;
     buildingInformation["width"] = newWidth;
@@ -148,34 +148,34 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh
 }
 
 /**
-* aendert bei dem Link in der Legende den Link zum Verschicken
-* @param: aJson: ein Objekt der Form 
-*    {camPos: json_mit_Camera_Position,
-*     garden: array_mit_ID_der_Gaerten,_die_an_sind,
-*     scaling: json_von_legende}
-*/
+ * aendert bei dem Link in der Legende den Link zum Verschicken
+ * @param: aJson: ein Objekt der Form 
+ *    {camPos: json_mit_Camera_Position,
+ *     garden: array_mit_ID_der_Gaerten,_die_an_sind,
+ *     scaling: json_von_legende}
+ */
 function changeLinkForCurrentView(aJson) {
     currentView['Link'] = window.location.href.split("/#/")[0] + '/#/storedView?webGLSettings=' + JSON.stringify(aJson);
 }
 
 /**
-* getter fuer gui (dropdownmenu)
-* @return: gui: das dropdownmenu
-*/
+ * getter fuer gui (dropdownmenu)
+ * @return: gui: das dropdownmenu
+ */
 function getGui() {
     return gui;
 }
 
 
 /**
-* Methode, um das Dropdown-Menue oben rechts zu zeichnen
-* @param: scene: die scene, mit der man arbeiten moechte und auf die man reagieren moechte
-* @param: aDistrict: das JSON vom Typ Stadtteil, mit dem ich agieren moechte, wenn der Nutzer das mit der Legende machen moechte
-* @param: camera: die Kamera, die neu positioniert wird, falls das district bearbeitet wird
-* @param: orbitControls: OrbitControl fuer die Steuerung,die wir verwenden
-* @param: trackballControls: das Trackball fuer die Steuerung,die wir verwenden
-* @param: nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
-*/
+ * Methode, um das Dropdown-Menue oben rechts zu zeichnen
+ * @param: scene: die scene, mit der man arbeiten moechte und auf die man reagieren moechte
+ * @param: aDistrict: das JSON vom Typ Stadtteil, mit dem ich agieren moechte, wenn der Nutzer das mit der Legende machen moechte
+ * @param: camera: die Kamera, die neu positioniert wird, falls das district bearbeitet wird
+ * @param: orbitControls: OrbitControl fuer die Steuerung,die wir verwenden
+ * @param: trackballControls: das Trackball fuer die Steuerung,die wir verwenden
+ * @param: nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
+ */
 function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, nameOfDivElement) {
     gui = new dat.GUI({
         width: 375,
@@ -256,11 +256,11 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
 
 
 /**
-* Hilfsmethode, um den Ordner "Legende" in dat gui zu setzen
-* @param: h: Ordner Legende
-* @param: i: die Position fuer den naechsten Controller im Ordner Legende
-* @param: gui: das Dropdownmenue
-*/
+ * Hilfsmethode, um den Ordner "Legende" in dat gui zu setzen
+ * @param: h: Ordner Legende
+ * @param: i: die Position fuer den naechsten Controller im Ordner Legende
+ * @param: gui: das Dropdownmenue
+ */
 function setFolderLegende(h, i, gui) {
     h.add(legend, myDimensions[i]).onChange(
         function(value) {
@@ -271,18 +271,18 @@ function setFolderLegende(h, i, gui) {
 }
 
 /**
-* Setter fuer changedLegend
-* @param: newchangedLegend: die neue Legende
-*/
+ * Setter fuer changedLegend
+ * @param: newchangedLegend: die neue Legende
+ */
 function setChangedLegend(newChangedLegend) {
     changedLegend = newChangedLegend;
 }
 
 
 /**
-* Getter fuer changedLegend
-* @return: changedLegend: die vom Nutzer veraenderte Legende
-*/
+ * Getter fuer changedLegend
+ * @return: changedLegend: die vom Nutzer veraenderte Legende
+ */
 function getChangedLegend() {
     if (changedLegend == undefined) {
         return legend;
@@ -293,11 +293,11 @@ function getChangedLegend() {
 
 
 /**
-* Methode, um ein Distrikt oder ein Gebaeude zu loeschen
-* @param: scene: die Scene, auf der die Objekte gezeichnet wurden
-* @param: aMesh: Mesh vom Distrikt oder Gebaeude, das geloescht werden soll
-* @param: isFirstCall: true, wenn es der Initialaufruf dieser Methode ist
-*/
+ * Methode, um ein Distrikt oder ein Gebaeude zu loeschen
+ * @param: scene: die Scene, auf der die Objekte gezeichnet wurden
+ * @param: aMesh: Mesh vom Distrikt oder Gebaeude, das geloescht werden soll
+ * @param: isFirstCall: true, wenn es der Initialaufruf dieser Methode ist
+ */
 function removeDistrict(scene, aMesh, isFirstCall) {
     if (isFirstCall) {
         storedDistrict = [];
@@ -315,9 +315,9 @@ function removeDistrict(scene, aMesh, isFirstCall) {
 }
 
 /**
-* Methode, um das letzte geloeschte District wieder herzustellen
-* @param: scene: die Scene, auf der wir zeichnen
-*/
+ * Methode, um das letzte geloeschte District wieder herzustellen
+ * @param: scene: die Scene, auf der wir zeichnen
+ */
 function undoRemoving(scene) {
     storedDistrict = arrayOfRemovedBuildings.pop();
     removedBuildings.splice(removedBuildings.indexOf(storedDistrict[0].building[association.name]), 1);
@@ -331,10 +331,10 @@ function undoRemoving(scene) {
 }
 
 /**
-* Methode, um Gebaeude zu loeschen
-* @param: scene: die Scene, auf die die Objekte gezeichnet wurden
-* @param: aMesh: das Mesh zum Gebaeude
-*/
+ * Methode, um Gebaeude zu loeschen
+ * @param: scene: die Scene, auf die die Objekte gezeichnet wurden
+ * @param: aMesh: das Mesh zum Gebaeude
+ */
 function removeObject(scene, aMesh) {
     storedBuilding = [];
     storedBuilding.push(aMesh);
@@ -359,13 +359,13 @@ function removeObject(scene, aMesh) {
 
 
 /**
-* skaliert die Gebaeude und zeichnet sie neu
-* @param: value: der Wert aus der Legende, also ein Boolean (true, falls logarithmisch skaliert werden soll; false, wenn nicht skaliert)
-* @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-* @param: scene: die scene, auf die neu gemalt werden soll
-* @param: aDistrict: das JSON vom Typ district, dessen Gebaeude skaliert werden soll
-* @param: camera: die Kamera, die nach dem Zeichnen neu positioniert werden soll
-*/
+ * skaliert die Gebaeude und zeichnet sie neu
+ * @param: value: der Wert aus der Legende, also ein Boolean (true, falls logarithmisch skaliert werden soll; false, wenn nicht skaliert)
+ * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
+ * @param: scene: die scene, auf die neu gemalt werden soll
+ * @param: aDistrict: das JSON vom Typ district, dessen Gebaeude skaliert werden soll
+ * @param: camera: die Kamera, die nach dem Zeichnen neu positioniert werden soll
+ */
 function scale(value, aString, scene, aDistrict, camera) {
     if (value) {
         var scalingMethod = scaleLogarithmically;
@@ -395,9 +395,9 @@ function scale(value, aString, scene, aDistrict, camera) {
 
 
 /**
-* Methode, um die Extremwerte ebenfalls zu skalieren
-* @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-*/
+ * Methode, um die Extremwerte ebenfalls zu skalieren
+ * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
+ */
 function takeLogarithmOfExtrema(aString) {
     var extrema = getExtrema();
     if (aString == "width") {
@@ -414,9 +414,9 @@ function takeLogarithmOfExtrema(aString) {
 
 
 /**
-* Methode, um die Extremwerte wieder normal zu skalieren
-* @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-*/
+ * Methode, um die Extremwerte wieder normal zu skalieren
+ * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
+ */
 function linearizeExtrema(aString) {
     var extrema = getExtrema();
     if (aString == "width") {
@@ -433,20 +433,20 @@ function linearizeExtrema(aString) {
 
 
 /**
-* Hilfsmethode zum logarithmieren (Logarithmus zur Basis 2)
-* @param: aDistrict: das Stadtteil, dessen Gebaeude skaliert werden soll
-* @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-*/
+ * Hilfsmethode zum logarithmieren (Logarithmus zur Basis 2)
+ * @param: aDistrict: das Stadtteil, dessen Gebaeude skaliert werden soll
+ * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
+ */
 function scaleLogarithmically(aDistrict, aString) {
     return (Math.log(aDistrict["_" + aString]) / Math.log(2));
 }
 
 
 /**
-* Hilfsmethode, um die urspruenglichen Werte wieder herzustellen, d.h. ohne Skalierung die Gebaeude zu zeichnen
-* @param: aDistrict: das Stadtteil, dessen Gebaeude skaliert werden soll
-* @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-*/
+ * Hilfsmethode, um die urspruenglichen Werte wieder herzustellen, d.h. ohne Skalierung die Gebaeude zu zeichnen
+ * @param: aDistrict: das Stadtteil, dessen Gebaeude skaliert werden soll
+ * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
+ */
 function scaleLinearly(aDistrict, aString) {
     if (aDistrict[association[aString]] == "") {
         return 1.5;
@@ -457,11 +457,11 @@ function scaleLinearly(aDistrict, aString) {
 
 
 /**
-* Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen
-* @param: scene: die Scene, auf der alle Objekte geloescht werden soll
-* @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-* @param: scalingMethod: scaleLogarithmically oder scaleLinearly
-*/
+ * Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen
+ * @param: scene: die Scene, auf der alle Objekte geloescht werden soll
+ * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
+ * @param: scalingMethod: scaleLogarithmically oder scaleLinearly
+ */
 function removeAllObjects(scene, aString, scalingMethod) {
     for (var i = scene.children.length - 1; i >= 0; i--) {
         scene.remove(scene.children[i]);
@@ -469,10 +469,10 @@ function removeAllObjects(scene, aString, scalingMethod) {
 }
 
 /**
-* skaliert alle Gebaeuden
-* @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
-* @param: scalingMethod: scaleLogarithmically oder scaleLinearly
-*/
+ * skaliert alle Gebaeuden
+ * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
+ * @param: scalingMethod: scaleLogarithmically oder scaleLinearly
+ */
 function scaleAll(aString, scalingMethod) {
     var hashMap = getBuildingsHashMap();
     for (var x in hashMap) {
@@ -484,8 +484,8 @@ function scaleAll(aString, scalingMethod) {
 }
 
 /**
-* nach dem Skalieren update der geloeschten Objekte, damit sie auch wiederhergestellt werden koennen
-*/
+ * nach dem Skalieren update der geloeschten Objekte, damit sie auch wiederhergestellt werden koennen
+ */
 function updateRemovedBuildings() {
     for (var i = 0; i < arrayOfRemovedBuildings.length; i++) {
         for (var j = 0; j < arrayOfRemovedBuildings[i].length; j++) {

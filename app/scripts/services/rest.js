@@ -284,14 +284,14 @@ angular.module('datacityApp')
                     $log.error("PUT auf " + url);
                     $log.error(response);
                 });
-                this.createCollectionForView(view, collection, null);
+            this.createCollectionForView(view, collection, null);
         };
-            
+
         this.createCollectionForView = function(view, collection, fn) {
             setAuthHeader();
             var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + "_dc_data" + "_" + view.timeOfCreation;
             //var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + this.META_DATA_PART + "_" + view.timeOfCreation;
-            
+
             $http.put(url, view).then(
                 function success(response) {
                     rest.setAuthToken(response);
@@ -304,7 +304,7 @@ angular.module('datacityApp')
                     $log.error("PUT auf " + url);
                     $log.error(response);
                 });
-        }; 
+        };
 
         this.createAggregation = function(database, collection, etag, params, fn) {
             //$log.info("So far!");
