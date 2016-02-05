@@ -257,112 +257,112 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- SCHRITT 4 - Blöcke bilden -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading" ng-click="showStep4 = !showStep4;">
-                            <span class="panel-title">4. Blöcke definieren</span>
-                            <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
-                            <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep4" aria-hidden="true"></span>
-                        </div>
-                        <div ng-show="showStep4">
-                            <fieldset class="formgroup">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" ng-model="chosenView.districtType" value=0 ng-click="chosenView.districts = []"> Keine Blockbildung benutzen
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" ng-model="chosenView.districtType" value=1 ng-click="chosenView.districts = []"> Es wird nach jedem Punkt eine neue Ebene gebildet (z.B. bei Packagenamen)
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" ng-model="chosenView.districtType" value=2> Blöcke auswählen
-                                        <!--Hinweis-->
-                                        <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Hier können Sie Gebäude nach der ausgewählten Dimension gruppieren."></span>
-                                    </label>
-                                </div>
-                            </fieldset>
+                        <!-- SCHRITT 4 - Blöcke bilden -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" ng-click="showStep4 = !showStep4;">
+                                <span class="panel-title">4. Blöcke definieren</span>
+                                <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep4" aria-hidden="true"></span>
+                            </div>
+                            <div ng-show="showStep4">
+                                <fieldset class="formgroup">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" ng-model="chosenView.districtType" value=0 ng-click="chosenView.districts = []"> Keine Blockbildung benutzen
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" ng-model="chosenView.districtType" value=1 ng-click="chosenView.districts = []"> Es wird nach jedem Punkt eine neue Ebene gebildet (z.B. bei Packagenamen)
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" ng-model="chosenView.districtType" value=2> Blöcke auswählen
+                                            <!--Hinweis-->
+                                            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Hier können Sie Gebäude nach der ausgewählten Dimension gruppieren."></span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="panel-body" ng-show="chosenView.districtType == 2 && showStep4">
+                                Block Nr.1 entspricht dem innersten Block.
+                                <table class="table">
+                                    <thead>
+                                        <th>Nr.</th>
+                                        <th>Feld</th>
+                                        <th>Löschen</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="(index, district) in chosenView.districts">
+                                            <td>{{index + 1}}</td>
+                                            <td>
+                                                <select ng-model="district.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-xs btn-danger" aria-label="Left Align" ng-click="deleteDistrict(index);">
+                                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn btn-success pull-right" aria-label="Left Align" ng-click="addDistrict()">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true">Block hinzufügen</span>
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="panel-body" ng-show="chosenView.districtType == 2 && showStep4">
-                            Block Nr.1 entspricht dem innersten Block.
-                            <table class="table">
-                                <thead>
-                                    <th>Nr.</th>
-                                    <th>Feld</th>
-                                    <th>Löschen</th>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="(index, district) in chosenView.districts">
-                                        <td>{{index + 1}}</td>
+                        <!-- SCHRITT 5 - Dimensionen bestimmen -->
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" ng-click="showStep5 = !showStep5;">
+                                <span class="panel-title">5. Dimensionen der Gebäude definieren</span>
+                                <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep4" aria-hidden="true"></span>
+                            </div>
+                            <div class="panel-body" ng-show="showStep5">
+                                <table class="table">
+                                    <!-- NAME -->
+                                    <tr>
                                         <td>
-                                            <select ng-model="district.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-xs btn-danger" aria-label="Left Align" ng-click="deleteDistrict(index);">
-                                                <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                                            </button>
+                                            <p><i>Hinweis: Wenn die Namen nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. Suche)</i></p>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Name</span>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
+                                            </div>
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
-                            <button type="button" class="btn btn-success pull-right" aria-label="Left Align" ng-click="addDistrict()">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true">Block hinzufügen</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- SCHRITT 5 - Dimensionen bestimmen -->
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading" ng-click="showStep5 = !showStep5;">
-                            <span class="panel-title">5. Dimensionen der Gebäude definieren</span>
-                            <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
-                            <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep4" aria-hidden="true"></span>
-                        </div>
-                        <div class="panel-body" ng-show="showStep5">
-                            <table class="table">
-                                <!-- NAME -->
-                                <tr>
-                                    <td>
-                                        <p><i>Hinweis: Wenn die Namen nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. Suche)</i></p>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">Name</span>
-                                            <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- FLÄCHE -->
-                                <tr>
-                                    <td>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">Fläche</span>
-                                            <select class="form-control" ng-model="chosenView.dimensionSettings.area" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- HÖHE -->
-                                <tr>
-                                    <td>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">Höhe</span>
-                                            <select class="form-control" ng-model="chosenView.dimensionSettings.height" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- FARBE -->
-                                <tr>
-                                    <td>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">Farbe</span>
-                                            <select class="form-control" ng-model="chosenView.dimensionSettings.color" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
+                                    <!-- FLÄCHE -->
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Fläche</span>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.area" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- HÖHE -->
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Höhe</span>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.height" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- FARBE -->
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Farbe</span>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.color" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </form>
