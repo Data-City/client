@@ -173,8 +173,6 @@ angular.module('datacityApp')
          */
         $scope.drawCity = function() {
             var view = $scope.chosenView;
-            var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data" + "_" + view._id;
-            //   var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
 
             //Fehlermeldungen, falls eine Option vom Nutzer nicht ausgewählt wurde
             var validate = true;
@@ -201,6 +199,8 @@ angular.module('datacityApp')
                 $scope.loader = true;
                 $scope.createAggregationForDisplay(function(response) {
                     REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data" + "_" + view._id, function(response) {
+                        
+                        var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
                         REST.getURL(relUrl, null, function(collection) {
                             view.numberOfEntries = $scope.collection.data._returned;
                             view.dimensions.name = {
@@ -218,12 +218,12 @@ angular.module('datacityApp')
                                         var incomingConnections = incoming.data._embedded['rh:doc'][0];
                                         var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
                                         drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
-                                        $scope.loader = true;
+                                        $scope.loader = false;
                                     });
                                 });
                             } else {
                                 drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
-                                $scope.loader = true;
+                                $scope.loader = false;
                             }
                         });
                     });
