@@ -6,7 +6,9 @@
         <h3>Sie sind nicht eingeloggt!</h3>
     </div>
 
-    <div ng-show="loggedIn" id="collapseAll" class="panel-collapse collapse in">
+    <span us-spinner ng-show="loggedIn && loader"></span>
+
+    <div ng-show="loggedIn && !loader" id="collapseAll" class="panel-collapse collapse in">
         <a ng-href="#/data"><i class=" glyphicon glyphicon-chevron-left"></i>Einen Datensatz auswählen</a>
         <div class="alert alert-danger" role="alert" ng-hide="collID">
             <h3>Kein Datensatz gewählt!</h3>

@@ -198,6 +198,7 @@ angular.module('datacityApp')
             }
 
             if (validate) {
+                $scope.loader = true;
                 $scope.createAggregationForDisplay(function(response) {
                     REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data" + "_" + view._id, function(response) {
                         REST.getURL(relUrl, null, function(collection) {
@@ -217,10 +218,12 @@ angular.module('datacityApp')
                                         var incomingConnections = incoming.data._embedded['rh:doc'][0];
                                         var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
                                         drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
+                                        $scope.loader = true;
                                     });
                                 });
                             } else {
                                 drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
+                                $scope.loader = true;
                             }
                         });
                     });
@@ -286,10 +289,12 @@ angular.module('datacityApp')
          * Initialisierung
          */
         if ($routeParams.collID) {
+            $scope.loader = true;
             $scope.collID = $routeParams.collID;
             $scope.getViews();
             REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
                 $scope.collection = resp;
+                $scope.loader = false;
             });
         }
 
