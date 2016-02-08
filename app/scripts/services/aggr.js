@@ -23,7 +23,7 @@ angular.module('datacityApp')
         /**
          * Counts the elements in obj
          */
-        var count = function(obj) {
+        var count = function (obj) {
             if (obj === null) {
                 return 0;
             }
@@ -39,43 +39,43 @@ angular.module('datacityApp')
             name: 'Vergessen',
             cmd: null,
         }, {
-            name: 'Summe',
-            cmd: '$sum',
-        }, {
-            name: 'Durchschnitt',
-            cmd: '$avg',
-        }, {
-            name: 'Erster Wert',
-            cmd: '$first',
-        }, {
-            name: 'Letzter Wert',
-            cmd: '$last',
-        }, {
-            name: 'Maximum',
-            cmd: '$max',
-        }, {
-            name: 'Push',
-            cmd: '$push',
-        }, {
-            name: 'Zur Menge hinzufügen',
-            cmd: '$addToSet',
-        }, {
-            name: 'Standardabweichung',
-            cmd: '$stdDevPop',
-        }, {
-            name: 'Stichprobenabweichung',
-            cmd: '$stdDevSamp',
-        }];
+                name: 'Summe',
+                cmd: '$sum',
+            }, {
+                name: 'Durchschnitt',
+                cmd: '$avg',
+            }, {
+                name: 'Erster Wert',
+                cmd: '$first',
+            }, {
+                name: 'Letzter Wert',
+                cmd: '$last',
+            }, {
+                name: 'Maximum',
+                cmd: '$max',
+            }, {
+                name: 'Push',
+                cmd: '$push',
+            }, {
+                name: 'Zur Menge hinzufügen',
+                cmd: '$addToSet',
+            }, {
+                name: 'Standardabweichung',
+                cmd: '$stdDevPop',
+            }, {
+                name: 'Stichprobenabweichung',
+                cmd: '$stdDevSamp',
+            }];
 
         /**
          * Erzeugt Project-Stage
          */
-        this.projectStage = function(params) {
+        this.projectStage = function (params) {
             /*
             $project : { title : 1 , author : 1 }
             */
             var project = {};
-            params.forEach(function(element, index) {
+            params.forEach(function (element, index) {
                 if (element.chooseable) {
                     project[element.name] = 1;
                 }
@@ -86,7 +86,7 @@ angular.module('datacityApp')
             return project;
         };
 
-        this.createLimitStage = function(limit) {
+        this.createLimitStage = function (limit) {
             return {
                 $limit: limit
             };
@@ -97,9 +97,9 @@ angular.module('datacityApp')
          * 
          * "_$match": matchStage(params) 
          */
-        this.matchStage = function(params) {
+        this.matchStage = function (params) {
             var matchers = [];
-            params.forEach(function(element, index) {
+            params.forEach(function (element, index) {
                 /*
                 { score: { $gt: 70, $lt: 90 } },
                 { views: { $gte: 1000 } } 
@@ -137,7 +137,7 @@ angular.module('datacityApp')
         /**
          * Setzt einzelne Aggregationsschritte zu einem vollständigen Aggregationsparameter zusammen
          */
-        this.buildAggregationPipe = function(collection, stages, viewID) {
+        this.buildAggregationPipe = function (collection, stages, viewID) {
             var aggr = {
                 "aggrs": [{
                     "type": "pipeline",
@@ -153,12 +153,10 @@ angular.module('datacityApp')
             return aggr;
         };
 
-        this.createDistrictAggregationStages = function(districts, attributes) {
+        this.createDistrictAggregationStages = function (districts, attributes) {
             var stages = [];
 
-
-
-            var fields = districts.map(function(d) {
+            var fields = districts.map(function (d) {
                 return d.field.name;
             });
 
@@ -174,16 +172,16 @@ angular.module('datacityApp')
 
 
             // Wird in Schleife genutzt
-            var idsAdder = function(field) {
+            var idsAdder = function (field) {
                 ids[field] = "$" + field;
             };
 
-            var idsAdder2 = function(field) {
+            var idsAdder2 = function (field) {
                 group._id[field] = "$_id." + field;
             };
 
             // Wird in Schleife genutzt
-            var dimensionAdder = function(attr) {
+            var dimensionAdder = function (attr) {
                 if (attr.chooseable) {
                     group.buildings.$addToSet[attr.name] = "$" + attr.name;
                 }
@@ -219,33 +217,49 @@ angular.module('datacityApp')
                 fields.splice(i, 1);
             }
 
+            //
             // City-Rahmen
-            group = JSON.parse(JSON.stringify(groupTemplate));
-            group._id = "city";
-            group.buildings.$addToSet.name = "$_id." + districts[districts.length - 1].field.name;
-            group.buildings.$addToSet.buildings = "$buildings";
-            group.buildings.$addToSet.count = "$count";
+            //
+            // Spezialfall: Keine Blöcke
+            if (!districts || districts.length === 0) {
+                group = JSON.parse(JSON.stringify(groupTemplate));
+                // IDs hinzufügen
+                var Ids = {};
+                fields.map(idsAdder);
+                group._id = Ids;
+
+                // Buildings für Dimension hinzufügen
+                attributes.map(dimensionAdder);
+            } 
+            // Es gibt Blöcke (districts)
+            else {
+                group = JSON.parse(JSON.stringify(groupTemplate));
+                group._id = "city";
+                group.buildings.$addToSet.name = "$_id." + districts[districts.length - 1].field.name;
+                group.buildings.$addToSet.buildings = "$buildings";
+                group.buildings.$addToSet.count = "$count";
+            }
             stages.push({
                 "$group": group
             });
 
             return stages;
         };
-        var escapeRegExp = function(str) {
+        var escapeRegExp = function (str) {
             return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
         };
 
-        var replaceAll = function(str, find, replace) {
+        var replaceAll = function (str, find, replace) {
             return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
         };
 
-        this.mongoDBCodeToRESTHeart = function(obj) {
+        this.mongoDBCodeToRESTHeart = function (obj) {
             var str = JSON.stringify(obj);
             str = replaceAll(str, '$', '_$');
             return JSON.parse(str);
         };
 
-        this.createMinMedMaxAggrParam = function(attrs, colname) {
+        this.createMinMedMaxAggrParam = function (attrs, colname) {
             /*
                 var aggrs =  {aggrs: [
                     {
@@ -276,7 +290,7 @@ angular.module('datacityApp')
             var ops = {
                 "_id": 0,
             };
-            attrs.forEach(function(element, index) {
+            attrs.forEach(function (element, index) {
                 if (element.type === 'number') {
                     var name = element.name;
 
@@ -304,11 +318,11 @@ angular.module('datacityApp')
             return aggrs;
         };
 
-        this.setLog = function(log) {
+        this.setLog = function (log) {
             $log = log;
         };
 
-        this.setSettings = function(s) {
+        this.setSettings = function (s) {
             SETTINGS = s;
 
             this.META_DATA_AGGR_URI = SETTINGS.meta_data_suffix;
@@ -319,7 +333,7 @@ angular.module('datacityApp')
         };
 
         // Method for instantiating
-        this.$get = function($log, SETTINGS) {
+        this.$get = function ($log, SETTINGS) {
             this.setLog($log);
             this.setSettings(SETTINGS);
             return this;
