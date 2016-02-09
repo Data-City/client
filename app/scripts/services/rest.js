@@ -163,7 +163,7 @@ angular.module('datacityApp')
             // Die Collection löschen
             this.getCurrentETag(db, collection, function (etag) {
                 rest.deleteData(function (r) {
-                    $log.info('Gelöscht:\t' + db + '/' + collection);
+                    //$log.info('Gelöscht:\t' + db + '/' + collection);
                     if (fn) {
                         fn(r);
                     }
@@ -215,7 +215,7 @@ angular.module('datacityApp')
 
 
         this.updateView = function (view, fn) {
-            $log.info(view);
+            //$log.info(view);
             setAuthHeader();
 
             var relUrl = ANSICHTEN + '/' + view._id;
@@ -320,7 +320,7 @@ angular.module('datacityApp')
             };
 
             var url = createURL(database, collection);
-            $log.info(url);
+            //$log.info(url);
             $http.put(url, params, config).then(
                 function success(response) {
                     rest.setAuthToken(response);
@@ -407,7 +407,7 @@ angular.module('datacityApp')
          * Fügt eine Aggregation zu den bestehenden hinzu
          */
         this.addAggregation = function (database, collection, aggr, fn) {
-            $log.info("Füge Aggregation hinzu: " + database + "\tcoll:" + collection);
+            //$log.info("Füge Aggregation hinzu: " + database + "\tcoll:" + collection);
             rest.getCurrentETag(database, collection, function (etag) {
                 rest.createAggregation(database, collection, etag, aggr, function (r) {
                     fn(r);
@@ -701,7 +701,7 @@ angular.module('datacityApp')
         this.getCurrentETag = function (database, collection, fn) {
             setAuthHeader();
             var url = createURL(database, collection);
-            $log.info("getCurrentETag URL: " + url);
+            //$log.info("getCurrentETag URL: " + url);
             $http.get(url).then(function (response) {
                 fn(response.data._etag.$oid);
             });

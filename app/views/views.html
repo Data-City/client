@@ -399,8 +399,14 @@
         </div>
 
     </div>
+    
+<div ng-show="mongoDbAggr">
+<pre>
+db.vielePersonen.aggregate({{mongoDbAggr.aggrs[0].stages | json}});
+db.vielePersonen_dc_data_1455014239818.find().pretty();
+</pre>
 </div>
-
+</div>
 <!-- Ein- und Ausklappen der Auswahlmöglichkeiten -->
 <div class="text-center">
     <a href="javascript:;" data-toggle="collapse" data-parent="#collapseAll" data-target="#collapseAll" ng-click="showEverything=!showEverything">

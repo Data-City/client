@@ -25,6 +25,8 @@ angular.module('datacityApp')
 
         var WEBGL_DIV = SETTINGS.WEBGL_DIV;
 
+        $scope.mongoDbAggr = null;
+
         /**
          *  Konstruktor für eine Ansicht
          */
@@ -209,7 +211,9 @@ angular.module('datacityApp')
                         view.dimensions.area = view.dimensionSettings.area.name;
                         view.dimensions.color = view.dimensionSettings.color.name;
                         view.buildingcolor = SETTINGS.farbefuerGebauede;
-
+                        // AUSKOMMENTIEREN! NUR DEBUG
+                        //$scope.loader = false;
+                        
                         if (view.metaData.connectionsAvailable === "true") {
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function (incoming) {
                                 REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function (outgoing) {
@@ -407,14 +411,14 @@ angular.module('datacityApp')
             stages.push(AGGR.createLimitStage(AGGR.MAX_DOCUMENTS_FOR_AGGREGATION));
             stages.push(AGGR.projectStage(view.attributes));
             stages.push(AGGR.matchStage(view.attributes));
-            stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
-            /*
-            if (view.districts.length > 0) {
-                stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
+            if(view.useGrouping == 1) {
+               stages = stages.concat(AGGR.groupingStage(view.grouping));
             }
-            */
+            
+            stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
+            
             var aggr = AGGR.buildAggregationPipe(view.collID, stages, view._id);
-            $log.info(aggr);
+            //$scope.mongoDbAggr = aggr;
             aggr = AGGR.mongoDBCodeToRESTHeart(aggr);
             REST.addAggregation(dbWithCollections, view.collID, aggr, function (response) {
                 if (fn) {
