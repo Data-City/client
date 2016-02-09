@@ -251,8 +251,8 @@
                                             <tr ng-repeat="(key, attr) in (chosenView.attributes | bychooseability | attrbyname:chosenView.grouping.field)">
                                                 <td>{{attr.name}} ({{attr.type}})</td>
                                                 <td>
-                                                    <select class="form-control" ng-show="attr.type !== 'string'">
-                                                        <option ng-repeat="(i, op) in availableAggrOps" value="op.cmd">{{op.name}}</option>
+                                                    <select class="form-control" ng-show="attr.type !== 'string'" ng-model="chosenView.grouping.attrs[attr.name]">
+                                                        <option ng-repeat="(i, op) in availableAggrOps" value="{{op.cmd}}">{{op.name}}</option>
                                                     </select>
                                                     <span ng-show="attr.type === 'string'"> Für Strings gibt es keine Operationen: Feld wird verworfen!</span>
                                                 </td>
@@ -303,7 +303,7 @@
                                         <tr ng-repeat="(index, district) in chosenView.districts">
                                             <td>{{index + 1}}</td>
                                             <td>
-                                                <select ng-model="district.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
+                                                <select ng-model="district.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name"></select>
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-xs btn-danger" aria-label="Left Align" ng-click="deleteDistrict(index);">
@@ -335,7 +335,7 @@
                                             <p><i>Hinweis: Wenn die Namen nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. Suche)</i></p>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Name</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -344,7 +344,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Fläche</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.area" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.area" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number' | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -353,7 +353,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Höhe</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.height" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.height" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number' | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
@@ -362,7 +362,7 @@
                                         <td>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Farbe</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.color" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number') track by attr.name"></select>
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.color" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number' | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name"></select>
                                             </div>
                                         </td>
                                     </tr>
