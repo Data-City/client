@@ -343,28 +343,21 @@ angular.module('datacityApp')
         };
 
         /**
-         * Konstruktor für eine Kopie einer neuen Ansicht
-         * Übernimmt die ausgewählten Dimensionsn der alten Ansicht, jedoch mit anderen Namen, Ersteller, Datum etc
-         */
-        function ViewCopy(collID) {
-            this.name = collID.name + " (Kopie)";
-            this.collID = $scope.collID;
-            this.creator = sharedLogin.getUsername();
-            this.timeOfCreation = Date.now();
-            this.lastModifiedBy = sharedLogin.getUsername();
-            this.timeOfLastModification = this.timeOfCreation;
-            this.dimensions = collID.dimensions;
-        }
-
-        /**
          * Erstellt eine Kopie der Ansicht, welche ausgewählt ist
          * 
          * @param collID Die ID des Datensatzes, der ausgewählt ist
          */
-        $scope.copyView = function (collID) {
-            var newView = new ViewCopy(collID);
+        $scope.copyView = function(view) {
+            var newView = new View();
+            
+            newView = $scope.chosenView;
+            newView._id = Date.now().toString();
+            newView.name = view.name + " (Kopie)";
+            newView.timeOfCreation = Date.now();
+            newView.timeOfLastModification = newView.timeOfCreation;
+            
             var url = baseurl + '/einstellungen/ansichten/' + newView.timeOfCreation;
-            $http.put(url, newView).then(function (response) {
+            $http.put(url, newView).then(function(response) {
                 $scope.getViews();
                 console.log(response);
             });
