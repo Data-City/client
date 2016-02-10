@@ -404,7 +404,7 @@ angular.module('datacityApp')
             stages.push(AGGR.createLimitStage(AGGR.MAX_DOCUMENTS_FOR_AGGREGATION));
             stages.push(AGGR.projectStage(view.attributes));
             stages.push(AGGR.matchStage(view.attributes));
-            if(view.useGrouping == 1) {
+            if(view.useGrouping === 1) {
                stages = stages.concat(AGGR.groupingStage(view.grouping));
             }
             
