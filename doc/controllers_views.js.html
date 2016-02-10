@@ -53,6 +53,8 @@ angular.module('datacityApp')
 
         var WEBGL_DIV = SETTINGS.WEBGL_DIV;
 
+        $scope.mongoDbAggr = null;
+
         /**
          *  Konstruktor für eine Ansicht
          */
@@ -197,63 +199,65 @@ angular.module('datacityApp')
         ];
 
         /**
-         * Setzt die Daten, damit die WebGL-Stadt gezeichnet werden kann
+         * Prüft die Eingaben, stellt die Daten zusammen und veranlasst das Zeichnen der Stadt mit WebGL
          */
         $scope.drawCity = function() {
             var view = $scope.chosenView;
-            var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data" + "_" + view._id;
-            //   var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
 
-            //Fehlermeldungen, falls eine Option vom Nutzer nicht ausgewählt wurde
-            var validate = true;
-
+            // Korrekte Blockeinstellungen
             for (var key in view.districts) {
                 if (view.districts[key].field === null) {
-                    validate = false;
                     window.alert("Schritt 3: \nEs wurden eine oder mehrere Blöcke hinzugefügt, aber keine Einstellungen vorgenommen!");
-                    break;
+                    return false;
                 }
             }
-
             if (view.districts[0] === undefined &amp;&amp; view.districtType === "2") {
-                validate = false;
                 window.alert("Schritt 3: \nBei der Blockbildung wurde Option 3 festgelegt, aber keine Blöcke ausgewählt. \nFalls Sie keine Blockbildung möchten, bitte wählen Sie Option 1");
+                return false;
             }
 
+            // Korrekte Dimensionen
             if (!view.dimensionSettings || !view.dimensionSettings.area || !view.dimensionSettings.color || !view.dimensionSettings.height || !view.dimensionSettings.name) {
-                validate = false;
                 window.alert("Schritt 4: \nEs wurden eine oder mehr Dimensionen nicht ausgewählt!");
+                return false;
             }
 
-            if (validate) {
-                $scope.createAggregationForDisplay(function(response) {
-                    REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data" + "_" + view._id, function(response) {
-                        REST.getURL(relUrl, null, function(collection) {
-                            view.numberOfEntries = $scope.collection.data._returned;
-                            view.dimensions.name = {
-                                name: view.dimensionSettings.name.name
-                            };
-                            view.metaData = $scope.chosenView.metaData;
-                            view.dimensions.height = view.dimensionSettings.height.name;
-                            view.dimensions.area = view.dimensionSettings.area.name;
-                            view.dimensions.color = view.dimensionSettings.color.name;
-                            view.buildingcolor = SETTINGS.farbefuerGebauede;
+            // Spinner anzeigen
+            $scope.loader = true;
 
-                            if (view.metaData.connectionsAvailable === "true") {
-                                REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
-                                    REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
-                                        var incomingConnections = incoming.data._embedded['rh:doc'][0];
-                                        var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
-                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
-                                    });
+            $scope.createAggregationForDisplay(function(response) {
+                REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data_" + view._id, function(response) {
+
+                    var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
+                    REST.getURL(relUrl, null, function(collection) {
+                        view.numberOfEntries = $scope.collection.data._returned;
+                        view.dimensions.name = {
+                            name: view.dimensionSettings.name.name
+                        };
+                        view.metaData = $scope.chosenView.metaData;
+                        view.dimensions.height = view.dimensionSettings.height.name;
+                        view.dimensions.area = view.dimensionSettings.area.name;
+                        view.dimensions.color = view.dimensionSettings.color.name;
+                        view.buildingcolor = SETTINGS.farbefuerGebauede;
+                        // AUSKOMMENTIEREN! NUR DEBUG
+                        //$scope.loader = false;
+
+                        if (view.metaData.connectionsAvailable === "true") {
+                            REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
+                                REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
+                                    var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                                    var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
+                                    drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
+                                    $scope.loader = false;
                                 });
-                            } else {
-                                drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
-                            }
-                        });
+                            });
+                        } else {
+                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
+                            $scope.loader = false;
+                        }
                     });
                 });
-            }
+            });
         };
 
         /**
@@ -314,10 +318,12 @@ angular.module('datacityApp')
          * Initialisierung
          */
         if ($routeParams.collID) {
+            $scope.loader = true;
             $scope.collID = $routeParams.collID;
             $scope.getViews();
             REST.getDocuments(dbWithCollections, $scope.collID, function(resp) {
                 $scope.collection = resp;
+                $scope.loader = false;
             });
         }
 
@@ -365,26 +371,19 @@ angular.module('datacityApp')
         };
 
         /**
-         * Konstruktor für eine Kopie einer neuen Ansicht
-         * Übernimmt die ausgewählten Dimensionsn der alten Ansicht, jedoch mit anderen Namen, Ersteller, Datum etc
-         */
-        function ViewCopy(collID) {
-            this.name = collID.name + " (Kopie)";
-            this.collID = $scope.collID;
-            this.creator = sharedLogin.getUsername();
-            this.timeOfCreation = Date.now();
-            this.lastModifiedBy = sharedLogin.getUsername();
-            this.timeOfLastModification = this.timeOfCreation;
-            this.dimensions = collID.dimensions;
-        }
-
-        /**
          * Erstellt eine Kopie der Ansicht, welche ausgewählt ist
          * 
          * @param collID Die ID des Datensatzes, der ausgewählt ist
          */
-        $scope.copyView = function(collID) {
-            var newView = new ViewCopy(collID);
+        $scope.copyView = function(view) {
+            var newView = new View();
+
+            newView = $scope.chosenView;
+            newView._id = Date.now().toString();
+            newView.name = view.name + " (Kopie)";
+            newView.timeOfCreation = Date.now();
+            newView.timeOfLastModification = newView.timeOfCreation;
+
             var url = baseurl + '/einstellungen/ansichten/' + newView.timeOfCreation;
             $http.put(url, newView).then(function(response) {
                 $scope.getViews();
@@ -433,11 +432,14 @@ angular.module('datacityApp')
             stages.push(AGGR.createLimitStage(AGGR.MAX_DOCUMENTS_FOR_AGGREGATION));
             stages.push(AGGR.projectStage(view.attributes));
             stages.push(AGGR.matchStage(view.attributes));
-
-            if (view.districts.length > 0) {
-                stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
+            if (view.useGrouping === 1) {
+                stages = stages.concat(AGGR.groupingStage(view.grouping));
             }
+
+            stages = stages.concat(AGGR.createDistrictAggregationStages(view.districts, view.attributes));
+
             var aggr = AGGR.buildAggregationPipe(view.collID, stages, view._id);
+            //$scope.mongoDbAggr = aggr;
             aggr = AGGR.mongoDBCodeToRESTHeart(aggr);
             REST.addAggregation(dbWithCollections, view.collID, aggr, function(response) {
                 if (fn) {
@@ -469,7 +471,7 @@ angular.module('datacityApp')
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Feb 05 2016 15:51:43 GMT+0100 (Mitteleuropäische Zeit)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Feb 10 2016 17:14:27 GMT+0100 (Mitteleuropäische Zeit)
 </footer>
 
 <script> prettyPrint(); </script>

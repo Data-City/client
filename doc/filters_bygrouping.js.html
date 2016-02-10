@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: controllers/settings.js</title>
+    <title>JSDoc: Source: filters/bygrouping.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: controllers/settings.js</h1>
+    <h1 class="page-title">Source: filters/bygrouping.js</h1>
 
     
 
@@ -29,45 +29,32 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 
 /**
- * @ngdoc function
- * @name datacityApp.controller:SettingsCtrl
+ * @ngdoc filter
+ * @name datacityApp.filter:bygrouping
+ * @function
  * @description
- * # SettingsCtrl
- * Controller of the datacityApp
+ * # bygrouping
+ * Filter in the datacityApp.
  */
 angular.module('datacityApp')
-    .constant('SETTINGS', {
-        databaseForCollections: "prelife",
-        databaseForViews: "einstellungen",
-        collection: "ansichten",
-        baseurl: "https://pegenau.com:16392",
-        farbefuerGebauede: "0x0000FF",
-
-        //Standard-Passwort und Standard-Benutzername für die MongoDB
-        benutzername: "a",
-        passwort: "a",
-
-        // Max. 16MB bei BSON in Aggregation 
-        max_docs_per_aggregation: 100000,
-
-        // Ab hier sollten eigentlich keine Änderungen nötig sein
-        WEBGL_DIV: 'Stadt',
-        meta_data_part: '_dc_',
-        meta_data_suffix: 'maxminavg',
-        aggregation_suffix: 'aggregation',
-        data_suffix: 'data',
+    .filter('bygrouping', function($log) {
+        return function(input, useGrouping, grouping) {
+            // Keine Gruppierung => Alles zurück
+            if (!useGrouping) {
+                return input;
+            }
+            // Gruppierung => Filtern
+            else {
+                var output = [];
+                input.forEach(function(element) {
+                    if (grouping.field.name === element.name || grouping.attrs[element.name]) {
+                        output.push(element); // mitnehmen
+                    }
+                });
+                return output;
+            }
+        };
     });
-
-/*
-var databaseForCollections = "prelife";
-var databaseForViews = "einstellungen";
-var collection = "ansichten";
-var baseurl = "https://pegenau.com:16392";
-
-var WEBGL_DIV = 'Stadt';
-
-var dbWithCollections = "prelife";
-*/
 </code></pre>
         </article>
     </section>
