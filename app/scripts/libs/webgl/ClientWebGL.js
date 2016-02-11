@@ -193,7 +193,9 @@ window.addEventListener("keyup", function(e) {
 function createMainDistrict(data, association) {
     var district = {};
     var splitString, currentDistrict;
-    for (var i = 0; i < data.length; i++) {
+    
+    var length = data.length;
+    for (var i = length; i--;) {
         currentDistrict = district;
         splitString = data[i][association.name].toString().split(".");
         for (var j = 0; j < splitString.length - 1; j++) {
@@ -221,14 +223,16 @@ function getMainDistrictFromJSON(aDistrict) {
     var toReturn = {
         buildings: []
     };
+    var buildings = toReturn.buildings;
     for (var x in aDistrict) {
         if (x == "buildings") {
-            for (var i = 0; i < aDistrict.buildings.length; i++) {
-                toReturn.buildings.push(aDistrict.buildings[i]);
+            var length = aDistrict.buildings.length;
+            for (var i = length; i--;) {
+                buildings.push(aDistrict.buildings[i]);
             }
         } else {
-            toReturn.buildings.push(getMainDistrictFromJSON(aDistrict[x]));
-            toReturn.buildings[toReturn.buildings.length - 1].name = x;
+            buildings.push(getMainDistrictFromJSON(aDistrict[x]));
+            buildings[toReturn.buildings.length - 1].name = x;
         }
     }
     return toReturn
@@ -369,8 +373,10 @@ function setSpecificView(aJson) {
 
     var hashMap = getBuildingsHashMap();
 
-    for (var j = 0; j < aJson.removedBuildings.length; j++) {
-        remove(hashMap[aJson.removedBuildings[j]].mesh);
+    var buildings = aJson.removedBuildings;
+    var length = buildings.length;
+    for (var j = length; j--;) {
+        remove(hashMap[buildings[j]].mesh);
     }
 
     setScalingBooleans(aJson.scaling);

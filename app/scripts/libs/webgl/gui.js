@@ -63,17 +63,20 @@ function highlightBuilding(buildingID) {
 function showBuilding() {
     if (highlightedBuildingID != undefined) {
         var hashMap = getBuildingsHashMap();
-        getControls().target.x = hashMap[highlightedBuildingID]._centerPosition[0];
-        getControls().target.y = hashMap[highlightedBuildingID]._centerPosition[1];
-        getControls().target.z = hashMap[highlightedBuildingID]._centerPosition[2];
-        if (hashMap[highlightedBuildingID].buildings == undefined) {
-            camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0],
-                hashMap[highlightedBuildingID]._centerPosition[1] + 10 * Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width),
-                hashMap[highlightedBuildingID]._centerPosition[2] + 10 * Math.min(hashMap[highlightedBuildingID]._height, hashMap[highlightedBuildingID]._width));
+        
+        var b = hashMap[highlightedBuildingID];
+        getControls().target.x = b._centerPosition[0];
+        getControls().target.y = b._centerPosition[1];
+        getControls().target.z = b._centerPosition[2];
+        if (b.buildings == undefined) {
+            var min = 10 * Math.min(b._height, b._width);
+            camera.position.set(b._centerPosition[0],
+                b._centerPosition[1] + min,
+                b._centerPosition[2] + min);
         } else {
-            camera.position.set(hashMap[highlightedBuildingID]._centerPosition[0],
-                hashMap[highlightedBuildingID]._centerPosition[1] + 1.5 * hashMap[highlightedBuildingID]._width,
-                hashMap[highlightedBuildingID]._centerPosition[2] + 1.5 * hashMap[highlightedBuildingID]._width);
+            camera.position.set(b._centerPosition[0],
+                b._centerPosition[1] + 1.5 * b._width,
+                b._centerPosition[2] + 1.5 * b._width);
         }
         camera.rotation.set(0, 0, 0);
     }
@@ -137,11 +140,14 @@ function setClickedGardens(aJson) {
  *@param: scene: die scene, der die Box hinzugefuegt werden soll
  */
 function drawBox(aBuilding, material, scene) {
-    var geometry = new THREE.BoxGeometry(aBuilding._width, aBuilding._height, aBuilding._width);
+    var cP = aBuilding._centerPosition;
+    var width = aBuilding._width;
+    var geometry = new THREE.BoxGeometry(width, aBuilding._height, width);
     var cube = new THREE.Mesh(geometry, material);
-    cube.position.x = aBuilding._centerPosition[0];
-    cube.position.y = aBuilding._centerPosition[1];
-    cube.position.z = aBuilding._centerPosition[2];
+    var pos = cube.position;
+    pos.x = cP[0];
+    pos.y = cP[1];
+    pos.z = cP[2];
     cube.building = aBuilding;
     aBuilding.mesh = cube;
     //if (aBuilding._isRemoved == false) {
@@ -155,7 +161,7 @@ function drawBox(aBuilding, material, scene) {
  *@return: das Material in der gewuenschten Farbe
  */
 function getMaterial(aColor) {
-    var material = new THREE.MeshPhongMaterial({
+    return new THREE.MeshPhongMaterial({
         color: aColor,
         //specular: 0x333333,
         //shininess: 50,
@@ -163,7 +169,6 @@ function getMaterial(aColor) {
         vertexColors: THREE.VertexColors,
         shading: THREE.SmoothShading
     });
-    return material;
 }
 
 /**
@@ -232,8 +237,10 @@ function goToInitialView() {
 function addCityToScene(mainDistrict, scene, camera) {
     var extrema = getExtrema();
     // nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
-    for (var i = 0; i < mainDistrict["buildings"].length; i++) {
-        addEachDistrict(mainDistrict["buildings"][i], scene, extrema, 0);
+    var buildings = mainDistrict["buildings"];
+    var length = buildings.length;
+    for (var i = length; i--;) {
+        addEachDistrict(buildings[i], scene, extrema, 0);
     }
     //Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
     mainDistrict._centerPosition[1] = -1.5;
@@ -258,17 +265,19 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
         addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene);
         addGarden(aDistrict, scene);
     } else {
+        var buildings = aDistrict["buildings"];
+        var length = buildings.length;
         if (colorBoolean == 0) {
             addBoxes(0xDBDBDC, aDistrict, scene);
             addGarden(aDistrict, scene);
-            for (var j = 0; j < aDistrict["buildings"].length; j++) {
-                addEachDistrict(aDistrict["buildings"][j], scene, extrema, 1);
+            for (var j = length; j--;) {
+                addEachDistrict(buildings[j], scene, extrema, 1);
             }
         } else {
             addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
             addGarden(aDistrict, scene);
-            for (var j = 0; j < aDistrict["buildings"].length; j++) {
-                addEachDistrict(aDistrict["buildings"][j], scene, extrema, 0);
+            for (var j = length; j--;) {
+                addEachDistrict(buildings[j], scene, extrema, 0);
             }
         }
     }
@@ -284,16 +293,17 @@ function addGarden(aBuilding, scene) {
     var gardens = ["_leftGarden", "_rightGarden"];
     for (var i = 0; i < 2; i++) {
         if (aBuilding[gardens[i]].color > 0) {
-            var factor = getColorFactor(getExtrema(), aBuilding[gardens[i]].color, "SumOfConn");
+            var garden = aBuilding[gardens[i]];
+            var factor = getColorFactor(getExtrema(), garden.color, "SumOfConn");
             var gardenMaterial = getMaterial(new THREE.Color(1 - factor, 1, 1 - factor));
             gardenMaterial.name = "garden";
-            var geometry = new THREE.CylinderGeometry(aBuilding[gardens[i]]._width / 2, aBuilding[gardens[i]]._width / 2, aBuilding[gardens[i]]._height, 3, 1, false, i * Math.PI);
+            var geometry = new THREE.CylinderGeometry(garden._width / 2, garden._width / 2, garden._height, 3, 1, false, i * Math.PI);
             var cube = new THREE.Mesh(geometry, gardenMaterial);
-            cube.position.x = aBuilding[gardens[i]]._centerPosition[0];
-            cube.position.y = aBuilding[gardens[i]]._centerPosition[1];
-            cube.position.z = aBuilding[gardens[i]]._centerPosition[2];
-            cube.garden = aBuilding[gardens[i]];
-            aBuilding[gardens[i]].mesh = cube;
+            cube.position.x = garden._centerPosition[0];
+            cube.position.y = garden._centerPosition[1];
+            cube.position.z = garden._centerPosition[2];
+            cube.garden = garden;
+            garden.mesh = cube;
             //if (aBuilding._isRemoved == false) {
             scene.add(cube);
             //}
@@ -376,15 +386,19 @@ function workUpGarden(aGarden, destGarden, curveObject) {
  *@param: updateBoolean: true, wenn sie von einer Methode aus gui.js aufgerufen wurde, sonst false
  */
 function removeLines(aGarden, updateBoolean) {
+    var gardenString;
     if (aGarden.isLeftGarden == true) {
-        var gardenString = "_rightGarden";
+        gardenString = "_rightGarden";
     } else {
-        var gardenString = "_leftGarden";
+        gardenString = "_leftGarden";
     }
     var hashMap = getBuildingsHashMap();
+    
+    
     for (var x in aGarden.meshLines) {
         if (hashMap[x][gardenString].on == false) {
-            for (var i = 0; i < aGarden.meshLines[x].length; i++) {
+            var length = aGarden.meshLines[x].length;
+            for (var i = length; i--;) {
                 scene.remove(aGarden.meshLines[x][i]);
             }
         }
@@ -415,9 +429,12 @@ function addBoxes(aColor, aBuilding, scene) {
  *@param: extrema: Extremwerte vom District
  */
 function setCameraPos(camera, mainDistrict, extrema) {
-    camera.position.x = Math.max(mainDistrict._width, extrema.maxHeight);
-    camera.position.y = Math.max(mainDistrict._width, extrema.maxHeight) / 2;
-    camera.position.z = Math.max(mainDistrict._width, extrema.maxHeight) * 1.5;
+    var maxWidth = mainDistrict._width;
+    var maxHeight = extrema.maxHeight;
+    var position = camera.position;
+    position.x = Math.max(maxWidth, maxHeight);
+    position.y = Math.max(maxWidth, maxHeight) / 2;
+    position.z = Math.max(maxWidth, maxHeight) * 1.5;
 }
 
 /**
@@ -492,11 +509,12 @@ function onDocumentMouseDown(event) {
             }
         } else {
             if (intersects[0].object.building != undefined) {
+                var b = intersects[0].object.building;
                 changeBuildingInformation(
-                    intersects[0].object.building[association["height"]],
-                    intersects[0].object.building[association["width"]],
-                    intersects[0].object.building[association["color"]],
-                    intersects[0].object.building[association["name"]],
+                    b[association["height"]],
+                    b[association["width"]],
+                    b[association["color"]],
+                    b[association["name"]],
                     intersects[0].object
                 );
             }

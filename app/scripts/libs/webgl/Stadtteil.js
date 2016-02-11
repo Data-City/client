@@ -126,17 +126,21 @@ function setNextLinePosForNextPackage(aGarden) {
  * @param: aBuilding: ein Gebaeude oder District
  */
 function setGardenPos(aBuilding) {
-    aBuilding._rightGarden._centerPosition[0] = aBuilding._centerPosition[0] + aBuilding._rightGarden._width / 2 - aBuilding._rightGarden.radius / 2;
-    aBuilding._rightGarden._centerPosition[1] = aBuilding._centerPosition[1] - aBuilding._height / 2 + 0.05;
-    aBuilding._rightGarden._centerPosition[2] = aBuilding._centerPosition[2] + 1 + aBuilding._rightGarden.radius + aBuilding._width / 2;
-    aBuilding._leftGarden._centerPosition[0] = aBuilding._centerPosition[0] - aBuilding._leftGarden._width / 2;
-    aBuilding._leftGarden._centerPosition[1] = aBuilding._centerPosition[1] - aBuilding._height / 2 + 0.05;
-    aBuilding._leftGarden._centerPosition[2] = aBuilding._centerPosition[2] + 1 + aBuilding._leftGarden.depth - aBuilding._leftGarden.radius + aBuilding._width / 2;
+    var right = aBuilding._rightGarden;
+    var left = aBuilding._leftGarden;
+    var cP = aBuilding._centerPosition;
 
-    aBuilding._leftGarden.nextLinePos[0] = aBuilding._leftGarden._centerPosition[0] - aBuilding._leftGarden._width / 2 + 1;
-    aBuilding._leftGarden.nextLinePos[1] = aBuilding._leftGarden._centerPosition[2] - (aBuilding._leftGarden.depth - aBuilding._leftGarden.radius) + 1;
-    aBuilding._rightGarden.nextLinePos[0] = aBuilding._rightGarden._centerPosition[0] - aBuilding._rightGarden._width / 2 + 1;
-    aBuilding._rightGarden.nextLinePos[1] = aBuilding._rightGarden._centerPosition[2] + (aBuilding._rightGarden.depth - aBuilding._rightGarden.radius) - 1;
+    right._centerPosition[0] = cP[0] + right._width / 2 - right.radius / 2;
+    right._centerPosition[1] = cP[1] - aBuilding._height / 2 + 0.05;
+    right._centerPosition[2] = cP[2] + 1 + right.radius + aBuilding._width / 2;
+    left._centerPosition[0] = cP[0] - left._width / 2;
+    left._centerPosition[1] = cP[1] - aBuilding._height / 2 + 0.05;
+    left._centerPosition[2] = cP[2] + 1 + left.depth - left.radius + aBuilding._width / 2;
+
+    left.nextLinePos[0] = left._centerPosition[0] - left._width / 2 + 1;
+    left.nextLinePos[1] = left._centerPosition[2] - (left.depth - left.radius) + 1;
+    right.nextLinePos[0] = right._centerPosition[0] - right._width / 2 + 1;
+    right.nextLinePos[1] = right._centerPosition[2] + (right.depth - right.radius) - 1;
 }
 
 
@@ -148,10 +152,13 @@ function setGardenPos(aBuilding) {
  */
 function setMainDistrict(mainDistrict, namePrefix) {
     if (mainDistrict["buildings"] != undefined) {
-        for (var i = 0; i < mainDistrict["buildings"].length; i++) {
-            setMainDistrict(mainDistrict["buildings"][i], namePrefix + mainDistrict.buildings[i].name + ".");
-            if (mainDistrict["buildings"][i]["buildings"] != undefined) {
-                setOneDistrict(mainDistrict["buildings"][i]);
+        var buildings = mainDistrict["buildings"];
+        var length = buildings.length;
+        for (var i = length; i--;) {
+            var b = buildings[i];
+            setMainDistrict(b, namePrefix + b.name + ".");
+            if (b["buildings"] != undefined) {
+                setOneDistrict(b);
             }
         }
         setOneDistrict(mainDistrict, namePrefix);
@@ -164,14 +171,19 @@ function setMainDistrict(mainDistrict, namePrefix) {
  */
 function shiftBack(mainDistrict) {
     if (mainDistrict.buildings != undefined) {
-        for (var i = 0; i < mainDistrict.buildings.length; i++) {
+        var buildings = mainDistrict.buildings;
+        var width = mainDistrict._width;
+
+        var length = mainDistrict.buildings.length;
+        for (var i = length; i--;) {
+            var b = buildings[i];
             setCenterPosition(
-                mainDistrict.buildings[i],
-                mainDistrict.buildings[i]._centerPosition[0] - mainDistrict._width / 2,
-                mainDistrict.buildings[i]._centerPosition[1] + 1.5,
-                mainDistrict.buildings[i]._centerPosition[2] - mainDistrict._width / 2
-            );
-            shiftBack(mainDistrict.buildings[i]);
+                b,
+                b._centerPosition[0] - width / 2,
+                b._centerPosition[1] + 1.5,
+                b._centerPosition[2] - width / 2
+                );
+            shiftBack(b);
         }
     }
     setGardenPos(mainDistrict);
@@ -185,12 +197,12 @@ function shiftBack(mainDistrict) {
  */
 function sortBuildings(aDistrict, namePrefix) {
     aDistrict["buildings"].sort(
-        function(building1, building2) {
+        function (building1, building2) {
             initBuilding(building1, namePrefix);
             initBuilding(building2, namePrefix);
             return (getLandWidth(building2) - getLandWidth(building1));
         }
-    );
+        );
     return aDistrict;
 }
 
@@ -201,12 +213,13 @@ function sortBuildings(aDistrict, namePrefix) {
  */
 function initBuilding(aBuilding, namePrefix) {
     if (aBuilding._height == undefined) {
-        var stringarray = ["height", "width", "color"];
-        for (var i = 0; i < stringarray.length; i++) {
-            if (aBuilding[association[stringarray[i]]] != undefined && aBuilding[association[stringarray[i]]] != "") {
-                aBuilding["_" + stringarray[i]] = parseFloat(aBuilding[association[stringarray[i]]]) + 1.5;
+        var dimensions = ["height", "width", "color"];
+        for (var i = 3; i--;) {
+            var dim = dimensions[i];
+            if (aBuilding[association[dim]] != undefined && aBuilding[association[dim]] != "") {
+                aBuilding["_" + dim] = parseFloat(aBuilding[association[dim]]) + 1.5;
             } else {
-                aBuilding["_" + stringarray[i]] = 1.5;
+                aBuilding["_" + dim] = 1.5;
             }
         }
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
@@ -236,7 +249,9 @@ function setOneDistrict(aDistrict, namePrefix) {
     initBuilding(aDistrict, namePrefix);
     aDistrict = sortBuildings(aDistrict, namePrefix); //zunaechst muessen wir das gebaudearray sortieren absteigend nach der Breite der Boxen
     setFirstBuilding(aDistrict, namePrefix); //Initialisiert globale Variablen
-    for (var i = 1; i < arrayOfBuildings.length; i++) {
+    
+    var length = arrayOfBuildings.length;
+    for (var i = 1; i < length; i++) {
         initBuilding(arrayOfBuildings[i], namePrefix);
         if (buildingInZDirection == true) { //wenn wir gerade in Z-Richtung bauen
 
@@ -277,13 +292,20 @@ function setOneDistrict(aDistrict, namePrefix) {
  */
 function setCenterPosition(aDistrict, newX, newY, newZ) {
     if (aDistrict["buildings"] != undefined) {
-        for (var i = 0; i < aDistrict["buildings"].length; i++) {
+        var buildings = aDistrict["buildings"];
+        var x = aDistrict._centerPosition[0];
+        var y = aDistrict._centerPosition[1];
+        var z = aDistrict._centerPosition[2];
+
+        var length = buildings.length;
+        for (var i = 0; i < length; i++) {
+            var b = buildings[i];
             setCenterPosition(
-                aDistrict["buildings"][i],
-                aDistrict["buildings"][i]._centerPosition[0] + newX - aDistrict._centerPosition[0],
-                aDistrict["buildings"][i]._centerPosition[1] + newY - aDistrict._centerPosition[1],
-                aDistrict["buildings"][i]._centerPosition[2] + newZ - aDistrict._centerPosition[2]
-            );
+                b,
+                b._centerPosition[0] + newX - x,
+                b._centerPosition[1] + newY - y,
+                b._centerPosition[2] + newZ - z
+                );
 
         }
     }
@@ -296,9 +318,13 @@ function setCenterPosition(aDistrict, newX, newY, newZ) {
  * @return: Breite des Grundstuecks, das zum i-ten Gebaeude gehoert
  */
 function getLandWidth(aBuilding) {
-    return Math.max(aBuilding._width + 1 + aBuilding._leftGarden.depth,
-        aBuilding._width + 1 + aBuilding._rightGarden.depth,
-        aBuilding._leftGarden._width + aBuilding._rightGarden._width + 2);
+    var width = aBuilding._width;
+    var left = aBuilding._leftGarden;
+    var right = aBuilding._rightGarden;
+
+    return Math.max(width + 1 + left.depth,
+        width + 1 + right.depth,
+        left._width + right._width + 2);
 }
 
 
@@ -307,11 +333,13 @@ function getLandWidth(aBuilding) {
  * @param: i: i-te Eintrag in arrayOfBuildings
  */
 function getXPosOfBuildingsFromLeft(i) {
-    return Math.max(arrayOfBuildings[i]._width / 2, arrayOfBuildings[i]._leftGarden._width + 1);
+    var b = arrayOfBuildings[i];
+    return Math.max(b._width / 2, b._leftGarden._width + 1);
 }
 
 function getXPosOfBuildingsFromRight(i) {
-    return Math.max(arrayOfBuildings[i]._width / 2, arrayOfBuildings[i]._rightGarden._width + 1);
+    var b = arrayOfBuildings[i];
+    return Math.max(b._width / 2, b._rightGarden._width + 1);
 }
 
 
@@ -322,14 +350,16 @@ function getXPosOfBuildingsFromRight(i) {
  */
 function setFirstBuilding(aDistrict, namePrefix) {
     arrayOfBuildings = aDistrict["buildings"];
-    initBuilding(arrayOfBuildings[0], namePrefix);
+    
+    var b = arrayOfBuildings[0];
+    initBuilding(b, namePrefix);
     //Setzen des ersten Elements
     setCenterPosition(
-        arrayOfBuildings[0],
-        gap + getXPosOfBuildingsFromLeft(0), (arrayOfBuildings[0]._height) / 2,
-        gap + (arrayOfBuildings[0]._width) / 2
-    );
-    maxWidth = 2 * gap + getLandWidth(arrayOfBuildings[0]); // hier startet man, in X-Richtung zu bauen
+        b,
+        gap + getXPosOfBuildingsFromLeft(0), (b._height) / 2,
+        gap + (b._width) / 2
+        );
+    maxWidth = 2 * gap + getLandWidth(b); // hier startet man, in X-Richtung zu bauen
     maxDepth = maxWidth; // baut man in Z-Richtung höher als maxDepth, muss man woanders eine neue Reihe starten
     startToBuildInXDirection = maxWidth - gap; // hier startet man, in X-Richtung zu bauen
     startToBuildInZDirection = gap; // hier startet man, in Z-Richtung zu bauen
@@ -356,16 +386,17 @@ function setFirstBuilding(aDistrict, namePrefix) {
  * @param: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
  */
 function continueBuildingInXDirection(i) {
+    var b = arrayOfBuildings[i];
     //bauen wir weiter in x-Richtung
-    setCenterPosition(arrayOfBuildings[i],
-        startToBuildInXDirection - getXPosOfBuildingsFromRight(i), (arrayOfBuildings[i]._height) / 2,
-        maxDepth + (1 / 2) * arrayOfBuildings[i]._width);
-    width = Math.max(startToBuildInZDirection, maxDepth + getLandWidth(arrayOfBuildings[i]), maxWidth + extension);
+    setCenterPosition(b,
+        startToBuildInXDirection - getXPosOfBuildingsFromRight(i), (b._height) / 2,
+        maxDepth + (1 / 2) * b._width);
+    width = Math.max(startToBuildInZDirection, maxDepth + getLandWidth(b), maxWidth + extension);
     buildingInZDirection = false;
     maxWidth = maxWidth + extension;
-    extension = getLandWidth(arrayOfBuildings[i]) + gap;
+    extension = getLandWidth(b) + gap;
     startToBuildInZDirection = gap;
-    startToBuildInXDirection = startToBuildInXDirection - getLandWidth(arrayOfBuildings[i]) - gap;
+    startToBuildInXDirection = startToBuildInXDirection - getLandWidth(b) - gap;
 
 }
 
@@ -376,13 +407,14 @@ function continueBuildingInXDirection(i) {
  * @params: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
  */
 function buildANewBuildingRowOnTheRightInZDirection(i) {
+    var b = arrayOfBuildings[i];
     // Dann fangen wir rechts von der letzten Gebaeudereihe an, eine neue Gebaeudereihe aufzubauen
-    setCenterPosition(arrayOfBuildings[i],
-        maxWidth + extension + getXPosOfBuildingsFromLeft(i), (arrayOfBuildings[i]._height) / 2, (1 / 2) * arrayOfBuildings[i]._width + gap);
+    setCenterPosition(b,
+        maxWidth + extension + getXPosOfBuildingsFromLeft(i), (b._height) / 2, (1 / 2) * b._width + gap);
     width = Math.max(startToBuildInZDirection, maxWidth + extension);
     maxWidth = maxWidth + extension;
-    extension = getLandWidth(arrayOfBuildings[i]) + gap;
-    startToBuildInZDirection = getLandWidth(arrayOfBuildings[i]) + gap * 2;
+    extension = getLandWidth(b) + gap;
+    startToBuildInZDirection = getLandWidth(b) + gap * 2;
 }
 
 
@@ -392,10 +424,11 @@ function buildANewBuildingRowOnTheRightInZDirection(i) {
  * @param: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
  */
 function continueBuildingNormallyInZDirection(i, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
-    setCenterPosition(arrayOfBuildings[i],
-        maxWidth + getXPosOfBuildingsFromLeft(i), (arrayOfBuildings[i]._height) / 2,
-        startToBuildInZDirection + (1 / 2) * arrayOfBuildings[i]._width);
-    startToBuildInZDirection = startToBuildInZDirection + getLandWidth(arrayOfBuildings[i]) + gap;
+    var b = arrayOfBuildings[i];
+    setCenterPosition(b,
+        maxWidth + getXPosOfBuildingsFromLeft(i), (b._height) / 2,
+        startToBuildInZDirection + (1 / 2) * b._width);
+    startToBuildInZDirection = startToBuildInZDirection + getLandWidth(b) + gap;
     width = Math.max(startToBuildInZDirection, maxWidth + extension, maxDepth);
 }
 
@@ -406,11 +439,12 @@ function continueBuildingNormallyInZDirection(i, nodesOfStreetsSortByXCoord, nod
  * @param: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
  */
 function continueBuildingNormallyInXDirection(i) {
-    setCenterPosition(arrayOfBuildings[i],
-        startToBuildInXDirection - getXPosOfBuildingsFromRight(i), (arrayOfBuildings[i]._height) / 2,
-        maxDepth + (1 / 2) * arrayOfBuildings[i]._width);
+    var b = arrayOfBuildings[i];
+    setCenterPosition(b,
+        startToBuildInXDirection - getXPosOfBuildingsFromRight(i), (b._height) / 2,
+        maxDepth + (1 / 2) * b._width);
     width = Math.max(maxDepth + extension, maxWidth);
-    startToBuildInXDirection = startToBuildInXDirection - getLandWidth(arrayOfBuildings[i]) - gap;
+    startToBuildInXDirection = startToBuildInXDirection - getLandWidth(b) - gap;
 
 }
 
@@ -422,12 +456,13 @@ function continueBuildingNormallyInXDirection(i) {
  * @param: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
  */
 function buildAgainDownOnTheRightInZDirection(i) {
-    setCenterPosition(arrayOfBuildings[i],
-        maxWidth + getXPosOfBuildingsFromLeft(i), (arrayOfBuildings[i]._height) / 2, (1 / 2) * arrayOfBuildings[i]._width + gap);
+    var b = arrayOfBuildings[i];
+    setCenterPosition(b,
+        maxWidth + getXPosOfBuildingsFromLeft(i), (b._height) / 2, (1 / 2) * b._width + gap);
     maxDepth = maxDepth + extension;
-    startToBuildInZDirection = getLandWidth(arrayOfBuildings[i]) + gap + 2 * gap;
+    startToBuildInZDirection = getLandWidth(b) + gap + 2 * gap;
     startToBuildInXDirection = maxWidth - gap;
-    extension = getLandWidth(arrayOfBuildings[i]) + gap;
+    extension = getLandWidth(b) + gap;
     buildingInZDirection = true;
     lastMaxWidth = maxWidth - 2 * gap;
     width = Math.max(maxWidth + extension, maxDepth);
@@ -441,13 +476,14 @@ function buildAgainDownOnTheRightInZDirection(i) {
  * @param: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
  */
 function buildANewRowOnTheTopInXDirection(i) {
+    var b = arrayOfBuildings[i];
     startToBuildInXDirection = lastMaxWidth + 2 * gap;
     maxDepth = maxDepth + extension;
-    extension = getLandWidth(arrayOfBuildings[i]) + gap;
-    setCenterPosition(arrayOfBuildings[i],
-        startToBuildInXDirection - getXPosOfBuildingsFromRight(i), (arrayOfBuildings[i]._height) / 2,
-        maxDepth + (1 / 2) * arrayOfBuildings[i]._width);
-    startToBuildInXDirection = startToBuildInXDirection - getLandWidth(arrayOfBuildings[i]) - gap;
+    extension = getLandWidth(b) + gap;
+    setCenterPosition(b,
+        startToBuildInXDirection - getXPosOfBuildingsFromRight(i), (b._height) / 2,
+        maxDepth + (1 / 2) * b._width);
+    startToBuildInXDirection = startToBuildInXDirection - getLandWidth(b) - gap;
     width = Math.max(maxWidth, maxDepth + extension);
 
 }
