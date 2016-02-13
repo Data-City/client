@@ -63,7 +63,7 @@ function highlightBuilding(buildingID) {
 function showBuilding() {
     if (highlightedBuildingID != undefined) {
         var hashMap = getBuildingsHashMap();
-        
+
         var b = hashMap[highlightedBuildingID];
         getControls().target.x = b._centerPosition[0];
         getControls().target.y = b._centerPosition[1];
@@ -265,20 +265,17 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
         addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene);
         addGarden(aDistrict, scene);
     } else {
-        var buildings = aDistrict["buildings"];
-        var length = buildings.length;
         if (colorBoolean == 0) {
             addBoxes(0xDBDBDC, aDistrict, scene);
-            addGarden(aDistrict, scene);
-            for (var j = length; j--;) {
-                addEachDistrict(buildings[j], scene, extrema, 1);
-            }
         } else {
             addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
-            addGarden(aDistrict, scene);
-            for (var j = length; j--;) {
-                addEachDistrict(buildings[j], scene, extrema, 0);
-            }
+        }
+        addGarden(aDistrict, scene);
+        
+        var buildings = aDistrict["buildings"];
+        var length = buildings.length;
+        for (var j = length; j--;) {
+            addEachDistrict(buildings[j], scene, extrema, colorBoolean);
         }
     }
 }
@@ -292,7 +289,7 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
 function addGarden(aBuilding, scene) {
     var gardens = ["_leftGarden", "_rightGarden"];
     for (var i = 0; i < 2; i++) {
-        if (aBuilding[gardens[i]].color > 0) {
+        if (aBuilding[gardens[i]] && aBuilding[gardens[i]].color > 0) {
             var garden = aBuilding[gardens[i]];
             var factor = getColorFactor(getExtrema(), garden.color, "SumOfConn");
             var gardenMaterial = getMaterial(new THREE.Color(1 - factor, 1, 1 - factor));
@@ -350,7 +347,7 @@ function drawALine(aGarden, destGarden) {
         new THREE.Vector3(aGarden.nextLinePos[0], 2 * maximalHeight, aGarden.nextLinePos[1]),
         new THREE.Vector3(destGarden.nextLinePos[0], 3 * maximalHeight, destGarden.nextLinePos[1]),
         new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
-    );
+        );
     var geometry = new THREE.Geometry();
     geometry.vertices = curve.getPoints(50);
 
@@ -393,8 +390,8 @@ function removeLines(aGarden, updateBoolean) {
         gardenString = "_leftGarden";
     }
     var hashMap = getBuildingsHashMap();
-    
-    
+
+
     for (var x in aGarden.meshLines) {
         if (hashMap[x][gardenString].on == false) {
             var length = aGarden.meshLines[x].length;
@@ -516,7 +513,7 @@ function onDocumentMouseDown(event) {
                     b[association["color"]],
                     b[association["name"]],
                     intersects[0].object
-                );
+                    );
             }
         }
     }

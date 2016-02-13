@@ -74,13 +74,14 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     }, false);
 
     initData(data, association, incomingCalls, outgoingCalls);
-
+    console.log("Main District");
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
     shiftBack(mainDistrict);
 
     //zeichnen nun auch die Stadt
     addCityToScene(mainDistrict, scene, camera, extrema);
+    console.log("Stadt");
 
     // Erstelle das Menue oben rechts
     if (Detector.webgl) {

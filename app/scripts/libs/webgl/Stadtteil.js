@@ -9,6 +9,10 @@ var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, b
 
 var buildingsHashMap = {}; //Hashmap fuer Gebaeude: mapt Gebaeude-ID mit dem Objekt
 
+var GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
+var GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
+
+
 /*
  * Setter fuer association
  * @param: newAssociation: die neue Zuordnung
@@ -44,18 +48,19 @@ function setCalls(income, outgoing) {
  * @param: connections: ein Objekt der Form {GebaeudeID : {connections : {GebaeudeID_1: Gewichtung1, GebaeudeID_2: Gewichtung2}, sumOfConnections: SummeDerGewichtungen}}; eingehende bzw. ausgehende Verbindungen, je nachdem, ob es sich um einen rechten oder linken Garten handelt
  */
 function garden(isItLeftGarden, aBuilding, connections) {
-    if (connections == undefined) {
+    if (!connections || connections == undefined || connections.sumOfConnections === 0) {
         connections = {
             sumOfConnections: 0,
             connections: {}
         };
     }
-    var aGarden = {
+
+    return {
         building: aBuilding,
-        _width: (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6),
+        _width: (connections.sumOfConnections > 0) ? GARDEN_WIDTH : 0,
         radius: gardenRadius,
         _height: 0.01,
-        depth: 6 + 6 * Math.sin(Math.PI / 6),
+        depth: (connections.sumOfConnections > 0) ? GARDEN_DEPTH : 0,
         color: connections.sumOfConnections,
         _centerPosition: [0, 0.05, 0],
         nextLinePos: [0, 0],
@@ -64,11 +69,6 @@ function garden(isItLeftGarden, aBuilding, connections) {
         linesTo: connections.connections,
         meshLines: {}
     };
-    if (aGarden.color == 0) {
-        aGarden._width = 0;
-        aGarden.depth = 0;
-    }
-    return aGarden;
 }
 
 
@@ -130,17 +130,23 @@ function setGardenPos(aBuilding) {
     var left = aBuilding._leftGarden;
     var cP = aBuilding._centerPosition;
 
-    right._centerPosition[0] = cP[0] + right._width / 2 - right.radius / 2;
-    right._centerPosition[1] = cP[1] - aBuilding._height / 2 + 0.05;
-    right._centerPosition[2] = cP[2] + 1 + right.radius + aBuilding._width / 2;
-    left._centerPosition[0] = cP[0] - left._width / 2;
-    left._centerPosition[1] = cP[1] - aBuilding._height / 2 + 0.05;
-    left._centerPosition[2] = cP[2] + 1 + left.depth - left.radius + aBuilding._width / 2;
+    if (right) {
+        right._centerPosition[0] = cP[0] + right._width / 2 - right.radius / 2;
+        right._centerPosition[1] = cP[1] - aBuilding._height / 2 + 0.05;
+        right._centerPosition[2] = cP[2] + 1 + right.radius + aBuilding._width / 2;
 
-    left.nextLinePos[0] = left._centerPosition[0] - left._width / 2 + 1;
-    left.nextLinePos[1] = left._centerPosition[2] - (left.depth - left.radius) + 1;
-    right.nextLinePos[0] = right._centerPosition[0] - right._width / 2 + 1;
-    right.nextLinePos[1] = right._centerPosition[2] + (right.depth - right.radius) - 1;
+        right.nextLinePos[0] = right._centerPosition[0] - right._width / 2 + 1;
+        right.nextLinePos[1] = right._centerPosition[2] + (right.depth - right.radius) - 1;
+    }
+
+    if (left) {
+        left._centerPosition[0] = cP[0] - left._width / 2;
+        left._centerPosition[1] = cP[1] - aBuilding._height / 2 + 0.05;
+        left._centerPosition[2] = cP[2] + 1 + left.depth - left.radius + aBuilding._width / 2;
+
+        left.nextLinePos[0] = left._centerPosition[0] - left._width / 2 + 1;
+        left.nextLinePos[1] = left._centerPosition[2] - (left.depth - left.radius) + 1;
+    }
 }
 
 
@@ -322,9 +328,10 @@ function getLandWidth(aBuilding) {
     var left = aBuilding._leftGarden;
     var right = aBuilding._rightGarden;
 
-    return Math.max(width + 1 + left.depth,
+    // Falls ein Garten null => Width = 0;
+    return (left && right) ? Math.max(width + 1 + left.depth,
         width + 1 + right.depth,
-        left._width + right._width + 2);
+        left._width + right._width + 2) : 0;
 }
 
 
@@ -334,12 +341,14 @@ function getLandWidth(aBuilding) {
  */
 function getXPosOfBuildingsFromLeft(i) {
     var b = arrayOfBuildings[i];
-    return Math.max(b._width / 2, b._leftGarden._width + 1);
+    var left = b._leftGarden;
+    return (left) ? Math.max(b._width / 2, left._width + 1) : b._width / 2;
 }
 
 function getXPosOfBuildingsFromRight(i) {
     var b = arrayOfBuildings[i];
-    return Math.max(b._width / 2, b._rightGarden._width + 1);
+    var right = b._rightGarden;
+    return (right) ? Math.max(b._width / 2, right._width + 1) : b._width / 2;
 }
 
 
@@ -350,7 +359,7 @@ function getXPosOfBuildingsFromRight(i) {
  */
 function setFirstBuilding(aDistrict, namePrefix) {
     arrayOfBuildings = aDistrict["buildings"];
-    
+
     var b = arrayOfBuildings[0];
     initBuilding(b, namePrefix);
     //Setzen des ersten Elements
