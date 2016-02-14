@@ -7,7 +7,7 @@
  */
 
 var buildingColor = 0x0000FF;
-var alphaForDistrictColor = 0.2;
+var alphaForDistrictColor = 0.3;
 var maximalHeight; //speichert max. hoehe der Gebaeude, um Linien in dieser Hoehe zu zeichnen, ohne extrema zu uebergeben
 var mapOfLines = {}; //hier werden alle gezeichneteten Linien gespeichert von jedem Garten
 var clickedLeftGardens = []; //Array aus ID der Gebaeude, dessen Gaerten an sind
@@ -275,7 +275,7 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
         var buildings = aDistrict["buildings"];
         var length = buildings.length;
         for (var j = length; j--;) {
-            addEachDistrict(buildings[j], scene, extrema, colorBoolean);
+            addEachDistrict(buildings[j], scene, extrema, (colorBoolean+1)%2);
         }
     }
 }
@@ -342,18 +342,28 @@ function drawLines(aGarden, updateBoolean) {
  *@param: destGarden: der Ziel-Garten
  */
 function drawALine(aGarden, destGarden) {
-    var curve = new THREE.CubicBezierCurve3(
-        new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
-        new THREE.Vector3(aGarden.nextLinePos[0], 2 * maximalHeight, aGarden.nextLinePos[1]),
-        new THREE.Vector3(destGarden.nextLinePos[0], 3 * maximalHeight, destGarden.nextLinePos[1]),
-        new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
-        );
     var geometry = new THREE.Geometry();
-    geometry.vertices = curve.getPoints(50);
-
+	
+	if(doStreetsWork()) {
+		var center = aGarden.building._centerPosition;
+		var destCenter = destGarden.building._centerPosition;
+		geometry.vertices.push(new THREE.Vector3(center[0], center[1]-(aGarden.building._height/2), center[2]));
+		setPath(geometry.vertices, aGarden.building, destGarden.building);
+		geometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1]-destGarden.building._height/2, destCenter[2]));
+	}
+	else{
+		var curve = new THREE.CubicBezierCurve3(
+			new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
+			new THREE.Vector3(aGarden.nextLinePos[0], 2 * maximalHeight, aGarden.nextLinePos[1]),
+			new THREE.Vector3(destGarden.nextLinePos[0], 3 * maximalHeight, destGarden.nextLinePos[1]),
+			new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
+        );
+		geometry.vertices = curve.getPoints(50);
+	}
     var factor = getColorFactor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
     var material = new THREE.LineBasicMaterial({
-        color: new THREE.Color(1, 1 - factor, 1 - factor)
+        //color: new THREE.Color(1, 1 - factor, 1 - factor)
+		 color: new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor)
     });
     var curveObject = new THREE.Line(geometry, material);
     scene.add(curveObject);

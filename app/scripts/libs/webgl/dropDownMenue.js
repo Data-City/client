@@ -76,6 +76,15 @@ var update = function() {
 };
 
 
+
+/**
+* Getter fuer buildingInformation
+* @return: buildingInformation
+*/
+function getBuildingInformation(){
+	return buildingInformation;
+}
+
 /**
  * loescht ein District von der Bildflaeche und speichert dies
  * @param: mesh: das Mesh-Objekt, auf das geklickt wurde und das geloescht werden soll
@@ -207,8 +216,8 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
     for (var i = 0; i < myDimensions.length; i++) {
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
-    h.add(buildingInformation, "remove").name("löschen");
-    h.add(buildingInformation, "undo").name("Löschen rückgängig");
+    h.add(buildingInformation, "remove").name("Ausblenden");
+    h.add(buildingInformation, "undo").name("Ausblenden rückgängig");
 
     //*****************************************************************
 
@@ -379,8 +388,9 @@ function scale(value, aString, scene, aDistrict, camera) {
     storedDistrict = [];
     storedBuilding = [];
     setLight(scene);
-    setMainDistrict(aDistrict);
-    shiftBack(aDistrict);
+    setMainDistrict(aDistrict, "");
+    shiftBack(mainDistrict, {}, {});
+	setGraph();
     scalingExtrema(aString);
     addCityToScene(aDistrict, scene, camera);
     drawStoredLines(getJsonForCurrentLink());

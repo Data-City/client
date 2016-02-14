@@ -16,6 +16,7 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
     minSumOfConn: Number.MAX_VALUE
 };
 var camToSave = {}; //speichert Anfangseinstellung
+var streetsWork = true;
 
 /**
  * Getter fuer scene
@@ -64,7 +65,7 @@ function getControls() {
  * @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
-
+	
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
 
@@ -77,7 +78,8 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     console.log("Main District");
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
-    shiftBack(mainDistrict);
+    shiftBack(mainDistrict, {}, {});
+	setGraph();
 
     //zeichnen nun auch die Stadt
     addCityToScene(mainDistrict, scene, camera, extrema);
@@ -135,13 +137,23 @@ function initAssociation(association) {
 function initMainDistrict(data, association) {
     if (association.districtType == "0") { //Falls keine Blockbildung
         mainDistrict = {
-            buildings: data
+            buildings: data,
         };
     } else if (association.districtType == "1") { //Falls Blockbildung mit Punkten
-        mainDistrict = createMainDistrict(data, association.dimensions);
+        mainDistrict = createMainDistrict(data[0].buildings, association.dimensions);
     } else {
         mainDistrict = data[0];
+		streetsWork = false;
     }
+}
+
+
+/**
+* Getter fuer streetsWork
+* @return: true, wenn die Strassen funktionieren, false, wenn nicht
+*/
+function doStreetsWork(){
+	return streetsWork;
 }
 
 
@@ -376,7 +388,7 @@ function setSpecificView(aJson) {
 
     var buildings = aJson.removedBuildings;
     var length = buildings.length;
-    for (var j = length; j--;) {
+    for (var j = 0; j < length; j++) {
         remove(hashMap[buildings[j]].mesh);
     }
 
