@@ -70,7 +70,8 @@ function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord){
 		lastNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][0]];
         for(var i=0; i<nodesOfStreetsSortByXCoord[x].length-1; i++){
 			currentNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][i+1]];
-			if (currentNode.belongsToBuilding != true) {
+			// eigentlich duerfte currentNode nicht undefined sein, aber irgendwie ist es trotzdem ab und zu undefined - komisch
+			if (currentNode != undefined && currentNode.belongsToBuilding != true) {
 				graph[lastNode.id][currentNode.id] = 1;
 				graph[currentNode.id][lastNode.id] = 1;
 				lastNode.front = currentNode;
@@ -83,11 +84,13 @@ function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord){
 		lastNode = jsonOfNodes[nodesOfStreetsSortByZCoord[x][0]][x];
         for(var i=0; i<nodesOfStreetsSortByZCoord[x].length-1; i++){
             currentNode = jsonOfNodes[nodesOfStreetsSortByZCoord[x][i+1]][x];
-			graph[lastNode.id][currentNode.id] = 1;
-			graph[currentNode.id][lastNode.id] = 1;
-			lastNode.right = currentNode;
-			currentNode.left = lastNode;
-			lastNode = currentNode;
+			if(currentNode != undefined) { //auch hier sollte currentNode eigentlich nicht undefined sein ...
+				graph[lastNode.id][currentNode.id] = 1;
+				graph[currentNode.id][lastNode.id] = 1;
+				lastNode.right = currentNode;
+				currentNode.left = lastNode;
+				lastNode = currentNode;
+			}
         }
     }
 }
@@ -506,7 +509,7 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
             );
             shiftBack(b, nodesSortByX, nodesSortByZ);
         }
-		if(doStreetsWork()){
+		if(doWeUseStreets()){
 			var exitNodeZCoord = Math.max.apply(Math, Object.keys(nodesSortByZ));
 			var exitNodeXCoord = Math.round((mainDistrict._centerPosition[0])*10000)/10000;
 			if(jsonOfNodes[exitNodeXCoord]==undefined){
@@ -527,7 +530,7 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
 		}
     }
     setGardenPos(mainDistrict);
-	if(doStreetsWork()) setTheFiveStreetNodes(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
+	if(doWeUseStreets()) setTheFiveStreetNodes(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
 }
 
 

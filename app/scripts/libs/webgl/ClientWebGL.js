@@ -16,7 +16,7 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
     minSumOfConn: Number.MAX_VALUE
 };
 var camToSave = {}; //speichert Anfangseinstellung
-var streetsWork = true;
+var useStreets = true;
 
 /**
  * Getter fuer scene
@@ -143,17 +143,16 @@ function initMainDistrict(data, association) {
         mainDistrict = createMainDistrict(data[0].buildings, association.dimensions);
     } else {
         mainDistrict = data[0];
-		streetsWork = false;
     }
 }
 
 
 /**
-* Getter fuer streetsWork
-* @return: true, wenn die Strassen funktionieren, false, wenn nicht
+* Getter fuer useStreets
+* @return: true, wenn die Strassen benutzt, false, wenn nicht
 */
-function doStreetsWork(){
-	return streetsWork;
+function doWeUseStreets(){
+	return useStreets;
 }
 
 

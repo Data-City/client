@@ -344,12 +344,13 @@ function drawLines(aGarden, updateBoolean) {
 function drawALine(aGarden, destGarden) {
     var geometry = new THREE.Geometry();
 	
-	if(doStreetsWork()) {
+	if(doWeUseStreets()) {
 		var center = aGarden.building._centerPosition;
 		var destCenter = destGarden.building._centerPosition;
 		geometry.vertices.push(new THREE.Vector3(center[0], center[1]-(aGarden.building._height/2), center[2]));
 		setPath(geometry.vertices, aGarden.building, destGarden.building);
 		geometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1]-destGarden.building._height/2, destCenter[2]));
+		destGarden.building.mesh.material.color.setHex(0x40FF00);
 	}
 	else{
 		var curve = new THREE.CubicBezierCurve3(
@@ -403,6 +404,8 @@ function removeLines(aGarden, updateBoolean) {
 
 
     for (var x in aGarden.meshLines) {
+		var faktor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
+        hashMap[x].mesh.material.color.set((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor));
         if (hashMap[x][gardenString].on == false) {
             var length = aGarden.meshLines[x].length;
             for (var i = length; i--;) {
