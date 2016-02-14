@@ -214,6 +214,9 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
 
     h = gui.addFolder("Gebäudeinformationen");
     for (var i = 0; i < myDimensions.length; i++) {
+		if (buildingInformation[dimensionsFromDatabase[i]]==undefined) {
+			buildingInformation[dimensionsFromDatabase[i]] = "Klicken Sie bitte auf ein Gebäude";
+		}
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
     h.add(buildingInformation, "remove").name("Ausblenden");

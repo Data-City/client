@@ -258,12 +258,12 @@ function getMainDistrictFromJSON(aDistrict) {
  * @param: color: Farbe, die ggf. geupdatet werden soll
  */
 function updateExtrema(width, height, color) {
-    if (width > extrema.maxWidth) extrema.maxWidth = width + 1.5;
-    if (height > extrema.maxHeight) extrema.maxHeight = height + 1.5;
-    if (color > extrema.maxColor) extrema.maxColor = color + 1.5;
-    if (width < extrema.minWidth) extrema.minWidth = width + 1.5;
-    if (height < extrema.minHeigth) extrema.minHeigth = height + 1.5;
-    if (color < extrema.minColor) extrema.minColor = color + 1.5;
+    if (width + 1.5 > extrema.maxWidth) extrema.maxWidth = width + 1.5;
+    if (height + 1.5 > extrema.maxHeight) extrema.maxHeight = height + 1.5;
+    if (color + 1.5 > extrema.maxColor) extrema.maxColor = color + 1.5;
+    if (width + 1.5 < extrema.minWidth) extrema.minWidth = width + 1.5;
+    if (height + 1.5 < extrema.minHeigth) extrema.minHeigth = height + 1.5;
+    if (color + 1.5 < extrema.minColor) extrema.minColor = color + 1.5;
 }
 
 
