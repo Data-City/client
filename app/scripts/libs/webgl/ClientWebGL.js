@@ -17,6 +17,7 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
 };
 var camToSave = {}; //speichert Anfangseinstellung
 var useStreets = true;
+var usingConnections = true;
 
 /**
  * Getter fuer scene
@@ -65,7 +66,7 @@ function getControls() {
  * @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
-	
+
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
 
@@ -79,7 +80,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
     shiftBack(mainDistrict, {}, {});
-	setGraph();
+	if (usingConnections) setGraph();
 
     //zeichnen nun auch die Stadt
     addCityToScene(mainDistrict, scene, camera, extrema);
@@ -100,6 +101,14 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     if (settings != undefined) setSpecificView(settings);
 }
 
+/**
+* Getter fuer usingConnections
+* @return: true, wenn Verbindungen dargestellt werden sollen, sonst false
+*/
+function doWeUseConnections(){
+	return usingConnections;
+}
+
 
 /**
  * Hilfsmethode bereitet Daten wie Legende, MainDistrict und Verbindungen vor
@@ -109,9 +118,13 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
  * @param: outgoingCalls: ausgehende Verbindungen
  */
 function initData(data, association, incomingCalls, outgoingCalls) {
+	setMetaData(association.metaData);
     if (incomingCalls != undefined && outgoingCalls != undefined) {
         setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
     }
+	else {
+		usingConnections = false;
+	}
     initAssociation(association);
     initMainDistrict(data, association);
 }
@@ -257,12 +270,18 @@ function getMainDistrictFromJSON(aDistrict) {
  * @param: color: Farbe, die ggf. geupdatet werden soll
  */
 function updateExtrema(width, height, color) {
-    if (width + 1.5 > extrema.maxWidth) extrema.maxWidth = width + 1.5;
+    /*if (width + 1.5 > extrema.maxWidth) extrema.maxWidth = width + 1.5;
     if (height + 1.5 > extrema.maxHeight) extrema.maxHeight = height + 1.5;
     if (color + 1.5 > extrema.maxColor) extrema.maxColor = color + 1.5;
     if (width + 1.5 < extrema.minWidth) extrema.minWidth = width + 1.5;
     if (height + 1.5 < extrema.minHeigth) extrema.minHeigth = height + 1.5;
-    if (color + 1.5 < extrema.minColor) extrema.minColor = color + 1.5;
+    if (color + 1.5 < extrema.minColor) extrema.minColor = color + 1.5;*/
+	if (width > extrema.maxWidth) extrema.maxWidth = width;
+    if (height > extrema.maxHeight) extrema.maxHeight = height;
+    if (color > extrema.maxColor) extrema.maxColor = color;
+    if (width < extrema.minWidth) extrema.minWidth = width;
+    if (height < extrema.minHeigth) extrema.minHeigth = height;
+    if (color < extrema.minColor) extrema.minColor = color;
 }
 
 

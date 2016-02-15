@@ -18,6 +18,16 @@ var graph = {};
 var nodeHashMap = {};
 var nodeID = 0;
 
+var metaData; //Objekt, das max, min-Werte enthaelt, die uebergeben worden sind
+
+/**
+* Setter fuer metaData
+* @param: newMetaData: die neuen MetaDaten
+*/
+function setMetaData(newMetaData) {
+	metaData = newMetaData;
+}
+
 /*
  * Setter fuer association
  * @param: newAssociation: die neue Zuordnung
@@ -509,7 +519,7 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
             );
             shiftBack(b, nodesSortByX, nodesSortByZ);
         }
-		if(doWeUseStreets()){
+		if(doWeUseConnections() && doWeUseStreets()){
 			var exitNodeZCoord = Math.max.apply(Math, Object.keys(nodesSortByZ));
 			var exitNodeXCoord = Math.round((mainDistrict._centerPosition[0])*10000)/10000;
 			if(jsonOfNodes[exitNodeXCoord]==undefined){
@@ -529,8 +539,8 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
 			createEdges(nodesSortByX, nodesSortByZ);
 		}
     }
-    setGardenPos(mainDistrict);
-	if(doWeUseStreets()) setTheFiveStreetNodes(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
+    if (doWeUseConnections()) setGardenPos(mainDistrict);
+	if (doWeUseStreets()) setTheFiveStreetNodes(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
 }
 
 
@@ -566,7 +576,12 @@ function initBuilding(aBuilding, namePrefix) {
 				if(isNaN(parseFloat(aBuilding[association[dim]]))) {
 					console.log("Erwartet wurde eine Zahl. Bekommen habe ich: "+aBuilding[association[dim]]);
 				}
-                aBuilding["_" + dim] = parseFloat(aBuilding[association[dim]]) + 1.5;
+				if(metaData["min_"+association[dim]]>2) {
+					aBuilding["_" + dim] = parseFloat(aBuilding[association[dim]])/parseFloat(metaData["min_"+association[dim]]) + 1.5;
+				}
+				else {
+					aBuilding["_" + dim] = parseFloat(aBuilding[association[dim]]) + 1.5;
+				}
             } else {
                 aBuilding["_" + dim] = 1.5;
             }
@@ -577,7 +592,8 @@ function initBuilding(aBuilding, namePrefix) {
         aBuilding["_leftGarden"] = theLeftGarden;
         aBuilding["_rightGarden"] = theRightGarden;
         if (aBuilding[association["height"]] != undefined) {
-            updateExtrema(aBuilding[association["width"]], aBuilding[association["height"]], aBuilding[association["color"]]);
+            //updateExtrema(aBuilding[association["width"]], aBuilding[association["height"]], aBuilding[association["color"]]);
+            updateExtrema(aBuilding._width, aBuilding._height, aBuilding._color);
         } else {
             aBuilding[association.name] = namePrefix;
         }

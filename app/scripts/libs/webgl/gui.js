@@ -20,6 +20,14 @@ var association = {}; //hier wird die Legende gespeichert
 var highlightedBuildingID;
 var camera;
 
+var GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
+var GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
+var boxGeom = new THREE.BoxGeometry(1, 1, 1);
+var gardenGeom= [
+	new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
+	new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
+]
+
 /**
  * Setter fuer die Farbe der Gebaeude aus settings.js
  *@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
@@ -142,17 +150,19 @@ function setClickedGardens(aJson) {
 function drawBox(aBuilding, material, scene) {
     var cP = aBuilding._centerPosition;
     var width = aBuilding._width;
-    var geometry = new THREE.BoxGeometry(width, aBuilding._height, width);
-    var cube = new THREE.Mesh(geometry, material);
+    //var geometry = new THREE.BoxGeometry(width, aBuilding._height, width);
+    var cube = new THREE.Mesh(boxGeom, material);
     var pos = cube.position;
+	var scale = cube.scale;
     pos.x = cP[0];
     pos.y = cP[1];
     pos.z = cP[2];
+	scale.x  = width;
+	scale.y = aBuilding._height;
+	scale.z = width;
     cube.building = aBuilding;
     aBuilding.mesh = cube;
-    //if (aBuilding._isRemoved == false) {
     scene.add(cube);
-    //}
 }
 
 /**
@@ -263,14 +273,14 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
     if (aDistrict["buildings"] == undefined) {
         var faktor = getColorFactor(extrema, aDistrict._color, "Color");
         addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene);
-        addGarden(aDistrict, scene);
+        if (doWeUseConnections()) addGarden(aDistrict, scene);
     } else {
         if (colorBoolean == 0) {
             addBoxes(0xDBDBDC, aDistrict, scene);
         } else {
             addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
         }
-        addGarden(aDistrict, scene);
+        if (doWeUseConnections()) addGarden(aDistrict, scene);
         
         var buildings = aDistrict["buildings"];
         var length = buildings.length;
@@ -294,16 +304,13 @@ function addGarden(aBuilding, scene) {
             var factor = getColorFactor(getExtrema(), garden.color, "SumOfConn");
             var gardenMaterial = getMaterial(new THREE.Color(1 - factor, 1, 1 - factor));
             gardenMaterial.name = "garden";
-            var geometry = new THREE.CylinderGeometry(garden._width / 2, garden._width / 2, garden._height, 3, 1, false, i * Math.PI);
-            var cube = new THREE.Mesh(geometry, gardenMaterial);
+            var cube = new THREE.Mesh(gardenGeom[i], gardenMaterial);
             cube.position.x = garden._centerPosition[0];
             cube.position.y = garden._centerPosition[1];
             cube.position.z = garden._centerPosition[2];
             cube.garden = garden;
             garden.mesh = cube;
-            //if (aBuilding._isRemoved == false) {
             scene.add(cube);
-            //}
         }
     }
 }
@@ -539,7 +546,7 @@ function onDocumentMouseDown(event) {
  */
 function setGardenOn(aMesh) {
     drawLines(aMesh.object.garden, true);
-    aMesh.object.material.color.setHex(0xA5DF00);
+    aMesh.object.material.color.setHex(0x424242);//0xA5DF00);
     if (aMesh.object.garden.isLeftGarden == true) {
         clickedLeftGardens.push(aMesh.object.garden.building[association.name]);
     } else {

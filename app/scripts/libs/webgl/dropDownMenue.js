@@ -337,7 +337,6 @@ function undoRemoving(scene) {
         scene.add(storedDistrict[i]);
         if (storedDistrict[i].building != undefined) {
             storedDistrict[i].building._isRemoved = false;
-            //removedBuildings.splice(removedBuildings.indexOf(storedDistrict[i].building[association.name]), 1);
         }
     }
 }
@@ -393,7 +392,7 @@ function scale(value, aString, scene, aDistrict, camera) {
     setLight(scene);
     setMainDistrict(aDistrict, "");
     shiftBack(mainDistrict, {}, {});
-	setGraph();
+	if (doWeUseConnections()) setGraph();
     scalingExtrema(aString);
     addCityToScene(aDistrict, scene, camera);
     drawStoredLines(getJsonForCurrentLink());
