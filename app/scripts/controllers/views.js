@@ -218,6 +218,7 @@ angular.module('datacityApp')
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function (incoming) {
                                 REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function (outgoing) {
                                     var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                                    console.info(incomingConnections.connections[0].average);
                                     var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
                                     drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
                                     $scope.loader = false;
@@ -430,4 +431,46 @@ angular.module('datacityApp')
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+        /**
+        * Hilfsfunktion fuer die Filterung der Verbindungen, erstmal auskommentiert 
+        */
+      /**  $scope.myTest = function(){
+            var view = $scope.chosenView;
+            if (view.metaData.connectionsAvailable === "true") {
+                            REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function (incoming) {
+                                REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function (outgoing) {
+                                    var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                                    var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
+                                    var inc = incomingConnections.connections;
+                                    
+                                    var min = 0;
+                                    for(var value = 0; value < inc.length; value++){
+                                        if(inc[0].minimum <= inc[0 + value].minimum){
+                                            min = inc[0].minimum;
+                                        } else{
+                                            min = inc[0+value].minimum;
+                                            
+                                            var x = inc[0+value].minimum;
+                                            inc[0+value].minimum = inc[0].minimum;
+                                            inc[0].minimum = x;
+                                        }
+                                    }
+                                    var out = outgoingConnections.connections;
+                                    var max = 0;
+                                    for(var y = 0; y < out.length; y++){
+                                        if(out[0].maximum >= out[0 + y].maximum){
+                                            max = out[0].maximum;
+                                        } else{
+                                            max = out[0+y].maximum;
+                                            
+                                            var z = out[0+y].maximum;
+                                            out[0+y].maximum = out[0].maximum;
+                                            out[0].maximum = z;
+                                        }
+                                    }
+                                });
+                            });
+                        }
+        };*/
     });
