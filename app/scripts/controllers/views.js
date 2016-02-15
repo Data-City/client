@@ -218,7 +218,6 @@ angular.module('datacityApp')
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function (incoming) {
                                 REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function (outgoing) {
                                     var incomingConnections = incoming.data._embedded['rh:doc'][0];
-                                    console.info(incomingConnections.connections[0].average);
                                     var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
                                     drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
                                     $scope.loader = false;
