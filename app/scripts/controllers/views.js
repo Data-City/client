@@ -179,18 +179,18 @@ angular.module('datacityApp')
             // Korrekte Blockeinstellungen
             for (var key in view.districts) {
                 if (view.districts[key].field === null) {
-                    window.alert("Schritt 3: \nEs wurden eine oder mehrere Blöcke hinzugefügt, aber keine Einstellungen vorgenommen!");
+                    window.alert("Schritt 4: \nEs wurden eine oder mehrere Blöcke hinzugefügt, aber keine Einstellungen vorgenommen!");
                     return false;
                 }
             }
             if (view.districts[0] === undefined && view.districtType === "2") {
-                window.alert("Schritt 3: \nBei der Blockbildung wurde Option 3 festgelegt, aber keine Blöcke ausgewählt. \nFalls Sie keine Blockbildung möchten, bitte wählen Sie Option 1");
+                window.alert("Schritt 4: \nBei der Blockbildung wurde Option 3 festgelegt, aber keine Blöcke ausgewählt. \nFalls Sie keine Blockbildung möchten, bitte wählen Sie Option 1");
                 return false;
             }
 
             // Korrekte Dimensionen
             if (!view.dimensionSettings || !view.dimensionSettings.area || !view.dimensionSettings.color || !view.dimensionSettings.height || !view.dimensionSettings.name) {
-                window.alert("Schritt 4: \nEs wurden eine oder mehr Dimensionen nicht ausgewählt!");
+                window.alert("Schritt 5: \nEs wurden eine oder mehr Dimensionen nicht ausgewählt!");
                 return false;
             }
 
