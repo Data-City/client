@@ -21,11 +21,11 @@ var nodeID = 0;
 var metaData; //Objekt, das max, min-Werte enthaelt, die uebergeben worden sind
 
 /**
- * Setter fuer metaData
- * @param: newMetaData: die neuen MetaDaten
- */
+* Setter fuer metaData
+* @param: newMetaData: die neuen MetaDaten
+*/
 function setMetaData(newMetaData) {
-    metaData = newMetaData;
+	metaData = newMetaData;
 }
 
 /*
@@ -58,148 +58,133 @@ function setCalls(income, outgoing) {
 
 
 /**
- * sortiert zu jedem key in nodesOfStreetsSortByXCoord und nodesOfStreetsSortByZCoord das zugehoerige Array absteigend 
- */
-function sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
-    for (var x in nodesOfStreetsSortByXCoord) {
-        nodesOfStreetsSortByXCoord[x].sort(function(a, b) {
-            return a - b
-        });
+* sortiert zu jedem key in nodesOfStreetsSortByXCoord und nodesOfStreetsSortByZCoord das zugehoerige Array absteigend 
+*/
+function sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord){
+    for(var x in nodesOfStreetsSortByXCoord){
+        nodesOfStreetsSortByXCoord[x].sort(function(a, b){return a-b});
     }
-    for (var x in nodesOfStreetsSortByZCoord) {
-        nodesOfStreetsSortByZCoord[x].sort(function(a, b) {
-            return a - b
-        });
+    for(var x in nodesOfStreetsSortByZCoord){
+        nodesOfStreetsSortByZCoord[x].sort(function(a, b){return a-b});
     }
 }
 
 
 /**
- * iteriert durch nodesOFStreetsSortByXCoord bzw. -ZCoord und bestimmt die Nachbarn von den Knoten
- */
-function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
-    sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
-    var lastNode, currentNode;
-    for (var x in nodesOfStreetsSortByXCoord) {
-        lastNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][0]];
-        for (var i = 0; i < nodesOfStreetsSortByXCoord[x].length - 1; i++) {
-            currentNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][i + 1]];
-            // eigentlich duerfte currentNode nicht undefined sein, aber irgendwie ist es trotzdem ab und zu undefined - komisch
-            if (currentNode != undefined && currentNode.belongsToBuilding != true) {
-                graph[lastNode.id][currentNode.id] = 1;
-                graph[currentNode.id][lastNode.id] = 1;
-                lastNode.front = currentNode;
-                currentNode.back = lastNode;
-            }
-            lastNode = currentNode;
+* iteriert durch nodesOFStreetsSortByXCoord bzw. -ZCoord und bestimmt die Nachbarn von den Knoten
+*/
+function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord){
+	sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
+	var lastNode, currentNode;
+	for(var x in nodesOfStreetsSortByXCoord){
+		lastNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][0]];
+        for(var i=0; i<nodesOfStreetsSortByXCoord[x].length-1; i++){
+			currentNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][i+1]];
+			// eigentlich duerfte currentNode nicht undefined sein, aber irgendwie ist es trotzdem ab und zu undefined - komisch
+			if (currentNode != undefined && currentNode.belongsToBuilding != true) {
+				graph[lastNode.id][currentNode.id] = 1;
+				graph[currentNode.id][lastNode.id] = 1;
+				lastNode.front = currentNode;
+				currentNode.back = lastNode;
+			}
+			lastNode = currentNode;
         }
     }
-    for (var x in nodesOfStreetsSortByZCoord) {
-        lastNode = jsonOfNodes[nodesOfStreetsSortByZCoord[x][0]][x];
-        for (var i = 0; i < nodesOfStreetsSortByZCoord[x].length - 1; i++) {
-            currentNode = jsonOfNodes[nodesOfStreetsSortByZCoord[x][i + 1]][x];
-            if (currentNode != undefined) { //auch hier sollte currentNode eigentlich nicht undefined sein ...
-                var distance = getEuclideanDistance(lastNode, currentNode);
-                graph[lastNode.id][currentNode.id] = 1;
-                graph[currentNode.id][lastNode.id] = 1;
-                lastNode.right = currentNode;
-                currentNode.left = lastNode;
-                lastNode = currentNode;
-            }
+    for(var x in nodesOfStreetsSortByZCoord){
+		lastNode = jsonOfNodes[nodesOfStreetsSortByZCoord[x][0]][x];
+        for(var i=0; i<nodesOfStreetsSortByZCoord[x].length-1; i++){
+            currentNode = jsonOfNodes[nodesOfStreetsSortByZCoord[x][i+1]][x];
+			if(currentNode != undefined) { //auch hier sollte currentNode eigentlich nicht undefined sein ...
+				var distance = getEuclideanDistance(lastNode, currentNode);
+				graph[lastNode.id][currentNode.id] = 1;
+				graph[currentNode.id][lastNode.id] = 1;
+				lastNode.right = currentNode;
+				currentNode.left = lastNode;
+				lastNode = currentNode;
+			}
         }
     }
 }
 
 /**
- * berechnet die euklidische Distanz im 2D fuer 2 Knoten
- * @param: firstNode: ein Knoten
- * @param: secondNode: zweiter Knoten
- * @return: euklidische Distanz zwischen den beiden Knoten
- */
-function getEuclideanDistance(firstNode, secondNode) {
-    return Math.sqrt(Math.pow(firstNode.x - secondNode.x, 2) + Math.pow(firstNode.y - secondNode.y, 2));
+* berechnet die euklidische Distanz im 2D fuer 2 Knoten
+* @param: firstNode: ein Knoten
+* @param: secondNode: zweiter Knoten
+* @return: euklidische Distanz zwischen den beiden Knoten
+*/
+function getEuclideanDistance(firstNode, secondNode){
+	return Math.sqrt(Math.pow(firstNode.x-secondNode.x, 2)+Math.pow(firstNode.y-secondNode.y, 2));
 }
 
 
 /**
 setzt den Graphen fuer die Strassen, damit man Dijkstra benutzen kann
 */
-function setGraph() {
-    graph = new Graph(graph);
+function setGraph(){
+	graph = new Graph(graph);
 }
 
 
 
 /**
- * Diese Methode fuegt den JSON-Objekten nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord, 
- * welche die Positionen der Strassenkreuzungen bzw. Knoten speichern, die mit dem Gebaeude erstellt werden muessen
- * @param: district: ein Gebaeude oder Stadtteil, bei dem die Knoten gesetzt werden sollen
- */
-function setTheFiveStreetNodes(district, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
-    var toAdd = Math.round((getLandWidth(district) / 2 + gap / 2) * 10000) / 10000;
+* Diese Methode fuegt den JSON-Objekten nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord, 
+* welche die Positionen der Strassenkreuzungen bzw. Knoten speichern, die mit dem Gebaeude erstellt werden muessen
+* @param: district: ein Gebaeude oder Stadtteil, bei dem die Knoten gesetzt werden sollen
+*/
+function setTheFiveStreetNodes(district, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord){
+    var toAdd = Math.round((getLandWidth(district)/2 + gap/2)*10000)/10000;
     var centerPos = [
-        Math.round(district._centerPosition[0] * 10000) / 10000,
-        Math.round(district._centerPosition[1] * 10000) / 10000,
-        Math.round(district._centerPosition[2] * 10000) / 10000
-    ];
-    district.posOfNextStreetNode = [Math.round(centerPos[0] * 10000) / 10000, Math.round(((Math.round(centerPos[2] * 10000) / 10000) + toAdd) * 10000) / 10000];
+		Math.round(district._centerPosition[0]*10000)/10000,
+		Math.round(district._centerPosition[1]*10000)/10000,
+		Math.round(district._centerPosition[2]*10000)/10000
+	];
+    district.posOfNextStreetNode = [Math.round(centerPos[0]*10000)/10000, Math.round(((Math.round(centerPos[2]*10000)/10000)+toAdd)*10000)/10000];
 
-    addANode(nodesOfStreetsSortByXCoord, Math.round(centerPos[0] * 10000) / 10000, Math.round((centerPos[2] + toAdd) * 10000) / 10000, district, true);
-    addANode(nodesOfStreetsSortByXCoord, Math.round((centerPos[0] + toAdd) * 10000) / 10000, Math.round((centerPos[2] + toAdd) * 10000) / 10000, district);
-    addANode(nodesOfStreetsSortByXCoord, Math.round((centerPos[0] + toAdd) * 10000) / 10000, Math.round((centerPos[2] - toAdd) * 10000) / 10000, district);
-    addANode(nodesOfStreetsSortByXCoord, Math.round((centerPos[0] - toAdd) * 10000) / 10000, Math.round((centerPos[2] + toAdd) * 10000) / 10000, district);
-    addANode(nodesOfStreetsSortByXCoord, Math.round((centerPos[0] - toAdd) * 10000) / 10000, Math.round((centerPos[2] - toAdd) * 10000) / 10000, district);
+    addANode(nodesOfStreetsSortByXCoord, Math.round(centerPos[0]*10000)/10000,  Math.round((centerPos[2]+toAdd)*10000)/10000, district, true);
+    addANode(nodesOfStreetsSortByXCoord, Math.round((centerPos[0]+toAdd)*10000)/10000, Math.round((centerPos[2]+toAdd)*10000)/10000, district);
+    addANode(nodesOfStreetsSortByXCoord, Math.round((centerPos[0]+toAdd)*10000)/10000, Math.round((centerPos[2]-toAdd)*10000)/10000, district);
+    addANode(nodesOfStreetsSortByXCoord, Math.round((centerPos[0]-toAdd)*10000)/10000, Math.round((centerPos[2]+toAdd)*10000)/10000, district);
+    addANode(nodesOfStreetsSortByXCoord, Math.round((centerPos[0]-toAdd)*10000)/10000, Math.round((centerPos[2]-toAdd)*10000)/10000, district);
 
-    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2] + toAdd) * 10000) / 10000, Math.round(centerPos[0] * 10000) / 10000);
-    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2] + toAdd) * 10000) / 10000, Math.round((centerPos[0] + toAdd) * 10000) / 10000);
-    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2] + toAdd) * 10000) / 10000, Math.round((centerPos[0] - toAdd) * 10000) / 10000);
-    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2] - toAdd) * 10000) / 10000, Math.round((centerPos[0] + toAdd) * 10000) / 10000);
-    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2] - toAdd) * 10000) / 10000, Math.round((centerPos[0] - toAdd) * 10000) / 10000);
+    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2]+toAdd)*10000)/10000, Math.round(centerPos[0]*10000)/10000);
+    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2]+toAdd)*10000)/10000, Math.round((centerPos[0]+toAdd)*10000)/10000);
+    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2]+toAdd)*10000)/10000, Math.round((centerPos[0]-toAdd)*10000)/10000);
+    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2]-toAdd)*10000)/10000, Math.round((centerPos[0]+toAdd)*10000)/10000);
+    addANode(nodesOfStreetsSortByZCoord, Math.round((centerPos[2]-toAdd)*10000)/10000, Math.round((centerPos[0]-toAdd)*10000)/10000);
 }
 
 
 /**
- * Diese Methode fuegt dem Array, welches dem Wert von aJSON an der Stelle theKey ist, den Wert theValue hinzu
- * @param: aJSON: ein JSON-Objekt der Form {key: Array}
- * @param: theKey: Key, mit dem man auf JSON zugreifen will
- * @param: theValue: der Wert, den man einfuegen moechte
- * @param: aDistrict: das Distrikt oder das Gebaeude, das zum Knoten gehört (nur zum Testen/ Ueberpruefen)
- * @param: belongsToBuilding: true, wenn es ein Knoten ist, das zu einem Gebäude gehört, sonst undefined
- */
-function addANode(aJSON, theKey, theValue, aDistrict, belongsToBuilding) {
+* Diese Methode fuegt dem Array, welches dem Wert von aJSON an der Stelle theKey ist, den Wert theValue hinzu
+* @param: aJSON: ein JSON-Objekt der Form {key: Array}
+* @param: theKey: Key, mit dem man auf JSON zugreifen will
+* @param: theValue: der Wert, den man einfuegen moechte
+* @param: aDistrict: das Distrikt oder das Gebaeude, das zum Knoten gehört (nur zum Testen/ Ueberpruefen)
+* @param: belongsToBuilding: true, wenn es ein Knoten ist, das zu einem Gebäude gehört, sonst undefined
+*/
+function addANode(aJSON, theKey, theValue, aDistrict, belongsToBuilding){
     if (aJSON[theKey] != undefined) {
-        if (aJSON[theKey].indexOf(theValue) == -1) {
+        if (aJSON[theKey].indexOf(theValue)==-1) {
             (aJSON[theKey]).push(theValue);
-            if (aDistrict != undefined) {
-                jsonOfNodes[theKey][theValue] = {
-                    x: theKey,
-                    z: theValue,
-                    building: aDistrict,
-                    belongsToBuilding: belongsToBuilding,
-                    id: nodeID
-                };
-                nodeHashMap[nodeID] = jsonOfNodes[theKey][theValue];
-                graph[nodeID] = {};
-                if (belongsToBuilding == true) aDistrict.nodeID = nodeID;
-                nodeID++;
-            }
+			if (aDistrict != undefined) {
+				jsonOfNodes[theKey][theValue] = {x: theKey, z: theValue, building: aDistrict, belongsToBuilding: belongsToBuilding, id : nodeID};
+				nodeHashMap[nodeID] = jsonOfNodes[theKey][theValue];
+				graph[nodeID] = {};
+				if(belongsToBuilding==true) aDistrict.nodeID = nodeID;
+				nodeID++;
+			}
         }
-    } else {
+    }
+    else{
         aJSON[theKey] = [theValue];
-        if (aDistrict != undefined) {
-            jsonOfNodes[theKey] = {};
-            jsonOfNodes[theKey][theValue] = {
-                x: theKey,
-                z: theValue,
-                building: aDistrict,
-                belongsToBuilding: belongsToBuilding,
-                id: nodeID
-            };
-            nodeHashMap[nodeID] = jsonOfNodes[theKey][theValue];
-            graph[nodeID] = {};
-            if (belongsToBuilding == true) aDistrict.nodeID = nodeID;
-            nodeID++;
-        }
+		if (aDistrict != undefined) {
+			jsonOfNodes[theKey] = {};
+			jsonOfNodes[theKey][theValue] = {x: theKey, z: theValue, building: aDistrict, belongsToBuilding: belongsToBuilding, id : nodeID};
+			nodeHashMap[nodeID] = jsonOfNodes[theKey][theValue];
+			graph[nodeID] = {};
+			if(belongsToBuilding==true) aDistrict.nodeID = nodeID;
+			nodeID++;
+		}
     }
 }
 
@@ -213,115 +198,116 @@ function addANode(aJSON, theKey, theValue, aDistrict, belongsToBuilding) {
  * @param: target: Gebaeude oder District, bei dem der Weg enden soll
  */
 function setPath(vertices, start, target) {
-    if (start._district == target._district) {
-        setPathOnOneDistrict(vertices, start.nodeID, target.nodeID, start._centerPosition[1] - (start._height / 2) + 0.1);
-    } else {
-        var startDistricts = (start._district).split(".");
-        var targetDistricts = (target._district).split(".");
-        var k = getLastPosOfSameEntry(startDistricts, targetDistricts);
+	if(start._district == target._district) {
+		setPathOnOneDistrict(vertices, start.nodeID, target.nodeID, start._centerPosition[1]-(start._height/2)+0.1);
+	}
+	else {
+		var startDistricts = (start._district).split(".");
+		var targetDistricts = (target._district).split(".");
+		var k = getLastPosOfSameEntry(startDistricts, targetDistricts);
 
-        var height = addPathFromUpperToLowerDistrict(start, vertices, startDistricts, k);
+		var height = addPathFromUpperToLowerDistrict(start, vertices, startDistricts, k);
 
-        var nameOfTargetDistrict = addPathBetweenDistrictsOnTheSameDistrict(startDistricts, targetDistricts, k, start, target, height, vertices);
-        var currentDistrict = buildingsHashMap[nameOfTargetDistrict];
+		var nameOfTargetDistrict = addPathBetweenDistrictsOnTheSameDistrict(startDistricts, targetDistricts, k, start, target, height, vertices);
+		var currentDistrict = buildingsHashMap[nameOfTargetDistrict];
 
-        currentDistrict = addPathFromLowerToUpperDistrict(nameOfTargetDistrict, targetDistricts, k, vertices, currentDistrict, height);
-        height = currentDistrict._centerPosition[1] + currentDistrict._height / 2 + 0.1;
-
-        lastStepInCreatingPath(targetDistricts, vertices, currentDistrict, target, height, k);
-    }
+		currentDistrict = addPathFromLowerToUpperDistrict(nameOfTargetDistrict, targetDistricts, k, vertices, currentDistrict, height);
+		height = currentDistrict._centerPosition[1]+currentDistrict._height/2+0.1;
+		
+		lastStepInCreatingPath(targetDistricts, vertices, currentDistrict, target, height, k);
+	}
 }
 
 /**
- * fuegt zu vertices den Weg vom Start hin bis runter zum "Exit-Knoten" des k-ten Distrikts unter dem Start
- * @param: start: Gebaeude oder District, bei dem der Pfad starten soll
- * @param: vertices: Array der Knoten vom Pfad bestehend aus THREE.Vector3
- * @param: startDistricts: ein Array, der Districtname von dem Start, aufgesplitted nach Punkten im Namen
- * @param: k: die letzte Position im startDistricts, die noch mit targetDistricts uebereinstimmt
- * @return: height: die Hoehe, auf die die letzte Linie gezeichnet worden ist 
- */
-function addPathFromUpperToLowerDistrict(start, vertices, startDistricts, k) {
-    var currentDistrict = buildingsHashMap[start._district]; //ein Districtobjekt
-    var startingNode = nodeHashMap[start.nodeID]; //ein Knotenobjekt
-    var endingNode = nodeHashMap[currentDistrict.exitNodeID]; //ein Knotenobjekt
-    var height = start._centerPosition[1] - (start._height / 2) + 0.1;
-    vertices.push(new THREE.Vector3(start._centerPosition[0], height, start._centerPosition[2]));
-    for (var i = 0; i < startDistricts.length - 1 - k; i++) {
-        setPathOnOneDistrict(vertices, startingNode.id, endingNode.id, height);
-        vertices.push(
-            new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2] + currentDistrict._width / 2 + 0.1)
-        );
-        height = currentDistrict._centerPosition[1] - (currentDistrict._height / 2) + 0.1;
-        vertices.push(
-            new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2] + currentDistrict._width / 2 + 0.1)
-        );
-
-        startingNode = nodeHashMap[currentDistrict.nodeID];
-        currentDistrict = buildingsHashMap[currentDistrict._district];
-        endingNode = nodeHashMap[currentDistrict.exitNodeID];
-    }
-    return height;
+* fuegt zu vertices den Weg vom Start hin bis runter zum "Exit-Knoten" des k-ten Distrikts unter dem Start
+* @param: start: Gebaeude oder District, bei dem der Pfad starten soll
+* @param: vertices: Array der Knoten vom Pfad bestehend aus THREE.Vector3
+* @param: startDistricts: ein Array, der Districtname von dem Start, aufgesplitted nach Punkten im Namen
+* @param: k: die letzte Position im startDistricts, die noch mit targetDistricts uebereinstimmt
+* @return: height: die Hoehe, auf die die letzte Linie gezeichnet worden ist 
+*/ 
+function addPathFromUpperToLowerDistrict(start, vertices, startDistricts, k){
+	var currentDistrict = buildingsHashMap[start._district]; //ein Districtobjekt
+	var startingNode = nodeHashMap[start.nodeID]; //ein Knotenobjekt
+	var endingNode = nodeHashMap[currentDistrict.exitNodeID]; //ein Knotenobjekt
+	var height = start._centerPosition[1]-(start._height/2)+0.1;
+	vertices.push(new THREE.Vector3(start._centerPosition[0], height, start._centerPosition[2]));
+	for (var i = 0; i<startDistricts.length-1-k; i++) {
+		setPathOnOneDistrict(vertices, startingNode.id, endingNode.id, height);
+		vertices.push(
+			new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2]+currentDistrict._width/2+0.1)
+		);
+		height = currentDistrict._centerPosition[1]-(currentDistrict._height/2)+0.1;
+		vertices.push(
+			new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2]+currentDistrict._width/2+0.1)
+		);
+		
+		startingNode = nodeHashMap[currentDistrict.nodeID];			
+		currentDistrict = buildingsHashMap[currentDistrict._district];
+		endingNode = nodeHashMap[currentDistrict.exitNodeID];
+	}
+	return height;
 }
 
 
 /**
- * fuegt den Pfad zwischen den beiden Distrikten von Start und Ziel hinzu, die auf einem gemeinsamen District stehen
- * @param: startDistricts: ein Array, der Districtname von dem Start, aufgesplitted nach Punkten im Namen
- * @param: targetDistricts: ein Array, der Districtname von dem Ziel, aufgesplitted nach Punkten im Namen
- * @param: k: die letzte Position im startDistricts, die noch mit targetDistricts uebereinstimmt
- * @param: start: Gebaeude- bzw. Districtobjekt, der (allererste) Startpunkt
- * @param: target: Gebaeude- bzw. Districtobjekt, der (allerletzte) Zielpunkt
- * @param: height: Hoehe der Linie, die als letztes gezeichnet worden ist
- * @param: vertices: bisheriger Pfad, bestehend aus THREE.Vector3
- * @return: nameOfTargetDistrict: der Name von dem ZielDistrict, bei dem man aufgehoert hat, den Pfad zu setzen
- */
-function addPathBetweenDistrictsOnTheSameDistrict(startDistricts, targetDistricts, k, start, target, height, vertices) {
-    var nameOfStartingDistrict = "";
-    var nameOfTargetDistrict = "";
-    for (var i = 0; i <= k; i++) {
-        nameOfStartingDistrict = nameOfStartingDistrict + startDistricts[i] + ".";
-        nameOfTargetDistrict = nameOfTargetDistrict + targetDistricts[i] + ".";
-    }
-    if (startDistricts.length - 1 == k) {
-        nameOfStartingDistrict = start[association.name];
-    }
-    if (targetDistricts.length - 1 == k) {
-        nameOfTargetDistrict = target[association.name];
-    }
-    setPathOnOneDistrict(vertices, buildingsHashMap[nameOfStartingDistrict].nodeID, buildingsHashMap[nameOfTargetDistrict].nodeID, height);
-    return nameOfTargetDistrict;
+* fuegt den Pfad zwischen den beiden Distrikten von Start und Ziel hinzu, die auf einem gemeinsamen District stehen
+* @param: startDistricts: ein Array, der Districtname von dem Start, aufgesplitted nach Punkten im Namen
+* @param: targetDistricts: ein Array, der Districtname von dem Ziel, aufgesplitted nach Punkten im Namen
+* @param: k: die letzte Position im startDistricts, die noch mit targetDistricts uebereinstimmt
+* @param: start: Gebaeude- bzw. Districtobjekt, der (allererste) Startpunkt
+* @param: target: Gebaeude- bzw. Districtobjekt, der (allerletzte) Zielpunkt
+* @param: height: Hoehe der Linie, die als letztes gezeichnet worden ist
+* @param: vertices: bisheriger Pfad, bestehend aus THREE.Vector3
+* @return: nameOfTargetDistrict: der Name von dem ZielDistrict, bei dem man aufgehoert hat, den Pfad zu setzen
+*/
+function addPathBetweenDistrictsOnTheSameDistrict(startDistricts, targetDistricts, k, start, target, height, vertices){
+	var nameOfStartingDistrict = "";
+	var nameOfTargetDistrict = "";
+	for (var i = 0; i<=k; i++) {
+		nameOfStartingDistrict = nameOfStartingDistrict + startDistricts[i] +".";
+		nameOfTargetDistrict = nameOfTargetDistrict + targetDistricts[i]+".";
+	}
+	if (startDistricts.length-1 == k) {
+		nameOfStartingDistrict = start[association.name];
+	}
+	if (targetDistricts.length-1 == k) {
+		nameOfTargetDistrict = target[association.name];
+	}
+	setPathOnOneDistrict(vertices, buildingsHashMap[nameOfStartingDistrict].nodeID, buildingsHashMap[nameOfTargetDistrict].nodeID, height);
+	return nameOfTargetDistrict;
 }
 
 
 
 /**
- * fuegt den Weg von einem unteren District hoch zu einem oberen District hinzu
- * @param: nameOfTargetDistrict: Name von dem District, bei dem man einen Schritt vorher aufgehoert hat
- * @param: targetDistricts: ein Array, der Districtname von dem Ziel, aufgesplitted nach Punkten im Namen
- * @param: k: die letzte Position im targetDistricts, die noch mit startDistricts uebereinstimmt
- * @param: vertices: bisheriger Pfad, bestehend aus THREE.Vector3
- * @param: currentDistrict: District, auf dem man den naechsten Pfad haben moechte
- * @param: height: Hoehe der Linie, die als letztes gezeichnet worden ist
- * @return: localDistrict: das aktualisierte District
- */
-function addPathFromLowerToUpperDistrict(nameOfTargetDistrict, targetDistricts, k, vertices, currentDistrict, height) {
-    var localNameOfTargetDistrict = nameOfTargetDistrict + targetDistricts[k + 1] + ".";
-    vertices.push(new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2] + currentDistrict._width / 2 + 0.1));
-    height = currentDistrict._centerPosition[1] + currentDistrict._height / 2 + 0.1;
-    vertices.push(new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2] + currentDistrict._width / 2 + 0.1));
-    var localDistrict = currentDistrict
-
-    for (var i = k + 2; i < targetDistricts.length; i++) {
-        setPathOnOneDistrict(vertices, localDistrict.exitNodeID, buildingsHashMap[localNameOfTargetDistrict].nodeID, height);
-
-        localDistrict = buildingsHashMap[localNameOfTargetDistrict];
-        localNameOfTargetDistrict = localNameOfTargetDistrict + targetDistricts[i] + ".";
-
-        vertices.push(new THREE.Vector3(localDistrict._centerPosition[0], height, localDistrict._centerPosition[2] + localDistrict._width / 2 + 0.1));
-        height = localDistrict._centerPosition[1] + localDistrict._height / 2 + 0.1;
-        vertices.push(new THREE.Vector3(localDistrict._centerPosition[0], height, localDistrict._centerPosition[2] + localDistrict._width / 2 + 0.1));
-    }
-    return localDistrict;
+* fuegt den Weg von einem unteren District hoch zu einem oberen District hinzu
+* @param: nameOfTargetDistrict: Name von dem District, bei dem man einen Schritt vorher aufgehoert hat
+* @param: targetDistricts: ein Array, der Districtname von dem Ziel, aufgesplitted nach Punkten im Namen
+* @param: k: die letzte Position im targetDistricts, die noch mit startDistricts uebereinstimmt
+* @param: vertices: bisheriger Pfad, bestehend aus THREE.Vector3
+* @param: currentDistrict: District, auf dem man den naechsten Pfad haben moechte
+* @param: height: Hoehe der Linie, die als letztes gezeichnet worden ist
+* @return: localDistrict: das aktualisierte District
+*/
+function addPathFromLowerToUpperDistrict(nameOfTargetDistrict, targetDistricts, k, vertices, currentDistrict, height){
+	var localNameOfTargetDistrict = nameOfTargetDistrict + targetDistricts[k+1] + ".";
+	vertices.push(new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2]+currentDistrict._width/2+0.1));
+	height = currentDistrict._centerPosition[1]+currentDistrict._height/2+0.1;
+	vertices.push(new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2]+currentDistrict._width/2+0.1));
+	var localDistrict = currentDistrict
+	
+	for (var i=k+2; i<targetDistricts.length; i++) {
+		setPathOnOneDistrict(vertices, localDistrict.exitNodeID, buildingsHashMap[localNameOfTargetDistrict].nodeID, height);
+		
+		localDistrict = buildingsHashMap[localNameOfTargetDistrict];
+		localNameOfTargetDistrict = localNameOfTargetDistrict + targetDistricts[i] + ".";	
+		
+		vertices.push(new THREE.Vector3(localDistrict._centerPosition[0], height, localDistrict._centerPosition[2]+localDistrict._width/2+0.1));
+		height = localDistrict._centerPosition[1]+localDistrict._height/2+0.1;
+		vertices.push(new THREE.Vector3(localDistrict._centerPosition[0], height, localDistrict._centerPosition[2]+localDistrict._width/2+0.1));
+	}
+	return localDistrict;
 }
 
 
@@ -335,57 +321,60 @@ function addPathFromLowerToUpperDistrict(nameOfTargetDistrict, targetDistricts, 
  * @param: height: die Hoehe von der Linie, die gezeichnet werden soll
  */
 function setPathOnOneDistrict(vertices, start, target, height) {
-    var path = graph.findShortestPath(start, target);
-    var currentNode;
-    if (path != null) {
-        for (var i = 0; i < path.length; i++) {
-            currentNode = nodeHashMap[path[i]];
-            vertices.push(new THREE.Vector3(currentNode.x, height, currentNode.z));
-        }
-    } else {
-        console.log("Fehler beim Finden eines Pfades.");
-    }
+	var path = graph.findShortestPath(start, target);
+	var currentNode;
+	if(path!=null){
+		for (var i=0; i<path.length; i++) {
+			currentNode = nodeHashMap[path[i]];
+			vertices.push(new THREE.Vector3(currentNode.x, height, currentNode.z));
+		}
+	}
+	else {
+		console.log("Fehler beim Finden eines Pfades.");
+	}
 }
 
 
 
 
 /**
- * berechnet die Position in den Arrays, ab dem sich die beiden unterscheiden
- * @param: firstArray: das eine Array
- * @param: secondArray: das andere Array
- * @return: die Position k, bei dem firstArray[k] noch secondArray[k] entspricht
- */
+* berechnet die Position in den Arrays, ab dem sich die beiden unterscheiden
+* @param: firstArray: das eine Array
+* @param: secondArray: das andere Array
+* @return: die Position k, bei dem firstArray[k] noch secondArray[k] entspricht
+*/
 function getLastPosOfSameEntry(firstArray, secondArray) {
-    var k = 0;
-    var isTheSameDistrict = true;
-    while (isTheSameDistrict) {
-        if (firstArray[k] == secondArray[k]) {
-            k++;
-        } else {
-            isTheSameDistrict = false;
-        }
-    }
-    return k;
+	var k = 0;
+	var isTheSameDistrict = true;
+	while (isTheSameDistrict) {
+		if (firstArray[k]==secondArray[k]) {
+			k++;
+		}
+		else {
+			isTheSameDistrict = false;
+		}
+	}
+	return k;
 }
 
 
 /**
- * Der letzte Schritt beim Erstellen eines Pfades zwischen zwei Gebaeuden, die auf unterschiedlichen Distrikten liegen.
- * Die Methode loescht entweder einen ueberfluessigen Knoten oder fuegt noch den letzten Pfad hinzu.
- * @param: targetDistricts: Der Name vom Distrikt vom Ziel als Array, aufgesplitted nach Punkten im Namen
- * @param: vertices: die bisherigen gesammelten Knoten / der Pfad (ein Array, bestehend aus THREE.Vector3)
- * @param: currentDistrict: Gebaeudeobjekt: Ziel-Distrikt bzw. Distrikt vom Ziel
- * @param: target: das Ziel
- * @param: height: die Hoehe, auf dem die Linien gezeichnet werden sollen
- * @param: k: Anzahl der uebereinstimmenden Distrike von Start und Ziel
- */
+* Der letzte Schritt beim Erstellen eines Pfades zwischen zwei Gebaeuden, die auf unterschiedlichen Distrikten liegen.
+* Die Methode loescht entweder einen ueberfluessigen Knoten oder fuegt noch den letzten Pfad hinzu.
+* @param: targetDistricts: Der Name vom Distrikt vom Ziel als Array, aufgesplitted nach Punkten im Namen
+* @param: vertices: die bisherigen gesammelten Knoten / der Pfad (ein Array, bestehend aus THREE.Vector3)
+* @param: currentDistrict: Gebaeudeobjekt: Ziel-Distrikt bzw. Distrikt vom Ziel
+* @param: target: das Ziel
+* @param: height: die Hoehe, auf dem die Linien gezeichnet werden sollen
+* @param: k: Anzahl der uebereinstimmenden Distrike von Start und Ziel
+*/
 function lastStepInCreatingPath(targetDistricts, vertices, currentDistrict, target, height, k) {
-    if (targetDistricts.length - 1 == k) {
-        vertices.pop();
-    } else {
-        setPathOnOneDistrict(vertices, currentDistrict.exitNodeID, target.nodeID, height);
-    }
+	if (targetDistricts.length-1 == k) {
+		vertices.pop();
+	}
+	else {
+		setPathOnOneDistrict(vertices, currentDistrict.exitNodeID, target.nodeID, height);
+	}
 }
 
 
@@ -514,7 +503,7 @@ function setMainDistrict(mainDistrict, namePrefix) {
             setMainDistrict(b, namePrefix + b.name + ".");
             if (b["buildings"] != undefined) {
                 setOneDistrict(b);
-                b._district = namePrefix;
+				b._district = namePrefix;
             }
         }
         setOneDistrict(mainDistrict, namePrefix);
@@ -529,14 +518,14 @@ function setMainDistrict(mainDistrict, namePrefix) {
  */
 function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
     if (mainDistrict.buildings != undefined) {
-        var nodesSortByX = {};
-        var nodesSortByZ = {};
+		var nodesSortByX = {};
+		var nodesSortByZ = {};
         var buildings = mainDistrict.buildings;
         var width = mainDistrict._width;
 
         var length = mainDistrict.buildings.length;
-        for (var i = 0; i < length; i++) {
-            var b = buildings[i];
+		for (var i = 0; i < length; i++) {
+			var b = buildings[i];
             setCenterPosition(
                 b,
                 b._centerPosition[0] - width / 2,
@@ -545,33 +534,28 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
             );
             shiftBack(b, nodesSortByX, nodesSortByZ);
         }
-        if (doWeUseConnections() && doWeUseStreets()) {
-            var exitNodeZCoord = Math.max.apply(Math, Object.keys(nodesSortByZ));
-            var exitNodeXCoord = Math.round((mainDistrict._centerPosition[0]) * 10000) / 10000;
-            if (jsonOfNodes[exitNodeXCoord] == undefined) {
-                jsonOfNodes[exitNodeXCoord] = {};
-            }
-
-            addANode(nodesSortByZ, exitNodeZCoord, exitNodeXCoord);
-
-            if (jsonOfNodes[exitNodeXCoord][exitNodeZCoord] == undefined) {
-                jsonOfNodes[exitNodeXCoord][exitNodeZCoord] = {
-                    x: exitNodeXCoord,
-                    z: exitNodeZCoord,
-                    id: nodeID,
-                    building: mainDistrict
-                };
-                nodeHashMap[nodeID] = jsonOfNodes[exitNodeXCoord][exitNodeZCoord];
-                graph[nodeID] = {};
-                nodeID++;
-            }
-
-            mainDistrict.exitNodeID = jsonOfNodes[exitNodeXCoord][exitNodeZCoord].id;
-            createEdges(nodesSortByX, nodesSortByZ);
-        }
+		if(doWeUseConnections() && doWeUseStreets()){
+			var exitNodeZCoord = Math.max.apply(Math, Object.keys(nodesSortByZ));
+			var exitNodeXCoord = Math.round((mainDistrict._centerPosition[0])*10000)/10000;
+			if(jsonOfNodes[exitNodeXCoord]==undefined){
+				jsonOfNodes[exitNodeXCoord] = {};
+			}
+			
+			addANode(nodesSortByZ, exitNodeZCoord, exitNodeXCoord);
+			
+			if(jsonOfNodes[exitNodeXCoord][exitNodeZCoord]==undefined) {
+				jsonOfNodes[exitNodeXCoord][exitNodeZCoord] = {x: exitNodeXCoord, z: exitNodeZCoord, id : nodeID, building: mainDistrict};
+				nodeHashMap[nodeID] = jsonOfNodes[exitNodeXCoord][exitNodeZCoord];
+				graph[nodeID] = {};
+				nodeID++;
+			}
+			
+			mainDistrict.exitNodeID = jsonOfNodes[exitNodeXCoord][exitNodeZCoord].id;
+			createEdges(nodesSortByX, nodesSortByZ);
+		}
     }
     if (doWeUseConnections()) setGardenPos(mainDistrict);
-    if (doWeUseStreets()) setTheFiveStreetNodes(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
+	if (doWeUseStreets()) setTheFiveStreetNodes(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
 }
 
 
@@ -584,7 +568,7 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
  */
 function sortBuildings(aDistrict, namePrefix) {
     aDistrict["buildings"].sort(
-        function(building1, building2) {
+        function (building1, building2) {
             initBuilding(building1, namePrefix);
             initBuilding(building2, namePrefix);
             return (getLandWidth(building2) - getLandWidth(building1));
@@ -595,26 +579,28 @@ function sortBuildings(aDistrict, namePrefix) {
 
 
 /**
- * berechnet die dargestellte Breite/Hoehe/Farbe
- * @param: aBuilding: Gebaeude oder District, dessen Dimensionswert berechnet werden soll
- * @param: dimString: "height", "width" oder "color"
- * @return: den Wert von der Dimension, die dargestellt wird / werden soll
- */
-function getDrawnDimValue(aBuilding, dimString) {
-    var toReturn;
-    if (aBuilding[association[dimString]] != undefined && aBuilding[association[dimString]] != "") {
-        if (isNaN(parseFloat(aBuilding[association[dimString]]))) {
-            console.log("Erwartet wurde eine Zahl. Bekommen habe ich: " + aBuilding[association[dimString]]);
-        }
-        if (metaData["min_" + association[dimString]] > 2) {
-            toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData["min_" + association[dimString]]) + 1.5;
-        } else {
-            toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
-        }
-    } else {
-        toReturn = 1.5;
-    }
-    return toReturn;
+* berechnet die dargestellte Breite/Hoehe/Farbe
+* @param: aBuilding: Gebaeude oder District, dessen Dimensionswert berechnet werden soll
+* @param: dimString: "height", "width" oder "color"
+* @return: den Wert von der Dimension, die dargestellt wird / werden soll
+*/
+function getDrawnDimValue(aBuilding, dimString){
+	var toReturn;
+	if (aBuilding[association[dimString]] != undefined && aBuilding[association[dimString]] != "") {
+		if(isNaN(parseFloat(aBuilding[association[dimString]]))) {
+                	console.log("Erwartet wurde eine Zahl. Bekommen habe ich: "+aBuilding[association[dimString]]);
+		}
+		if(metaData["min_"+association[dimString]]>2) {
+			toReturn = parseFloat(aBuilding[association[dimString]])/parseFloat(metaData["min_"+association[dimString]]) + 1.5;
+		}
+		else {
+			toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
+		}
+	} 
+	else {
+		toReturn = 1.5;
+	}
+	return toReturn;
 }
 
 
@@ -643,7 +629,7 @@ function initBuilding(aBuilding, namePrefix) {
         }
         buildingsHashMap[aBuilding[association.name]] = aBuilding;
         aBuilding._isRemoved = false;
-        aBuilding._district = namePrefix;
+		aBuilding._district = namePrefix;
     }
 }
 
@@ -659,7 +645,7 @@ function setOneDistrict(aDistrict, namePrefix) {
     initBuilding(aDistrict, namePrefix);
     aDistrict = sortBuildings(aDistrict, namePrefix); //zunaechst muessen wir das gebaudearray sortieren absteigend nach der Breite der Boxen
     setFirstBuilding(aDistrict, namePrefix); //Initialisiert globale Variablen
-
+    
     var length = arrayOfBuildings.length;
     for (var i = 1; i < length; i++) {
         initBuilding(arrayOfBuildings[i], namePrefix);
@@ -715,7 +701,7 @@ function setCenterPosition(aDistrict, newX, newY, newZ) {
                 b._centerPosition[0] + newX - x,
                 b._centerPosition[1] + newY - y,
                 b._centerPosition[2] + newZ - z
-            );
+                );
 
         }
     }
@@ -728,16 +714,17 @@ function setCenterPosition(aDistrict, newX, newY, newZ) {
  * @return: Breite des Grundstuecks, das zum i-ten Gebaeude gehoert
  */
 function getLandWidth(aBuilding) {
-    var width = aBuilding._width;
+	var width = aBuilding._width;
     var left = aBuilding._leftGarden;
     var right = aBuilding._rightGarden;
-    if (left._width == 0 && right._width == 0) {
-        return width;
-    } else {
-        return Math.max(width + 1 + left.depth,
-            width + 1 + right.depth,
-            left._width + right._width + 2);
-    }
+	if(left._width == 0 && right._width == 0){
+		return width;
+	}
+	else{
+		return Math.max(width + 1 + left.depth,
+			width + 1 + right.depth,
+			left._width + right._width + 2);
+	}
 }
 
 
@@ -773,7 +760,7 @@ function setFirstBuilding(aDistrict, namePrefix) {
         b,
         gap + getXPosOfBuildingsFromLeft(0), (b._height) / 2,
         gap + getLandWidth(b) / 2
-    );
+        );
     maxWidth = 2 * gap + getLandWidth(b); // hier startet man, in X-Richtung zu bauen
     maxDepth = maxWidth; // baut man in Z-Richtung höher als maxDepth, muss man woanders eine neue Reihe starten
     startToBuildInXDirection = maxWidth - gap; // hier startet man, in X-Richtung zu bauen

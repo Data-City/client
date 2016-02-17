@@ -97,13 +97,13 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
 
 
 /**
- * setzt und zeichnet die Stadt
- * @param: mainDistrict: District, das dargestellt werden soll
- * @param: scaling: boolean, true, wenn wir skalieren wollen
- * @param: scalingString: width, height oder color, jenachdem, was man skalieren will (angeben, wenn scaling true)
- * @param: scalingExtrema: die Skalierungsmethode (angeben, wenn scaling true);
- */
-function setAndDrawCity(mainDistrict, scaling, scalingString, scalingExtrema) {
+* setzt und zeichnet die Stadt
+* @param: mainDistrict: District, das dargestellt werden soll
+* @param: scaling: boolean, true, wenn wir skalieren wollen
+* @param: scalingString: width, height oder color, jenachdem, was man skalieren will (angeben, wenn scaling true)
+* @param: scalingExtrema: die Skalierungsmethode (angeben, wenn scaling true);
+*/
+function setAndDrawCity(mainDistrict, scaling, scalingString, scalingExtrema){
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
     shiftBack(mainDistrict, {}, {});
@@ -119,11 +119,11 @@ function setAndDrawCity(mainDistrict, scaling, scalingString, scalingExtrema) {
 
 
 /**
- * Getter fuer usingConnections
- * @return: true, wenn Verbindungen dargestellt werden sollen, sonst false
- */
-function doWeUseConnections() {
-    return usingConnections;
+* Getter fuer usingConnections
+* @return: true, wenn Verbindungen dargestellt werden sollen, sonst false
+*/
+function doWeUseConnections(){
+	return usingConnections;
 }
 
 
@@ -135,12 +135,13 @@ function doWeUseConnections() {
  * @param: outgoingCalls: ausgehende Verbindungen
  */
 function initData(data, association, incomingCalls, outgoingCalls) {
-    setMetaData(association.metaData);
+	setMetaData(association.metaData);
     if (incomingCalls != undefined && outgoingCalls != undefined) {
         setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
-    } else {
-        usingConnections = false;
     }
+	else {
+		usingConnections = false;
+	}
     initAssociation(association);
     initMainDistrict(data, association);
 }
@@ -177,11 +178,11 @@ function initMainDistrict(data, association) {
 
 
 /**
- * Getter fuer useStreets
- * @return: true, wenn die Strassen benutzt, false, wenn nicht
- */
-function doWeUseStreets() {
-    return useStreets;
+* Getter fuer useStreets
+* @return: true, wenn die Strassen benutzt, false, wenn nicht
+*/
+function doWeUseStreets(){
+	return useStreets;
 }
 
 
@@ -234,7 +235,7 @@ window.addEventListener("keyup", function(e) {
 function createMainDistrict(data, association) {
     var district = {};
     var splitString, currentDistrict;
-
+    
     var length = data.length;
     for (var i = length; i--;) {
         currentDistrict = district;
@@ -292,7 +293,7 @@ function updateExtrema(width, height, color) {
     if (width + 1.5 < extrema.minWidth) extrema.minWidth = width + 1.5;
     if (height + 1.5 < extrema.minHeigth) extrema.minHeigth = height + 1.5;
     if (color + 1.5 < extrema.minColor) extrema.minColor = color + 1.5;*/
-    if (width > extrema.maxWidth) extrema.maxWidth = width;
+	if (width > extrema.maxWidth) extrema.maxWidth = width;
     if (height > extrema.maxHeight) extrema.maxHeight = height;
     if (color > extrema.maxColor) extrema.maxColor = color;
     if (width < extrema.minWidth) extrema.minWidth = width;
@@ -460,7 +461,7 @@ function drawStoredLines(aJson) {
         for (var i = 0; i < aJson[stringArray[j]].length; i++) {
             if (hashMap[aJson[stringArray[j]][i]]._isRemoved == false) {
                 drawLines(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]], true);
-                hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]].mesh.material.color.setHex(0x424242); //0xA5DF00);
+                hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]].mesh.material.color.setHex(0x424242);//0xA5DF00);
             }
         }
     }
