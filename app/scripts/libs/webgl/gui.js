@@ -23,9 +23,9 @@ var camera;
 var GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
 var GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
 var boxGeom = new THREE.BoxGeometry(1, 1, 1);
-var gardenGeom= [
-	new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
-	new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
+var gardenGeom = [
+    new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
+    new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
 ]
 
 /**
@@ -153,13 +153,13 @@ function drawBox(aBuilding, material, scene) {
     //var geometry = new THREE.BoxGeometry(width, aBuilding._height, width);
     var cube = new THREE.Mesh(boxGeom, material);
     var pos = cube.position;
-	var scale = cube.scale;
+    var scale = cube.scale;
     pos.x = cP[0];
     pos.y = cP[1];
     pos.z = cP[2];
-	scale.x  = width;
-	scale.y = aBuilding._height;
-	scale.z = width;
+    scale.x = width;
+    scale.y = aBuilding._height;
+    scale.z = width;
     cube.building = aBuilding;
     aBuilding.mesh = cube;
     scene.add(cube);
@@ -281,11 +281,11 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
             addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
         }
         if (doWeUseConnections()) addGarden(aDistrict, scene);
-        
+
         var buildings = aDistrict["buildings"];
         var length = buildings.length;
         for (var j = length; j--;) {
-            addEachDistrict(buildings[j], scene, extrema, (colorBoolean+1)%2);
+            addEachDistrict(buildings[j], scene, extrema, (colorBoolean + 1) % 2);
         }
     }
 }
@@ -350,28 +350,27 @@ function drawLines(aGarden, updateBoolean) {
  */
 function drawALine(aGarden, destGarden) {
     var geometry = new THREE.Geometry();
-	
-	if(doWeUseStreets()) {
-		var center = aGarden.building._centerPosition;
-		var destCenter = destGarden.building._centerPosition;
-		geometry.vertices.push(new THREE.Vector3(center[0], center[1]-(aGarden.building._height/2), center[2]));
-		setPath(geometry.vertices, aGarden.building, destGarden.building);
-		geometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1]-destGarden.building._height/2, destCenter[2]));
-		destGarden.building.mesh.material.color.setHex(0x40FF00);
-	}
-	else{
-		var curve = new THREE.CubicBezierCurve3(
-			new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
-			new THREE.Vector3(aGarden.nextLinePos[0], 2 * maximalHeight, aGarden.nextLinePos[1]),
-			new THREE.Vector3(destGarden.nextLinePos[0], 3 * maximalHeight, destGarden.nextLinePos[1]),
-			new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
+
+    if (doWeUseStreets()) {
+        var center = aGarden.building._centerPosition;
+        var destCenter = destGarden.building._centerPosition;
+        geometry.vertices.push(new THREE.Vector3(center[0], center[1] - (aGarden.building._height / 2), center[2]));
+        setPath(geometry.vertices, aGarden.building, destGarden.building);
+        geometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1] - destGarden.building._height / 2, destCenter[2]));
+        destGarden.building.mesh.material.color.setHex(0x40FF00);
+    } else {
+        var curve = new THREE.CubicBezierCurve3(
+            new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
+            new THREE.Vector3(aGarden.nextLinePos[0], 2 * maximalHeight, aGarden.nextLinePos[1]),
+            new THREE.Vector3(destGarden.nextLinePos[0], 3 * maximalHeight, destGarden.nextLinePos[1]),
+            new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
         );
-		geometry.vertices = curve.getPoints(50);
-	}
+        geometry.vertices = curve.getPoints(50);
+    }
     var factor = getColorFactor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
     var material = new THREE.LineBasicMaterial({
         //color: new THREE.Color(1, 1 - factor, 1 - factor)
-		 color: new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor)
+        color: new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor)
     });
     var curveObject = new THREE.Line(geometry, material);
     scene.add(curveObject);
@@ -411,7 +410,7 @@ function removeLines(aGarden, updateBoolean) {
 
 
     for (var x in aGarden.meshLines) {
-		var faktor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
+        var faktor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
         hashMap[x].mesh.material.color.set((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor));
         if (hashMap[x][gardenString].on == false) {
             var length = aGarden.meshLines[x].length;
@@ -533,7 +532,7 @@ function onDocumentMouseDown(event) {
                     b[association["color"]],
                     b[association["name"]],
                     intersects[0].object
-                    );
+                );
             }
         }
     }
@@ -546,7 +545,7 @@ function onDocumentMouseDown(event) {
  */
 function setGardenOn(aMesh) {
     drawLines(aMesh.object.garden, true);
-    aMesh.object.material.color.setHex(0x424242);//0xA5DF00);
+    aMesh.object.material.color.setHex(0x424242); //0xA5DF00);
     if (aMesh.object.garden.isLeftGarden == true) {
         clickedLeftGardens.push(aMesh.object.garden.building[association.name]);
     } else {
