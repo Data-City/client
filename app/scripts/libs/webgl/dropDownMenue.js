@@ -390,11 +390,7 @@ function scale(value, aString, scene, aDistrict, camera) {
     storedDistrict = [];
     storedBuilding = [];
     setLight(scene);
-    setMainDistrict(aDistrict, "");
-    shiftBack(mainDistrict, {}, {});
-	if (doWeUseConnections()) setGraph();
-    scalingExtrema(aString);
-    addCityToScene(aDistrict, scene, camera);
+    setAndDrawCity(aDistrict, true, aString, scalingExtrema);
     drawStoredLines(getJsonForCurrentLink());
     updateRemovedBuildings();
     if (buildingInformation.mesh != undefined) {
@@ -460,11 +456,12 @@ function scaleLogarithmically(aDistrict, aString) {
  * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
  */
 function scaleLinearly(aDistrict, aString) {
-    if (aDistrict[association[aString]] == "") {
+    /*if (aDistrict[association[aString]] == "") {
         return 1.5;
     } else {
         return aDistrict[association[aString]] + 1.5;
-    }
+    }*/
+    return getDrawnDimValue(aDistrict, aString);
 }
 
 

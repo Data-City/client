@@ -95,6 +95,7 @@ function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord){
         for(var i=0; i<nodesOfStreetsSortByZCoord[x].length-1; i++){
             currentNode = jsonOfNodes[nodesOfStreetsSortByZCoord[x][i+1]][x];
 			if(currentNode != undefined) { //auch hier sollte currentNode eigentlich nicht undefined sein ...
+				var distance = getEuclideanDistance(lastNode, currentNode);
 				graph[lastNode.id][currentNode.id] = 1;
 				graph[currentNode.id][lastNode.id] = 1;
 				lastNode.right = currentNode;
@@ -104,6 +105,17 @@ function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord){
         }
     }
 }
+
+/**
+* berechnet die euklidische Distanz im 2D fuer 2 Knoten
+* @param: firstNode: ein Knoten
+* @param: secondNode: zweiter Knoten
+* @return: euklidische Distanz zwischen den beiden Knoten
+*/
+function getEuclideanDistance(firstNode, secondNode){
+	return Math.sqrt(Math.pow(firstNode.x-secondNode.x, 2)+Math.pow(firstNode.y-secondNode.y, 2));
+}
+
 
 /**
 setzt den Graphen fuer die Strassen, damit man Dijkstra benutzen kann
@@ -151,8 +163,6 @@ function setTheFiveStreetNodes(district, nodesOfStreetsSortByXCoord, nodesOfStre
 * @param: belongsToBuilding: true, wenn es ein Knoten ist, das zu einem Gebäude gehört, sonst undefined
 */
 function addANode(aJSON, theKey, theValue, aDistrict, belongsToBuilding){
-	//if(theValue === -105.1423) console.log("dshgahdsöghaödsghaöodsghaoödsg: " + theKey);
-	//if(theKey = -105.1423) console.log("LALALLALALALALALLAL: "+theValue);
     if (aJSON[theKey] != undefined) {
         if (aJSON[theKey].indexOf(theValue)==-1) {
             (aJSON[theKey]).push(theValue);
@@ -313,9 +323,14 @@ function addPathFromLowerToUpperDistrict(nameOfTargetDistrict, targetDistricts, 
 function setPathOnOneDistrict(vertices, start, target, height) {
 	var path = graph.findShortestPath(start, target);
 	var currentNode;
-	for (var i=0; i<path.length; i++) {
-		currentNode = nodeHashMap[path[i]];
-		vertices.push(new THREE.Vector3(currentNode.x, height, currentNode.z));
+	if(path!=null){
+		for (var i=0; i<path.length; i++) {
+			currentNode = nodeHashMap[path[i]];
+			vertices.push(new THREE.Vector3(currentNode.x, height, currentNode.z));
+		}
+	}
+	else {
+		console.log("Fehler beim Finden eines Pfades.");
 	}
 }
 
@@ -562,6 +577,33 @@ function sortBuildings(aDistrict, namePrefix) {
     return aDistrict;
 }
 
+
+/**
+* berechnet die dargestellte Breite/Hoehe/Farbe
+* @param: aBuilding: Gebaeude oder District, dessen Dimensionswert berechnet werden soll
+* @param: dimString: "height", "width" oder "color"
+* @return: den Wert von der Dimension, die dargestellt wird / werden soll
+*/
+function getDrawnDimValue(aBuilding, dimString){
+	var toReturn;
+	if (aBuilding[association[dimString]] != undefined && aBuilding[association[dimString]] != "") {
+		if(isNaN(parseFloat(aBuilding[association[dimString]]))) {
+                	console.log("Erwartet wurde eine Zahl. Bekommen habe ich: "+aBuilding[association[dimString]]);
+		}
+		if(metaData["min_"+association[dimString]]>2) {
+			toReturn = parseFloat(aBuilding[association[dimString]])/parseFloat(metaData["min_"+association[dimString]]) + 1.5;
+		}
+		else {
+			toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
+		}
+	} 
+	else {
+		toReturn = 1.5;
+	}
+	return toReturn;
+}
+
+
 /*
  * Methode zur Initialisierung des Districts bzw. des Gebaeudes
  * @param: aBuilding: Das Gebaeude bzw. District, das initialisiert werden soll
@@ -572,19 +614,7 @@ function initBuilding(aBuilding, namePrefix) {
         var dimensions = ["height", "width", "color"];
         for (var i = 3; i--;) {
             var dim = dimensions[i];
-            if (aBuilding[association[dim]] != undefined && aBuilding[association[dim]] != "") {
-				if(isNaN(parseFloat(aBuilding[association[dim]]))) {
-					console.log("Erwartet wurde eine Zahl. Bekommen habe ich: "+aBuilding[association[dim]]);
-				}
-				if(metaData["min_"+association[dim]]>2) {
-					aBuilding["_" + dim] = parseFloat(aBuilding[association[dim]])/parseFloat(metaData["min_"+association[dim]]) + 1.5;
-				}
-				else {
-					aBuilding["_" + dim] = parseFloat(aBuilding[association[dim]]) + 1.5;
-				}
-            } else {
-                aBuilding["_" + dim] = 1.5;
-            }
+            aBuilding["_" + dim] = getDrawnDimValue(aBuilding, dim);
         }
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
         var theLeftGarden = garden(true, aBuilding, outgoingCalls[aBuilding[association.name]]);

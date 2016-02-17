@@ -77,13 +77,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
 
     initData(data, association, incomingCalls, outgoingCalls);
     console.log("Main District");
-    // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
-    setMainDistrict(mainDistrict, "");
-    shiftBack(mainDistrict, {}, {});
-	if (usingConnections) setGraph();
-
-    //zeichnen nun auch die Stadt
-    addCityToScene(mainDistrict, scene, camera, extrema);
+    setAndDrawCity(mainDistrict, false);
     console.log("Stadt");
 
     // Erstelle das Menue oben rechts
@@ -100,6 +94,29 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     goToInitialView();
     if (settings != undefined) setSpecificView(settings);
 }
+
+
+/**
+* setzt und zeichnet die Stadt
+* @param: mainDistrict: District, das dargestellt werden soll
+* @param: scaling: boolean, true, wenn wir skalieren wollen
+* @param: scalingString: width, height oder color, jenachdem, was man skalieren will (angeben, wenn scaling true)
+* @param: scalingExtrema: die Skalierungsmethode (angeben, wenn scaling true);
+*/
+function setAndDrawCity(mainDistrict, scaling, scalingString, scalingExtrema){
+    // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
+    setMainDistrict(mainDistrict, "");
+    shiftBack(mainDistrict, {}, {});
+    if (usingConnections) setGraph();
+
+    if (scaling) {
+        scalingExtrema(scalingString);
+    }
+
+    //zeichnen nun auch die Stadt
+    addCityToScene(mainDistrict, scene, camera, extrema);
+}
+
 
 /**
 * Getter fuer usingConnections
@@ -444,7 +461,7 @@ function drawStoredLines(aJson) {
         for (var i = 0; i < aJson[stringArray[j]].length; i++) {
             if (hashMap[aJson[stringArray[j]][i]]._isRemoved == false) {
                 drawLines(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]], true);
-                hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]].mesh.material.color.setHex(0xA5DF00);
+                hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]].mesh.material.color.setHex(0x424242);//0xA5DF00);
             }
         }
     }
