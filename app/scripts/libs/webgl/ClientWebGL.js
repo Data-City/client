@@ -76,9 +76,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     }, false);
 
     initData(data, association, incomingCalls, outgoingCalls);
-    console.log("Main District");
     setAndDrawCity(mainDistrict, false);
-    console.log("Stadt");
 
     // Erstelle das Menue oben rechts
     if (Detector.webgl) {
