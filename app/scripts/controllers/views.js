@@ -15,7 +15,6 @@
 angular.module('datacityApp')
     .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST, SETTINGS) {
         //Standardeinstellungen
-        var db = "prelife";
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
 
@@ -444,21 +443,27 @@ angular.module('datacityApp')
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
-        
-          /**
-           * Hilfsfunktionen für die kurze Vorschau des Datensatzes
-           */
-        if ($routeParams.collID) {
-            $scope.collID = $routeParams.collID;
-        }
-
+    
         /**
-         * Holt die Collection und die Attribute
+         * Hilfsfunktionen für die kurze Vorschau des Datensatzes
          */
-        REST.getDocuments(db, $scope.collID, function(collection) {
-            $scope.results = collection.data._embedded['rh:doc'];
-            $scope.attributes = getProperties($scope.results[0]);
-            $scope.numberOfEntries = collection.data._returned;
+        REST.getDocuments(dbWithCollections, $scope.collID, function(collection) {
+            var results = collection.data._embedded['rh:doc'];
+            $scope.properties = getProperties(results[0]);
+            
+            var actualEntries = [];
+            
+            //Für jede Eigenschaft durchgehen
+            for (var property in $scope.properties) {
+                var propertyName = $scope.properties[property].name;
+                for (var entry in results) {
+                    if (results[entry][propertyName]) {
+                        actualEntries.push(results[entry][propertyName]);
+                        break;
+                    }
+                }
+            }
+            $scope.actualEntries = actualEntries;
         });
 
         /**

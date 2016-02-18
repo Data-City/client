@@ -94,12 +94,12 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th ng-repeat="attr in attributes">{{attr.name}}</th>
+                                    <th ng-repeat="property in properties">{{property.name}}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="result in results|limitTo:1">
-                                        <td ng-repeat="attr in attributes">{{result[attr.name]}}</td>
+                                    <tr>
+                                        <td ng-repeat="entry in actualEntries">{{entry}}</td>
                                     </tr>
                                 </tbody>
                             </table>
