@@ -170,9 +170,14 @@
                                         </div>
                                     </fieldset>
                                     </br>
+                                    <div ng-if="chosenView.useConnections">
+                                        <p> Die Vorgärten, die auf die Gebäude zeigen, stellen die eingehenden Verbindungen dar. Die anderen stehen für die ausgehenden Verbindungen.</p>
+                                        <p> Je dunkler bzw. grüner ein Vorgarten ist, umso mehr ausgehende oder eingehende Verbindungen liegen vor.</p>
+                                        <p> Je dunkler die Straße bzw. die Linie ist, umso höher sind die Verbindungen von A nach B.</p>
+                                    </div>
                                     <!-- Filterung der Verbindungen erstmal auskommentiert
                                     
-                                    <div ng-if="chosenView.useConnections">
+                                    
                                         <p><i>Filterung ist noch nicht implementiert!</i></p>
                                     <table  class="table table-striped table-bordered table-condensed table-responsive">
                                         <colgroup>
