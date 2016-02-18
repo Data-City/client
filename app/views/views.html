@@ -156,7 +156,22 @@
                                         <br></br>
                                     </label>
                                     <br>
+                                    <fieldset class="formgroup" ng-show="chosenView.useConnections">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" ng-model="chosenView.typeOfConnections" value=0> Regenbögen
+                                            </label>
+                                            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Gebogene Linien, die zwei Gebäude durch die Luft verbinden"></span>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" ng-model="chosenView.typeOfConnections" value=1> Straßen
+                                            </label>
+                                        </div>
+                                    </fieldset>
                                     </br>
+                                    <!-- Filterung der Verbindungen erstmal auskommentiert
+                                    
                                     <div ng-if="chosenView.useConnections">
                                         <p><i>Filterung ist noch nicht implementiert!</i></p>
                                     <table  class="table table-striped table-bordered table-condensed table-responsive">
@@ -164,7 +179,6 @@
                                             <col span="1" style="width: 25%;"></col>
                                             <col span="1" style="width: 75%;"></col>
                                         </colgroup>
-                                        <!--Filtert die eingehende Verbindungen-->
                                         <tbody>
                                             <div>
                                                 <td>Eingehende Verbindungen</td>
@@ -195,7 +209,6 @@
                                         </colgroup>
                                         <tbody>
                                             <div>
-                                                <!--Filtert die ausgehende Verbindungen-->
                                                 <td>Ausgehende Verbindungen</td>
                                                 <td>
                                                     <div class="row">
@@ -217,6 +230,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                -->
                                 </div>
                             </div>
                             <div class="alert alert-warning" ng-show="showStep2 && chosenView.metaData.connectionsAvailable === 'false'">Da es keine Verbindungen gibt, kann man keine auswählen</div>
@@ -335,7 +349,7 @@
                                     <!-- NAME -->
                                     <tr>
                                         <td>
-                                            <p><i>Hinweis: Wenn die Namen nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. Suche)</i></p>
+                                            <p><i>Hinweis: Wenn die Namen nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. die Suche)</i></p>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Name</span>
                                                 <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name"></select>

@@ -176,6 +176,11 @@ angular.module('datacityApp')
         $scope.drawCity = function () {
             var view = $scope.chosenView;
 
+            if (view.useConnections && !view.typeOfConnections) {
+                window.alert("Schritt 2: \nEs wurden Verbindungen ausgewählt, aber keine Option ausgewählt!");
+                return false;    
+            }
+
             // Korrekte Blockeinstellungen
             for (var key in view.districts) {
                 if (view.districts[key].field === null) {
