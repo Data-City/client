@@ -278,7 +278,7 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
         if (doWeUseConnections()) addGarden(aDistrict, scene);
     } else {
         if (colorBoolean == 0) {
-            addBoxes(0xDBDBDC, aDistrict, scene);
+            addBoxes(0xBEBEBE, aDistrict, scene);
         } else {
             addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
         }
