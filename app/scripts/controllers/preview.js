@@ -8,10 +8,10 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-    .controller('PreviewCtrl', function($scope, $routeParams, sharedLogin, $log, REST) {
+    .controller('PreviewCtrl', function($scope, $routeParams, sharedLogin, $log, REST, SETTINGS) {
 
         // Verbindungsdaten
-        var db = "prelife";
+        var db = SETTINGS.databaseForCollections;
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
 
