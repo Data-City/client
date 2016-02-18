@@ -15,7 +15,7 @@ angular.module('datacityApp')
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
 
-        $log.info($routeParams.collID);
+        
         $scope.collID = null;
         $scope.results = null;
         $scope.attributes = null;

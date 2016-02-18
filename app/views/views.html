@@ -88,6 +88,22 @@
                             <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep1" aria-hidden="true"></span>
                             <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Einzelne Schritte als SQL-Befehle verdeutlicht."></span>
                         </div>
+                        <!--kleine Vorschau des ersten Datensatzes zur Hilfe -->
+                        <div class="panel-body" ng-show="showStep1">
+                            <span class="glyphicon glyphicon-question-sign pull-right" data-toggle="tooltip" title="Zur Hilfe wird hier ein Beispiel des Datensatzes nochmal gezeigt."></span>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th ng-repeat="attr in attributes">{{attr.name}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="result in results|limitTo:1">
+                                        <td ng-repeat="attr in attributes">{{result[attr.name]}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="panel-body" ng-show="showStep1">
                             <table class="table table-striped table-bordered table-condensed table-responsive">
                                 <colgroup>

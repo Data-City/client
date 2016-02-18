@@ -15,6 +15,7 @@
 angular.module('datacityApp')
     .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST, SETTINGS) {
         //Standardeinstellungen
+        var db = "prelife";
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
 
@@ -24,9 +25,15 @@ angular.module('datacityApp')
         var baseurl = SETTINGS.baseurl;
 
         var WEBGL_DIV = SETTINGS.WEBGL_DIV;
-
+        
+        $scope.collID = null;
+        $scope.results = null;
+        $scope.attributes = null;
         $scope.mongoDbAggr = null;
+      
 
+
+        
         /**
          *  Konstruktor für eine Ansicht
          */
@@ -436,6 +443,22 @@ angular.module('datacityApp')
          */
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
+        });
+        
+          /**
+           * Hilfsfunktionen für die kurze Vorschau des Datensatzes
+           */
+        if ($routeParams.collID) {
+            $scope.collID = $routeParams.collID;
+        }
+
+        /**
+         * Holt die Collection und die Attribute
+         */
+        REST.getDocuments(db, $scope.collID, function(collection) {
+            $scope.results = collection.data._embedded['rh:doc'];
+            $scope.attributes = getProperties($scope.results[0]);
+            $scope.numberOfEntries = collection.data._returned;
         });
 
         /**
