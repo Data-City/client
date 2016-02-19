@@ -275,9 +275,7 @@ angular.module('datacityApp')
          * Wählt bei Klick auf eine Ansicht diese aus
          */
         $scope.setChosenView = function(view) {
-            if ($scope.chosenView) {
-                $scope.chosenView = null;
-            } else {
+            if (!$scope.chosenView || $scope.chosenView._id !== view._id) {
                 REST.getData(function(response) {
                     if (response.data) {
                         $scope.chosenView = response.data;
@@ -287,6 +285,8 @@ angular.module('datacityApp')
                         });
                     }
                 }, database, collection, view._id);
+            } else {
+                $scope.chosenView = null;
             }
             document.getElementById("Stadt").innerHTML = "";
         };
