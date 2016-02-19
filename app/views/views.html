@@ -270,7 +270,7 @@
                                 <fieldset class="formgroup">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" ng-model="chosenView.useGrouping" value=0> Keine Aggregation
+                                            <input type="radio" ng-model="chosenView.useGrouping" value=0 ng-click="chosenView.aggregations = []; chosenView.grouping = null;"> Keine Aggregation
                                         </label>
                                     </div>
                                     <div class="radio">
