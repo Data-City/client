@@ -174,8 +174,6 @@ angular.module('datacityApp')
         $scope.drawCity = function() {
             var view = $scope.chosenView;
 
-            $('#collapseAll').collapse();
-
             if (view.useConnections && !view.typeOfConnections) {
                 window.alert("Schritt 2: \nEs wurden Verbindungen ausgewählt, aber keine Option ausgewählt!");
                 return false;
@@ -198,6 +196,8 @@ angular.module('datacityApp')
                 window.alert("Schritt 5: \nEs wurden eine oder mehr Dimensionen nicht ausgewählt!");
                 return false;
             }
+
+            $('#collapseAll').collapse();
 
             // Spinner anzeigen
             $scope.loader = true;
