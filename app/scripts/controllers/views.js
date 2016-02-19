@@ -275,7 +275,7 @@ angular.module('datacityApp')
          * Wählt bei Klick auf eine Ansicht diese aus
          */
         $scope.setChosenView = function(view) {
-            if ($scope.chosenView === view) {
+            if ($scope.chosenView) {
                 $scope.chosenView = null;
             } else {
                 REST.getData(function(response) {
@@ -288,6 +288,7 @@ angular.module('datacityApp')
                     }
                 }, database, collection, view._id);
             }
+            document.getElementById("Stadt").innerHTML = "";
         };
 
 
