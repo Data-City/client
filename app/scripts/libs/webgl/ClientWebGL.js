@@ -66,6 +66,16 @@ function getControls() {
  * @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
+    
+    usingConnections = association.useConnections;
+    
+    if (usingConnections) {
+        if (association.typeOfConnections === "1") {
+            useStreets = true;
+        } else {
+            useStreets = false;
+        }
+    }
 
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
@@ -208,7 +218,6 @@ window.addEventListener("keyup", function(e) {
     if (e.which !== 80) return;
     try {
         imgData = renderer.domElement.toDataURL();
-        console.log(imgData);
     } catch (e) {
         console.log("Browser does not support taking screenshot of 3d context");
         return;
