@@ -24,15 +24,7 @@ angular.module('datacityApp')
         var baseurl = SETTINGS.baseurl;
 
         var WEBGL_DIV = SETTINGS.WEBGL_DIV;
-        
-        $scope.collID = null;
-        $scope.results = null;
-        $scope.attributes = null;
-        $scope.mongoDbAggr = null;
-      
 
-
-        
         /**
          *  Konstruktor für eine Ansicht
          */
@@ -186,7 +178,7 @@ angular.module('datacityApp')
 
             if (view.useConnections && !view.typeOfConnections) {
                 window.alert("Schritt 2: \nEs wurden Verbindungen ausgewählt, aber keine Option ausgewählt!");
-                return false;    
+                return false;
             }
 
             // Korrekte Blockeinstellungen
@@ -443,16 +435,16 @@ angular.module('datacityApp')
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
-    
+
         /**
          * Hilfsfunktionen für die kurze Vorschau des Datensatzes
          */
         REST.getDocuments(dbWithCollections, $scope.collID, function(collection) {
             var results = collection.data._embedded['rh:doc'];
             $scope.properties = getProperties(results[0]);
-            
+
             var actualEntries = [];
-            
+
             //Für jede Eigenschaft durchgehen
             for (var property in $scope.properties) {
                 var propertyName = $scope.properties[property].name;
