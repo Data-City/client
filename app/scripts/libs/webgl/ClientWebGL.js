@@ -238,16 +238,15 @@ window.addEventListener("keyup", function(e) {
  * Navigation über die Pfeiltasten
  */
 window.addEventListener("keydown", function(e) {
-    console.log("Listener");
-
     //Damit man mit den Pfeiltasten nicht mehr die Seite scrollt
     e.preventDefault();
 
     //Pfeiltaste links
     if (e.which === 37) {
         try {
-            console.log("Links");
-            camera.position.x = camera.position.x - 5;
+            //console.log("Links");
+            //camera.position.x = camera.position.x - 5;
+            getControls().target.x -= 5;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;
@@ -257,8 +256,9 @@ window.addEventListener("keydown", function(e) {
     //Pfeiltaste hoch
     if (e.which === 38) {
         try {
-            console.log("hoch");   
-            camera.position.y = camera.position.y - 5;
+            //console.log("hoch");   
+            //camera.position.y = camera.position.y - 5;
+            getControls().target.y += 5;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;    
@@ -268,8 +268,9 @@ window.addEventListener("keydown", function(e) {
     //Pfeiltaste rechts
     if (e.which === 39) {
         try {
-            console.log("rechts");    
-            camera.position.x = camera.position.x + 5;
+            //console.log("rechts");    
+            //camera.position.x = camera.position.x + 5;
+            getControls().target.x += 5;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;    
@@ -279,8 +280,9 @@ window.addEventListener("keydown", function(e) {
     //Pfeiltaste runter
     if (e.which === 40) {
         try {
-            console.log("runter");  
-            camera.position.y = camera.position.y + 5; 
+            //console.log("runter");  
+            //camera.position.y = camera.position.y + 5; 
+            getControls().target.y -= 5;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;    
