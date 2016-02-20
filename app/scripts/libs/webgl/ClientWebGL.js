@@ -88,7 +88,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     initData(data, association, incomingCalls, outgoingCalls);
     setAndDrawCity(mainDistrict, false);
 
-    // Erstelle das Menue oben rechts
+    // Erstelle die Legende
     if (Detector.webgl) {
         var ourDivElement = document.getElementById(nameOfDivElement);
         if (ourDivElement.children["dropdownmenu"] != undefined) {
@@ -211,10 +211,13 @@ function getCamToSave() {
 }
 
 
-/**** ADDING SCREEN SHOT ABILITY ***/
+/**
+ * Fügt Listener für einen Screenshot hinzu
+ */
 window.addEventListener("keyup", function(e) {
     var imgData, imgNode;
-    //Listen to 'P' key
+    
+    //Druck auf 'p'
     if (e.which !== 80) return;
     try {
         imgData = renderer.domElement.toDataURL();
@@ -229,6 +232,60 @@ window.addEventListener("keyup", function(e) {
     var myWindow = window.open("", "");
     myWindow.document.write("<div id='imageDownload'></div>");
     myWindow.document.getElementById('imageDownload').appendChild(imgNode);
+});
+
+/**
+ * Navigation über die Pfeiltasten
+ */
+window.addEventListener("keydown", function(e) {
+    console.log("Listener");
+
+    //Damit man mit den Pfeiltasten nicht mehr die Seite scrollt
+    e.preventDefault();
+
+    //Pfeiltaste links
+    if (e.which === 37) {
+        try {
+            console.log("Links");
+            camera.position.x = camera.position.x - 5;
+        } catch (e) {
+            console.log("Die Navigation über die Pfeiltasten lief schief!");
+            return;
+        }   
+    }
+    
+    //Pfeiltaste hoch
+    if (e.which === 38) {
+        try {
+            console.log("hoch");   
+            camera.position.y = camera.position.y - 5;
+        } catch (e) {
+            console.log("Die Navigation über die Pfeiltasten lief schief!");
+            return;    
+        }   
+    }
+    
+    //Pfeiltaste rechts
+    if (e.which === 39) {
+        try {
+            console.log("rechts");    
+            camera.position.x = camera.position.x + 5;
+        } catch (e) {
+            console.log("Die Navigation über die Pfeiltasten lief schief!");
+            return;    
+        }   
+    }
+    
+    //Pfeiltaste runter
+    if (e.which === 40) {
+        try {
+            console.log("runter");  
+            camera.position.y = camera.position.y + 5; 
+        } catch (e) {
+            console.log("Die Navigation über die Pfeiltasten lief schief!");
+            return;    
+        }   
+    }
 });
 
 
@@ -341,6 +398,10 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.set(0, 10, 30);
     setCamera(camera);
+    
+    console.log("--------------------");
+    console.log("camera: ");
+    console.log(camera);
 
     //Lichtquellen setzen
     setLight(scene);
