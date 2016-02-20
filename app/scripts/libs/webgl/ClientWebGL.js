@@ -66,9 +66,9 @@ function getControls() {
  * @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
-    
+
     usingConnections = association.useConnections;
-    
+
     if (usingConnections) {
         if (association.typeOfConnections === "1") {
             useStreets = true;
