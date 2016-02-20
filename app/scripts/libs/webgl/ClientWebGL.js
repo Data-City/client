@@ -67,16 +67,6 @@ function getControls() {
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
 
-    usingConnections = association.useConnections;
-
-    if (usingConnections) {
-        if (association.typeOfConnections === "1") {
-            useStreets = true;
-        } else {
-            useStreets = false;
-        }
-    }
-
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
 
@@ -144,11 +134,18 @@ function doWeUseConnections() {
  */
 function initData(data, association, incomingCalls, outgoingCalls) {
     setMetaData(association.metaData);
-    if (incomingCalls != undefined && outgoingCalls != undefined) {
+
+    usingConnections = association.useConnections;
+
+    if (usingConnections) {
         setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
-    } else {
-        usingConnections = false;
+        if (association.typeOfConnections === "1") {
+            useStreets = true;
+        } else {
+            useStreets = false;
+        }
     }
+    
     initAssociation(association);
     initMainDistrict(data, association);
 }

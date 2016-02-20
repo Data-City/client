@@ -52,8 +52,18 @@ function getBuildingsHashMap() {
  * @param: outgoing: neues Objekt fuer outgoingCalls
  */
 function setCalls(income, outgoing) {
-    incomingCalls = income;
-    outgoingCalls = outgoing;
+    if (income == undefined) {
+        incomingCalls = {};
+    }
+    else {
+        incomingCalls = income;
+    }
+    if (outgoing == undefined) {
+        outgoingCalls = {};
+    }
+    else {
+        outgoingCalls = outgoing;
+    }
 }
 
 

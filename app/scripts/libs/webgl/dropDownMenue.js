@@ -149,10 +149,22 @@ function setRemovedBuildings(newRemovedBuildings) {
  * @param: aMesh: Mesh von dem Gebaeude, auf das geklickt worden ist
  */
 function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh) {
-    buildingInformation["height"] = newHeight;
-    buildingInformation["width"] = newWidth;
-    buildingInformation["color"] = newColor;
-    buildingInformation["name"] = newName;
+    if (newHeight != undefined) {
+        buildingInformation["height"] = newHeight;
+        buildingInformation["width"] = newWidth;
+        buildingInformation["color"] = newColor;
+    }
+    else {
+        buildingInformation["height"] = "Keine Daten";
+        buildingInformation["width"] = "Keine Daten";
+        buildingInformation["color"] = "Keine Daten";
+    }
+    if (newName != "undefined.") {
+        buildingInformation["name"] = newName;
+    }
+    else {
+        buildingInformation["name"] = "Keine Daten";
+    }
     buildingInformation.mesh = aMesh;
 }
 
@@ -393,7 +405,7 @@ function scale(value, aString, scene, aDistrict, camera) {
     setAndDrawCity(aDistrict, true, aString, scalingExtrema);
     drawStoredLines(getJsonForCurrentLink());
     updateRemovedBuildings();
-    if (buildingInformation.mesh != undefined) {
+    if (buildingInformation.mesh != "Keine Daten") {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
     }
     updateControls(Math.max(aDistrict._width, getExtrema().maxHeight));
