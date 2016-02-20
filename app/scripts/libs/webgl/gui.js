@@ -256,7 +256,7 @@ function addCityToScene(mainDistrict, scene, camera) {
     }
     //Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
     mainDistrict._centerPosition[1] = -1.5;
-    addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, scene);
+    addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, scene);
     setCameraPos(camera, mainDistrict, extrema);
 
     maximalHeight = getExtrema().maxHeight;
@@ -274,13 +274,13 @@ function addCityToScene(mainDistrict, scene, camera) {
 function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
     if (aDistrict["buildings"] == undefined) {
         var faktor = getColorFactor(extrema, aDistrict._color, "Color");
-        addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene);
+        addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene);
         if (doWeUseConnections()) addGarden(aDistrict, scene);
     } else {
         if (colorBoolean == 0) {
-            addBoxes(0xBEBEBE, aDistrict, scene);
+            addBoxes(0xDBDBDC, aDistrict, scene);
         } else {
-            addBoxes((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
+            addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
         }
         if (doWeUseConnections()) addGarden(aDistrict, scene);
 
@@ -304,7 +304,8 @@ function addGarden(aBuilding, scene) {
         if (aBuilding[gardens[i]] && aBuilding[gardens[i]].color > 0) {
             var garden = aBuilding[gardens[i]];
             var factor = getColorFactor(getExtrema(), garden.color, "SumOfConn");
-            var gardenMaterial = getMaterial(new THREE.Color(1 - factor, 1, 1 - factor));
+            //var gardenMaterial = getMaterial(new THREE.Color(1 - factor, 1, 1 - factor));
+            var gardenMaterial = getMaterial((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));
             gardenMaterial.name = "garden";
             var gardenGeom = [
                 new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
@@ -417,7 +418,7 @@ function removeLines(aGarden, updateBoolean) {
 
     for (var x in aGarden.meshLines) {
         var faktor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
-        hashMap[x].mesh.material.color.set((new THREE.Color(0xFFFFFF)).lerp(new THREE.Color(buildingColor), faktor));
+        hashMap[x].mesh.material.color.set((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), faktor));
         if (hashMap[x][gardenString].on == false) {
             var length = aGarden.meshLines[x].length;
             for (var i = length; i--;) {
