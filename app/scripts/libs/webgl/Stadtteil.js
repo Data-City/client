@@ -52,8 +52,18 @@ function getBuildingsHashMap() {
  * @param: outgoing: neues Objekt fuer outgoingCalls
  */
 function setCalls(income, outgoing) {
-    incomingCalls = income;
-    outgoingCalls = outgoing;
+    if (income == undefined) {
+        incomingCalls = {};
+    }
+    else {
+        incomingCalls = income;
+    }
+    if (outgoing == undefined) {
+        outgoingCalls = {};
+    }
+    else {
+        outgoingCalls = outgoing;
+    }
 }
 
 
@@ -79,6 +89,7 @@ function sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoo
  */
 function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
     sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
+	var distance;
     var lastNode, currentNode;
     for (var x in nodesOfStreetsSortByXCoord) {
         lastNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][0]];
@@ -86,8 +97,9 @@ function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
             currentNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][i + 1]];
             // eigentlich duerfte currentNode nicht undefined sein, aber irgendwie ist es trotzdem ab und zu undefined - komisch
             if (currentNode != undefined && currentNode.belongsToBuilding != true) {
-                graph[lastNode.id][currentNode.id] = 1;
-                graph[currentNode.id][lastNode.id] = 1;
+				distance = getEuclideanDistance(lastNode, currentNode);
+                graph[lastNode.id][currentNode.id] = distance;
+                graph[currentNode.id][lastNode.id] = distance;
                 lastNode.front = currentNode;
                 currentNode.back = lastNode;
             }
@@ -99,9 +111,9 @@ function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
         for (var i = 0; i < nodesOfStreetsSortByZCoord[x].length - 1; i++) {
             currentNode = jsonOfNodes[nodesOfStreetsSortByZCoord[x][i + 1]][x];
             if (currentNode != undefined) { //auch hier sollte currentNode eigentlich nicht undefined sein ...
-                var distance = getEuclideanDistance(lastNode, currentNode);
-                graph[lastNode.id][currentNode.id] = 1;
-                graph[currentNode.id][lastNode.id] = 1;
+                distance = getEuclideanDistance(lastNode, currentNode);
+                graph[lastNode.id][currentNode.id] = distance;
+                graph[currentNode.id][lastNode.id] = distance;
                 lastNode.right = currentNode;
                 currentNode.left = lastNode;
                 lastNode = currentNode;
@@ -117,7 +129,7 @@ function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
  * @return: euklidische Distanz zwischen den beiden Knoten
  */
 function getEuclideanDistance(firstNode, secondNode) {
-    return Math.sqrt(Math.pow(firstNode.x - secondNode.x, 2) + Math.pow(firstNode.y - secondNode.y, 2));
+    return Math.sqrt(Math.pow(firstNode.x - secondNode.x, 2) + Math.pow(firstNode.z - secondNode.z, 2));
 }
 
 

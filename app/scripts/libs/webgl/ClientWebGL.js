@@ -18,6 +18,7 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
 var camToSave = {}; //speichert Anfangseinstellung
 var useStreets = true;
 var usingConnections = true;
+var SpeedForShiftByKeys = 5;
 
 /**
  * Getter fuer scene
@@ -66,16 +67,6 @@ function getControls() {
  * @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
-
-    usingConnections = association.useConnections;
-
-    if (usingConnections) {
-        if (association.typeOfConnections === "1") {
-            useStreets = true;
-        } else {
-            useStreets = false;
-        }
-    }
 
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
@@ -144,11 +135,18 @@ function doWeUseConnections() {
  */
 function initData(data, association, incomingCalls, outgoingCalls) {
     setMetaData(association.metaData);
-    if (incomingCalls != undefined && outgoingCalls != undefined) {
+
+    usingConnections = association.useConnections;
+
+    if (usingConnections) {
         setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
-    } else {
-        usingConnections = false;
+        if (association.typeOfConnections === "1") {
+            useStreets = true;
+        } else {
+            useStreets = false;
+        }
     }
+    
     initAssociation(association);
     initMainDistrict(data, association);
 }
@@ -245,8 +243,8 @@ window.addEventListener("keydown", function(e) {
     if (e.which === 37) {
         try {
             //console.log("Links");
-            //camera.position.x = camera.position.x - 5;
-            getControls().target.x -= 5;
+            camera.position.x = camera.position.x - SpeedForShiftByKeys;
+            trackballControls.target.x -= SpeedForShiftByKeys;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;
@@ -257,8 +255,8 @@ window.addEventListener("keydown", function(e) {
     if (e.which === 38) {
         try {
             //console.log("hoch");   
-            //camera.position.y = camera.position.y - 5;
-            getControls().target.y += 5;
+            camera.position.z = camera.position.z - SpeedForShiftByKeys;
+            trackballControls.target.z -= SpeedForShiftByKeys;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;    
@@ -269,8 +267,8 @@ window.addEventListener("keydown", function(e) {
     if (e.which === 39) {
         try {
             //console.log("rechts");    
-            //camera.position.x = camera.position.x + 5;
-            getControls().target.x += 5;
+            camera.position.x = camera.position.x + SpeedForShiftByKeys;
+            trackballControls.target.x += SpeedForShiftByKeys;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;    
@@ -281,8 +279,8 @@ window.addEventListener("keydown", function(e) {
     if (e.which === 40) {
         try {
             //console.log("runter");  
-            //camera.position.y = camera.position.y + 5; 
-            getControls().target.y -= 5;
+            camera.position.z = camera.position.z + SpeedForShiftByKeys; 
+            trackballControls.target.z += SpeedForShiftByKeys;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;    
@@ -400,10 +398,6 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.set(0, 10, 30);
     setCamera(camera);
-    
-    console.log("--------------------");
-    console.log("camera: ");
-    console.log(camera);
 
     //Lichtquellen setzen
     setLight(scene);
