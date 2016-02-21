@@ -236,8 +236,6 @@ window.addEventListener("keyup", function(e) {
  * Navigation über die Pfeiltasten
  */
 window.addEventListener("keydown", function(e) {
-    //Damit man mit den Pfeiltasten nicht mehr die Seite scrollt
-    e.preventDefault();
 
     //Pfeiltaste links
     if (e.which === 37) {
@@ -444,6 +442,7 @@ function setControls() {
     orbitControls.enableZoom = false;
     orbitControls.rotateSpeed = 1;
     orbitControls.noPan = true;
+    orbitControls.enableKeys = false;
 }
 
 /**
