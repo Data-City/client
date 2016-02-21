@@ -215,8 +215,8 @@ function getCamToSave() {
 window.addEventListener("keyup", function(e) {
     var imgData, imgNode;
     
-    //Druck auf 'p'
-    if (e.which !== 80) return;
+    //Druck auf 'Entfernen'
+    if (e.which !== 16) return;
     try {
         imgData = renderer.domElement.toDataURL();
     } catch (e) {
