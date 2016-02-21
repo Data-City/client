@@ -405,7 +405,7 @@ function scale(value, aString, scene, aDistrict, camera) {
     setAndDrawCity(aDistrict, true, aString, scalingExtrema);
     drawStoredLines(getJsonForCurrentLink());
     updateRemovedBuildings();
-    if (buildingInformation.mesh != "Keine Daten") {
+    if (buildingInformation.mesh != undefined) {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
     }
     updateControls(Math.max(aDistrict._width, getExtrema().maxHeight));
