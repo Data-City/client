@@ -86,15 +86,15 @@ angular
                 controller: 'LoginCtrl',
                 controllerAs: 'login'
             })
-            .when('/playground', {
-                templateUrl: 'views/playground.html',
-                controller: 'PlaygroundCtrl',
-                controllerAs: 'playground'
-            })
             .when('/storedView', {
                 templateUrl: 'views/storedview.html',
                 controller: 'StoredviewCtrl',
                 controllerAs: 'storedView'
+            })
+            .when('/import', {
+                templateUrl: 'views/import.html',
+                controller: 'ImportCtrl',
+                controllerAs: 'import'
             })
             .otherwise({
                 redirectTo: '/data'

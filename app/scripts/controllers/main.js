@@ -68,11 +68,25 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
      * 
      * @return: Gibt den Link zurück
      */
-    $scope.getMyLink = function(collId) {
+    $scope.getPreviewLink = function(collId) {
         var link = "#/data/preview/" + collId;
         location.href = link;
         return link;
     };
+    
+    /**
+     * Linkt zur Import-Seite 
+     * 
+     * 
+     * 
+     * @return: Gibt den Import Link zurück
+     */
+    $scope.getImportLink = function() {
+        var link = "#/import";
+        location.href = link;
+        return link;
+    };
+    
     /**
      * Gibt entweder Datensatz oder Datensätze an
      * 
