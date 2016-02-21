@@ -23,11 +23,6 @@ var GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
 var GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
 
 var lastIntersectedBuilding;
-//var boxGeom = new THREE.BoxGeometry(1, 1, 1);
-/*var gardenGeom = [
-    new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
-    new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
-];*/
 
 /**
  * Setter fuer die Farbe der Gebaeude aus settings.js
@@ -147,13 +142,12 @@ function setClickedGardens(aJson) {
  *@param: aBuilding: ein JSON-Objekt vom Typ Gebaeude/building, das gezeichnet werden soll
  *@param: material: ein Material von THREE.js, das auf das Gebaeude drauf soll
  *@param: scene: die scene, der die Box hinzugefuegt werden soll
+ *@param: boxGeom: die THREE.BoxGeometry
  */
-function drawBox(aBuilding, material, scene) {
+function drawBox(aBuilding, material, scene, boxGeom) {
     var cP = aBuilding._centerPosition;
     var width = aBuilding._width;
 
-    //var geometry = new THREE.BoxGeometry(width, aBuilding._height, width);
-    var boxGeom = new THREE.BoxGeometry(1, 1, 1);
     var cube = new THREE.Mesh(boxGeom, material);
     var pos = cube.position;
     var scale = cube.scale;
@@ -252,12 +246,17 @@ function addCityToScene(mainDistrict, scene, camera) {
     // nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
     var buildings = mainDistrict["buildings"];
     var length = buildings.length;
+	var boxGeom = new THREE.BoxGeometry(1, 1, 1);
+    var gardenGeom = [
+        new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
+        new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
+    ];
     for (var i = length; i--;) {
-        addEachDistrict(buildings[i], scene, extrema, 0);
+        addEachDistrict(buildings[i], scene, extrema, 0, boxGeom, gardenGeom);
     }
     //Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
     mainDistrict._centerPosition[1] = -1.5;
-    addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, scene);
+    addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, scene, boxGeom);
     setCameraPos(camera, mainDistrict, extrema);
 
     maximalHeight = getExtrema().maxHeight;
@@ -271,24 +270,26 @@ function addCityToScene(mainDistrict, scene, camera) {
  *@param: scene: die scene, der man die Zeichnungen hinzufuegen moechte
  *@param: extrema: ein JSON-Objekt, das die Extremwerte der Daten enhtaelt, dass man darauf zugreifen kann
  *@param: colorBoolean: 0, wenn Districtfarbe eben 0xB5BCDE war, 1 wenn sie eben 0x768dff (um Districtfarben abzuwechseln)
+ *@param: boxGeom: die THREE.BoxGeometry(1,1,1)
+ *@param: gardenGeom: die Dreiecke als Geometry fuer die Gaerten
  */
-function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
+function addEachDistrict(aDistrict, scene, extrema, colorBoolean, boxGeom, gardenGeom) {
     if (aDistrict["buildings"] == undefined) {
         var faktor = getColorFactor(extrema, aDistrict._color, "Color");
-        addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene);
-        if (doWeUseConnections()) addGarden(aDistrict, scene);
+        addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene, boxGeom);
+        if (doWeUseConnections()) addGarden(aDistrict, scene, gardenGeom);
     } else {
         if (colorBoolean == 0) {
-            addBoxes(0xDBDBDC, aDistrict, scene);
+            addBoxes(0xDBDBDC, aDistrict, scene, boxGeom);
         } else {
-            addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene);
+            addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene, boxGeom);
         }
-        if (doWeUseConnections()) addGarden(aDistrict, scene);
+        if (doWeUseConnections()) addGarden(aDistrict, scene, gardenGeom);
 
         var buildings = aDistrict["buildings"];
         var length = buildings.length;
         for (var j = length; j--;) {
-            addEachDistrict(buildings[j], scene, extrema, (colorBoolean + 1) % 2);
+            addEachDistrict(buildings[j], scene, extrema, (colorBoolean + 1) % 2, boxGeom, gardenGeom);
         }
     }
 }
@@ -298,8 +299,9 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean) {
  *Hilfsmethode fuer addCityToScene, zeichnet die Gaerten zu den zugehoerigen gebaeuden bzw Districts
  *@param aBuilding: das Gebaeude bzw das District
  *@param: scene: scene, der der Garten hinzugefuegt werden soll
+ *@param: gardenGeom: ein Array bestehend aus den beiden Garten-Geometries
  */
-function addGarden(aBuilding, scene) {
+function addGarden(aBuilding, scene, gardenGeom) {
     var gardens = ["_leftGarden", "_rightGarden"];
     for (var i = 0; i < 2; i++) {
         if (aBuilding[gardens[i]] && aBuilding[gardens[i]].color > 0) {
@@ -308,10 +310,6 @@ function addGarden(aBuilding, scene) {
             //var gardenMaterial = getMaterial(new THREE.Color(1 - factor, 1, 1 - factor));
             var gardenMaterial = getMaterial((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));
             gardenMaterial.name = "garden";
-            var gardenGeom = [
-                new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
-                new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
-            ];
             var cube = new THREE.Mesh(gardenGeom[i], gardenMaterial);
             cube.position.x = garden._centerPosition[0];
             cube.position.y = garden._centerPosition[1];
@@ -439,10 +437,11 @@ function removeLines(aGarden, updateBoolean) {
  *@param: aColor: die Farbe fuer die Box
  *@param: aBuilding: das Building oder District Objekt, das gezeichnet werden soll
  *@param: scene: die scene, der das Objekt hinzugefuegt werden soll
+ *@param: boxGeom: die THREE.BoxGeometry(1,1,1)
  */
-function addBoxes(aColor, aBuilding, scene) {
+function addBoxes(aColor, aBuilding, scene, boxGeom) {
     var districtMaterial = getMaterial(aColor);
-    drawBox(aBuilding, districtMaterial, scene);
+    drawBox(aBuilding, districtMaterial, scene, boxGeom);
 }
 
 
