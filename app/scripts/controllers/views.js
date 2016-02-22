@@ -45,8 +45,9 @@ angular.module('datacityApp')
             this.metaData = {};
             this.aggregations = [];
             this.districts = [];
-            this.districtType = 0; //"Keine Blöcke benutzen" ist voreingestellt
-            this.useGrouping = 0;
+            this.districtType = 0; // "Keine Blöcke benutzen" ist voreingestellt
+            this.useGrouping = 0; // Keine Grupperiung
+            this.typeOfConnections = 0; // Regenbögen
         }
 
         /**
@@ -175,8 +176,13 @@ angular.module('datacityApp')
             var view = $scope.chosenView;
 
             if (view.useConnections && !view.typeOfConnections) {
-                window.alert("Schritt 2: \nEs wurden Verbindungen ausgewählt, aber keine Option ausgewählt!");
+                window.alert("Schritt 2: \nEs wurden Verbindungen, aber keine Option ausgewählt!");
                 return false;
+            }
+            
+            if (view.useGrouping === "1" && view.grouping === undefined) {
+                window.alert("Schritt 3: \nEs wurde die Aggregation ausgewählt, aber keine Option ausgewählt!");
+                return false;   
             }
 
             // Korrekte Blockeinstellungen
