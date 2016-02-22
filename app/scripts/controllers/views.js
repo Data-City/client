@@ -180,7 +180,7 @@ angular.module('datacityApp')
                 return false;
             }
             
-            if (view.useGrouping === "1" && view.grouping === undefined) {
+            if (view.useGrouping === "1" && (view. grouping === null || view.grouping === undefined)) {
                 window.alert("Schritt 3: \nEs wurde die Aggregation ausgewählt, aber keine Option ausgewählt!");
                 return false;   
             }
