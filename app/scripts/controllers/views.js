@@ -203,8 +203,6 @@ angular.module('datacityApp')
                 return false;
             }
 
-            $('#collapseAll').collapse();
-
             // Spinner anzeigen
             $scope.loader = true;
 
@@ -214,6 +212,11 @@ angular.module('datacityApp')
                     var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
                     REST.getURL(relUrl, null, function(collection) {
                         view.numberOfEntries = $scope.collection.data._returned;
+                        if (collection.data._returned === 0) {
+                            window.alert("Die Filterung bzw. Aggregation wurde so eingestellt, dass keine Datensätze übrig bleiben!");
+                            $scope.loader = false;
+                            return false;
+                        }
                         view.dimensions.name = {
                             name: view.dimensionSettings.name.name
                         };
@@ -222,8 +225,8 @@ angular.module('datacityApp')
                         view.dimensions.area = view.dimensionSettings.area.name;
                         view.dimensions.color = view.dimensionSettings.color.name;
                         view.buildingcolor = SETTINGS.farbefuerGebauede;
-                        // AUSKOMMENTIEREN! NUR DEBUG
-                        //$scope.loader = false;
+                        
+                        $('#collapseAll').collapse();
 
                         if (view.metaData.connectionsAvailable === "true") {
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
