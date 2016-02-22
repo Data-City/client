@@ -133,23 +133,23 @@
                                         </td>
                                         <td>
                                             <div ng-if="attr.toBeFiltered && attr.chooseable && attr.type === 'number'">
-                                                <button type="button" class="btn btn-xs" aria-label="Left Align" ng-click="">
+                                                <button type="button" class="btn btn-xs" aria-label="Left Align" ng-click="attr.numberValueFilter[0] = attr.numberValueFilter[0] - 5">
                                                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                                                 </button>
-                                                <button type="button" class="btn btn-xs" aria-label="Left Align" ng-click="">
+                                                <button type="button" class="btn btn-xs" aria-label="Left Align" ng-click="attr.numberValueFilter[0] = attr.numberValueFilter[0] + 5">
                                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                                 </button>
-                                                <button type="button" class="btn btn-xs pull-right" aria-label="Left Align" ng-click="">
+                                                <button type="button" class="btn btn-xs pull-right" aria-label="Left Align" ng-click="attr.numberValueFilter[1] = attr.numberValueFilter[1] - 5">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs pull-right" aria-label="Left Align" ng-click="attr.numberValueFilter[1] = attr.numberValueFilter[1] + 5">
                                                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                                                </button>
-                                                <button type="button" class="btn btn-xs pull-right" aria-label="Left Align" ng-click="">
-                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                                 </button>
                                                 <div class="row">
                                                     <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
                                                         <div class="row">
                                                             <div class="col-md-4 col-sm-4"> <span class="pull-left">Minimum: {{chosenView.metaData['min_' + attr.name]}} </span></div>
-                                                            <div class="col-md-4 col-sm-4"> <span class="center-block text-center"> Durchschnitt: {{chosenView.metaData['avg_' + attr.name]}}</span></div>
+                                                            <div class="col-md-4 col-sm-4"> <span class="center-block text-center"> Durchschnitt: {{chosenView.metaData['avg_' + attr.name].toFixed(3)}}</span></div>
                                                             <div class="col-md-4 col-sm-4"> <span class="pull-right"> Maximum: {{chosenView.metaData['max_' + attr.name]}} </span></div>
                                                         </div>
                                                     </div>
