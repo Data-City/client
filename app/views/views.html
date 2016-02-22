@@ -133,6 +133,7 @@
                                         </td>
                                         <td>
                                             <div ng-if="attr.toBeFiltered && attr.chooseable && attr.type === 'number'">
+                                                <!--
                                                 <button type="button" class="btn btn-xs" aria-label="Left Align" ng-click="attr.numberValueFilter[0] = attr.numberValueFilter[0] - 5">
                                                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                                                 </button>
@@ -145,6 +146,14 @@
                                                 <button type="button" class="btn btn-xs pull-right" aria-label="Left Align" ng-click="attr.numberValueFilter[1] = attr.numberValueFilter[1] + 5">
                                                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                                                 </button>
+                                                -->
+                                                <div class="col-xs-3">
+                                                    <input class="form-control" type="number" ng-model="attr.numberValueFilter[0]">
+                                                </div>
+                                                <div class="col-xs-3 pull-right">
+                                                    <input class="form-control" type="number" ng-model="attr.numberValueFilter[1]">
+                                                </div>
+                                                
                                                 <div class="row">
                                                     <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
                                                         <div class="row">
