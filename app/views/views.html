@@ -129,10 +129,10 @@
                                         <td>{{attr.name}}</td>
                                         <td>{{attr.type}}</td>
                                         <td>
-                                            <input type="checkbox" ng-model="attr.toBeFiltered" ng-show="attr.type === 'number'">
+                                            <input type="checkbox" ng-model="attr.toBeFiltered" ng-show="attr.chooseable && attr.type === 'number'">
                                         </td>
                                         <td>
-                                            <div ng-if="attr.toBeFiltered && attr.type === 'number'">
+                                            <div ng-if="attr.toBeFiltered && attr.chooseable && attr.type === 'number'">
                                                 <div class="row">
                                                     <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
                                                         <div class="row">
@@ -281,10 +281,11 @@
                                     <table class="table table-condensed table-bordered">
                                         <tbody>
                                             <tr>
-                                                <td>Aggregieren über</td>
-                                                <td>
-                                                    <select class="form-control" ng-model="chosenView.grouping.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
+                                                <td>Aggregieren über <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Werden verbindungsrelevante Felder aggregiert, lassen sich die Verbindungen nicht mehr eindeutig darstellen"></span>
                                                 </td>
+                                                    <td>
+                                                    <select class="form-control" ng-model="chosenView.grouping.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
+                                                    </td>
                                             </tr>
                                             <tr ng-repeat="(key, attr) in (chosenView.attributes | bychooseability | attrbyname:chosenView.grouping.field)">
                                                 <td>{{attr.name}} ({{attr.type}})</td>
