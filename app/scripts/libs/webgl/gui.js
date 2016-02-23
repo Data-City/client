@@ -174,7 +174,7 @@ function getMaterial(aColor) {
         //shininess: 50,
         side: THREE.FrontSide,
         vertexColors: THREE.VertexColors,
-        shading: THREE.SmoothShading
+        shading: THREE.FlatShading
     });
 }
 
