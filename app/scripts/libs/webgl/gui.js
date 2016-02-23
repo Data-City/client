@@ -158,7 +158,7 @@ function drawBox(aBuilding, material, scene, boxGeom) {
     scale.y = aBuilding._height;
     scale.z = width;
     cube.building = aBuilding;
-    aBuilding.mesh = cube;
+    //aBuilding.mesh = cube;
     scene.add(cube);
 }
 
@@ -315,7 +315,7 @@ function addGarden(aBuilding, scene, gardenGeom) {
             cube.position.y = garden._centerPosition[1];
             cube.position.z = garden._centerPosition[2];
             cube.garden = garden;
-            garden.mesh = cube;
+            //garden.mesh = cube;
             scene.add(cube);
         }
     }
