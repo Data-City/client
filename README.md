@@ -29,7 +29,9 @@ cd datacity
 git init
 git pull https://github.com/Data-City/client.git
 npm install
+npm install -g bower
 bower install
+npm install -g grunt-cli
 ```
 ### Grunt Befehle
 Befehl              | Bedeutung
