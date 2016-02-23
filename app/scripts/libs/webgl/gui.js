@@ -172,9 +172,9 @@ function getMaterial(aColor) {
         color: aColor,
         //specular: 0x333333,
         //shininess: 50,
-        side: THREE.FrontSide,
+        side: THREE.DoubleSide,
         vertexColors: THREE.VertexColors,
-        shading: THREE.FlatShading
+        shading: THREE.SmoothShading
     });
 }
 
