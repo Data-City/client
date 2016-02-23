@@ -216,7 +216,7 @@ window.addEventListener("keyup", function(e) {
     var imgData, imgNode;
     
     //Druck auf 'Entfernen'
-    if (e.which !== 16) return;
+    if (e.which !== 46) return;
     try {
         imgData = renderer.domElement.toDataURL();
     } catch (e) {
