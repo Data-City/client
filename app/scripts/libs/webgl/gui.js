@@ -246,7 +246,7 @@ function addCityToScene(mainDistrict, scene, camera) {
     // nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
     var buildings = mainDistrict["buildings"];
     var length = buildings.length;
-	var boxGeom = new THREE.BoxGeometry(1, 1, 1);
+    var boxGeom = new THREE.BoxGeometry(1, 1, 1);
     var gardenGeom = [
         new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
         new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
@@ -504,10 +504,10 @@ function render() {
     if (intersects.length > 0 && intersects[0].object.material.type != "LineBasicMaterial") { //wenn der Strahl mindestens 1 Objekt schneidet
         INTERSECTED = intersects[0].object; //INTERSECTED sei nun das erste Objekt, das geschnitten wurde
         INTERSECTED.material.emissive.setHex(0xff0000); //davon setze die Farbe auf rot
-		updateHighlightingLines(INTERSECTED.building);
+        updateHighlightingLines(INTERSECTED.building);
     } else { //wenn der Strahl kein Objekt (mehr) schneidet
         INTERSECTED = null; // dann sorge dafuer, dass es nichts mehr rot gemalt wird
-	}
+    }
 
     renderer.render(scene, camera); //zeichne das Bild neu
 
@@ -519,17 +519,17 @@ function render() {
  * @param aBuilding: ein Gebaeude, auf das gezeigt wird
  */
 function updateHighlightingLines(aBuilding) {
-	if (doWeUseConnections() && aBuilding != undefined) {
-		if (lastIntersectedBuilding != aBuilding) {
-			if (lastIntersectedBuilding != undefined) {
-				removeHighlightingGardenLines(lastIntersectedBuilding._leftGarden);
-				removeHighlightingGardenLines(lastIntersectedBuilding._rightGarden);
-			}
-			lastIntersectedBuilding = aBuilding;
-			highlightGardenLines(lastIntersectedBuilding._leftGarden);
-			highlightGardenLines(lastIntersectedBuilding._rightGarden);
-		}
-	}
+    if (doWeUseConnections() && aBuilding != undefined) {
+        if (lastIntersectedBuilding != aBuilding) {
+            if (lastIntersectedBuilding != undefined) {
+                removeHighlightingGardenLines(lastIntersectedBuilding._leftGarden);
+                removeHighlightingGardenLines(lastIntersectedBuilding._rightGarden);
+            }
+            lastIntersectedBuilding = aBuilding;
+            highlightGardenLines(lastIntersectedBuilding._leftGarden);
+            highlightGardenLines(lastIntersectedBuilding._rightGarden);
+        }
+    }
 }
 
 
@@ -540,18 +540,18 @@ function updateHighlightingLines(aBuilding) {
  * @param aGarden: ein Gartenobjekt
  */
 function highlightGardenLines(aGarden) {
-	var hashMap = getBuildingsHashMap();
-	if (aGarden != undefined && aGarden.on) {
-		var meshLines = aGarden.meshLines;
-		var length;
-		for (var x in meshLines) {
-			length = meshLines[x].length;
-			for (var i=0; i<length; i++) {
-				meshLines[x][i].material.color.setHex(0xFF0000);
-				hashMap[x].mesh.material.emissive.setHex(0xff0000);
-			}
-		}
-	}
+    var hashMap = getBuildingsHashMap();
+    if (aGarden != undefined && aGarden.on) {
+        var meshLines = aGarden.meshLines;
+        var length;
+        for (var x in meshLines) {
+            length = meshLines[x].length;
+            for (var i = 0; i < length; i++) {
+                meshLines[x][i].material.color.setHex(0xFF0000);
+                hashMap[x].mesh.material.emissive.setHex(0xff0000);
+            }
+        }
+    }
 }
 
 /**
@@ -559,20 +559,20 @@ function highlightGardenLines(aGarden) {
  * @param aGarden: ein Gartenobjekt
  */
 function removeHighlightingGardenLines(aGarden) {
-	var hashMap = getBuildingsHashMap();
-	if (aGarden != undefined && aGarden.on) {
-		var meshLines = aGarden.meshLines;
-		var length;
-		var factor;
-		for (var x in meshLines) {
-			length = meshLines[x].length;
-			for (var i=0; i<length; i++) {
-				factor = getColorFactor(getExtrema(), aGarden.linesTo[x], "Connections");
-				meshLines[x][i].material.color.set(new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor));
-				hashMap[x].mesh.material.emissive.setHex(null);
-			}
-		}
-	}
+    var hashMap = getBuildingsHashMap();
+    if (aGarden != undefined && aGarden.on) {
+        var meshLines = aGarden.meshLines;
+        var length;
+        var factor;
+        for (var x in meshLines) {
+            length = meshLines[x].length;
+            for (var i = 0; i < length; i++) {
+                factor = getColorFactor(getExtrema(), aGarden.linesTo[x], "Connections");
+                meshLines[x][i].material.color.set(new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor));
+                hashMap[x].mesh.material.emissive.setHex(null);
+            }
+        }
+    }
 }
 
 

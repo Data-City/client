@@ -54,14 +54,12 @@ function getBuildingsHashMap() {
 function setCalls(income, outgoing) {
     if (income == undefined) {
         incomingCalls = {};
-    }
-    else {
+    } else {
         incomingCalls = income;
     }
     if (outgoing == undefined) {
         outgoingCalls = {};
-    }
-    else {
+    } else {
         outgoingCalls = outgoing;
     }
 }
@@ -89,7 +87,7 @@ function sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoo
  */
 function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
     sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
-	var distance;
+    var distance;
     var lastNode, currentNode;
     for (var x in nodesOfStreetsSortByXCoord) {
         lastNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][0]];
@@ -97,7 +95,7 @@ function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
             currentNode = jsonOfNodes[x][nodesOfStreetsSortByXCoord[x][i + 1]];
             // eigentlich duerfte currentNode nicht undefined sein, aber irgendwie ist es trotzdem ab und zu undefined - komisch
             if (currentNode != undefined && currentNode.belongsToBuilding != true) {
-				distance = getEuclideanDistance(lastNode, currentNode);
+                distance = getEuclideanDistance(lastNode, currentNode);
                 graph[lastNode.id][currentNode.id] = distance;
                 graph[currentNode.id][lastNode.id] = distance;
                 lastNode.front = currentNode;

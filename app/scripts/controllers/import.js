@@ -9,11 +9,10 @@
  */
 angular.module('datacityApp')
     .controller('ImportCtrl', function($scope, $routeParams, sharedLogin, $log, REST, SETTINGS) {
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     });
-    

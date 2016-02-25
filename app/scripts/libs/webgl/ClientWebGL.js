@@ -146,7 +146,7 @@ function initData(data, association, incomingCalls, outgoingCalls) {
             useStreets = false;
         }
     }
-    
+
     initAssociation(association);
     initMainDistrict(data, association);
 }
@@ -214,7 +214,7 @@ function getCamToSave() {
  */
 window.addEventListener("keyup", function(e) {
     var imgData, imgNode;
-    
+
     //Druck auf 'Entfernen'
     if (e.which !== 46) return;
     try {
@@ -246,9 +246,9 @@ window.addEventListener("keydown", function(e) {
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;
-        }   
+        }
     }
-    
+
     //Pfeiltaste hoch
     if (e.which === 38) {
         try {
@@ -257,10 +257,10 @@ window.addEventListener("keydown", function(e) {
             trackballControls.target.z -= SpeedForShiftByKeys;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
-            return;    
-        }   
+            return;
+        }
     }
-    
+
     //Pfeiltaste rechts
     if (e.which === 39) {
         try {
@@ -269,20 +269,20 @@ window.addEventListener("keydown", function(e) {
             trackballControls.target.x += SpeedForShiftByKeys;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
-            return;    
-        }   
+            return;
+        }
     }
-    
+
     //Pfeiltaste runter
     if (e.which === 40) {
         try {
             //console.log("runter");  
-            camera.position.z = camera.position.z + SpeedForShiftByKeys; 
+            camera.position.z = camera.position.z + SpeedForShiftByKeys;
             trackballControls.target.z += SpeedForShiftByKeys;
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
-            return;    
-        }   
+            return;
+        }
     }
 });
 

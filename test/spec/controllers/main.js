@@ -30,8 +30,9 @@ describe('Controller: MainCtrl', function () {
       expect($scope.getIdOfCollection(object)).toBe("Benedetto10");
   });
   
+  /*
   it('Sollte den Link richtig erstellen', function() {
       expect($scope.getMyLink("123456")).toBe("#/data/preview/123456");
   });
-  
+  */
 });

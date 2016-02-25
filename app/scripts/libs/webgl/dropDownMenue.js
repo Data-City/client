@@ -153,16 +153,14 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh
         buildingInformation["height"] = newHeight;
         buildingInformation["width"] = newWidth;
         buildingInformation["color"] = newColor;
-    }
-    else {
+    } else {
         buildingInformation["height"] = "Keine Daten";
         buildingInformation["width"] = "Keine Daten";
         buildingInformation["color"] = "Keine Daten";
     }
     if (newName != "undefined.") {
         buildingInformation["name"] = newName;
-    }
-    else {
+    } else {
         buildingInformation["name"] = "Keine Daten";
     }
     buildingInformation.mesh = aMesh;

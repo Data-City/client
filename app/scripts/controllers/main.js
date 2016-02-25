@@ -73,7 +73,7 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
         location.href = link;
         return link;
     };
-    
+
     /**
      * Linkt zur Import-Seite 
      * 
@@ -86,7 +86,7 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
         location.href = link;
         return link;
     };
-    
+
     /**
      * Gibt entweder Datensatz oder Datensätze an
      * 

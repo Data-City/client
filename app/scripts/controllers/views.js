@@ -179,10 +179,10 @@ angular.module('datacityApp')
                 window.alert("Schritt 2: \nEs wurden Verbindungen, aber keine Option ausgewählt!");
                 return false;
             }
-            
-            if (view.useGrouping === "1" && (view. grouping === null || view.grouping === undefined)) {
+
+            if (view.useGrouping === "1" && (view.grouping === null || view.grouping === undefined)) {
                 window.alert("Schritt 3: \nEs wurde die Aggregation ausgewählt, aber keine Option ausgewählt!");
-                return false;   
+                return false;
             }
 
             // Korrekte Blockeinstellungen
@@ -225,7 +225,7 @@ angular.module('datacityApp')
                         view.dimensions.area = view.dimensionSettings.area.name;
                         view.dimensions.color = view.dimensionSettings.color.name;
                         view.buildingcolor = SETTINGS.farbefuerGebauede;
-                        
+
                         $('#collapseAll').collapse();
 
                         if (view.metaData.connectionsAvailable === "true") {
