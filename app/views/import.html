@@ -10,16 +10,36 @@
                 <uploadformdatasourcefile></uploadformdatasourcefile>
                 <div class="container">
                     <b>Datensatz:</b>
-                    <input name="Datei" type="file" size="50" accept="csv/*">
+                    <input id="csv-file" name="Datei" type="file" size="50" accept="csv/*">
                     <br></br>
-                    <b>Verbindungen:(optional)</b>
-                    <input name="Datei" type="file" size="50" accept="csv/*">
-                    <br></br>
+                    <!--<b>Verbindungen:(optional)</b>
+                    <input name="Verbindungsdatei" type="file" size="50" accept="csv/*">
+                    <br></br>-->
                     <p><i>Noch nicht implementiert!</i></p>
-                    <button type="button" class="btn btn-default" onclick="">Datei(en) importieren</button>
+                    <button type="button" class="btn btn-default">Datei(en) importieren</button>
                 </div>
+                <script>
+                    var data;
+ 
+                    function handleFileSelect(evt) {
+                        var file = evt.target.files[0];
+                    
+                        Papa.parse(file, {
+                        header: true,
+                        dynamicTyping: true,
+                        complete: function(results) {
+                            data = results;
+                            console.log(data);
+                        }
+                        });
+                    }
+                    
+                    $(document).ready(function(){
+                        $("#csv-file").change(handleFileSelect);
+                    });
+
+                </script>
             </div>
         </div>
-
     </div>
 </div>

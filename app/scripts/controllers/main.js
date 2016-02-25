@@ -167,7 +167,6 @@ App.controller('MainCtrl', function($scope, $http, $rootScope, $log, $filter, sh
         }
     };
 
-
     // Init
     $scope.getCollections();
 });
