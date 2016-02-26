@@ -8,7 +8,7 @@ var removedBuildings = [];
 var arrayOfRemovedBuildings = [];
 
 // Dimensionen, die wir abbilden
-var myDimensions = ["Name", "Breite", "Höhe", "Farbe"];
+var myDimensions = ["ID", "Breite", "Höhe", "Farbe"];
 
 //Namen, auf die wir beim JSON-Objekt zugreifen fuer die Legende
 var dimensionsFromDatabase = ["name", "width", "height", "color"];
@@ -219,11 +219,9 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         "Farbe": association.color
     };
 
-    h.add(legend, "ID").name("ID");
-    h.add(legend, "Breite").name("Breite");
-    h.add(legend, "Höhe").name("Höhe");
-    h.add(legend, "Farbe").name("Farbe");
-    
+    for (var i = 0; i < myDimensions.length; i++) {
+        setFolderLegende(h, i, gui);
+    }
     //*****************************************************************
 
     h = gui.addFolder("Gebäudeinformationen");
