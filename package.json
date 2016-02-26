@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "bower": "^1.7.7",
+    "ink-docstrap": "^1.1.2",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.19",
     "papaparse": "^4.1.2",
