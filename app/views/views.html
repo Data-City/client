@@ -310,8 +310,20 @@
                                             <tr ng-repeat="(key, attr) in (chosenView.attributes | bychooseability | attrbyname:chosenView.grouping.field)">
                                                 <td>{{attr.name}} ({{attr.type}})</td>
                                                 <td>
+                                                    <!-- Aggr Befehle - dynamisches SELECT Element 
                                                     <select class="form-control" ng-show="attr.type !== 'string'" ng-model="chosenView.grouping.attrs[attr.name]">
                                                         <option ng-repeat="(i, op) in availableAggrOps" value="{{op.cmd}}">{{op.name}}</option>
+                                                    </select>
+                                                    -->
+                                                    <select class="form-control" ng-show="attr.type !== 'string'" ng-model="chosenView.grouping.attrs[attr.name]">
+                                                        <option value="$sum" ng-selected="!chosenView.grouping.attrs[attr.name]">Summe</option>
+                                                        <option value="$min">Minimum</option>
+                                                        <option value="$max">Maximum</option>
+                                                        <option value="$avg">Durchschnitt</option>
+                                                        <option value="$stdDevPop">Standardabweichung</option>
+                                                        <option value="$first">Erster Wert</option>
+                                                        <option value="$last">Letzter Wert</option>
+                                                        <option value="">Vergessen</option>
                                                     </select>
                                                     <span ng-show="attr.type === 'string'"> Für Strings gibt es keine Operationen: Feld wird verworfen!</span>
                                                 </td>

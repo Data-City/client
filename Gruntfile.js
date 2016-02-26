@@ -31,9 +31,10 @@ module.exports = function (grunt) {
     grunt.initConfig({
         jsdoc: {
             dist: {
-                src: ['app/scripts/{,*/}*.js', 'test/{,*/}*.js', '!app/scripts/libs/dataExample.js'],
+                src: ['app/scripts/{,*/}*.js', 'test/{,*/}*.js', 'app/**/*.js', '!app/scripts/libs/dataExample.js'],
                 options: {
-                    destination: 'doc'
+                    destination: 'doc',
+                    template: './node_modules/ink-docstrap/template'
                 }
             }
         },
@@ -48,7 +49,7 @@ module.exports = function (grunt) {
                 tasks: ['wiredep']
             },
             js: {
-                files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+                files: ['<%= yeoman.app %>/scripts/{,*/}*.js', '<%= yeoman.app %>/scripts/**/{,*/}*.js'],
                 tasks: ['newer:jshint:all', 'newer:jscs:all'],
                 options: {
                     livereload: '<%= connect.options.livereload %>'
