@@ -196,6 +196,9 @@ function getGui() {
  * @param: nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
  */
 function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, nameOfDivElement) {
+   
+    setLogScalingToFalse();
+    
     gui = new dat.GUI({
         width: 375,
         autoPlace: false
@@ -275,7 +278,14 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
     h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
 }
 
-
+/**
+ * Alle Checkboxes für das Logarithmieren werden auf false gesetzt (nicht ausgewählt)
+ */
+function setLogScalingToFalse() {
+    scaling.logarithmicHeight = false;
+    scaling.logarithmicWidth = false;
+    scaling.logarithmicColor = false;
+}
 
 /**
  * Hilfsmethode, um den Ordner "Legende" in dat gui zu setzen
