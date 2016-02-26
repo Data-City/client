@@ -654,6 +654,7 @@ function initBuilding(aBuilding, namePrefix) {
         buildingsHashMap[aBuilding[association.name]] = aBuilding;
         aBuilding._isRemoved = false;
         aBuilding._district = namePrefix;
+        aBuilding._numOfActivatedConnections = 0;
     }
 }
 

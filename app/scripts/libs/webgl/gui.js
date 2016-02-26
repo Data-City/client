@@ -331,8 +331,10 @@ function drawLines(aGarden, updateBoolean) {
         aGarden.on = true;
     }
     var hashMap = getBuildingsHashMap();
+    var length = 5;
+    if (doWeUseStreets()) length = 1;
     for (var x in aGarden.linesTo) {
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < length; i++) {
             if (aGarden.isLeftGarden == true) {
                 if (hashMap[x]._rightGarden.on == false && hashMap[x]._isRemoved == false) {
                     drawALine(aGarden, hashMap[x]._rightGarden);
@@ -363,7 +365,6 @@ function drawALine(aGarden, destGarden) {
         geometry.vertices.push(new THREE.Vector3(center[0], center[1] - (aGarden.building._height / 2), center[2]));
         setPath(geometry.vertices, aGarden.building, destGarden.building);
         geometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1] - destGarden.building._height / 2, destCenter[2]));
-        destGarden.building.mesh.material.color.setHex(0x40FF00);
     } else {
         var curve = new THREE.CubicBezierCurve3(
             new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
@@ -373,9 +374,9 @@ function drawALine(aGarden, destGarden) {
         );
         geometry.vertices = curve.getPoints(50);
     }
+    destGarden.building.mesh.material.color.setHex(0x40FF00);
     var factor = getColorFactor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
     var material = new THREE.LineBasicMaterial({
-        //color: new THREE.Color(1, 1 - factor, 1 - factor)
         color: new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor)
     });
     var curveObject = new THREE.Line(geometry, material);
@@ -383,6 +384,7 @@ function drawALine(aGarden, destGarden) {
 
     workUpGarden(aGarden, destGarden, curveObject);
     workUpGarden(destGarden, aGarden, curveObject);
+    destGarden.building._numOfActivatedConnections++;
 }
 
 /**
@@ -416,8 +418,11 @@ function removeLines(aGarden, updateBoolean) {
 
 
     for (var x in aGarden.meshLines) {
-        var faktor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
-        hashMap[x].mesh.material.color.set((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), faktor));
+        if (hashMap[x]._numOfActivatedConnections==1) {
+            var faktor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
+            hashMap[x].mesh.material.color.set((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), faktor));
+        }
+        hashMap[x]._numOfActivatedConnections--;
         if (hashMap[x][gardenString].on == false) {
             var length = aGarden.meshLines[x].length;
             for (var i = length; i--;) {
@@ -648,7 +653,7 @@ function setGardenOff(aMesh) {
  *Eine Methode, um den Abstand von einem DivElement zum linken bzw. oberen Rand des Fensters zu bekommen
  *@param: ein DivElement
  *@return: JSON, sodass man mit JSON.left den Abstand zum linken Rand in px bekommt
- *			bzw. mit JSON.top den Abstand zum oberen Rand
+ *            bzw. mit JSON.top den Abstand zum oberen Rand
  */
 function getScrollDistance(divElement) {
     var rect = divElement.getBoundingClientRect();
