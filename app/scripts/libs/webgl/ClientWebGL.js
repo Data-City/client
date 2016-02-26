@@ -239,6 +239,7 @@ window.addEventListener("keydown", function(e) {
 
     //Pfeiltaste links
     if (e.which === 37) {
+        e.preventDefault();
         try {
             //console.log("Links");
             camera.position.x = camera.position.x - SpeedForShiftByKeys;
@@ -251,6 +252,7 @@ window.addEventListener("keydown", function(e) {
 
     //Pfeiltaste hoch
     if (e.which === 38) {
+        e.preventDefault();
         try {
             //console.log("hoch");   
             camera.position.z = camera.position.z - SpeedForShiftByKeys;
@@ -263,6 +265,7 @@ window.addEventListener("keydown", function(e) {
 
     //Pfeiltaste rechts
     if (e.which === 39) {
+        e.preventDefault();
         try {
             //console.log("rechts");    
             camera.position.x = camera.position.x + SpeedForShiftByKeys;
@@ -275,6 +278,7 @@ window.addEventListener("keydown", function(e) {
 
     //Pfeiltaste runter
     if (e.which === 40) {
+        e.preventDefault();
         try {
             //console.log("runter");  
             camera.position.z = camera.position.z + SpeedForShiftByKeys;
