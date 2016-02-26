@@ -15,7 +15,7 @@ var dimensionsFromDatabase = ["name", "width", "height", "color"];
 
 //fuer den Ordner 'Legende'
 var legend = {
-    "Name": association.name,
+    "ID": association.name,
     "Breite": association.width,
     "Höhe": association.height,
     "Farbe": association.color
@@ -213,16 +213,17 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
 
     var h = gui.addFolder("Legende");
     legend = {
-        "Name": association.name,
+        "ID": association.name,
         "Breite": association.width,
         "Höhe": association.height,
         "Farbe": association.color
     };
 
-
-    for (var i = 0; i < myDimensions.length; i++) {
-        setFolderLegende(h, i, gui);
-    }
+    h.add(legend, "ID").name("ID");
+    h.add(legend, "Breite").name("Breite");
+    h.add(legend, "Höhe").name("Höhe");
+    h.add(legend, "Farbe").name("Farbe");
+    
     //*****************************************************************
 
     h = gui.addFolder("Gebäudeinformationen");

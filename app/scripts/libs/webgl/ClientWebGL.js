@@ -82,7 +82,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     // Erstelle die Legende
     if (Detector.webgl) {
         var ourDivElement = document.getElementById(nameOfDivElement);
-        if (ourDivElement.children["dropdownmenu"] != undefined) {
+        if (ourDivElement.children["dropdownmenu"]) {
             ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
         }
         setMenue(scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);

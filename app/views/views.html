@@ -399,12 +399,12 @@
                             </div>
                             <div class="panel-body" ng-show="showStep5">
                                 <table class="table">
-                                    <!-- NAME -->
+                                    <!-- ID -->
                                     <tr>
                                         <td>
-                                            <p><i>Hinweis: Wenn die Namen nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. die Suche)</i></p>
+                                            <p><i>Hinweis: Wenn die ID's' nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. die Suche)</i></p>
                                             <div class="input-group">
-                                                <span class="input-group-addon">Name</span>
+                                                <span class="input-group-addon">ID</span>
                                                 <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name"></select>
                                             </div>
                                         </td>
