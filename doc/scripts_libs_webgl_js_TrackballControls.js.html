@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: scripts/libs/webgl/js/TrackballControls.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: scripts/libs/webgl/js/TrackballControls.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author Eberhard Graether / http://egraether.com/
+ * @author Mark Lundin 	/ http://mark-lundin.com
+ * @author Simone Manini / http://daron1337.github.io
+ * @author Luca Antiga 	/ http://lantiga.github.io
+ */
+
+THREE.TrackballControls = function(object, domElement) {
+
+    var _this = this;
+    var STATE = {
+        NONE: -1,
+        ROTATE: 0,
+        ZOOM: 1,
+        PAN: 2,
+        TOUCH_ROTATE: 3,
+        TOUCH_ZOOM_PAN: 4
+    };
+
+    this.object = object;
+    this.domElement = (domElement !== undefined) ? domElement : document;
+
+    // API
+
+    this.enabled = true;
+
+    this.screen = {
+        left: 0,
+        top: 0,
+        width: 0,
+        height: 0
+    };
+
+    this.rotateSpeed = 1.0;
+    this.zoomSpeed = 1.2;
+    this.panSpeed = 0.3;
+
+    this.noRotate = false;
+    this.noZoom = false;
+    this.noPan = false;
+
+    this.staticMoving = false;
+    this.dynamicDampingFactor = 0.2;
+
+    this.minDistance = 0;
+    this.maxDistance = Infinity;
+
+    this.keys = [65 /*A*/ , 83 /*S*/ , 68 /*D*/ ];
+
+    // internals
+
+    this.target = new THREE.Vector3();
+
+    var EPS = 0.000001;
+
+    var lastPosition = new THREE.Vector3();
+
+    var _state = STATE.NONE,
+        _prevState = STATE.NONE,
+
+        _eye = new THREE.Vector3(),
+
+        _movePrev = new THREE.Vector2(),
+        _moveCurr = new THREE.Vector2(),
+
+        _lastAxis = new THREE.Vector3(),
+        _lastAngle = 0,
+
+        _zoomStart = new THREE.Vector2(),
+        _zoomEnd = new THREE.Vector2(),
+
+        _touchZoomDistanceStart = 0,
+        _touchZoomDistanceEnd = 0,
+
+        _panStart = new THREE.Vector2(),
+        _panEnd = new THREE.Vector2();
+
+    // for reset
+
+    this.target0 = this.target.clone();
+    this.position0 = this.object.position.clone();
+    this.up0 = this.object.up.clone();
+
+    // events
+
+    var changeEvent = {
+        type: 'change'
+    };
+    var startEvent = {
+        type: 'start'
+    };
+    var endEvent = {
+        type: 'end'
+    };
+
+
+    // methods
+
+    this.handleResize = function() {
+
+        if (this.domElement === document) {
+
+            this.screen.left = 0;
+            this.screen.top = 0;
+            this.screen.width = window.innerWidth;
+            this.screen.height = window.innerHeight;
+
+        } else {
+
+            var box = this.domElement.getBoundingClientRect();
+            // adjustments come from similar code in the jquery offset() function
+            var d = this.domElement.ownerDocument.documentElement;
+            this.screen.left = box.left + window.pageXOffset - d.clientLeft;
+            this.screen.top = box.top + window.pageYOffset - d.clientTop;
+            this.screen.width = box.width;
+            this.screen.height = box.height;
+
+        }
+
+    };
+
+    this.handleEvent = function(event) {
+
+        if (typeof this[event.type] == 'function') {
+
+            this[event.type](event);
+
+        }
+
+    };
+
+    var getMouseOnScreen = (function() {
+
+        var vector = new THREE.Vector2();
+
+        return function getMouseOnScreen(pageX, pageY) {
+
+            vector.set(
+                (pageX - _this.screen.left) / _this.screen.width, (pageY - _this.screen.top) / _this.screen.height
+            );
+
+            return vector;
+
+        };
+
+    }());
+
+    var getMouseOnCircle = (function() {
+
+        var vector = new THREE.Vector2();
+
+        return function getMouseOnCircle(pageX, pageY) {
+
+            vector.set(
+                ((pageX - _this.screen.width * 0.5 - _this.screen.left) / (_this.screen.width * 0.5)), ((_this.screen.height + 2 * (_this.screen.top - pageY)) / _this.screen.width) // screen.width intentional
+            );
+
+            return vector;
+
+        };
+
+    }());
+
+    this.rotateCamera = (function() {
+
+        var axis = new THREE.Vector3(),
+            quaternion = new THREE.Quaternion(),
+            eyeDirection = new THREE.Vector3(),
+            objectUpDirection = new THREE.Vector3(),
+            objectSidewaysDirection = new THREE.Vector3(),
+            moveDirection = new THREE.Vector3(),
+            angle;
+
+        return function rotateCamera() {
+
+            moveDirection.set(_moveCurr.x - _movePrev.x, _moveCurr.y - _movePrev.y, 0);
+            angle = moveDirection.length();
+
+            if (angle) {
+
+                _eye.copy(_this.object.position).sub(_this.target);
+
+                eyeDirection.copy(_eye).normalize();
+                objectUpDirection.copy(_this.object.up).normalize();
+                objectSidewaysDirection.crossVectors(objectUpDirection, eyeDirection).normalize();
+
+                objectUpDirection.setLength(_moveCurr.y - _movePrev.y);
+                objectSidewaysDirection.setLength(_moveCurr.x - _movePrev.x);
+
+                moveDirection.copy(objectUpDirection.add(objectSidewaysDirection));
+
+                axis.crossVectors(moveDirection, _eye).normalize();
+
+                angle *= _this.rotateSpeed;
+                quaternion.setFromAxisAngle(axis, angle);
+
+                _eye.applyQuaternion(quaternion);
+                _this.object.up.applyQuaternion(quaternion);
+
+                _lastAxis.copy(axis);
+                _lastAngle = angle;
+
+            } else if (!_this.staticMoving &amp;&amp; _lastAngle) {
+
+                _lastAngle *= Math.sqrt(1.0 - _this.dynamicDampingFactor);
+                _eye.copy(_this.object.position).sub(_this.target);
+                quaternion.setFromAxisAngle(_lastAxis, _lastAngle);
+                _eye.applyQuaternion(quaternion);
+                _this.object.up.applyQuaternion(quaternion);
+
+            }
+
+            _movePrev.copy(_moveCurr);
+
+        };
+
+    }());
+
+
+    this.zoomCamera = function() {
+
+        var factor;
+
+        if (_state === STATE.TOUCH_ZOOM_PAN) {
+
+            factor = _touchZoomDistanceStart / _touchZoomDistanceEnd;
+            _touchZoomDistanceStart = _touchZoomDistanceEnd;
+            _eye.multiplyScalar(factor);
+
+        } else {
+
+            factor = 1.0 + (_zoomEnd.y - _zoomStart.y) * _this.zoomSpeed;
+
+            if (factor !== 1.0 &amp;&amp; factor > 0.0) {
+
+                _eye.multiplyScalar(factor);
+
+                if (_this.staticMoving) {
+
+                    _zoomStart.copy(_zoomEnd);
+
+                } else {
+
+                    _zoomStart.y += (_zoomEnd.y - _zoomStart.y) * this.dynamicDampingFactor;
+
+                }
+
+            }
+
+        }
+
+    };
+
+    this.panCamera = (function() {
+
+        var mouseChange = new THREE.Vector2(),
+            objectUp = new THREE.Vector3(),
+            pan = new THREE.Vector3();
+
+        return function panCamera() {
+
+            mouseChange.copy(_panEnd).sub(_panStart);
+
+            if (mouseChange.lengthSq()) {
+
+                mouseChange.multiplyScalar(_eye.length() * _this.panSpeed);
+
+                pan.copy(_eye).cross(_this.object.up).setLength(mouseChange.x);
+                pan.add(objectUp.copy(_this.object.up).setLength(mouseChange.y));
+
+                _this.object.position.add(pan);
+                _this.target.add(pan);
+
+                if (_this.staticMoving) {
+
+                    _panStart.copy(_panEnd);
+
+                } else {
+
+                    _panStart.add(mouseChange.subVectors(_panEnd, _panStart).multiplyScalar(_this.dynamicDampingFactor));
+
+                }
+
+            }
+
+        };
+
+    }());
+
+    this.checkDistances = function() {
+
+        if (!_this.noZoom || !_this.noPan) {
+
+            if (_eye.lengthSq() > _this.maxDistance * _this.maxDistance) {
+
+                _this.object.position.addVectors(_this.target, _eye.setLength(_this.maxDistance));
+                _zoomStart.copy(_zoomEnd);
+
+            }
+
+            if (_eye.lengthSq() &lt; _this.minDistance * _this.minDistance) {
+
+                _this.object.position.addVectors(_this.target, _eye.setLength(_this.minDistance));
+                _zoomStart.copy(_zoomEnd);
+
+            }
+
+        }
+
+    };
+
+    this.update = function() {
+
+        _eye.subVectors(_this.object.position, _this.target);
+
+        if (!_this.noRotate) {
+
+            _this.rotateCamera();
+
+        }
+
+        if (!_this.noZoom) {
+
+            _this.zoomCamera();
+
+        }
+
+        if (!_this.noPan) {
+
+            _this.panCamera();
+
+        }
+
+        _this.object.position.addVectors(_this.target, _eye);
+
+        _this.checkDistances();
+
+        _this.object.lookAt(_this.target);
+
+        if (lastPosition.distanceToSquared(_this.object.position) > EPS) {
+
+            _this.dispatchEvent(changeEvent);
+
+            lastPosition.copy(_this.object.position);
+
+        }
+
+    };
+
+    this.reset = function() {
+
+        _state = STATE.NONE;
+        _prevState = STATE.NONE;
+
+        _this.target.copy(_this.target0);
+        _this.object.position.copy(_this.position0);
+        _this.object.up.copy(_this.up0);
+
+        _eye.subVectors(_this.object.position, _this.target);
+
+        _this.object.lookAt(_this.target);
+
+        _this.dispatchEvent(changeEvent);
+
+        lastPosition.copy(_this.object.position);
+
+    };
+
+    // listeners
+
+    function keydown(event) {
+
+        if (_this.enabled === false) return;
+
+        window.removeEventListener('keydown', keydown);
+
+        _prevState = _state;
+
+        if (_state !== STATE.NONE) {
+
+            return;
+
+        } else if (event.keyCode === _this.keys[STATE.ROTATE] &amp;&amp; !_this.noRotate) {
+
+            _state = STATE.ROTATE;
+
+        } else if (event.keyCode === _this.keys[STATE.ZOOM] &amp;&amp; !_this.noZoom) {
+
+            _state = STATE.ZOOM;
+
+        } else if (event.keyCode === _this.keys[STATE.PAN] &amp;&amp; !_this.noPan) {
+
+            _state = STATE.PAN;
+
+        }
+
+    }
+
+    function keyup(event) {
+
+        if (_this.enabled === false) return;
+
+        _state = _prevState;
+
+        window.addEventListener('keydown', keydown, false);
+
+    }
+
+    function mousedown(event) {
+
+        if (_this.enabled === false) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (_state === STATE.NONE) {
+
+            _state = event.button;
+
+        }
+
+        if (_state === STATE.ROTATE &amp;&amp; !_this.noRotate) {
+
+            _moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY));
+            _movePrev.copy(_moveCurr);
+
+        } else if (_state === STATE.ZOOM &amp;&amp; !_this.noZoom) {
+
+            _zoomStart.copy(getMouseOnScreen(event.pageX, event.pageY));
+            _zoomEnd.copy(_zoomStart);
+
+        } else if (_state === STATE.PAN &amp;&amp; !_this.noPan) {
+
+            _panStart.copy(getMouseOnScreen(event.pageX, event.pageY));
+            _panEnd.copy(_panStart);
+
+        }
+
+        document.addEventListener('mousemove', mousemove, false);
+        document.addEventListener('mouseup', mouseup, false);
+
+        _this.dispatchEvent(startEvent);
+
+    }
+
+    function mousemove(event) {
+
+        if (_this.enabled === false) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (_state === STATE.ROTATE &amp;&amp; !_this.noRotate) {
+
+            _movePrev.copy(_moveCurr);
+            _moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY));
+
+        } else if (_state === STATE.ZOOM &amp;&amp; !_this.noZoom) {
+
+            _zoomEnd.copy(getMouseOnScreen(event.pageX, event.pageY));
+
+        } else if (_state === STATE.PAN &amp;&amp; !_this.noPan) {
+
+            _panEnd.copy(getMouseOnScreen(event.pageX, event.pageY));
+
+        }
+
+    }
+
+    function mouseup(event) {
+
+        if (_this.enabled === false) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        _state = STATE.NONE;
+
+        document.removeEventListener('mousemove', mousemove);
+        document.removeEventListener('mouseup', mouseup);
+        _this.dispatchEvent(endEvent);
+
+    }
+
+    function mousewheel(event) {
+
+        if (_this.enabled === false) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        var delta = 0;
+
+        if (event.wheelDelta) {
+
+            // WebKit / Opera / Explorer 9
+
+            delta = event.wheelDelta / 40;
+
+        } else if (event.detail) {
+
+            // Firefox
+
+            delta = -event.detail / 3;
+
+        }
+
+        _zoomStart.y += delta * 0.01;
+        _this.dispatchEvent(startEvent);
+        _this.dispatchEvent(endEvent);
+
+    }
+
+    function touchstart(event) {
+
+        if (_this.enabled === false) return;
+
+        switch (event.touches.length) {
+
+            case 1:
+                _state = STATE.TOUCH_ROTATE;
+                _moveCurr.copy(getMouseOnCircle(event.touches[0].pageX, event.touches[0].pageY));
+                _movePrev.copy(_moveCurr);
+                break;
+
+            case 2:
+                _state = STATE.TOUCH_ZOOM_PAN;
+                var dx = event.touches[0].pageX - event.touches[1].pageX;
+                var dy = event.touches[0].pageY - event.touches[1].pageY;
+                _touchZoomDistanceEnd = _touchZoomDistanceStart = Math.sqrt(dx * dx + dy * dy);
+
+                var x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
+                var y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
+                _panStart.copy(getMouseOnScreen(x, y));
+                _panEnd.copy(_panStart);
+                break;
+
+            default:
+                _state = STATE.NONE;
+
+        }
+        _this.dispatchEvent(startEvent);
+
+
+    }
+
+    function touchmove(event) {
+
+        if (_this.enabled === false) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        switch (event.touches.length) {
+
+            case 1:
+                _movePrev.copy(_moveCurr);
+                _moveCurr.copy(getMouseOnCircle(event.touches[0].pageX, event.touches[0].pageY));
+                break;
+
+            case 2:
+                var dx = event.touches[0].pageX - event.touches[1].pageX;
+                var dy = event.touches[0].pageY - event.touches[1].pageY;
+                _touchZoomDistanceEnd = Math.sqrt(dx * dx + dy * dy);
+
+                var x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
+                var y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
+                _panEnd.copy(getMouseOnScreen(x, y));
+                break;
+
+            default:
+                _state = STATE.NONE;
+
+        }
+
+    }
+
+    function touchend(event) {
+
+        if (_this.enabled === false) return;
+
+        switch (event.touches.length) {
+
+            case 1:
+                _movePrev.copy(_moveCurr);
+                _moveCurr.copy(getMouseOnCircle(event.touches[0].pageX, event.touches[0].pageY));
+                break;
+
+            case 2:
+                _touchZoomDistanceStart = _touchZoomDistanceEnd = 0;
+
+                var x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
+                var y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
+                _panEnd.copy(getMouseOnScreen(x, y));
+                _panStart.copy(_panEnd);
+                break;
+
+        }
+
+        _state = STATE.NONE;
+        _this.dispatchEvent(endEvent);
+
+    }
+
+    function contextmenu(event) {
+
+        event.preventDefault();
+
+    }
+
+    this.dispose = function() {
+
+        this.domElement.removeEventListener('contextmenu', contextmenu, false);
+        this.domElement.removeEventListener('mousedown', mousedown, false);
+        this.domElement.removeEventListener('mousewheel', mousewheel, false);
+        this.domElement.removeEventListener('MozMousePixelScroll', mousewheel, false); // firefox
+
+        this.domElement.removeEventListener('touchstart', touchstart, false);
+        this.domElement.removeEventListener('touchend', touchend, false);
+        this.domElement.removeEventListener('touchmove', touchmove, false);
+
+        document.removeEventListener('mousemove', mousemove, false);
+        document.removeEventListener('mouseup', mouseup, false);
+
+        window.removeEventListener('keydown', keydown, false);
+        window.removeEventListener('keyup', keyup, false);
+
+    }
+
+    this.domElement.addEventListener('contextmenu', contextmenu, false);
+    this.domElement.addEventListener('mousedown', mousedown, false);
+    this.domElement.addEventListener('mousewheel', mousewheel, false);
+    this.domElement.addEventListener('MozMousePixelScroll', mousewheel, false); // firefox
+
+    this.domElement.addEventListener('touchstart', touchstart, false);
+    this.domElement.addEventListener('touchend', touchend, false);
+    this.domElement.addEventListener('touchmove', touchmove, false);
+
+    window.addEventListener('keydown', keydown, false);
+    window.addEventListener('keyup', keyup, false);
+
+    this.handleResize();
+
+    // force an update at start
+    this.update();
+
+};
+
+THREE.TrackballControls.prototype = Object.create(THREE.EventDispatcher.prototype);
+THREE.TrackballControls.prototype.constructor = THREE.TrackballControls;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#addANode">addANode</a></li><li><a href="global.html#addBoxes">addBoxes</a></li><li><a href="global.html#addCityToScene">addCityToScene</a></li><li><a href="global.html#addEachDistrict">addEachDistrict</a></li><li><a href="global.html#addGarden">addGarden</a></li><li><a href="global.html#addPathBetweenDistrictsOnTheSameDistrict">addPathBetweenDistrictsOnTheSameDistrict</a></li><li><a href="global.html#addPathFromLowerToUpperDistrict">addPathFromLowerToUpperDistrict</a></li><li><a href="global.html#addPathFromUpperToLowerDistrict">addPathFromUpperToLowerDistrict</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#changeBuildingInformation">changeBuildingInformation</a></li><li><a href="global.html#changeLinkForCurrentView">changeLinkForCurrentView</a></li><li><a href="global.html#computeDistancesForNextLinePos">computeDistancesForNextLinePos</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createEdges">createEdges</a></li><li><a href="global.html#createMainDistrict">createMainDistrict</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#dat">dat</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#Detector">Detector</a></li><li><a href="global.html#doWeUseConnections">doWeUseConnections</a></li><li><a href="global.html#doWeUseStreets">doWeUseStreets</a></li><li><a href="global.html#drawALine">drawALine</a></li><li><a href="global.html#drawBox">drawBox</a></li><li><a href="global.html#drawCity">drawCity</a></li><li><a href="global.html#drawLines">drawLines</a></li><li><a href="global.html#drawStoredLines">drawStoredLines</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getBuildingInformation">getBuildingInformation</a></li><li><a href="global.html#getCamToSave">getCamToSave</a></li><li><a href="global.html#getChangedLegend">getChangedLegend</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getColorFactor">getColorFactor</a></li><li><a href="global.html#getControls">getControls</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getDrawnDimValue">getDrawnDimValue</a></li><li><a href="global.html#getEuclideanDistance">getEuclideanDistance</a></li><li><a href="global.html#getExtrema">getExtrema</a></li><li><a href="global.html#getGui">getGui</a></li><li><a href="global.html#getIncomingConnections">getIncomingConnections</a></li><li><a href="global.html#getJsonForCurrentLink">getJsonForCurrentLink</a></li><li><a href="global.html#getLastPosOfSameEntry">getLastPosOfSameEntry</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getMainDistrict">getMainDistrict</a></li><li><a href="global.html#getMainDistrictFromJSON">getMainDistrictFromJSON</a></li><li><a href="global.html#getMaterial">getMaterial</a></li><li><a href="global.html#getOrbitControls">getOrbitControls</a></li><li><a href="global.html#getOriginalAssociations">getOriginalAssociations</a></li><li><a href="global.html#getOutgoingConnections">getOutgoingConnections</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getRemovedBuildings">getRemovedBuildings</a></li><li><a href="global.html#getScalingBooleans">getScalingBooleans</a></li><li><a href="global.html#getScene">getScene</a></li><li><a href="global.html#getScrollDistance">getScrollDistance</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#goToArielView">goToArielView</a></li><li><a href="global.html#goToInitialView">goToInitialView</a></li><li><a href="global.html#Graph">Graph</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#highlightBuilding">highlightBuilding</a></li><li><a href="global.html#highlightGardenLines">highlightGardenLines</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initAssociation">initAssociation</a></li><li><a href="global.html#initData">initData</a></li><li><a href="global.html#initMainDistrict">initMainDistrict</a></li><li><a href="global.html#lastStepInCreatingPath">lastStepInCreatingPath</a></li><li><a href="global.html#linearizeExtrema">linearizeExtrema</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#onDocumentMouseDown">onDocumentMouseDown</a></li><li><a href="global.html#onDocumentMouseMove">onDocumentMouseMove</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#pushToClickedLeftGardens">pushToClickedLeftGardens</a></li><li><a href="global.html#pushToClickedRightGardens">pushToClickedRightGardens</a></li><li><a href="global.html#remove">remove</a></li><li><a href="global.html#removeAllObjects">removeAllObjects</a></li><li><a href="global.html#removeDistrict">removeDistrict</a></li><li><a href="global.html#removeHighlightingGardenLines">removeHighlightingGardenLines</a></li><li><a href="global.html#removeLines">removeLines</a></li><li><a href="global.html#removeObject">removeObject</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#restoreCamera">restoreCamera</a></li><li><a href="global.html#saveCamera">saveCamera</a></li><li><a href="global.html#scale">scale</a></li><li><a href="global.html#scaleAll">scaleAll</a></li><li><a href="global.html#scaleLinearly">scaleLinearly</a></li><li><a href="global.html#scaleLogarithmically">scaleLogarithmically</a></li><li><a href="global.html#setAndDrawCity">setAndDrawCity</a></li><li><a href="global.html#setAssociation">setAssociation</a></li><li><a href="global.html#setBuildingColor">setBuildingColor</a></li><li><a href="global.html#setCamera">setCamera</a></li><li><a href="global.html#setCameraPos">setCameraPos</a></li><li><a href="global.html#setCameraPosForLink">setCameraPosForLink</a></li><li><a href="global.html#setChangedLegend">setChangedLegend</a></li><li><a href="global.html#setClickedGardens">setClickedGardens</a></li><li><a href="global.html#setClickedGardensEmpty">setClickedGardensEmpty</a></li><li><a href="global.html#setControls">setControls</a></li><li><a href="global.html#setFolderLegende">setFolderLegende</a></li><li><a href="global.html#setGardenOff">setGardenOff</a></li><li><a href="global.html#setGardenOn">setGardenOn</a></li><li><a href="global.html#setGraph">setGraph</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLight">setLight</a></li><li><a href="global.html#setLOG">setLOG</a></li><li><a href="global.html#setMenue">setMenue</a></li><li><a href="global.html#setMetaData">setMetaData</a></li><li><a href="global.html#setNextLinePosForNextPackage">setNextLinePosForNextPackage</a></li><li><a href="global.html#setPath">setPath</a></li><li><a href="global.html#setPathOnOneDistrict">setPathOnOneDistrict</a></li><li><a href="global.html#setRemovedBuildings">setRemovedBuildings</a></li><li><a href="global.html#setScalingBooleans">setScalingBooleans</a></li><li><a href="global.html#setSpecificView">setSpecificView</a></li><li><a href="global.html#setTheFiveStreetNodes">setTheFiveStreetNodes</a></li><li><a href="global.html#showBuilding">showBuilding</a></li><li><a href="global.html#sortNodesOfStreets">sortNodesOfStreets</a></li><li><a href="global.html#takeLogarithmOfExtrema">takeLogarithmOfExtrema</a></li><li><a href="global.html#undoRemoving">undoRemoving</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#updateConnectionExtrema">updateConnectionExtrema</a></li><li><a href="global.html#updateControls">updateControls</a></li><li><a href="global.html#updateExtrema">updateExtrema</a></li><li><a href="global.html#updateHighlightingLines">updateHighlightingLines</a></li><li><a href="global.html#updateRemovedBuildings">updateRemovedBuildings</a></li><li><a href="global.html#workUpGarden">workUpGarden</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Feb 26 2016 11:51:22 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,37 +1,80 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>JSDoc: Global</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Documentation Global</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
 </head>
 
 <body>
 
-<div id="main">
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Documentation</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#addANode">addANode</a></li><li><a href="global.html#addBoxes">addBoxes</a></li><li><a href="global.html#addCityToScene">addCityToScene</a></li><li><a href="global.html#addEachDistrict">addEachDistrict</a></li><li><a href="global.html#addGarden">addGarden</a></li><li><a href="global.html#addPathBetweenDistrictsOnTheSameDistrict">addPathBetweenDistrictsOnTheSameDistrict</a></li><li><a href="global.html#addPathFromLowerToUpperDistrict">addPathFromLowerToUpperDistrict</a></li><li><a href="global.html#addPathFromUpperToLowerDistrict">addPathFromUpperToLowerDistrict</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#changeBuildingInformation">changeBuildingInformation</a></li><li><a href="global.html#changeLinkForCurrentView">changeLinkForCurrentView</a></li><li><a href="global.html#computeDistancesForNextLinePos">computeDistancesForNextLinePos</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createEdges">createEdges</a></li><li><a href="global.html#createMainDistrict">createMainDistrict</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#dat">dat</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#Detector">Detector</a></li><li><a href="global.html#doWeUseConnections">doWeUseConnections</a></li><li><a href="global.html#doWeUseStreets">doWeUseStreets</a></li><li><a href="global.html#drawALine">drawALine</a></li><li><a href="global.html#drawBox">drawBox</a></li><li><a href="global.html#drawCity">drawCity</a></li><li><a href="global.html#drawLines">drawLines</a></li><li><a href="global.html#drawStoredLines">drawStoredLines</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getBuildingInformation">getBuildingInformation</a></li><li><a href="global.html#getCamToSave">getCamToSave</a></li><li><a href="global.html#getChangedLegend">getChangedLegend</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getColorFactor">getColorFactor</a></li><li><a href="global.html#getControls">getControls</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getDrawnDimValue">getDrawnDimValue</a></li><li><a href="global.html#getEuclideanDistance">getEuclideanDistance</a></li><li><a href="global.html#getExtrema">getExtrema</a></li><li><a href="global.html#getGui">getGui</a></li><li><a href="global.html#getIncomingConnections">getIncomingConnections</a></li><li><a href="global.html#getJsonForCurrentLink">getJsonForCurrentLink</a></li><li><a href="global.html#getLastPosOfSameEntry">getLastPosOfSameEntry</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getMainDistrict">getMainDistrict</a></li><li><a href="global.html#getMainDistrictFromJSON">getMainDistrictFromJSON</a></li><li><a href="global.html#getMaterial">getMaterial</a></li><li><a href="global.html#getOrbitControls">getOrbitControls</a></li><li><a href="global.html#getOriginalAssociations">getOriginalAssociations</a></li><li><a href="global.html#getOutgoingConnections">getOutgoingConnections</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getRemovedBuildings">getRemovedBuildings</a></li><li><a href="global.html#getScalingBooleans">getScalingBooleans</a></li><li><a href="global.html#getScene">getScene</a></li><li><a href="global.html#getScrollDistance">getScrollDistance</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#goToArielView">goToArielView</a></li><li><a href="global.html#goToInitialView">goToInitialView</a></li><li><a href="global.html#Graph">Graph</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#highlightBuilding">highlightBuilding</a></li><li><a href="global.html#highlightGardenLines">highlightGardenLines</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initAssociation">initAssociation</a></li><li><a href="global.html#initData">initData</a></li><li><a href="global.html#initMainDistrict">initMainDistrict</a></li><li><a href="global.html#lastStepInCreatingPath">lastStepInCreatingPath</a></li><li><a href="global.html#linearizeExtrema">linearizeExtrema</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#onDocumentMouseDown">onDocumentMouseDown</a></li><li><a href="global.html#onDocumentMouseMove">onDocumentMouseMove</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#pushToClickedLeftGardens">pushToClickedLeftGardens</a></li><li><a href="global.html#pushToClickedRightGardens">pushToClickedRightGardens</a></li><li><a href="global.html#remove">remove</a></li><li><a href="global.html#removeAllObjects">removeAllObjects</a></li><li><a href="global.html#removeDistrict">removeDistrict</a></li><li><a href="global.html#removeHighlightingGardenLines">removeHighlightingGardenLines</a></li><li><a href="global.html#removeLines">removeLines</a></li><li><a href="global.html#removeObject">removeObject</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#restoreCamera">restoreCamera</a></li><li><a href="global.html#saveCamera">saveCamera</a></li><li><a href="global.html#scale">scale</a></li><li><a href="global.html#scaleAll">scaleAll</a></li><li><a href="global.html#scaleLinearly">scaleLinearly</a></li><li><a href="global.html#scaleLogarithmically">scaleLogarithmically</a></li><li><a href="global.html#setAndDrawCity">setAndDrawCity</a></li><li><a href="global.html#setAssociation">setAssociation</a></li><li><a href="global.html#setBuildingColor">setBuildingColor</a></li><li><a href="global.html#setCamera">setCamera</a></li><li><a href="global.html#setCameraPos">setCameraPos</a></li><li><a href="global.html#setCameraPosForLink">setCameraPosForLink</a></li><li><a href="global.html#setChangedLegend">setChangedLegend</a></li><li><a href="global.html#setClickedGardens">setClickedGardens</a></li><li><a href="global.html#setClickedGardensEmpty">setClickedGardensEmpty</a></li><li><a href="global.html#setControls">setControls</a></li><li><a href="global.html#setFolderLegende">setFolderLegende</a></li><li><a href="global.html#setGardenOff">setGardenOff</a></li><li><a href="global.html#setGardenOn">setGardenOn</a></li><li><a href="global.html#setGraph">setGraph</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLight">setLight</a></li><li><a href="global.html#setLOG">setLOG</a></li><li><a href="global.html#setMenue">setMenue</a></li><li><a href="global.html#setMetaData">setMetaData</a></li><li><a href="global.html#setNextLinePosForNextPackage">setNextLinePosForNextPackage</a></li><li><a href="global.html#setPath">setPath</a></li><li><a href="global.html#setPathOnOneDistrict">setPathOnOneDistrict</a></li><li><a href="global.html#setRemovedBuildings">setRemovedBuildings</a></li><li><a href="global.html#setScalingBooleans">setScalingBooleans</a></li><li><a href="global.html#setSpecificView">setSpecificView</a></li><li><a href="global.html#setTheFiveStreetNodes">setTheFiveStreetNodes</a></li><li><a href="global.html#showBuilding">showBuilding</a></li><li><a href="global.html#sortNodesOfStreets">sortNodesOfStreets</a></li><li><a href="global.html#takeLogarithmOfExtrema">takeLogarithmOfExtrema</a></li><li><a href="global.html#undoRemoving">undoRemoving</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#updateConnectionExtrema">updateConnectionExtrema</a></li><li><a href="global.html#updateControls">updateControls</a></li><li><a href="global.html#updateExtrema">updateExtrema</a></li><li><a href="global.html#updateHighlightingLines">updateHighlightingLines</a></li><li><a href="global.html#updateRemovedBuildings">updateRemovedBuildings</a></li><li><a href="global.html#workUpGarden">workUpGarden</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
 
-    <h1 class="page-title">Global</h1>
-
-    
-
+</div>
+</div>
 
 
+<div class="container" id="toc-content">
+<div class="row">
 
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">Global</h1>
 <section>
 
 <header>
     
-        <h2></h2>
+        <h2>
+        
+        </h2>
         
     
 </header>
+
 
 <article>
     <div class="container-overview">
@@ -39,9 +82,14 @@
         
 
         
-
-
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -51,29 +99,25 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
@@ -87,31 +131,41 @@
 
     
 
-     
+    
 
     
 
     
         <h3 class="subsection-title">Members</h3>
 
-        
+        <dl>
             
-<h4 class="name" id="availableAggregationOperations"><span class="type-signature"></span>availableAggregationOperations<span class="type-signature"></span></h4>
+<hr>
+<dt class="name" id="availableAggregationOperations">
+    <h4><span class="type-signature"></span>availableAggregationOperations<span class="type-signature"></span></h4>
 
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Alle für MongoDB verfügbaren Gruppierungsoperationen
 
+https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
+    </div>
+    
 
+    
 
-<div class="description">
-    Alle für MongoDB verfügbaren Gruppierungsoperationenhttps://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
-</div>
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -121,59 +175,59 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line38">line 38</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
-
-
-
+    
+</dd>
 
         
             
-<h4 class="name" id="datacityApp"><span class="type-signature"></span>datacityApp<span class="type-signature"></span></h4>
+<hr>
+<dt class="name" id="availableAggregationOperations">
+    <h4><span class="type-signature"></span>availableAggregationOperations<span class="type-signature"></span></h4>
 
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Alle für MongoDB verfügbaren Gruppierungsoperationen
 
+https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
+    </div>
+    
 
+    
 
-<div class="description">
-    # datacityAppMain module of the application.
-</div>
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -183,75 +237,330 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line3">line 3</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
-
-
-
+    
+</dd>
 
         
+            
+<hr>
+<dt class="name" id="dat">
+    <h4><span class="type-signature"></span>dat<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        dat-gui JavaScript Controller Library
+http://code.google.com/p/dat-gui
+
+Copyright 2011 Data Arts Team, Google Creative Lab
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="datacityApp">
+    <h4><span class="type-signature"></span>datacityApp<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        # datacityApp
+
+Main module of the application.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="Detector">
+    <h4><span class="type-signature"></span>Detector<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
+	<dd class="tag-author">
+		<ul>
+			<li>alteredq / http://alteredqualia.com/</li>
+			
+			<li>mr.doob / http://mrdoob.com/</li>
+			</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="Graph">
+    <h4><span class="type-signature"></span>Graph<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Dijkstra's algorithm, conceived by Dutch computer scientist Edsger Dijkstra, is a graph search algorithm that solves the single-source shortest path problem for a graph with nonnegative edge path costs, producing a shortest path tree. This algorithm is often used in routing and as a subroutine in other graph algorithms.
+
+var map = {a:{b:3,c:1},b:{a:2,c:1},c:{a:4,b:1}},
+graph = new Graph(map);
+
+graph.findShortestPath('a', 'b');      // => ['a', 'c', 'b']
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
     
 
     
         <h3 class="subsection-title">Methods</h3>
 
-        
+        <dl>
             
+<hr>
+<dt>
+    <h4 class="name" id="$get"><span class="type-signature"></span>$get()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Instanziert Provider
+    </div>
+    
 
     
 
-    <h4 class="name" id="$get"><span class="type-signature"></span>$get<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Instanziert Provider
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -261,79 +570,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line777">line 777</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="$get"><span class="type-signature"></span>$get()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Instanziert Provider
+    </div>
+    
 
     
 
-    <h4 class="name" id="addAggregation"><span class="type-signature"></span>addAggregation<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Fügt eine Aggregation zu den bestehenden hinzu
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -343,79 +648,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line409">line 409</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="addAggregation"><span class="type-signature"></span>addAggregation()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Fügt eine Aggregation zu den bestehenden hinzu
+    </div>
+    
 
     
 
-    <h4 class="name" id="buildAggregationPipe"><span class="type-signature"></span>buildAggregationPipe<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Setzt einzelne Aggregationsschritte zu einem vollständigen Aggregationsparameter zusammen
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -425,79 +726,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line172">line 172</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="addAggregation"><span class="type-signature"></span>addAggregation()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Fügt eine Aggregation zu den bestehenden hinzu
+    </div>
+    
 
     
 
-    <h4 class="name" id="callCollectionsMetaDataAggrURI"><span class="type-signature"></span>callCollectionsMetaDataAggrURI<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Ruft die Meta-Daten-Aggregations-URI aufBeispiel:/db/collection/_aggrs/AGGR.META_DATA_AGGR_URI
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -507,79 +804,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line424">line 424</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="addANode"><span class="type-signature"></span>addANode()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Diese Methode fuegt dem Array, welches dem Wert von aJSON an der Stelle theKey ist, den Wert theValue hinzu
+    </div>
+    
 
     
 
-    <h4 class="name" id="count"><span class="type-signature"></span>count<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Counts the elements in obj
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -589,79 +882,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="libs_lib_view.js.html">libs/lib_view.js</a>, <a href="libs_lib_view.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="addBoxes"><span class="type-signature"></span>addBoxes()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode fuer addCityToScene, zeichnet die Boxen
+    </div>
+    
 
     
 
-    <h4 class="name" id="createMetaDataAggregation"><span class="type-signature"></span>createMetaDataAggregation<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Fügt einer Collection die Meta-Daten-Aggregation hinzu
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -671,79 +960,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line453">line 453</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="addCityToScene"><span class="type-signature"></span>addCityToScene()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode, um die Stadt auf die WebGL-scene zu zeichnen, wenn wir die Daten bekommen haben
+    </div>
+    
 
     
 
-    <h4 class="name" id="createView"><span class="type-signature"></span>createView<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Erzeugt eine neue Ansicht für eine gegebene Collection
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -753,79 +1038,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line271">line 271</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="addEachDistrict"><span class="type-signature"></span>addEachDistrict()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        rekursive Hilfsmethode fuer addCityToScene
+    </div>
+    
 
     
 
-    <h4 class="name" id="deleteCollection"><span class="type-signature"></span>deleteCollection<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Löscht eine Collection
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -835,79 +1116,119 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line162">line 162</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="addGarden"><span class="type-signature"></span>addGarden(aBuilding:)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode fuer addCityToScene, zeichnet die Gaerten zu den zugehoerigen gebaeuden bzw Districts
+    </div>
+    
 
     
 
-    <h4 class="name" id="deleteData"><span class="type-signature"></span>deleteData<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aBuilding:</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">das Gebaeude bzw das District</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
-
-
-<div class="description">
-    Löscht die Daten und ruft die Funktion mit dem Ergebnis aufdb, collection und id können null sein
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -917,78 +1238,1795 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line186">line 186</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="addPathBetweenDistrictsOnTheSameDistrict"><span class="type-signature"></span>addPathBetweenDistrictsOnTheSameDistrict()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        fuegt den Pfad zwischen den beiden Distrikten von Start und Ziel hinzu, die auf einem gemeinsamen District stehen
+    </div>
+    
 
     
 
-    <h4 class="name" id="deleteView"><span class="type-signature"></span>deleteView<span class="signature">(view, fn)</span><span class="type-signature"></span></h4>
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
-
-
-<div class="description">
-    Löscht eine Ansicht
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
     
 
-<table class="params">
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addPathFromLowerToUpperDistrict"><span class="type-signature"></span>addPathFromLowerToUpperDistrict()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        fuegt den Weg von einem unteren District hoch zu einem oberen District hinzu
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addPathFromUpperToLowerDistrict"><span class="type-signature"></span>addPathFromUpperToLowerDistrict()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        fuegt zu vertices den Weg vom Start hin bis runter zum "Exit-Knoten" des k-ten Distrikts unter dem Start
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="animate"><span class="type-signature"></span>animate()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        schaut regelmäßig, ob was passiert und updatet und zeichnet neu
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="buildAggregationPipe"><span class="type-signature"></span>buildAggregationPipe()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setzt einzelne Aggregationsschritte zu einem vollständigen Aggregationsparameter zusammen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="buildAggregationPipe"><span class="type-signature"></span>buildAggregationPipe()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setzt einzelne Aggregationsschritte zu einem vollständigen Aggregationsparameter zusammen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="callCollectionsMetaDataAggrURI"><span class="type-signature"></span>callCollectionsMetaDataAggrURI()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ruft die Meta-Daten-Aggregations-URI auf
+
+Beispiel:
+/db/collection/_aggrs/AGGR.META_DATA_AGGR_URI
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="callCollectionsMetaDataAggrURI"><span class="type-signature"></span>callCollectionsMetaDataAggrURI()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ruft die Meta-Daten-Aggregations-URI auf
+
+Beispiel:
+/db/collection/_aggrs/AGGR.META_DATA_AGGR_URI
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="changeBuildingInformation"><span class="type-signature"></span>changeBuildingInformation()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        aendert bei den Gebaeudeinformationen in der Legende die Werte, die angezeigt werden sollen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="changeLinkForCurrentView"><span class="type-signature"></span>changeLinkForCurrentView()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        aendert bei dem Link in der Legende den Link zum Verschicken
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="computeDistancesForNextLinePos"><span class="type-signature"></span>computeDistancesForNextLinePos()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode zum initialisieren der Variablen fuer setNextLinePos-Methoden
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="count"><span class="type-signature"></span>count()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Counts the elements in obj
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="createEdges"><span class="type-signature"></span>createEdges()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        iteriert durch nodesOFStreetsSortByXCoord bzw. -ZCoord und bestimmt die Nachbarn von den Knoten
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="createMainDistrict"><span class="type-signature"></span>createMainDistrict()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode, um aus einem Array aus Gebaeuden Districts zu erstellen, die nach Packagenamen sortiert sind
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="createMetaDataAggregation"><span class="type-signature"></span>createMetaDataAggregation()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Fügt einer Collection die Meta-Daten-Aggregation hinzu
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="createMetaDataAggregation"><span class="type-signature"></span>createMetaDataAggregation()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Fügt einer Collection die Meta-Daten-Aggregation hinzu
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="createView"><span class="type-signature"></span>createView()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Erzeugt eine neue Ansicht für eine gegebene Collection
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="createView"><span class="type-signature"></span>createView()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Erzeugt eine neue Ansicht für eine gegebene Collection
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="deleteCollection"><span class="type-signature"></span>deleteCollection()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Löscht eine Collection
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="deleteCollection"><span class="type-signature"></span>deleteCollection()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Löscht eine Collection
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="deleteData"><span class="type-signature"></span>deleteData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Löscht die Daten und ruft die Funktion mit dem Ergebnis auf
+
+db, collection und id können null sein
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="deleteData"><span class="type-signature"></span>deleteData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Löscht die Daten und ruft die Funktion mit dem Ergebnis auf
+
+db, collection und id können null sein
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="deleteView"><span class="type-signature"></span>deleteView(view, fn)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Löscht eine Ansicht
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
     <thead>
     <tr>
         
@@ -1046,12 +3084,17 @@
     </tbody>
 </table>
 
+    
 
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -1061,161 +3104,3240 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line249">line 249</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="deleteView"><span class="type-signature"></span>deleteView(view, fn)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Löscht eine Ansicht
+    </div>
+    
 
     
 
-    <h4 class="name" id="ensureCollectionsMetaData"><span class="type-signature"></span>ensureCollectionsMetaData<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>view</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Die Ansicht, die gelöscht werden soll</td>
+        </tr>
 
     
 
+        <tr>
+            
+                <td class="name"><code>fn</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Funktion, die nach erfolgreichem Löschen aufgerufen wird</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
-<div class="description">
-    Garantiert, dass Meta-Daten einer Collection vorhanden sind und ruft die Funktion mit diesen auf
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="doWeUseConnections"><span class="type-signature"></span>doWeUseConnections()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer usingConnections
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="doWeUseStreets"><span class="type-signature"></span>doWeUseStreets()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer useStreets
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="drawALine"><span class="type-signature"></span>drawALine()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Zeichnet fuer die Gaerten eine Abhaengigkeit
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="drawBox"><span class="type-signature"></span>drawBox()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode, um eine WebGL-Box zu malen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="drawCity"><span class="type-signature"></span>drawCity()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="drawLines"><span class="type-signature"></span>drawLines()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Zeichnet alle Abhaengigkeiten, die von einem Garten ausgehen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="drawStoredLines"><span class="type-signature"></span>drawStoredLines()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode, um gespeicherte Linien wieder zu zeichnen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="ensureCollectionsMetaData"><span class="type-signature"></span>ensureCollectionsMetaData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Garantiert, dass Meta-Daten einer Collection vorhanden sind und 
+ruft die Funktion mit diesen auf
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="ensureCollectionsMetaData"><span class="type-signature"></span>ensureCollectionsMetaData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Garantiert, dass Meta-Daten einer Collection vorhanden sind und 
+ruft die Funktion mit diesen auf
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getAggregations"><span class="type-signature"></span>getAggregations()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt alle vorhandenen Aggregationen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getAggregations"><span class="type-signature"></span>getAggregations()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt alle vorhandenen Aggregationen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getAttributesWithType"><span class="type-signature"></span>getAttributesWithType()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Gibt alle Attribute mit Typ zurück
+
+Erwartet als Parameter die Serverantwort, Beispiel:
+getAttributesWithType($scope.collection.data._embedded['rh:doc']);
+
+Beispielhafte Antwort:
+
+var result = {
+	'Klassen': {
+		'name': "Klassen",
+		'type': "number",
+		},
+	'Methoden': {
+		'name': "Methoden",
+		'type': "number",
+	},
+	'Package': {
+		'name': "Package",
+		'type': "string",
+	},
+	'Verzweigungen': {
+		'name': "Verzweigungen",
+		'type': "number",
+	},
+	'Zeilen': {
+		'name': "Zeilen",
+		'type': "number",
+	}
+};
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getBuildingInformation"><span class="type-signature"></span>getBuildingInformation()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer buildingInformation
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCamToSave"><span class="type-signature"></span>getCamToSave()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer Kameraeinstellung
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getChangedLegend"><span class="type-signature"></span>getChangedLegend()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer changedLegend
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCollections"><span class="type-signature"></span>getCollections()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt alle Collections einer DB
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCollections"><span class="type-signature"></span>getCollections()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt alle Collections einer DB
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCollectionsMetaData"><span class="type-signature"></span>getCollectionsMetaData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ruft Funktion mit MetaDaten als Parameter auf
+
+null, falls nicht vorhanden
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCollectionsMetaData"><span class="type-signature"></span>getCollectionsMetaData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ruft Funktion mit MetaDaten als Parameter auf
+
+null, falls nicht vorhanden
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getColorFactor"><span class="type-signature"></span>getColorFactor()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum Bestimmen der Farbe aus dem Farbwert (bisher noch nicht genutzt)
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getControls"><span class="type-signature"></span>getControls()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer trackballControls
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCurrentETag"><span class="type-signature"></span>getCurrentETag()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Gibt den aktuellen ETag einer Collection zurück
+
+Nötig für _ALLE_ Änderungen an der Collection.
+Siehe RESTHeart Doku
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCurrentETag"><span class="type-signature"></span>getCurrentETag()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Gibt den aktuellen ETag einer Collection zurück
+
+Nötig für _ALLE_ Änderungen an der Collection.
+Siehe RESTHeart Doku
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCurrentETagForRelURL"><span class="type-signature"></span>getCurrentETagForRelURL()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Gibt den aktuellen ETag eines Dokuments zurück
+
+Nötig für _ALLE_ Änderungen
+Siehe RESTHeart Doku
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCurrentETagForRelURL"><span class="type-signature"></span>getCurrentETagForRelURL()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Gibt den aktuellen ETag eines Dokuments zurück
+
+Nötig für _ALLE_ Änderungen
+Siehe RESTHeart Doku
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getData"><span class="type-signature"></span>getData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt die Daten und ruft die Funktion mit dem Ergebnis auf
+
+db, collection und id können null sein
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getData"><span class="type-signature"></span>getData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt die Daten und ruft die Funktion mit dem Ergebnis auf
+
+db, collection und id können null sein
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getDatabases"><span class="type-signature"></span>getDatabases()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt alle Datenbanken
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getDatabases"><span class="type-signature"></span>getDatabases()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt alle Datenbanken
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getDocument"><span class="type-signature"></span>getDocument()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt ein Dokument einer Collection
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getDocument"><span class="type-signature"></span>getDocument()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt ein Dokument einer Collection
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getDocuments"><span class="type-signature"></span>getDocuments()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt alle Einträge einer Collection
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getDocuments"><span class="type-signature"></span>getDocuments()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt alle Einträge einer Collection
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getDrawnDimValue"><span class="type-signature"></span>getDrawnDimValue()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        berechnet die dargestellte Breite/Hoehe/Farbe
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getEuclideanDistance"><span class="type-signature"></span>getEuclideanDistance()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        berechnet die euklidische Distanz im 2D fuer 2 Knoten
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getExtrema"><span class="type-signature"></span>getExtrema()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        gibt die Extremwerte zurueck
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getGui"><span class="type-signature"></span>getGui()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        getter fuer gui (dropdownmenu)
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getIncomingConnections"><span class="type-signature"></span>getIncomingConnections()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    neues JSON fuer Verbindungen
 </div>
 
 
 
 
-
-
-
-
-
-
-
-
-
-<dl class="details">
+        
 
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line567">line 567</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="getJsonForCurrentLink"><span class="type-signature"></span>getJsonForCurrentLink()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum erstellen des JSON zum Speichern der aktuellen Ansicht mit Kameraposition etc.
+    </div>
+    
 
     
 
-    <h4 class="name" id="getAggregations"><span class="type-signature"></span>getAggregations<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Holt alle vorhandenen Aggregationen
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -1225,79 +6347,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line381">line 381</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="getLastPosOfSameEntry"><span class="type-signature"></span>getLastPosOfSameEntry()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        berechnet die Position in den Arrays, ab dem sich die beiden unterscheiden
+    </div>
+    
 
     
 
-    <h4 class="name" id="getAttributesWithType"><span class="type-signature"></span>getAttributesWithType<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Gibt alle Attribute mit Typ zurückErwartet als Parameter die Serverantwort, Beispiel:getAttributesWithType($scope.collection.data._embedded['rh:doc']);Beispielhafte Antwort:var result = {	'Klassen': {		'name': "Klassen",		'type': "number",		},	'Methoden': {		'name': "Methoden",		'type': "number",	},	'Package': {		'name': "Package",		'type': "string",	},	'Verzweigungen': {		'name': "Verzweigungen",		'type': "number",	},	'Zeilen': {		'name': "Zeilen",		'type': "number",	}};
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -1307,79 +6425,71 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="libs_lib_view.js.html">libs/lib_view.js</a>, <a href="libs_lib_view.js.html#line85">line 85</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="getLoggedIn"><span class="type-signature"></span>getLoggedIn()</h4>
+    
+    
+</dt>
+<dd>
 
     
 
-    <h4 class="name" id="getCollections"><span class="type-signature"></span>getCollections<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
     
 
+    
+    
 
-
-<div class="description">
-    Holt alle Collections einer DB
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -1389,737 +6499,82 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line81">line 81</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
-
-
-        
+    
+    <h5>Returns:</h5>
+    
             
-
-    
-
-    <h4 class="name" id="getCollectionsMetaData"><span class="type-signature"></span>getCollectionsMetaData<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Ruft Funktion mit MetaDaten als Parameter aufnull, falls nicht vorhanden
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line674">line 674</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getCurrentETag"><span class="type-signature"></span>getCurrentETag<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Gibt den aktuellen ETag einer Collection zurückNötig für _ALLE_ Änderungen an der Collection.Siehe RESTHeart Doku
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line701">line 701</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getCurrentETagForRelURL"><span class="type-signature"></span>getCurrentETagForRelURL<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Gibt den aktuellen ETag eines Dokuments zurückNötig für _ALLE_ ÄnderungenSiehe RESTHeart Doku
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line716">line 716</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getData"><span class="type-signature"></span>getData<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Holt die Daten und ruft die Funktion mit dem Ergebnis aufdb, collection und id können null sein
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line135">line 135</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getDatabases"><span class="type-signature"></span>getDatabases<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Holt alle Datenbanken
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line89">line 89</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getDocument"><span class="type-signature"></span>getDocument<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Holt ein Dokument einer Collection
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line65">line 65</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getDocuments"><span class="type-signature"></span>getDocuments<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Holt alle Einträge einer Collection
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line73">line 73</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getLoggedIn"><span class="type-signature"></span>getLoggedIn<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_sharedlogin.js.html">services/sharedlogin.js</a>, <a href="services_sharedlogin.js.html#line61">line 61</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
 <div class="param-desc">
     Gibt zurück, ob jemand eingeloggt ist oder nicht
 </div>
 
 
 
+
+        
+
     
-
-
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="getLoggedIn"><span class="type-signature"></span>getLoggedIn()</h4>
+    
+    
+</dt>
+<dd>
 
     
 
-    <h4 class="name" id="getPassword"><span class="type-signature"></span>getPassword<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
     
 
+    
+    
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -2129,167 +6584,735 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_sharedlogin.js.html">services/sharedlogin.js</a>, <a href="services_sharedlogin.js.html#line35">line 35</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Gibt zurück, ob jemand eingeloggt ist oder nicht
+</div>
 
 
 
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
 
         
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getMainDistrict"><span class="type-signature"></span>getMainDistrict()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer mainDistrict
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getMainDistrictFromJSON"><span class="type-signature"></span>getMainDistrictFromJSON()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        rekursive Hilfsmethode, um aus dem Objekt, was in createMainDistrict erstellt wurde, ein Stadtobjekt zu erstellen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getMaterial"><span class="type-signature"></span>getMaterial()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode, um ein schönes Material zu bekommen, wenn man die Farbe kriegt
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getOrbitControls"><span class="type-signature"></span>getOrbitControls()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer OrbitControls
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getOriginalAssociations"><span class="type-signature"></span>getOriginalAssociations()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer associations
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getOutgoingConnections"><span class="type-signature"></span>getOutgoingConnections()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode bekommt ein JSON-Objekt fuer die Verbindungen und schreibt es so um, dass man nachher besser mit arbeiten kann
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    neues JSON fuer Verbindungen
+</div>
+
+
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getPassword"><span class="type-signature"></span>getPassword()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
 <div class="param-desc">
     gibt das Password des eingeloggten Nutzers zurück
 </div>
 
 
 
+
+        
+
     
-
-
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="getPassword"><span class="type-signature"></span>getPassword()</h4>
+    
+    
+</dt>
+<dd>
 
     
 
-    <h4 class="name" id="getType"><span class="type-signature"></span>getType<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
     
 
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
-<div class="description">
-    Gibt es Datentyp des uebergebenen Datums zurueckBeispiele:"w"	=>	string3	=>	number3.14	=>	numbernull	=>	null""	=>	nulltrue	=>	boolean
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    gibt das Password des eingeloggten Nutzers zurück
 </div>
 
 
 
 
-
-
-
-
-
-
-
-
-
-<dl class="details">
+        
 
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="libs_lib_view.js.html">libs/lib_view.js</a>, <a href="libs_lib_view.js.html#line26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="getRemovedBuildings"><span class="type-signature"></span>getRemovedBuildings()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer removedBuildings
+    </div>
+    
 
     
 
-    <h4 class="name" id="getUsername"><span class="type-signature"></span>getUsername<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -2299,89 +7322,476 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_sharedlogin.js.html">services/sharedlogin.js</a>, <a href="services_sharedlogin.js.html#line29">line 29</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-<h5>Returns:</h5>
+    
+</dd>
 
         
+            
+<hr>
+<dt>
+    <h4 class="name" id="getScalingBooleans"><span class="type-signature"></span>getScalingBooleans()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter für scaling
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getScene"><span class="type-signature"></span>getScene()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Getter fuer scene
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getScrollDistance"><span class="type-signature"></span>getScrollDistance()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Eine Methode, um den Abstand von einem DivElement zum linken bzw. oberen Rand des Fensters zu bekommen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getType"><span class="type-signature"></span>getType()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Gibt es Datentyp des uebergebenen Datums zurueck
+
+Beispiele:
+"w"	=>	string
+3	=>	number
+3.14	=>	number
+null	=>	null
+""	=>	null
+true	=>	boolean
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getUsername"><span class="type-signature"></span>getUsername()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
 <div class="param-desc">
     der Nutzername des eingeloggten Nutzers
 </div>
 
 
 
+
+        
+
     
-
-
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="getUsername"><span class="type-signature"></span>getUsername()</h4>
+    
+    
+</dt>
+<dd>
 
     
 
-    <h4 class="name" id="getViewsOfCollection"><span class="type-signature"></span>getViewsOfCollection<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
     
 
+    
+    
 
-
-<div class="description">
-    Holt alle Ansichten zu einer Collection
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -2391,79 +7801,86 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line97">line 97</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
-
-
-        
+    
+    <h5>Returns:</h5>
+    
             
-
-    
-
-    <h4 class="name" id="hasCollectionAggregations"><span class="type-signature"></span>hasCollectionAggregations<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Besitzt die Collection Aggregationen?
+<div class="param-desc">
+    der Nutzername des eingeloggten Nutzers
 </div>
 
 
 
 
+        
 
+    
+</dd>
 
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getViewsOfCollection"><span class="type-signature"></span>getViewsOfCollection()</h4>
+    
+    
+</dt>
+<dd>
 
+    
+    <div class="description">
+        Holt alle Ansichten zu einer Collection
+    </div>
+    
 
+    
 
+    
 
+    
+    
 
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -2473,79 +7890,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line399">line 399</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="getViewsOfCollection"><span class="type-signature"></span>getViewsOfCollection()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Holt alle Ansichten zu einer Collection
+    </div>
+    
 
     
 
-    <h4 class="name" id="hasCollectionMetaData"><span class="type-signature"></span>hasCollectionMetaData<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Prüft, ob eine Collection Meta-Daten gespeichert hat
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -2555,78 +7968,1207 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line662">line 662</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="goToArielView"><span class="type-signature"></span>goToArielView()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        setzt Camera auf die Vogelperspektive
+    </div>
+    
 
     
 
-    <h4 class="name" id="login"><span class="type-signature"></span>login<span class="signature">(usernameInput, passwordInput)</span><span class="type-signature"></span></h4>
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
-
-
-<div class="description">
-    Loggt den Nutzer ein, falls die Daten korrekt sind
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
     
 
-<table class="params">
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="goToInitialView"><span class="type-signature"></span>goToInitialView()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        setzt Camera auf die erste Ansicht
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="hasCollectionAggregations"><span class="type-signature"></span>hasCollectionAggregations()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Besitzt die Collection Aggregationen?
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="hasCollectionAggregations"><span class="type-signature"></span>hasCollectionAggregations()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Besitzt die Collection Aggregationen?
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="hasCollectionMetaData"><span class="type-signature"></span>hasCollectionMetaData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Prüft, ob eine Collection Meta-Daten gespeichert hat
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="hasCollectionMetaData"><span class="type-signature"></span>hasCollectionMetaData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Prüft, ob eine Collection Meta-Daten gespeichert hat
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="highlightBuilding"><span class="type-signature"></span>highlightBuilding()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        highlighted ein Gebaeude
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="highlightGardenLines"><span class="type-signature"></span>highlightGardenLines(aGarden:)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum highlighten der Gartenlinien
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aGarden:</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ein Gartenobjekt</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="init"><span class="type-signature"></span>init()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Initialisiert das Bild, d.h. malt die Zeichenflaeche, erstellt die Kamera, setzt das Licht, 
+aktiviert das Beobachten der Mausaktivitaeten und das Zoomen, Drehen, Verschieben
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="initAssociation"><span class="type-signature"></span>initAssociation()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode, um die Legende richtig vorzubereiten
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="initData"><span class="type-signature"></span>initData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode bereitet Daten wie Legende, MainDistrict und Verbindungen vor
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="initMainDistrict"><span class="type-signature"></span>initMainDistrict()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        initialisiert mainDistrict je nachdem, welche Blockbildung gefordert ist
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="lastStepInCreatingPath"><span class="type-signature"></span>lastStepInCreatingPath()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Der letzte Schritt beim Erstellen eines Pfades zwischen zwei Gebaeuden, die auf unterschiedlichen Distrikten liegen.
+Die Methode loescht entweder einen ueberfluessigen Knoten oder fuegt noch den letzten Pfad hinzu.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="linearizeExtrema"><span class="type-signature"></span>linearizeExtrema()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode, um die Extremwerte wieder normal zu skalieren
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="login"><span class="type-signature"></span>login(usernameInput, passwordInput)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Loggt den Nutzer ein, falls die Daten korrekt sind
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
     <thead>
     <tr>
         
@@ -2684,12 +9226,17 @@
     </tbody>
 </table>
 
+    
 
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -2699,79 +9246,137 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_sharedlogin.js.html">services/sharedlogin.js</a>, <a href="services_sharedlogin.js.html#line45">line 45</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="login"><span class="type-signature"></span>login(usernameInput, passwordInput)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Loggt den Nutzer ein, falls die Daten korrekt sind
+    </div>
+    
 
     
 
-    <h4 class="name" id="logout"><span class="type-signature"></span>logout<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>usernameInput</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Der eingegebene Benutzername</td>
+        </tr>
 
     
 
+        <tr>
+            
+                <td class="name"><code>passwordInput</code></td>
+            
 
+            <td class="type">
+            
+            </td>
 
-<div class="description">
-    Loggt den Nutzer aus
-</div>
+            
 
+            
 
+            <td class="description last">Das eingegebene Passwort</td>
+        </tr>
 
+    
+    </tbody>
+</table>
 
+    
 
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -2781,79 +9386,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_sharedlogin.js.html">services/sharedlogin.js</a>, <a href="services_sharedlogin.js.html#line53">line 53</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="logout"><span class="type-signature"></span>logout()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Loggt den Nutzer aus
+    </div>
+    
 
     
 
-    <h4 class="name" id="matchStage"><span class="type-signature"></span>matchStage<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Erzeugt eine match-Stage:"_$match": matchStage(params)
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -2863,79 +9464,75 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line100">line 100</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="logout"><span class="type-signature"></span>logout()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Loggt den Nutzer aus
+    </div>
+    
 
     
 
-    <h4 class="name" id="projectStage"><span class="type-signature"></span>projectStage<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Erzeugt Project-Stage
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -2945,79 +9542,77 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_aggr.js.html">services/aggr.js</a>, <a href="services_aggr.js.html#line73">line 73</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="matchStage"><span class="type-signature"></span>matchStage()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Erzeugt eine match-Stage:
+
+"_$match": matchStage(params)
+    </div>
+    
 
     
 
-    <h4 class="name" id="setHTTP"><span class="type-signature"></span>setHTTP<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Speichert $http in Provider
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -3027,79 +9622,77 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line728">line 728</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
             
+<hr>
+<dt>
+    <h4 class="name" id="matchStage"><span class="type-signature"></span>matchStage()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Erzeugt eine match-Stage:
+
+"_$match": matchStage(params)
+    </div>
+    
 
     
 
-    <h4 class="name" id="setLOG"><span class="type-signature"></span>setLOG<span class="signature">()</span><span class="type-signature"></span></h4>
-
     
 
+    
+    
 
-
-<div class="description">
-    Speichert $log in Provider
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 <dl class="details">
+    
+
+	
+
+	
+
+	
 
     
 
@@ -3109,52 +9702,4784 @@
 
     
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
+	
 
-    
 
-    
 
-    
+	
 
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_rest.js.html">services/rest.js</a>, <a href="services_rest.js.html#line735">line 735</a>
-    </li></ul></dd>
-    
+	
 
-    
+	
 
-    
-
-    
+	
 </dl>
 
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
+</dd>
 
         
+            
+<hr>
+<dt>
+    <h4 class="name" id="onDocumentMouseDown"><span class="type-signature"></span>onDocumentMouseDown()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Wird ausgefuehrt, wenn man mit der Maus klickt
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="onDocumentMouseMove"><span class="type-signature"></span>onDocumentMouseMove()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        berechnet die Position von der Maus
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="projectStage"><span class="type-signature"></span>projectStage()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Erzeugt Project-Stage
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="projectStage"><span class="type-signature"></span>projectStage()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Erzeugt Project-Stage
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="pushToClickedLeftGardens"><span class="type-signature"></span>pushToClickedLeftGardens()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum Hinzufuegen von Elementen zu clickedLeftGardens
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="pushToClickedRightGardens"><span class="type-signature"></span>pushToClickedRightGardens()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum hinzufuegen von Elementen zu clickedRightGardens
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="remove"><span class="type-signature"></span>remove()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        loescht ein District von der Bildflaeche und speichert dies
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="removeAllObjects"><span class="type-signature"></span>removeAllObjects()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode, um alle Objekte auf der Oberflaeche zu loeschen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="removeDistrict"><span class="type-signature"></span>removeDistrict()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode, um ein Distrikt oder ein Gebaeude zu loeschen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="removeHighlightingGardenLines"><span class="type-signature"></span>removeHighlightingGardenLines(aGarden:)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode, die das highlighten der Gartenlinien rueckgaengig macht
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aGarden:</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ein Gartenobjekt</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="removeLines"><span class="type-signature"></span>removeLines()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum Löschen der Kanten, die von einem Garten ausgehen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="removeObject"><span class="type-signature"></span>removeObject()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode, um Gebaeude zu loeschen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="render"><span class="type-signature"></span>render()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        zeichnet das Bild neu nach einer Aktion vom Nutzer
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="restoreCamera"><span class="type-signature"></span>restoreCamera()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Stellt AnfangsKameraeinstellung wieder her
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="saveCamera"><span class="type-signature"></span>saveCamera()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        speichert Kameraeinstellung
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="scale"><span class="type-signature"></span>scale()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        skaliert die Gebaeude und zeichnet sie neu
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="scaleAll"><span class="type-signature"></span>scaleAll()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        skaliert alle Gebaeuden
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="scaleLinearly"><span class="type-signature"></span>scaleLinearly()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode, um die urspruenglichen Werte wieder herzustellen, d.h. ohne Skalierung die Gebaeude zu zeichnen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="scaleLogarithmically"><span class="type-signature"></span>scaleLogarithmically()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode zum logarithmieren (Logarithmus zur Basis 2)
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setAndDrawCity"><span class="type-signature"></span>setAndDrawCity()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        setzt und zeichnet die Stadt
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setAssociation"><span class="type-signature"></span>setAssociation()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setter fuer association
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setAssociation"><span class="type-signature"></span>setAssociation()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setter fuer association
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setBuildingColor"><span class="type-signature"></span>setBuildingColor()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setter fuer die Farbe der Gebaeude aus settings.js
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setCamera"><span class="type-signature"></span>setCamera()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setter fuer camera
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setCameraPos"><span class="type-signature"></span>setCameraPos()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        setzt die Kameraposition neu
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setCameraPosForLink"><span class="type-signature"></span>setCameraPosForLink()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        setzt die Kameraposition neu, wenn die alte Ansicht wiederhergestellt werden soll aus einem Link
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setChangedLegend"><span class="type-signature"></span>setChangedLegend()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setter fuer changedLegend
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setClickedGardens"><span class="type-signature"></span>setClickedGardens()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum Setzen von clickedRightGardens und clickedLeftGardens
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setClickedGardensEmpty"><span class="type-signature"></span>setClickedGardensEmpty()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum leeren der Arrays clickedLeft-/-RightGardens
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setControls"><span class="type-signature"></span>setControls()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum Setzen der trackballControls fuer das Zoomen, Drehen, Verschieben
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setFolderLegende"><span class="type-signature"></span>setFolderLegende()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode, um den Ordner "Legende" in dat gui zu setzen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setGardenOff"><span class="type-signature"></span>setGardenOff()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        wird aufgerufen, wenn jemand auf einen Garten klickt, der bereits an ist.
+Der Garten bekommt dann die urspruengliche Farbe und es werden die Verbindungen geloescht.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setGardenOn"><span class="type-signature"></span>setGardenOn()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        wird aufgerufen, wenn jemand auf einen Garten klickt, der noch nicht an ist.
+Der Garten bekommt dann eine andere Farbe und es werden die Verbindungen gezeichnet.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setGraph"><span class="type-signature"></span>setGraph()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        setzt den Graphen fuer die Strassen, damit man Dijkstra benutzen kann
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setHTTP"><span class="type-signature"></span>setHTTP()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Speichert $http in Provider
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setHTTP"><span class="type-signature"></span>setHTTP()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Speichert $http in Provider
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setLight"><span class="type-signature"></span>setLight()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum Setzen des Lichts
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setLOG"><span class="type-signature"></span>setLOG()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Speichert $log in Provider
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setLOG"><span class="type-signature"></span>setLOG()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Speichert $log in Provider
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setMenue"><span class="type-signature"></span>setMenue()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode, um das Dropdown-Menue oben rechts zu zeichnen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setMetaData"><span class="type-signature"></span>setMetaData()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setter fuer metaData
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setNextLinePosForNextPackage"><span class="type-signature"></span>setNextLinePosForNextPackage()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        verschiebt die NextLinePos solange, bis 5 Linien nebeneinander passen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setPath"><span class="type-signature"></span>setPath()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        berechnet einen Weg von einem Gebaeude (start) zu einem anderen Gebaeude (target)
+Der Weg wird in vertices gepusht
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setPathOnOneDistrict"><span class="type-signature"></span>setPathOnOneDistrict()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        berechnet einen Weg von einem Gebaeude (start) zu einem anderen Gebaeude (target), die sich im gleichen District befinden.
+Der Weg wird in vertices gepusht
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setRemovedBuildings"><span class="type-signature"></span>setRemovedBuildings()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setter fuer removedBuildings
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setScalingBooleans"><span class="type-signature"></span>setScalingBooleans()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Setter fuer scaling
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setSpecificView"><span class="type-signature"></span>setSpecificView()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        wenn ein Link fuer eine spezielle Ansicht aufgerufen wurde, wird diese Methode aufgerufen, 
+um die alte Ansicht (mit Kameraposition etc.) wiederherzustellen, nachdem drawCity(...) aufgerufen wurde
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setTheFiveStreetNodes"><span class="type-signature"></span>setTheFiveStreetNodes()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Diese Methode fuegt den JSON-Objekten nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord, 
+welche die Positionen der Strassenkreuzungen bzw. Knoten speichern, die mit dem Gebaeude erstellt werden muessen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="showBuilding"><span class="type-signature"></span>showBuilding()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        positioniert die Kamera vor das Gebaeude, das in highlightedBuildingID gespeichert ist
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="sortNodesOfStreets"><span class="type-signature"></span>sortNodesOfStreets()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        sortiert zu jedem key in nodesOfStreetsSortByXCoord und nodesOfStreetsSortByZCoord das zugehoerige Array absteigend
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="takeLogarithmOfExtrema"><span class="type-signature"></span>takeLogarithmOfExtrema()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode, um die Extremwerte ebenfalls zu skalieren
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="undoRemoving"><span class="type-signature"></span>undoRemoving()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode, um das letzte geloeschte District wieder herzustellen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsvariable als Methode zum Reagieren auf das DropDown-Menue
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="updateConnectionExtrema"><span class="type-signature"></span>updateConnectionExtrema()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        aktualisiert in extrema die min- bzq. maxConnections bzw. -SumOfCon
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="updateControls"><span class="type-signature"></span>updateControls(maxDistance:)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        update vom maximalen Abstand fuer den Zoom, damit man noch die hoechsten Gebaeude sehen kann
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>maxDistance:</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">der Abstand zum Koordinatenursprung, zu dem man maximal wegzoomen kann</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="updateExtrema"><span class="type-signature"></span>updateExtrema()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        aktualisiert die alten Extremwerte, wenn man die neuen Werte breite, hoehe, farbe sieht
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="updateHighlightingLines"><span class="type-signature"></span>updateHighlightingLines(aBuilding:)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Methode zum Updaten des Highlighten der Straßen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aBuilding:</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ein Gebaeude, auf das gezeigt wird</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="updateRemovedBuildings"><span class="type-signature"></span>updateRemovedBuildings()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        nach dem Skalieren update der geloeschten Objekte, damit sie auch wiederhergestellt werden koennen
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="workUpGarden"><span class="type-signature"></span>workUpGarden()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Hilfsmethode fuer drawALine
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
     
 
     
@@ -3167,19 +14492,127 @@
 
 
 
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
 </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#$get">$get</a></li><li><a href="global.html#addAggregation">addAggregation</a></li><li><a href="global.html#availableAggregationOperations">availableAggregationOperations</a></li><li><a href="global.html#buildAggregationPipe">buildAggregationPipe</a></li><li><a href="global.html#callCollectionsMetaDataAggrURI">callCollectionsMetaDataAggrURI</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createMetaDataAggregation">createMetaDataAggregation</a></li><li><a href="global.html#createView">createView</a></li><li><a href="global.html#datacityApp">datacityApp</a></li><li><a href="global.html#deleteCollection">deleteCollection</a></li><li><a href="global.html#deleteData">deleteData</a></li><li><a href="global.html#deleteView">deleteView</a></li><li><a href="global.html#ensureCollectionsMetaData">ensureCollectionsMetaData</a></li><li><a href="global.html#getAggregations">getAggregations</a></li><li><a href="global.html#getAttributesWithType">getAttributesWithType</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getCollectionsMetaData">getCollectionsMetaData</a></li><li><a href="global.html#getCurrentETag">getCurrentETag</a></li><li><a href="global.html#getCurrentETagForRelURL">getCurrentETagForRelURL</a></li><li><a href="global.html#getData">getData</a></li><li><a href="global.html#getDatabases">getDatabases</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getLoggedIn">getLoggedIn</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#getViewsOfCollection">getViewsOfCollection</a></li><li><a href="global.html#hasCollectionAggregations">hasCollectionAggregations</a></li><li><a href="global.html#hasCollectionMetaData">hasCollectionMetaData</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#matchStage">matchStage</a></li><li><a href="global.html#projectStage">projectStage</a></li><li><a href="global.html#setHTTP">setHTTP</a></li><li><a href="global.html#setLOG">setLOG</a></li></ul>
-</nav>
-
-<br class="clear">
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Feb 25 2016 13:26:27 GMT+0100 (Mitteleuropäische Zeit)
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 2016-02-26T12:11:56+01:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
 </body>
 </html>

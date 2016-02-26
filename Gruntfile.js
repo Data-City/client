@@ -31,9 +31,10 @@ module.exports = function (grunt) {
     grunt.initConfig({
         jsdoc: {
             dist: {
-                src: ['app/scripts/{,*/}*.js', 'test/{,*/}*.js', '!app/scripts/libs/dataExample.js'],
+                src: ['app/scripts/{,*/}*.js', 'test/{,*/}*.js', 'app/**/*.js', '!app/scripts/libs/dataExample.js'],
                 options: {
-                    destination: 'doc'
+                    destination: 'doc',
+                    template: './node_modules/ink-docstrap/template'
                 }
             }
         },
