@@ -185,6 +185,66 @@ function getGui() {
     return gui;
 }
 
+/**
+ * Initiiert die Legende auf den Anfangszustand
+ */
+function initDropDownMenue() {
+    
+    //fuer den Ordner 'Legende'
+    legend = {
+        "ID": association.name,
+        "Breite": association.width,
+        "Höhe": association.height,
+        "Farbe": association.color
+    };
+
+    //fuer den Ordner "Gebaeudeinformationen"
+    buildingInformation = {
+        "height": "Klicken Sie bitte auf ein Gebäude",
+        "width": "Klicken Sie bitte auf ein Gebäude",
+        "color": "Klicken Sie bitte auf ein Gebäude",
+        "name": "Klicken Sie bitte auf ein Gebäude",
+        "remove": function() {
+            remove(buildingInformation.mesh);
+        },
+        "undo": function() {
+            if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
+        }
+    };
+
+    //entsteht, wenn Nutzer die Legende aendert
+    changedLegend = undefined;
+
+    //fuer den Ordner "Skalierung"
+    scaling = {
+        "logarithmicHeight": false,
+        "logarithmicWidth": false,
+        "logarithmicColor": false
+    };
+
+
+    //fuer den Ordner "Steuerung"
+    controlling = {
+        "zoomSpeed": 1,
+        "rotateSpeed": 1
+    };
+
+    //fuer den Ordner "aktuelle Ansicht"
+    currentView = {
+        "initialView": function() {
+            goToInitialView();
+        },
+        "goToArielView": function() {
+            goToArielView();
+        },
+        "Link": ''
+    }
+
+    //fuer den Ordner "Gebaeudesuche"
+    searchBuilding = {
+        "search": "Bitte Gebäudenamen eingeben",
+    }
+}
 
 /**
  * Methode, um das Dropdown-Menue oben rechts zu zeichnen
@@ -197,7 +257,7 @@ function getGui() {
  */
 function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, nameOfDivElement) {
    
-    setLogScalingToFalse();
+    initDropDownMenue();
     
     gui = new dat.GUI({
         width: 375,
@@ -275,15 +335,6 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
     h.add(currentView, "goToArielView").name("Vogelperspektive");
     h.add(currentView, "Link").name("aktuelle Ansicht").listen();
     h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
-}
-
-/**
- * Alle Checkboxes für das Logarithmieren werden auf false gesetzt (nicht ausgewählt)
- */
-function setLogScalingToFalse() {
-    scaling.logarithmicHeight = false;
-    scaling.logarithmicWidth = false;
-    scaling.logarithmicColor = false;
 }
 
 /**
