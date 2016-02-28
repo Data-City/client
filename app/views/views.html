@@ -28,17 +28,17 @@
                     <tr>
                         <th>Name</th>
                         <th>Datensatz</th>
-                        <th>Erstellt von</th>
+                        <!--<th>Erstellt von</th> -->
                         <th>Erstellt am</th>
-                        <th>Geändert von</th>
+                        <!--<th>Geändert von</th> -->
                         <th>Geändert am</th>
                     </tr>
                     <tr ng-repeat="view in views | filter:collID:true" ng-click="setChosenView(view);">
                         <td>{{view.name}}</td>
                         <td>{{view.collID}}</td>
-                        <td>{{view.creator}}</td>
+                        <!-- <td>{{view.creator}}</td> -->
                         <td>{{jstimeToFormatedTime(view.timeOfCreation)}}</td>
-                        <td>{{view.lastModifiedBy}}</td>
+                        <!-- <td>{{view.lastModifiedBy}}</td> -->
                         <td>{{jstimeToFormatedTime(view.timeOfLastModification)}}</td>
                     </tr>
                     <tr ng-hide="numberOfViews > 0">
