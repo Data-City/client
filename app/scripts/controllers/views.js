@@ -130,12 +130,14 @@ angular.module('datacityApp')
          * 
          * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
          */
-        $scope.availableAggrOps = [{
-                name: 'Vergessen',
-                cmd: null,
-            }, {
+        $scope.availableAggrOps = [
+            {
                 name: 'Summe',
                 cmd: '$sum',
+            }, 
+            {
+                name: 'Vergessen',
+                cmd: null,
             }, {
                 name: 'Durchschnitt',
                 cmd: '$avg',
