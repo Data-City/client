@@ -308,7 +308,7 @@
                                                     data-placement="right" title="Werden verbindungsrelevante Felder aggregiert, lassen sich die Verbindungen nicht mehr eindeutig darstellen"></span>
                                                 </td>
                                                 <td>
-                                                    <select class="form-control" ng-model="chosenView.grouping.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"></select>
+                                                    <select class="form-control" ng-model="chosenView.grouping.field" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability) track by attr.name"   ng-change="resetAggregationOps()"></select>
                                                 </td>
                                             </tr>
                                             <tr ng-repeat="(key, attr) in (chosenView.attributes | bychooseability | attrbyname:chosenView.grouping.field)">

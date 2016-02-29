@@ -13,7 +13,7 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-    .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, AGGR, REST, SETTINGS) {
+    .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, $filter, AGGR, REST, SETTINGS) {
         //Standardeinstellungen
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
@@ -53,6 +53,22 @@ angular.module('datacityApp')
             this.districts = [];
             this.districtType = 0; // "Keine Blöcke benutzen" ist voreingestellt
             this.useGrouping = 0; // Keine Grupperiung
+            this.grouping = {
+                field: null,
+                attrs: {}
+            };
+        }
+        
+        $scope.resetAggregationOps = function() {
+            var grouping = $scope.chosenView.grouping;
+            
+            var attrs = $filter('bychooseability')($scope.chosenView.attributes);
+            
+            attrs.forEach(function(a) {
+                if(a.name !== grouping.field.name) {
+                    grouping.attrs[a.name] = '$sum';
+                }
+            });
         }
 
         /**
