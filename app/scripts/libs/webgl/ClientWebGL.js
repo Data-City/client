@@ -412,7 +412,12 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
     setControls();
 }
 
-
+function removeWebGLCanvasFromDomElement(nameOfDivElement) {
+    var myNode = document.getElementById(nameOfDivElement);
+    while (myNode && myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+    }
+}
 
 /**
  *schaut regelmäßig, ob was passiert und updatet und zeichnet neu

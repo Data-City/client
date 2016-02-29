@@ -446,7 +446,7 @@
 
                     <button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
                     <button type="button" class="btn btn-danger btn-xs" ng-click="discardChanges()" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderungen verwerfen</button>
-                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="drawCity();" onclick="this.innerHTML='Stadt aktualisieren'"
+                    <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="drawCity();" onclick="this.innerHTML='Stadt aktualisieren'; removeWebGLCanvasFromDomElement('Stadt')"
                     ng-hide="dimform.$dirty">Stadt anzeigen</button>
                 </div>
             </div>
