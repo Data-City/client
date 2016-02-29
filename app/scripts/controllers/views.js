@@ -170,6 +170,32 @@ angular.module('datacityApp')
                 cmd: '$min',
             }
         ];
+        
+        $scope.availableAggrOpsWithoutForget = [
+            {
+                name: 'Summe',
+                cmd: '$sum',
+            }, {
+                name: 'Durchschnitt',
+                cmd: '$avg',
+            }, {
+                name: 'Erster Wert',
+                cmd: '$first',
+            }, {
+                name: 'Letzter Wert',
+                cmd: '$last',
+            }, {
+                name: 'Maximum',
+                cmd: '$max',
+            },
+            {
+                name: 'Standardabweichung',
+                cmd: '$stdDevPop',
+            }, {
+                name: 'Minimum',
+                cmd: '$min',
+            }
+        ];
 
         /**
          * Prüft die Eingaben, stellt die Daten zusammen und veranlasst das Zeichnen der Stadt mit WebGL
