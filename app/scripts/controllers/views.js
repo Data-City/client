@@ -47,7 +47,6 @@ angular.module('datacityApp')
             this.districts = [];
             this.districtType = 0; // "Keine Blöcke benutzen" ist voreingestellt
             this.useGrouping = 0; // Keine Grupperiung
-            this.typeOfConnections = 0; // Regenbögen
         }
 
         /**
