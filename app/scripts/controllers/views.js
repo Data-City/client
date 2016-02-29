@@ -53,7 +53,6 @@ angular.module('datacityApp')
             this.districts = [];
             this.districtType = 0; // "Keine Blöcke benutzen" ist voreingestellt
             this.useGrouping = 0; // Keine Grupperiung
-            this.typeOfConnections = 0; // Regenbögen
         }
 
         /**
@@ -176,6 +175,32 @@ angular.module('datacityApp')
                 name: 'Vergessen',
                 cmd: null,
             }, 
+        ];
+        
+        $scope.availableAggrOpsWithoutForget = [
+            {
+                name: 'Summe',
+                cmd: '$sum',
+            }, {
+                name: 'Durchschnitt',
+                cmd: '$avg',
+            }, {
+                name: 'Erster Wert',
+                cmd: '$first',
+            }, {
+                name: 'Letzter Wert',
+                cmd: '$last',
+            }, {
+                name: 'Maximum',
+                cmd: '$max',
+            },
+            {
+                name: 'Standardabweichung',
+                cmd: '$stdDevPop',
+            }, {
+                name: 'Minimum',
+                cmd: '$min',
+            }
         ];
 
         /**

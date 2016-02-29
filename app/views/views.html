@@ -321,6 +321,15 @@
                                                     </select>
                                                     -->
                                                     <!--
+                                                    <select ng-if="!attr.toBeFiltered" class="form-control" ng-show="attr.type !== 'string'" ng-model="chosenView.grouping.attrs[attr.name]">
+                                                        <option ng-repeat="(i, op) in availableAggrOps" value="{{op.cmd}}">{{op.name}}</option>
+                                                    </select>
+                                                    
+                                                    <select ng-if="attr.toBeFiltered" class="form-control" ng-show="attr.type !== 'string'" ng-model="chosenView.grouping.attrs[attr.name]">
+                                                        <option ng-repeat="(i, op) in availableAggrOpsWithoutForget" value="{{op.cmd}}">{{op.name}}</option>
+                                                    </select>
+                                                    -->
+                                                    <!--
                                                     <select
                                                         class="form-control"
                                                         ng-show="attr.type !== 'string'"
