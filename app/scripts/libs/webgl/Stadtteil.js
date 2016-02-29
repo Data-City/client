@@ -488,7 +488,7 @@ function setGardenPos(aBuilding) {
     var right = aBuilding._rightGarden;
     var left = aBuilding._leftGarden;
     var cP = aBuilding._centerPosition;
-    
+
     if (right) {
         right._centerPosition[0] = cP[0] + right._width / 2 - right.radius / 2;
         right._centerPosition[1] = cP[1] - aBuilding._height / 2 + 0.05;

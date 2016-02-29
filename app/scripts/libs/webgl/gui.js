@@ -418,7 +418,7 @@ function removeLines(aGarden, updateBoolean) {
 
 
     for (var x in aGarden.meshLines) {
-        if (hashMap[x]._numOfActivatedConnections==1) {
+        if (hashMap[x]._numOfActivatedConnections == 1) {
             var faktor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
             hashMap[x].mesh.material.color.set((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), faktor));
         }
@@ -657,12 +657,12 @@ function setGardenOff(aMesh) {
  */
 function getScrollDistance(divElement) {
     if (divElement) {
-       var rect = divElement.getBoundingClientRect();
+        var rect = divElement.getBoundingClientRect();
 
         return {
             left: rect.left,
             top: rect.top
-        }; 
+        };
     }
 }
 
@@ -707,6 +707,6 @@ function onDocumentMouseMove(event) {
 
     if (rect) {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1 - (rect.left / window.innerWidth) * 2;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1 + (rect.top / window.innerHeight) * 2;  
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1 + (rect.top / window.innerHeight) * 2;
     }
 }
