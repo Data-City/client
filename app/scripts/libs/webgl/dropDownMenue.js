@@ -189,7 +189,7 @@ function getGui() {
  * Initiiert die Legende auf den Anfangszustand
  */
 function initDropDownMenue() {
-    
+
     //fuer den Ordner 'Legende'
     legend = {
         "ID": association.name,
@@ -256,9 +256,9 @@ function initDropDownMenue() {
  * @param: nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
  */
 function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, nameOfDivElement) {
-   
+
     initDropDownMenue();
-    
+
     gui = new dat.GUI({
         width: 375,
         autoPlace: false

@@ -58,18 +58,18 @@ angular.module('datacityApp')
                 attrs: {}
             };
         }
-        
+
         $scope.resetAggregationOps = function() {
             var grouping = $scope.chosenView.grouping;
-            
+
             var attrs = $filter('bychooseability')($scope.chosenView.attributes);
-            
+
             attrs.forEach(function(a) {
-                if(a.name !== grouping.field.name) {
+                if (a.name !== grouping.field.name) {
                     grouping.attrs[a.name] = '$sum';
                 }
             });
-        }
+        };
 
         /**
          *  Konstruktor für eine Aggregation
@@ -151,12 +151,10 @@ angular.module('datacityApp')
          * 
          * https://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
          */
-        $scope.availableAggrOps = [
-            {
+        $scope.availableAggrOps = [{
                 name: 'Summe',
                 cmd: '$sum',
-            }, 
-            {
+            }, {
                 name: 'Durchschnitt',
                 cmd: '$avg',
             }, {
@@ -186,38 +184,34 @@ angular.module('datacityApp')
             }, {
                 name: 'Minimum',
                 cmd: '$min',
-            },
-            {
+            }, {
                 name: 'Vergessen',
                 cmd: null,
-            }, 
-        ];
-        
-        $scope.availableAggrOpsWithoutForget = [
-            {
-                name: 'Summe',
-                cmd: '$sum',
-            }, {
-                name: 'Durchschnitt',
-                cmd: '$avg',
-            }, {
-                name: 'Erster Wert',
-                cmd: '$first',
-            }, {
-                name: 'Letzter Wert',
-                cmd: '$last',
-            }, {
-                name: 'Maximum',
-                cmd: '$max',
             },
-            {
-                name: 'Standardabweichung',
-                cmd: '$stdDevPop',
-            }, {
-                name: 'Minimum',
-                cmd: '$min',
-            }
         ];
+
+        $scope.availableAggrOpsWithoutForget = [{
+            name: 'Summe',
+            cmd: '$sum',
+        }, {
+            name: 'Durchschnitt',
+            cmd: '$avg',
+        }, {
+            name: 'Erster Wert',
+            cmd: '$first',
+        }, {
+            name: 'Letzter Wert',
+            cmd: '$last',
+        }, {
+            name: 'Maximum',
+            cmd: '$max',
+        }, {
+            name: 'Standardabweichung',
+            cmd: '$stdDevPop',
+        }, {
+            name: 'Minimum',
+            cmd: '$min',
+        }];
 
         /**
          * Prüft die Eingaben, stellt die Daten zusammen und veranlasst das Zeichnen der Stadt mit WebGL
@@ -341,7 +335,7 @@ angular.module('datacityApp')
                 REST.getData(function(response) {
                     if (response.data) {
                         $scope.chosenView = response.data;
-                        $log.info(response.data)
+                        $log.info(response.data);
                         REST.getCollectionsMetaData(dbWithCollections, $scope.collID, function(metaData) {
                             $log.info(metaData);
                             $scope.chosenView.metaData = metaData;
