@@ -40,6 +40,12 @@ angular.module('datacityApp')
                 area: null,
                 color: null
             };
+            this.dimensionSettings = {
+                area: null,
+                color: null,
+                height: null,
+                name: null,
+            };
             this.attributesOfCollection = [];
             this.attributes = getAttributesWithType($scope.collection.data._embedded['rh:doc']);
             this.metaData = {};
@@ -136,9 +142,6 @@ angular.module('datacityApp')
                 cmd: '$sum',
             }, 
             {
-                name: 'Vergessen',
-                cmd: null,
-            }, {
                 name: 'Durchschnitt',
                 cmd: '$avg',
             }, {
@@ -168,7 +171,11 @@ angular.module('datacityApp')
             }, {
                 name: 'Minimum',
                 cmd: '$min',
-            }
+            },
+            {
+                name: 'Vergessen',
+                cmd: null,
+            }, 
         ];
 
         /**
@@ -199,8 +206,11 @@ angular.module('datacityApp')
                 return false;
             }
 
+            //view.dimensionSettings.name = JSON.parse(view.dimensionSettings.name);
+
             // Korrekte Dimensionen
             if (!view.dimensionSettings || !view.dimensionSettings.area || !view.dimensionSettings.color || !view.dimensionSettings.height || !view.dimensionSettings.name) {
+                $log.info(view);
                 window.alert("Schritt 5: \nEs wurden eine oder mehr Dimensionen nicht ausgewählt!\n(Gegebenenfalls wurde in Schritt 1 zu viel heraus gefiltert)");
                 return false;
             }
@@ -290,6 +300,7 @@ angular.module('datacityApp')
                 REST.getData(function(response) {
                     if (response.data) {
                         $scope.chosenView = response.data;
+                        $log.info(response.data)
                         REST.getCollectionsMetaData(dbWithCollections, $scope.collID, function(metaData) {
                             $log.info(metaData);
                             $scope.chosenView.metaData = metaData;
