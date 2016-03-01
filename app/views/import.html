@@ -12,10 +12,15 @@
                     <b>Datensatz:</b>
                     <input id="csv-file" name="Datei" type="file" size="50" accept="csv/*">
                     <br></br>
-                    <!--<b>Verbindungen:(optional)</b>
+                    <input type="checkbox" ng-model="withConnections"> mit Verbindungen</input>
+                    <br></br>
+                    <div ng-show="withConnections">
+                        <b>Verbindungen:(optional)</b>
                     <input name="Verbindungsdatei" type="file" size="50" accept="csv/*">
-                    <br></br>-->
-                    <p><i>Noch nicht implementiert!</i></p>
+                    <br></br>
+                    </div>
+                    
+                    <p><i>Metadaten und Verbindungsdatei noch nicht implementiert!</i></p>
                     <button type="button" class="btn btn-default" ng-click="startImport()">Datei(en) importieren</button>
                 </div>
             </div>
