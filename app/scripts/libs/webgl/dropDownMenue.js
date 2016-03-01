@@ -556,7 +556,7 @@ function removeAllObjects(scene, aString, scalingMethod) {
             }
         }
         scene.remove(object);
-        delete object;
+        //delete object;
     }
 }
 

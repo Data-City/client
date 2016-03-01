@@ -653,15 +653,17 @@ function onDocumentMouseMove(event) {
  *            bzw. mit JSON.top den Abstand zum oberen Rand
  */
 function getScrollDistance(divElement) {
-    var rect = divElement.getBoundingClientRect();
     if (divElement) {
-        return {
-            left: rect.left,
-            top: rect.top
-        };
+        var rect = divElement.getBoundingClientRect();
+        if (divElement) {
+            return {
+                left: rect.left,
+                top: rect.top
+            };
+        }   
     }
+    
 }
-
 
 /**
  *Wird ausgefuehrt, wenn man mit der Maus klickt
