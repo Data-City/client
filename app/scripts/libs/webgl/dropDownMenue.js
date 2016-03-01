@@ -27,12 +27,12 @@ var buildingInformation = {
     "width": "Klicken Sie bitte auf ein Gebäude",
     "color": "Klicken Sie bitte auf ein Gebäude",
     "name": "Klicken Sie bitte auf ein Gebäude",
-    "remove": function() {
+    /*"remove": function() {
         remove(buildingInformation.mesh);
     },
     "undo": function() {
         if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
-    }
+    }*/
 };
 
 //entsteht, wenn Nutzer die Legende aendert
@@ -49,7 +49,8 @@ var scaling = {
 //fuer den Ordner "Steuerung"
 var controlling = {
     "zoomSpeed": 1,
-    "rotateSpeed": 1
+    "rotateSpeed": 1,
+    "opacity" : 1
 };
 
 //fuer den Ordner "aktuelle Ansicht"
@@ -66,6 +67,7 @@ var currentView = {
 //fuer den Ordner "Gebaeudesuche"
 var searchBuilding = {
     "search": "Bitte Gebäudenamen eingeben",
+    "deactivate" : function() {deactivateHighlighting();}
 }
 
 /**
@@ -81,19 +83,20 @@ var update = function() {
  * Getter fuer buildingInformation
  * @return: buildingInformation
  */
-function getBuildingInformation() {
+/*function getBuildingInformation() {
     return buildingInformation;
-}
+}*/
 
 /**
  * loescht ein District von der Bildflaeche und speichert dies
- * @param: mesh: das Mesh-Objekt, auf das geklickt wurde und das geloescht werden soll
+ * @param: face: das Face-Objekt, auf das geklickt wurde und dessen Gebaeude geloescht werden soll
  */
-function remove(mesh) {
-    if (mesh.length != 0) {
-        removeDistrict(getScene(), mesh, true);
+function remove(Face) {
+    var building = getBuildingsHashMap()[Face.face.building];
+    //if (mesh.length != 0) {
+        removeDistrict(getScene(), Face, true);
         arrayOfRemovedBuildings.push(storedDistrict);
-    }
+    //}
 }
 
 
@@ -146,9 +149,9 @@ function setRemovedBuildings(newRemovedBuildings) {
  * @param: newWidth: die neue Breite, die angezeigt werden soll
  * @param: newColor: die neue Farbe, die angezeigt werden soll
  * @param: newName: der neue Name vom Gebaeude, der angezeigt werden soll
- * @param: aMesh: Mesh von dem Gebaeude, auf das geklickt worden ist
+ * @param: aFace: Objekt von der Seitenflaeche, auf das geklickt worden ist
  */
-function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh) {
+function changeBuildingInformation(newHeight, newWidth, newColor, newName, aFace) {
     if (newHeight != undefined) {
         buildingInformation["height"] = newHeight;
         buildingInformation["width"] = newWidth;
@@ -163,7 +166,7 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newName, aMesh
     } else {
         buildingInformation["name"] = "Keine Daten";
     }
-    buildingInformation.mesh = aMesh;
+    /*buildingInformation.face = aFace;*/
 }
 
 /**
@@ -203,13 +206,13 @@ function initDropDownMenue() {
         "height": "Klicken Sie bitte auf ein Gebäude",
         "width": "Klicken Sie bitte auf ein Gebäude",
         "color": "Klicken Sie bitte auf ein Gebäude",
-        "name": "Klicken Sie bitte auf ein Gebäude",
+        "name": "Klicken Sie bitte auf ein Gebäude"/*,
         "remove": function() {
             remove(buildingInformation.mesh);
         },
         "undo": function() {
             if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
-        }
+        }*/
     };
 
     //entsteht, wenn Nutzer die Legende aendert
@@ -226,7 +229,8 @@ function initDropDownMenue() {
     //fuer den Ordner "Steuerung"
     controlling = {
         "zoomSpeed": 1,
-        "rotateSpeed": 1
+        "rotateSpeed": 1, 
+        "opacity": 1
     };
 
     //fuer den Ordner "aktuelle Ansicht"
@@ -243,6 +247,7 @@ function initDropDownMenue() {
     //fuer den Ordner "Gebaeudesuche"
     searchBuilding = {
         "search": "Bitte Gebäudenamen eingeben",
+    "deactivate" : function() {deactivateHighlighting();}
     }
 }
 
@@ -291,8 +296,8 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         }
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
-    h.add(buildingInformation, "remove").name("Ausblenden");
-    h.add(buildingInformation, "undo").name("Ausblenden rückgängig");
+    /*h.add(buildingInformation, "remove").name("Ausblenden");
+    h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
 
     //*****************************************************************
 
@@ -319,6 +324,9 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
     h.add(controlling, "rotateSpeed", 0.1, 2).name("Rotationsgeschwindigkeit").onChange(function(value) {
         orbitControls.rotateSpeed = value;
     });
+    h.add(controlling, "opacity", 0, 1).name("Transparenz").onChange(function(value){
+        getTotalMaterial().opacity = value;
+    });
 
     //********************************************************************
 
@@ -327,6 +335,7 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         highlightBuilding(value);
         showBuilding();
     });
+    h.add(searchBuilding, "deactivate").name("Auswahl deaktivieren");
 
     //********************************************************************
 
@@ -347,6 +356,7 @@ function setFolderLegende(h, i, gui) {
     h.add(legend, myDimensions[i]).onChange(
         function(value) {
             gui.__folders["Gebäudeinformationen"].__listening[i].name(value);
+            if(changedLegend == undefined) changedLegend = legend;
             changedLegend[myDimensions[i]] = value;
         }
     )
@@ -380,7 +390,7 @@ function getChangedLegend() {
  * @param: aMesh: Mesh vom Distrikt oder Gebaeude, das geloescht werden soll
  * @param: isFirstCall: true, wenn es der Initialaufruf dieser Methode ist
  */
-function removeDistrict(scene, aMesh, isFirstCall) {
+/*function removeDistrict(scene, aMesh, isFirstCall) {
     if (isFirstCall) {
         storedDistrict = [];
         removedBuildings.push(aMesh.building[association.name]);
@@ -394,13 +404,13 @@ function removeDistrict(scene, aMesh, isFirstCall) {
             }
         }
     }
-}
+}*/
 
 /**
  * Methode, um das letzte geloeschte District wieder herzustellen
  * @param: scene: die Scene, auf der wir zeichnen
  */
-function undoRemoving(scene) {
+/*function undoRemoving(scene) {
     storedDistrict = arrayOfRemovedBuildings.pop();
     removedBuildings.splice(removedBuildings.indexOf(storedDistrict[0].building[association.name]), 1);
     for (var i = 0; i < storedDistrict.length; i++) {
@@ -409,14 +419,14 @@ function undoRemoving(scene) {
             storedDistrict[i].building._isRemoved = false;
         }
     }
-}
+}*/
 
 /**
  * Methode, um Gebaeude zu loeschen
  * @param: scene: die Scene, auf die die Objekte gezeichnet wurden
  * @param: aMesh: das Mesh zum Gebaeude
  */
-function removeObject(scene, aMesh) {
+/*function removeObject(scene, aMesh) {
     storedBuilding = [];
     storedBuilding.push(aMesh);
     aMesh.building._isRemoved = true;
@@ -436,7 +446,7 @@ function removeObject(scene, aMesh) {
     for (var i = 0; i < storedBuilding.length; i++) {
         scene.remove(storedBuilding[i]);
     }
-}
+}*/
 
 
 /**
@@ -462,10 +472,10 @@ function scale(value, aString, scene, aDistrict, camera) {
     setLight(scene);
     setAndDrawCity(aDistrict, true, aString, scalingExtrema);
     drawStoredLines(getJsonForCurrentLink());
-    updateRemovedBuildings();
+    /*updateRemovedBuildings();
     if (buildingInformation.mesh != undefined) {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
-    }
+    }*/
     updateControls(Math.max(aDistrict._width, getExtrema().maxHeight));
     saveCamera();
 }
@@ -526,11 +536,6 @@ function scaleLogarithmically(aDistrict, aString) {
  * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
  */
 function scaleLinearly(aDistrict, aString) {
-    /*if (aDistrict[association[aString]] == "") {
-        return 1.5;
-    } else {
-        return aDistrict[association[aString]] + 1.5;
-    }*/
     return getDrawnDimValue(aDistrict, aString);
 }
 
@@ -542,8 +547,16 @@ function scaleLinearly(aDistrict, aString) {
  * @param: scalingMethod: scaleLogarithmically oder scaleLinearly
  */
 function removeAllObjects(scene, aString, scalingMethod) {
+    var object;
     for (var i = scene.children.length - 1; i >= 0; i--) {
-        scene.remove(scene.children[i]);
+        object = scene.children[i];
+        if (object.faces != undefined) {
+            for (var j = 0; j<object.faces.length; j++) {
+                delete object.geometry.faces[j];
+            }
+        }
+        scene.remove(object);
+        delete object;
     }
 }
 
@@ -565,7 +578,7 @@ function scaleAll(aString, scalingMethod) {
 /**
  * nach dem Skalieren update der geloeschten Objekte, damit sie auch wiederhergestellt werden koennen
  */
-function updateRemovedBuildings() {
+/*function updateRemovedBuildings() {
     for (var i = 0; i < arrayOfRemovedBuildings.length; i++) {
         for (var j = 0; j < arrayOfRemovedBuildings[i].length; j++) {
             if (arrayOfRemovedBuildings[i][j].building != undefined) {
@@ -577,4 +590,4 @@ function updateRemovedBuildings() {
             }
         }
     }
-}
+}*/

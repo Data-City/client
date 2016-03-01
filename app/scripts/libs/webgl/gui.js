@@ -12,17 +12,24 @@ var maximalHeight; //speichert max. hoehe der Gebaeude, um Linien in dieser Hoeh
 var clickedLeftGardens = []; //Array aus ID der Gebaeude, dessen Gaerten an sind
 var clickedRightGardens = [];
 
-var currentPosInColorOfLines = 0;
-
 var association = {}; //hier wird die Legende gespeichert
 
 var highlightedBuildingID;
+var colorOfHighlightedBuilding;
 var camera;
 
 var GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
 var GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
 
 var lastIntersectedBuilding;
+
+var targetList = [];
+var projector;
+
+var oldColor;
+var totalGeom;
+var totalMaterial;
+var qwert = 0;
 
 /**
  * Setter fuer die Farbe der Gebaeude aus settings.js
@@ -42,24 +49,70 @@ function setCamera(aCam) {
 }
 
 /**
- *highlighted ein Gebaeude
+* Getter fuer totalMaterial
+*@return: totalMaterial: das Material von unserem Hauptobjekt
+*/
+function getTotalMaterial(){
+    return totalMaterial;
+}
+
+/**
+ *highlighted ein Gebaeude (fuer die Gebaeudesuche)
  *@param: buildingID: ID vom Gebaeude, das gehighlighted werden soll
  */
 function highlightBuilding(buildingID) {
     var hashMap = getBuildingsHashMap();
+    var building = hashMap[buildingID];
     if (highlightedBuildingID != undefined) {
-        hashMap[highlightedBuildingID].mesh.material.emissive.setHex(null);
+        colorObject(hashMap[highlightedBuildingID], colorOfHighlightedBuilding);
     }
-    if (hashMap[buildingID] != undefined) {
+    if (building != undefined) {
         highlightedBuildingID = buildingID;
-        hashMap[buildingID].mesh.material.emissive.setHex(0xffff00);
+        colorOfHighlightedBuilding = building._faces[0].color.clone();
+        colorObject(building, 0xffff00);
     } else if (hashMap[buildingID + "."] != undefined) {
         highlightedBuildingID = buildingID + ".";
-        hashMap[buildingID + "."].mesh.material.emissive.setHex(0xffff00);
+        building = hashMap[buildingID+"."]
+        colorOfHighlightedBuilding = building._faces[0].color.clone();
+        colorObject(hashMap[highlightedBuildingID], 0xffff00);
     } else {
+        colorObject(hashMap[highlightedBuildingID], colorOfHighlightedBuilding);
         highlightedBuildingID = undefined;
     }
 }
+
+
+/**
+ *deaktiviert das highlighten eines Gebaeudes durch die Gebaeudesuche
+ */
+function deactivateHighlighting(){
+    var hashMap = getBuildingsHashMap();
+    if (highlightedBuildingID != undefined) {
+        colorObject(hashMap[highlightedBuildingID], colorOfHighlightedBuilding);
+        highlightedBuildingID = undefined;
+    }
+}
+
+
+
+/**
+ * faerbt ein Objekt in einer Farbe ein
+ * @param: object: Objekt (Gebaeude oder Garten), das eingefaerbt werden soll
+ * @param: aColor: eine Instanz von THREE.Color oder eine Hexadezimalzahl
+ */
+function colorObject(object, aColor) {
+    var faces = object._faces;
+    for(var i=0; i<faces.length; i++){
+        if(isNaN(aColor)){
+            faces[i].color.set(aColor);
+        }
+        else {
+            faces[i].color.setHex(aColor);
+        }
+    }
+    totalGeom.colorsNeedUpdate = true;
+}
+
 
 /**
  *positioniert die Kamera vor das Gebaeude, das in highlightedBuildingID gespeichert ist
@@ -137,30 +190,6 @@ function setClickedGardens(aJson) {
     clickedRightGardens = aJson.rightGarden;
 }
 
-/**
- *Hilfsmethode, um eine WebGL-Box zu malen
- *@param: aBuilding: ein JSON-Objekt vom Typ Gebaeude/building, das gezeichnet werden soll
- *@param: material: ein Material von THREE.js, das auf das Gebaeude drauf soll
- *@param: scene: die scene, der die Box hinzugefuegt werden soll
- *@param: boxGeom: die THREE.BoxGeometry
- */
-function drawBox(aBuilding, material, scene, boxGeom) {
-    var cP = aBuilding._centerPosition;
-    var width = aBuilding._width;
-
-    var cube = new THREE.Mesh(boxGeom, material);
-    var pos = cube.position;
-    var scale = cube.scale;
-    pos.x = cP[0];
-    pos.y = cP[1];
-    pos.z = cP[2];
-    scale.x = width;
-    scale.y = aBuilding._height;
-    scale.z = width;
-    cube.building = aBuilding;
-    aBuilding.mesh = cube;
-    scene.add(cube);
-}
 
 /**
  *Hilfsmethode, um ein schönes Material zu bekommen, wenn man die Farbe kriegt
@@ -170,11 +199,7 @@ function drawBox(aBuilding, material, scene, boxGeom) {
 function getMaterial(aColor) {
     return new THREE.MeshPhongMaterial({
         color: aColor,
-        //specular: 0x333333,
-        //shininess: 50,
-        side: THREE.DoubleSide,
-        vertexColors: THREE.VertexColors,
-        shading: THREE.SmoothShading
+        vertexColors: THREE.VertexColors
     });
 }
 
@@ -242,6 +267,10 @@ function goToInitialView() {
  *@param: camera: die Kamera, die wir nach dem Malen anders positionieren moechten
  */
 function addCityToScene(mainDistrict, scene, camera) {
+    var myGeometry = new THREE.Geometry();
+    var matrix = new THREE.Matrix4();
+    var quaternion = new THREE.Quaternion();
+    var color = new THREE.Color();
     var extrema = getExtrema();
     // nun machen wir die Stadt gleich sichtbar, indem wir jedes Gebaeude und den Boden zeichnen
     var buildings = mainDistrict["buildings"];
@@ -252,14 +281,28 @@ function addCityToScene(mainDistrict, scene, camera) {
         new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
     ];
     for (var i = length; i--;) {
-        addEachDistrict(buildings[i], scene, extrema, 0, boxGeom, gardenGeom);
+        addEachDistrict(buildings[i], scene, extrema, 0, boxGeom, gardenGeom, myGeometry, matrix, quaternion, color);
     }
     //Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
     mainDistrict._centerPosition[1] = -1.5;
-    addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, scene, boxGeom);
+    addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, boxGeom, myGeometry, matrix, quaternion);
     setCameraPos(camera, mainDistrict, extrema);
 
     maximalHeight = getExtrema().maxHeight;
+    totalMaterial = new THREE.MeshPhongMaterial( { 
+            color: 0xffffff, 
+            vertexColors: THREE.FaceColors,
+            transparent : true,
+            opacity : 1
+        } ) 
+    var drawnObject = new THREE.Mesh( 
+        myGeometry, 
+        totalMaterial
+    );
+    scene.add( drawnObject );
+    projector = new THREE.Projector();
+    targetList.push(drawnObject);
+    totalGeom = myGeometry;
 }
 
 
@@ -272,27 +315,96 @@ function addCityToScene(mainDistrict, scene, camera) {
  *@param: colorBoolean: 0, wenn Districtfarbe eben 0xB5BCDE war, 1 wenn sie eben 0x768dff (um Districtfarben abzuwechseln)
  *@param: boxGeom: die THREE.BoxGeometry(1,1,1)
  *@param: gardenGeom: die Dreiecke als Geometry fuer die Gaerten
+ *@param: boxGeom: die THREE.BoxGeometry(1,1,1)
+ *@param: myGeometry: die gesamte THREE.Geometry zum mergen
+ *@param: matrix: eine Instanz von THREE.Matrix4()
+ *@param: quaternion: eine Instanz von THREE.Quaternion()
  */
-function addEachDistrict(aDistrict, scene, extrema, colorBoolean, boxGeom, gardenGeom) {
+function addEachDistrict(aDistrict, scene, extrema, colorBoolean, boxGeom, gardenGeom, myGeometry, matrix, quaternion) {
     if (aDistrict["buildings"] == undefined) {
-        var faktor = getColorFactor(extrema, aDistrict._color, "Color");
-        addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), faktor), aDistrict, scene, boxGeom);
-        if (doWeUseConnections()) addGarden(aDistrict, scene, gardenGeom);
+        var factor = getColorFactor(extrema, aDistrict._color, "Color");
+        addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor), aDistrict, boxGeom, myGeometry, matrix, quaternion);
+        if (doWeUseConnections()) addGarden(aDistrict, scene, gardenGeom, myGeometry, matrix, quaternion);
     } else {
         if (colorBoolean == 0) {
-            addBoxes(0xDBDBDC, aDistrict, scene, boxGeom);
+            addBoxes(0xDBDBDC, aDistrict, boxGeom, myGeometry, matrix, quaternion);
         } else {
-            addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, scene, boxGeom);
+            addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, boxGeom, myGeometry, matrix, quaternion);
         }
-        if (doWeUseConnections()) addGarden(aDistrict, scene, gardenGeom);
+        if (doWeUseConnections()) addGarden(aDistrict, scene, gardenGeom, myGeometry, matrix, quaternion);
 
         var buildings = aDistrict["buildings"];
         var length = buildings.length;
         for (var j = length; j--;) {
-            addEachDistrict(buildings[j], scene, extrema, (colorBoolean + 1) % 2, boxGeom, gardenGeom);
+            addEachDistrict(buildings[j], scene, extrema, (colorBoolean + 1) % 2, boxGeom, gardenGeom, myGeometry, matrix, quaternion);
         }
     }
 }
+
+
+
+
+/**
+ *Hilfsmethode fuer addCityToScene, zeichnet die Boxen
+ *@param: aColor: die Farbe fuer die Box
+ *@param: aBuilding: das Building oder District Objekt, das gezeichnet werden soll
+ *@param: boxGeom: die THREE.BoxGeometry(1,1,1)
+ *@param: myGeometry: die gesamte THREE.Geometry zum mergen
+ *@param: matrix: eine Instanz von THREE.Matrix4()
+ *@param: quaternion: eine Instanz von THREE.Quaternion()
+ */
+function addBoxes(aColor, aBuilding, boxGeom, myGeometry, matrix, quaternion) {
+    setMatrix(aBuilding._centerPosition, aBuilding._width, aBuilding._height, quaternion, matrix);
+    
+    aBuilding._faces = [];
+    var face;
+    for ( var i = 0; i < boxGeom.faces.length; i++ ) 
+    {
+        face = boxGeom.faces[ i ];
+        face.color.set(aColor);    
+    }
+    
+    myGeometry.merge( boxGeom, matrix );
+    
+    var length = myGeometry.faces.length;
+    for (var i = length-1; i >= length-12; i-- ){
+        face = myGeometry.faces[i];
+        face.building = aBuilding[association.name];
+        aBuilding._faces.push(face);
+    }
+}
+
+
+
+
+/**
+ setzt die Matrix, die die Position, Rotation und Skalierung von der naechsten BoxGeometry(1,1,1) beschreibt
+ *@param: cP: centerPosition von der BoxGeometry
+ *@param: width: Breite der BoxGeometry
+ *@param: height: Hoehe der BoxGeometry
+ *@param: matrix: eine Instanz von THREE.Matrix4()
+ *@param: quaternion: eine Instanz von THREE.Quaternion()
+ */
+function setMatrix(cP, width, height, quaternion, matrix) {
+    var position = new THREE.Vector3();
+    position.x = cP[0];
+    position.y = cP[1];
+    position.z = cP[2];
+
+    var rotation = new THREE.Euler();
+    rotation.x = 0;
+    rotation.y = 0;
+    rotation.z = 0;
+
+    var scale = new THREE.Vector3();
+    scale.x = width;
+    scale.y = height;
+    scale.z = width;
+
+    quaternion.setFromEuler( rotation, false );
+    matrix.compose( position, quaternion, scale );
+}
+
 
 
 /**
@@ -300,23 +412,36 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean, boxGeom, garde
  *@param aBuilding: das Gebaeude bzw das District
  *@param: scene: scene, der der Garten hinzugefuegt werden soll
  *@param: gardenGeom: ein Array bestehend aus den beiden Garten-Geometries
+ *@param: myGeometry: die gesamte THREE.Geometry zum mergen
+ *@param: matrix: eine Instanz von THREE.Matrix4()
+ *@param: quaternion: eine Instanz von THREE.Quaternion()
  */
-function addGarden(aBuilding, scene, gardenGeom) {
+function addGarden(aBuilding, scene, gardenGeom, myGeometry, matrix, quaternion) {
     var gardens = ["_leftGarden", "_rightGarden"];
     for (var i = 0; i < 2; i++) {
         if (aBuilding[gardens[i]] && aBuilding[gardens[i]].color > 0) {
             var garden = aBuilding[gardens[i]];
             var factor = getColorFactor(getExtrema(), garden.color, "SumOfConn");
-            //var gardenMaterial = getMaterial(new THREE.Color(1 - factor, 1, 1 - factor));
-            var gardenMaterial = getMaterial((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));
-            gardenMaterial.name = "garden";
-            var cube = new THREE.Mesh(gardenGeom[i], gardenMaterial);
-            cube.position.x = garden._centerPosition[0];
-            cube.position.y = garden._centerPosition[1];
-            cube.position.z = garden._centerPosition[2];
-            cube.garden = garden;
-            garden.mesh = cube;
-            scene.add(cube);
+            
+            setMatrix(garden._centerPosition, 1, 1, quaternion, matrix);
+    
+            garden._faces = [];
+            var face;
+            for ( var j = 0; j < gardenGeom[i].faces.length; j++ ) {
+                face = gardenGeom[i].faces[j];
+                face.color.set((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));
+            }
+            myGeometry.merge( gardenGeom[i], matrix );
+            
+            var length = myGeometry.faces.length;
+            aBuilding[gardens[i]]._faces = [];
+            for (var j = length-1; j >= length-12; j-- ){
+                face = myGeometry.faces[j];
+                face.building = aBuilding[association.name];
+                if (i==0) face.isLeftGarden = true;
+                else face.isLeftGarden = false;
+                aBuilding[gardens[i]]._faces.push(face);
+            }
         }
     }
 }
@@ -345,9 +470,8 @@ function drawLines(aGarden, updateBoolean) {
                 }
             }
         }
-        setNextLinePosForNextPackage(aGarden);
+        if(!doWeUseStreets()) setNextLinePosForNextPackage(aGarden);
     }
-    currentPosInColorOfLines++;
 }
 
 
@@ -357,34 +481,36 @@ function drawLines(aGarden, updateBoolean) {
  *@param: destGarden: der Ziel-Garten
  */
 function drawALine(aGarden, destGarden) {
-    var geometry = new THREE.Geometry();
+    if(destGarden.on == false) {
+        var geometry = new THREE.Geometry();
 
-    if (doWeUseStreets()) {
-        var center = aGarden.building._centerPosition;
-        var destCenter = destGarden.building._centerPosition;
-        geometry.vertices.push(new THREE.Vector3(center[0], center[1] - (aGarden.building._height / 2), center[2]));
-        setPath(geometry.vertices, aGarden.building, destGarden.building);
-        geometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1] - destGarden.building._height / 2, destCenter[2]));
-    } else {
-        var curve = new THREE.CubicBezierCurve3(
-            new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
-            new THREE.Vector3(aGarden.nextLinePos[0], 2 * maximalHeight, aGarden.nextLinePos[1]),
-            new THREE.Vector3(destGarden.nextLinePos[0], 3 * maximalHeight, destGarden.nextLinePos[1]),
-            new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
-        );
-        geometry.vertices = curve.getPoints(50);
+        if (doWeUseStreets()) {
+            var center = aGarden.building._centerPosition;
+            var destCenter = destGarden.building._centerPosition;
+            geometry.vertices.push(new THREE.Vector3(center[0], center[1] - (aGarden.building._height / 2), center[2]));
+            setPath(geometry.vertices, aGarden.building, destGarden.building);
+            geometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1] - destGarden.building._height / 2, destCenter[2]));
+        } else {
+            var curve = new THREE.CubicBezierCurve3(
+                new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
+                new THREE.Vector3(aGarden.nextLinePos[0], 2 * maximalHeight, aGarden.nextLinePos[1]),
+                new THREE.Vector3(destGarden.nextLinePos[0], 3 * maximalHeight, destGarden.nextLinePos[1]),
+                new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
+            );
+            geometry.vertices = curve.getPoints(50);
+        }
+        colorObject(destGarden.building, 0x40FF00);
+        var factor = getColorFactor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
+        var material = new THREE.LineBasicMaterial({
+            color: new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor)
+        });
+        var curveObject = new THREE.Line(geometry, material);
+        scene.add(curveObject);
+
+        workUpGarden(aGarden, destGarden, curveObject);
+        workUpGarden(destGarden, aGarden, curveObject);
+        destGarden.building._numOfActivatedConnections++;
     }
-    destGarden.building.mesh.material.color.setHex(0x40FF00);
-    var factor = getColorFactor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
-    var material = new THREE.LineBasicMaterial({
-        color: new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor)
-    });
-    var curveObject = new THREE.Line(geometry, material);
-    scene.add(curveObject);
-
-    workUpGarden(aGarden, destGarden, curveObject);
-    workUpGarden(destGarden, aGarden, curveObject);
-    destGarden.building._numOfActivatedConnections++;
 }
 
 /**
@@ -416,18 +542,17 @@ function removeLines(aGarden, updateBoolean) {
     }
     var hashMap = getBuildingsHashMap();
 
-
     for (var x in aGarden.meshLines) {
-        if (hashMap[x]._numOfActivatedConnections == 1) {
-            var faktor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
-            hashMap[x].mesh.material.color.set((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), faktor));
-        }
-        hashMap[x]._numOfActivatedConnections--;
         if (hashMap[x][gardenString].on == false) {
             var length = aGarden.meshLines[x].length;
             for (var i = length; i--;) {
                 scene.remove(aGarden.meshLines[x][i]);
             }
+            hashMap[x]._numOfActivatedConnections = hashMap[x]._numOfActivatedConnections - length;
+        }
+        if (hashMap[x]._numOfActivatedConnections==0) {
+            var factor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
+            colorObject(hashMap[x], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor))
         }
     }
     if (updateBoolean) {
@@ -436,18 +561,6 @@ function removeLines(aGarden, updateBoolean) {
     }
 }
 
-
-/**
- *Hilfsmethode fuer addCityToScene, zeichnet die Boxen
- *@param: aColor: die Farbe fuer die Box
- *@param: aBuilding: das Building oder District Objekt, das gezeichnet werden soll
- *@param: scene: die scene, der das Objekt hinzugefuegt werden soll
- *@param: boxGeom: die THREE.BoxGeometry(1,1,1)
- */
-function addBoxes(aColor, aBuilding, scene, boxGeom) {
-    var districtMaterial = getMaterial(aColor);
-    drawBox(aBuilding, districtMaterial, scene, boxGeom);
-}
 
 
 /**
@@ -494,36 +607,79 @@ function getColorFactor(extrema, colorValue, string) {
 }
 
 
-
 /**
  *zeichnet das Bild neu nach einer Aktion vom Nutzer
  */
 function render() {
-    raycaster.setFromCamera(mouse, camera); //erstellt einen Strahl mit der Maus in Verbindung mit der Kamera
+    
+var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+    vector.unproject(camera);
+    var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 
-    var intersects = raycaster.intersectObjects(scene.children); //sammelt Objekte, die der Strahl schneidet
-    if (INTERSECTED && INTERSECTED.material.type != "LineBasicMaterial") {
-        INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); //von dem Objekt nehme vom Material die Farbe und setze sie
+    var intersects = ray.intersectObjects( targetList );
+    
+    /*if(INTERSECTED){
+        var buildingID = INTERSECTED.object.geometry.faces[INTERSECTED.faceIndex].building;
+        var faces = getFaces(INTERSECTED);
+        for (var i=0; i<faces.length; i++) {
+            faces[i].color.setRGB(oldColor.r, oldColor.g, oldColor.b);
+        }
+        INTERSECTED.object.geometry.colorsNeedUpdate = true;
+    }*/
+
+    if ( intersects.length > 0 && intersects[ 0 ].material == undefined) {
+        INTERSECTED = intersects[ 0 ];
+        
+        /*var faces = getFaces(INTERSECTED);
+        oldColor = {r: INTERSECTED.face.color.r, g: INTERSECTED.face.color.g, b:INTERSECTED.face.color.b};
+        console.log(INTERSECTED.face.building);
+        for (var i=0; i<faces.length; i++) {
+            faces[i].color.setHex( 0xF5A9E1 );
+        }
+        INTERSECTED.object.geometry.colorsNeedUpdate = true;*/
+        if(INTERSECTED.face.isLeftGarden == undefined){
+            updateHighlightingLines(INTERSECTED.object.geometry.faces[INTERSECTED.faceIndex].building);
+        }
+        
     }
-
-    if (intersects.length > 0 && intersects[0].object.material.type != "LineBasicMaterial") { //wenn der Strahl mindestens 1 Objekt schneidet
-        INTERSECTED = intersects[0].object; //INTERSECTED sei nun das erste Objekt, das geschnitten wurde
-        INTERSECTED.material.emissive.setHex(0xff0000); //davon setze die Farbe auf rot
-        updateHighlightingLines(INTERSECTED.building);
-    } else { //wenn der Strahl kein Objekt (mehr) schneidet
-        INTERSECTED = null; // dann sorge dafuer, dass es nichts mehr rot gemalt wird
-    }
-
-    renderer.render(scene, camera); //zeichne das Bild neu
+    /*else{
+        INTERSECTED = null;
+        oldColor = null;
+    }*/
+    
+    renderer.render(scene, camera);
 
 }
 
 
 /**
- * Methode zum Updaten des Highlighten der Straßen
- * @param aBuilding: ein Gebaeude, auf das gezeigt wird
+ gibt die Seitenflaechen von dem Objekt zurueck, das durch raycasting geschnitten wurde
+ @param: object: das intersected Object
+ @return: faces: die Seitenflaechen von diesem Objekt
  */
-function updateHighlightingLines(aBuilding) {
+function getFaces(object) {
+    var buildingID = INTERSECTED.object.geometry.faces[INTERSECTED.faceIndex].building;
+    if (object.face.isLeftGarden == undefined) {
+        var faces = getBuildingsHashMap()[buildingID]._faces;
+    }
+    else {
+        if (object.face.isLeftGarden){
+            var faces = getBuildingsHashMap()[buildingID]._leftGarden._faces;
+        }
+        else{
+            var faces = getBuildingsHashMap()[buildingID]._rightGarden._faces;
+        }    
+    }
+    return faces;
+}
+
+
+/**
+ * Methode zum Updaten des Highlighten der Straßen
+ * @param BuildingID: eine GebaeudeID, auf das gezeigt wird
+ */
+function updateHighlightingLines(buildingID) {
+    var aBuilding = getBuildingsHashMap()[buildingID];
     if (doWeUseConnections() && aBuilding != undefined) {
         if (lastIntersectedBuilding != aBuilding) {
             if (lastIntersectedBuilding != undefined) {
@@ -553,8 +709,9 @@ function highlightGardenLines(aGarden) {
             length = meshLines[x].length;
             for (var i = 0; i < length; i++) {
                 meshLines[x][i].material.color.setHex(0xFF0000);
-                hashMap[x].mesh.material.emissive.setHex(0xff0000);
+                //hashMap[x].mesh.material.emissive.setHex(0xff0000);
             }
+            colorObject(hashMap[x], 0xff0000);
         }
     }
 }
@@ -574,43 +731,30 @@ function removeHighlightingGardenLines(aGarden) {
             for (var i = 0; i < length; i++) {
                 factor = getColorFactor(getExtrema(), aGarden.linesTo[x], "Connections");
                 meshLines[x][i].material.color.set(new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor));
-                hashMap[x].mesh.material.emissive.setHex(null);
             }
+            factor = getColorFactor(extrema, hashMap[x]._color, "Color");
+            colorObject(hashMap[x], 0x40FF00);
         }
     }
 }
 
 
+
 /**
- *Wird ausgefuehrt, wenn man mit der Maus klickt
+ * gibt das Gartenobjekt von einer Seitenflaeche zurueck
+ *@param: aFace: Seitenflaeche vom Garten
+ *@return: garden: der zugehoerige Garten
  */
-function onDocumentMouseDown(event) {
-
-    event.preventDefault(); // schaltet trackballControls aus
-
-    raycaster.setFromCamera(mouse, camera); //schaut, was die Maus durch die Kamera so erwischt
-
-    var intersects = raycaster.intersectObjects(scene.children); // schaut, was der Strahl, den die Maus macht, alles an Objekten schneidet
-    if (intersects.length > 0) { //wenn der Strahl ein Objekt schneidet
-        if (intersects[0].object.material.name == "garden") {
-            if (intersects[0].object.garden.on == false) {
-                setGardenOn(intersects[0]);
-            } else {
-                setGardenOff(intersects[0]);
-            }
-        } else {
-            if (intersects[0].object.building != undefined) {
-                var b = intersects[0].object.building;
-                changeBuildingInformation(
-                    b[association["height"]],
-                    b[association["width"]],
-                    b[association["color"]],
-                    b[association["name"]],
-                    intersects[0].object
-                );
-            }
-        }
+function getGarden(aFace){
+    var theBuilding = getBuildingsHashMap()[aFace.face.building];
+    var gardenstring;
+    if (aFace.face.isLeftGarden) {
+        gardenstring = "_leftGarden";
     }
+    else {
+        gardenstring = "_rightGarden";
+    }
+    return theBuilding[gardenstring];
 }
 
 
@@ -618,15 +762,15 @@ function onDocumentMouseDown(event) {
 /**
  * wird aufgerufen, wenn jemand auf einen Garten klickt, der noch nicht an ist.
  * Der Garten bekommt dann eine andere Farbe und es werden die Verbindungen gezeichnet.
- *@param: aMesh: Das Mesh vom Garten
+ *@param: theGarden: ein Garten
  */
-function setGardenOn(aMesh) {
-    drawLines(aMesh.object.garden, true);
-    aMesh.object.material.color.setHex(0x424242); //0xA5DF00);
-    if (aMesh.object.garden.isLeftGarden == true) {
-        clickedLeftGardens.push(aMesh.object.garden.building[association.name]);
+function setGardenOn(theGarden) {
+    drawLines(theGarden, true);
+    colorObject(theGarden, 0x424242);
+    if (theGarden.isLeftGarden == true) {
+        clickedLeftGardens.push(theGarden.building[association.name]);
     } else {
-        clickedRightGardens.push(aMesh.object.garden.building[association.name]);
+        clickedRightGardens.push(theGarden.building[association.name]);
     }
 }
 
@@ -635,36 +779,20 @@ function setGardenOn(aMesh) {
 /**
  * wird aufgerufen, wenn jemand auf einen Garten klickt, der bereits an ist.
  * Der Garten bekommt dann die urspruengliche Farbe und es werden die Verbindungen geloescht.
- *@param: aMesh: Das Mesh vom Garten
+ *@param: theGarden: ein Garten
  */
-function setGardenOff(aMesh) {
-    removeLines(aMesh.object.garden, true);
-    var factor = getColorFactor(getExtrema(), aMesh.object.garden.color, "SumOfConn");
-    aMesh.object.material.color.set(new THREE.Color(1 - factor, 1, 1 - factor));
-    if (aMesh.object.garden.isLeftGarden == true) {
-        clickedLeftGardens.splice(clickedLeftGardens.indexOf(aMesh.object.garden.id), 1);
+function setGardenOff(theGarden) {
+    removeLines(theGarden, true);
+    var factor = getColorFactor(getExtrema(), theGarden.color, "SumOfConn");
+    colorObject(theGarden, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));
+    if (theGarden.isLeftGarden == true) {
+        clickedLeftGardens.splice(clickedLeftGardens.indexOf(theGarden.building[association.name]), 1);
     } else {
-        clickedRightGardens.splice(clickedRightGardens.indexOf(aMesh.object.garden.id), 1);
+        clickedRightGardens.splice(clickedRightGardens.indexOf(theGarden.building[association.name]), 1);
     }
 }
 
 
-/**
- *Eine Methode, um den Abstand von einem DivElement zum linken bzw. oberen Rand des Fensters zu bekommen
- *@param: ein DivElement
- *@return: JSON, sodass man mit JSON.left den Abstand zum linken Rand in px bekommt
- *            bzw. mit JSON.top den Abstand zum oberen Rand
- */
-function getScrollDistance(divElement) {
-    if (divElement) {
-        var rect = divElement.getBoundingClientRect();
-
-        return {
-            left: rect.left,
-            top: rect.top
-        };
-    }
-}
 
 /**
  *Methode zum erstellen des JSON zum Speichern der aktuellen Ansicht mit Kameraposition etc.
@@ -688,25 +816,10 @@ function getJsonForCurrentLink() {
     aJson.leftGarden = clickedLeftGardens;
     aJson.rightGarden = clickedRightGardens;
     aJson.scaling = getScalingBooleans();
-    aJson.removedBuildings = getRemovedBuildings();
+    //aJson.removedBuildings = getRemovedBuildings();
     aJson.changedLegend = getChangedLegend();
     aJson.collID = getOriginalAssociations().collID;
     aJson._id = getOriginalAssociations()._id;
     return aJson;
 }
 
-/**
- *berechnet die Position von der Maus
- *@param: event: das Event wie Maus faehrt ueber Bildschirm
- */
-function onDocumentMouseMove(event) {
-    changeLinkForCurrentView(getJsonForCurrentLink());
-
-    event.preventDefault();
-    var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
-
-    if (rect) {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1 - (rect.left / window.innerWidth) * 2;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1 + (rect.top / window.innerHeight) * 2;
-    }
-}

@@ -412,12 +412,18 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
     setControls();
 }
 
+
+/**
+ * entfernt die WebGLCanvas als Dom-Element
+*/
 function removeWebGLCanvasFromDomElement(nameOfDivElement) {
     var myNode = document.getElementById(nameOfDivElement);
     while (myNode && myNode.firstChild) {
         myNode.removeChild(myNode.firstChild);
     }
 }
+
+
 
 /**
  *schaut regelmäßig, ob was passiert und updatet und zeichnet neu
@@ -492,11 +498,11 @@ function setSpecificView(aJson) {
 
     var hashMap = getBuildingsHashMap();
 
-    var buildings = aJson.removedBuildings;
+    /*var buildings = aJson.removedBuildings;
     var length = buildings.length;
     for (var j = 0; j < length; j++) {
         remove(hashMap[buildings[j]].mesh);
-    }
+    }*/
 
     setScalingBooleans(aJson.scaling);
     var scaleArray = ["height", "width", "color"];
@@ -532,7 +538,7 @@ function drawStoredLines(aJson) {
         for (var i = 0; i < aJson[stringArray[j]].length; i++) {
             if (hashMap[aJson[stringArray[j]][i]]._isRemoved == false) {
                 drawLines(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]], true);
-                hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]].mesh.material.color.setHex(0x424242); //0xA5DF00);
+                colorObject(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]], 0x424242);
             }
         }
     }
@@ -615,5 +621,83 @@ function updateConnectionExtrema(weight, string) {
     }
     if (extrema["min" + string] > weight && weight > 0) {
         extrema["min" + string] = weight;
+    }
+}
+
+
+
+
+
+/**
+ *berechnet die Position von der Maus
+ *@param: event: das Event wie Maus faehrt ueber Bildschirm
+ */
+function onDocumentMouseMove(event) {
+    changeLinkForCurrentView(getJsonForCurrentLink());
+
+    event.preventDefault();
+    var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1 - (rect.left / window.innerWidth) * 2;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1 + (rect.top / window.innerHeight) * 2;
+}
+
+
+
+/**
+ *Eine Methode, um den Abstand von einem DivElement zum linken bzw. oberen Rand des Fensters zu bekommen
+ *@param: ein DivElement
+ *@return: JSON, sodass man mit JSON.left den Abstand zum linken Rand in px bekommt
+ *            bzw. mit JSON.top den Abstand zum oberen Rand
+ */
+function getScrollDistance(divElement) {
+    var rect = divElement.getBoundingClientRect();
+
+    return {
+        left: rect.left,
+        top: rect.top
+    };
+}
+
+
+/**
+ *Wird ausgefuehrt, wenn man mit der Maus klickt
+ */
+function onDocumentMouseDown(event) {
+
+    event.preventDefault(); 
+
+    // create a Ray with origin at the mouse position
+    //   and direction into the scene (camera direction)
+    var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+    vector.unproject(camera);
+    var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+    // create an array containing all objects in the scene with which the ray intersects
+    var intersects = ray.intersectObjects( targetList );
+    // if there is one (or more) intersections
+    if ( intersects.length > 0 && intersects[0].material == undefined) {
+        //console.log(intersects[0]);
+        if (intersects[0].face.isLeftGarden != undefined) {
+            var theGarden = getGarden(intersects[0]);
+            if (theGarden.on == false) {
+                setGardenOn(theGarden);
+            } else {
+                setGardenOff(theGarden);
+            }
+        }
+        else {
+            var buildingID = intersects[0].object.geometry.faces[intersects[0].faceIndex].building;
+            if (buildingID != undefined){
+                var b = getBuildingsHashMap()[buildingID];
+                changeBuildingInformation(
+                    b[association["height"]],
+                    b[association["width"]],
+                    b[association["color"]],
+                    b[association["name"]],
+                    intersects[0]
+                );
+            }
+        }
     }
 }
