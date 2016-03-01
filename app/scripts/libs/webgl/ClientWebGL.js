@@ -638,8 +638,10 @@ function onDocumentMouseMove(event) {
     event.preventDefault();
     var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
 
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1 - (rect.left / window.innerWidth) * 2;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1 + (rect.top / window.innerHeight) * 2;
+    if(rect){
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1 - (rect.left / window.innerWidth) * 2;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1 + (rect.top / window.innerHeight) * 2;
+    }
 }
 
 
@@ -652,11 +654,12 @@ function onDocumentMouseMove(event) {
  */
 function getScrollDistance(divElement) {
     var rect = divElement.getBoundingClientRect();
-
-    return {
-        left: rect.left,
-        top: rect.top
-    };
+    if (divElement) {
+        return {
+            left: rect.left,
+            top: rect.top
+        };
+    }
 }
 
 
