@@ -432,12 +432,18 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 */
 function removeWebGLCanvasFromDomElement(nameOfDivElement) {
     var myNode = document.getElementById(nameOfDivElement);
-    while (myNode && myNode.firstChild) {
-        myNode.removeChild(myNode.firstChild);
-    }
+    if (myNode && document.getElementById("WebGLCanvas")) {
+        
+        var obj;
+        //Alle Objekte von der Szene löschen
+        for(var i = scene.children.length - 1; i >= 0; i--) { 
+            obj = scene.children[i];
+            scene.remove(obj);
+        }
+        //Das WebGL Canvas von dem DOM-Element löschen
+        myNode.removeChild(document.getElementById("WebGLCanvas"));
+    };
 }
-
-
 
 /**
  *schaut regelmäßig, ob was passiert und updatet und zeichnet neu
