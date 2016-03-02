@@ -49,10 +49,10 @@ function setCamera(aCam) {
 }
 
 /**
-* Getter fuer totalMaterial
-*@return: totalMaterial: das Material von unserem Hauptobjekt
-*/
-function getTotalMaterial(){
+ * Getter fuer totalMaterial
+ *@return: totalMaterial: das Material von unserem Hauptobjekt
+ */
+function getTotalMaterial() {
     return totalMaterial;
 }
 
@@ -72,7 +72,7 @@ function highlightBuilding(buildingID) {
         colorObject(building, 0xffff00);
     } else if (hashMap[buildingID + "."] != undefined) {
         highlightedBuildingID = buildingID + ".";
-        building = hashMap[buildingID+"."]
+        building = hashMap[buildingID + "."]
         colorOfHighlightedBuilding = building._faces[0].color.clone();
         colorObject(hashMap[highlightedBuildingID], 0xffff00);
     } else {
@@ -85,7 +85,7 @@ function highlightBuilding(buildingID) {
 /**
  *deaktiviert das highlighten eines Gebaeudes durch die Gebaeudesuche
  */
-function deactivateHighlighting(){
+function deactivateHighlighting() {
     var hashMap = getBuildingsHashMap();
     if (highlightedBuildingID != undefined) {
         colorObject(hashMap[highlightedBuildingID], colorOfHighlightedBuilding);
@@ -102,11 +102,10 @@ function deactivateHighlighting(){
  */
 function colorObject(object, aColor) {
     var faces = object._faces;
-    for(var i=0; i<faces.length; i++){
-        if(isNaN(aColor)){
+    for (var i = 0; i < faces.length; i++) {
+        if (isNaN(aColor)) {
             faces[i].color.set(aColor);
-        }
-        else {
+        } else {
             faces[i].color.setHex(aColor);
         }
     }
@@ -289,17 +288,17 @@ function addCityToScene(mainDistrict, scene, camera) {
     setCameraPos(camera, mainDistrict, extrema);
 
     maximalHeight = getExtrema().maxHeight;
-    totalMaterial = new THREE.MeshPhongMaterial( { 
-            color: 0xffffff, 
-            vertexColors: THREE.FaceColors,
-            transparent : true,
-            opacity : 1
-        } ) 
-    var drawnObject = new THREE.Mesh( 
-        myGeometry, 
+    totalMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        vertexColors: THREE.FaceColors,
+        transparent: true,
+        opacity: 1
+    })
+    var drawnObject = new THREE.Mesh(
+        myGeometry,
         totalMaterial
     );
-    scene.add( drawnObject );
+    scene.add(drawnObject);
     projector = new THREE.Projector();
     targetList.push(drawnObject);
     totalGeom = myGeometry;
@@ -355,19 +354,18 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean, boxGeom, garde
  */
 function addBoxes(aColor, aBuilding, boxGeom, myGeometry, matrix, quaternion) {
     setMatrix(aBuilding._centerPosition, aBuilding._width, aBuilding._height, quaternion, matrix);
-    
+
     aBuilding._faces = [];
     var face;
-    for ( var i = 0; i < boxGeom.faces.length; i++ ) 
-    {
-        face = boxGeom.faces[ i ];
-        face.color.set(aColor);    
+    for (var i = 0; i < boxGeom.faces.length; i++) {
+        face = boxGeom.faces[i];
+        face.color.set(aColor);
     }
-    
-    myGeometry.merge( boxGeom, matrix );
-    
+
+    myGeometry.merge(boxGeom, matrix);
+
     var length = myGeometry.faces.length;
-    for (var i = length-1; i >= length-12; i-- ){
+    for (var i = length - 1; i >= length - 12; i--) {
         face = myGeometry.faces[i];
         face.building = aBuilding[association.name];
         aBuilding._faces.push(face);
@@ -401,8 +399,8 @@ function setMatrix(cP, width, height, quaternion, matrix) {
     scale.y = height;
     scale.z = width;
 
-    quaternion.setFromEuler( rotation, false );
-    matrix.compose( position, quaternion, scale );
+    quaternion.setFromEuler(rotation, false);
+    matrix.compose(position, quaternion, scale);
 }
 
 
@@ -422,23 +420,23 @@ function addGarden(aBuilding, scene, gardenGeom, myGeometry, matrix, quaternion)
         if (aBuilding[gardens[i]] && aBuilding[gardens[i]].color > 0) {
             var garden = aBuilding[gardens[i]];
             var factor = getColorFactor(getExtrema(), garden.color, "SumOfConn");
-            
+
             setMatrix(garden._centerPosition, 1, 1, quaternion, matrix);
-    
+
             garden._faces = [];
             var face;
-            for ( var j = 0; j < gardenGeom[i].faces.length; j++ ) {
+            for (var j = 0; j < gardenGeom[i].faces.length; j++) {
                 face = gardenGeom[i].faces[j];
                 face.color.set((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));
             }
-            myGeometry.merge( gardenGeom[i], matrix );
-            
+            myGeometry.merge(gardenGeom[i], matrix);
+
             var length = myGeometry.faces.length;
             aBuilding[gardens[i]]._faces = [];
-            for (var j = length-1; j >= length-12; j-- ){
+            for (var j = length - 1; j >= length - 12; j--) {
                 face = myGeometry.faces[j];
                 face.building = aBuilding[association.name];
-                if (i==0) face.isLeftGarden = true;
+                if (i == 0) face.isLeftGarden = true;
                 else face.isLeftGarden = false;
                 aBuilding[gardens[i]]._faces.push(face);
             }
@@ -470,7 +468,7 @@ function drawLines(aGarden, updateBoolean) {
                 }
             }
         }
-        if(!doWeUseStreets()) setNextLinePosForNextPackage(aGarden);
+        if (!doWeUseStreets()) setNextLinePosForNextPackage(aGarden);
     }
 }
 
@@ -481,7 +479,7 @@ function drawLines(aGarden, updateBoolean) {
  *@param: destGarden: der Ziel-Garten
  */
 function drawALine(aGarden, destGarden) {
-    if(destGarden.on == false) {
+    if (destGarden.on == false) {
         var geometry = new THREE.Geometry();
 
         if (doWeUseStreets()) {
@@ -550,7 +548,7 @@ function removeLines(aGarden, updateBoolean) {
             }
             hashMap[x]._numOfActivatedConnections = hashMap[x]._numOfActivatedConnections - length;
         }
-        if (hashMap[x]._numOfActivatedConnections==0) {
+        if (hashMap[x]._numOfActivatedConnections == 0) {
             var factor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
             colorObject(hashMap[x], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor))
         }
@@ -611,13 +609,13 @@ function getColorFactor(extrema, colorValue, string) {
  *zeichnet das Bild neu nach einer Aktion vom Nutzer
  */
 function render() {
-    
-var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-    vector.unproject(camera);
-    var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 
-    var intersects = ray.intersectObjects( targetList );
-    
+    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+    vector.unproject(camera);
+    var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+
+    var intersects = ray.intersectObjects(targetList);
+
     /*if(INTERSECTED){
         var buildingID = INTERSECTED.object.geometry.faces[INTERSECTED.faceIndex].building;
         var faces = getFaces(INTERSECTED);
@@ -627,9 +625,9 @@ var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
         INTERSECTED.object.geometry.colorsNeedUpdate = true;
     }*/
 
-    if ( intersects.length > 0 && intersects[ 0 ].material == undefined) {
-        INTERSECTED = intersects[ 0 ];
-        
+    if (intersects.length > 0 && intersects[0].material == undefined) {
+        INTERSECTED = intersects[0];
+
         /*var faces = getFaces(INTERSECTED);
         oldColor = {r: INTERSECTED.face.color.r, g: INTERSECTED.face.color.g, b:INTERSECTED.face.color.b};
         console.log(INTERSECTED.face.building);
@@ -637,16 +635,16 @@ var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
             faces[i].color.setHex( 0xF5A9E1 );
         }
         INTERSECTED.object.geometry.colorsNeedUpdate = true;*/
-        if(INTERSECTED.face.isLeftGarden == undefined){
+        if (INTERSECTED.face.isLeftGarden == undefined) {
             updateHighlightingLines(INTERSECTED.object.geometry.faces[INTERSECTED.faceIndex].building);
         }
-        
+
     }
     /*else{
         INTERSECTED = null;
         oldColor = null;
     }*/
-    
+
     renderer.render(scene, camera);
 
 }
@@ -661,14 +659,12 @@ function getFaces(object) {
     var buildingID = INTERSECTED.object.geometry.faces[INTERSECTED.faceIndex].building;
     if (object.face.isLeftGarden == undefined) {
         var faces = getBuildingsHashMap()[buildingID]._faces;
-    }
-    else {
-        if (object.face.isLeftGarden){
+    } else {
+        if (object.face.isLeftGarden) {
             var faces = getBuildingsHashMap()[buildingID]._leftGarden._faces;
-        }
-        else{
+        } else {
             var faces = getBuildingsHashMap()[buildingID]._rightGarden._faces;
-        }    
+        }
     }
     return faces;
 }
@@ -745,13 +741,12 @@ function removeHighlightingGardenLines(aGarden) {
  *@param: aFace: Seitenflaeche vom Garten
  *@return: garden: der zugehoerige Garten
  */
-function getGarden(aFace){
+function getGarden(aFace) {
     var theBuilding = getBuildingsHashMap()[aFace.face.building];
     var gardenstring;
     if (aFace.face.isLeftGarden) {
         gardenstring = "_leftGarden";
-    }
-    else {
+    } else {
         gardenstring = "_rightGarden";
     }
     return theBuilding[gardenstring];
@@ -822,4 +817,3 @@ function getJsonForCurrentLink() {
     aJson._id = getOriginalAssociations()._id;
     return aJson;
 }
-

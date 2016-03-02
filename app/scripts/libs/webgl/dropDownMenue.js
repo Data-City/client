@@ -50,7 +50,7 @@ var scaling = {
 var controlling = {
     "zoomSpeed": 1,
     "rotateSpeed": 1,
-    "opacity" : 1
+    "opacity": 1
 };
 
 //fuer den Ordner "aktuelle Ansicht"
@@ -67,7 +67,9 @@ var currentView = {
 //fuer den Ordner "Gebaeudesuche"
 var searchBuilding = {
     "search": "Bitte Gebäudenamen eingeben",
-    "deactivate" : function() {deactivateHighlighting();}
+    "deactivate": function() {
+        deactivateHighlighting();
+    }
 }
 
 /**
@@ -94,8 +96,8 @@ var update = function() {
 function remove(Face) {
     var building = getBuildingsHashMap()[Face.face.building];
     //if (mesh.length != 0) {
-        removeDistrict(getScene(), Face, true);
-        arrayOfRemovedBuildings.push(storedDistrict);
+    removeDistrict(getScene(), Face, true);
+    arrayOfRemovedBuildings.push(storedDistrict);
     //}
 }
 
@@ -206,13 +208,14 @@ function initDropDownMenue() {
         "height": "Klicken Sie bitte auf ein Gebäude",
         "width": "Klicken Sie bitte auf ein Gebäude",
         "color": "Klicken Sie bitte auf ein Gebäude",
-        "name": "Klicken Sie bitte auf ein Gebäude"/*,
-        "remove": function() {
-            remove(buildingInformation.mesh);
-        },
-        "undo": function() {
-            if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
-        }*/
+        "name": "Klicken Sie bitte auf ein Gebäude"
+            /*,
+                    "remove": function() {
+                        remove(buildingInformation.mesh);
+                    },
+                    "undo": function() {
+                        if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
+                    }*/
     };
 
     //entsteht, wenn Nutzer die Legende aendert
@@ -229,7 +232,7 @@ function initDropDownMenue() {
     //fuer den Ordner "Steuerung"
     controlling = {
         "zoomSpeed": 1,
-        "rotateSpeed": 1, 
+        "rotateSpeed": 1,
         "opacity": 1
     };
 
@@ -247,7 +250,9 @@ function initDropDownMenue() {
     //fuer den Ordner "Gebaeudesuche"
     searchBuilding = {
         "search": "Bitte Gebäudenamen eingeben",
-    "deactivate" : function() {deactivateHighlighting();}
+        "deactivate": function() {
+            deactivateHighlighting();
+        }
     }
 }
 
@@ -324,7 +329,7 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
     h.add(controlling, "rotateSpeed", 0.1, 2).name("Rotationsgeschwindigkeit").onChange(function(value) {
         orbitControls.rotateSpeed = value;
     });
-    h.add(controlling, "opacity", 0, 1).name("Transparenz").onChange(function(value){
+    h.add(controlling, "opacity", 0, 1).name("Transparenz").onChange(function(value) {
         getTotalMaterial().opacity = value;
     });
 
@@ -356,7 +361,7 @@ function setFolderLegende(h, i, gui) {
     h.add(legend, myDimensions[i]).onChange(
         function(value) {
             gui.__folders["Gebäudeinformationen"].__listening[i].name(value);
-            if(changedLegend == undefined) changedLegend = legend;
+            if (changedLegend == undefined) changedLegend = legend;
             changedLegend[myDimensions[i]] = value;
         }
     )
@@ -551,7 +556,7 @@ function removeAllObjects(scene, aString, scalingMethod) {
     for (var i = scene.children.length - 1; i >= 0; i--) {
         object = scene.children[i];
         if (object.faces != undefined) {
-            for (var j = 0; j<object.faces.length; j++) {
+            for (var j = 0; j < object.faces.length; j++) {
                 delete object.geometry.faces[j];
             }
         }

@@ -220,7 +220,7 @@ window.addEventListener("keydown", function(e) {
     if (e.which == 16) {
         ctrlIsPressed = true;
     }
-    
+
     //Druck auf 'Pos1'
     if (e.which == 13 && ctrlIsPressed) {
         e.preventDefault();
@@ -429,14 +429,14 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
 /**
  * entfernt die WebGLCanvas als Dom-Element
-*/
+ */
 function removeWebGLCanvasFromDomElement(nameOfDivElement) {
     var myNode = document.getElementById(nameOfDivElement);
     if (myNode && document.getElementById("WebGLCanvas")) {
-        
+
         var obj;
         //Alle Objekte von der Szene löschen
-        for(var i = scene.children.length - 1; i >= 0; i--) { 
+        for (var i = scene.children.length - 1; i >= 0; i--) {
             obj = scene.children[i];
             scene.remove(obj);
         }
@@ -658,7 +658,7 @@ function onDocumentMouseMove(event) {
     event.preventDefault();
     var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
 
-    if(rect){
+    if (rect) {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1 - (rect.left / window.innerWidth) * 2;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1 + (rect.top / window.innerHeight) * 2;
     }
@@ -680,9 +680,9 @@ function getScrollDistance(divElement) {
                 left: rect.left,
                 top: rect.top
             };
-        }   
+        }
     }
-    
+
 }
 
 /**
@@ -690,18 +690,18 @@ function getScrollDistance(divElement) {
  */
 function onDocumentMouseDown(event) {
 
-    event.preventDefault(); 
+    event.preventDefault();
 
     // create a Ray with origin at the mouse position
     //   and direction into the scene (camera direction)
-    var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
     vector.unproject(camera);
-    var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+    var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 
     // create an array containing all objects in the scene with which the ray intersects
-    var intersects = ray.intersectObjects( targetList );
+    var intersects = ray.intersectObjects(targetList);
     // if there is one (or more) intersections
-    if ( intersects.length > 0 && intersects[0].material == undefined) {
+    if (intersects.length > 0 && intersects[0].material == undefined) {
         //console.log(intersects[0]);
         if (intersects[0].face.isLeftGarden != undefined) {
             var theGarden = getGarden(intersects[0]);
@@ -710,10 +710,9 @@ function onDocumentMouseDown(event) {
             } else {
                 setGardenOff(theGarden);
             }
-        }
-        else {
+        } else {
             var buildingID = intersects[0].object.geometry.faces[intersects[0].faceIndex].building;
-            if (buildingID != undefined){
+            if (buildingID != undefined) {
                 var b = getBuildingsHashMap()[buildingID];
                 changeBuildingInformation(
                     b[association["height"]],

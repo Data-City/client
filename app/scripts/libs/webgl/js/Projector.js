@@ -4,918 +4,926 @@
  * @author julianwa / https://github.com/julianwa
  */
 
-THREE.RenderableObject = function () {
+THREE.RenderableObject = function() {
 
-	this.id = 0;
+    this.id = 0;
 
-	this.object = null;
-	this.z = 0;
-	this.renderOrder = 0;
-
-};
-
-//
-
-THREE.RenderableFace = function () {
-
-	this.id = 0;
-
-	this.v1 = new THREE.RenderableVertex();
-	this.v2 = new THREE.RenderableVertex();
-	this.v3 = new THREE.RenderableVertex();
-
-	this.normalModel = new THREE.Vector3();
-
-	this.vertexNormalsModel = [ new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3() ];
-	this.vertexNormalsLength = 0;
-
-	this.color = new THREE.Color();
-	this.material = null;
-	this.uvs = [ new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2() ];
-
-	this.z = 0;
-	this.renderOrder = 0;
+    this.object = null;
+    this.z = 0;
+    this.renderOrder = 0;
 
 };
 
 //
 
-THREE.RenderableVertex = function () {
+THREE.RenderableFace = function() {
 
-	this.position = new THREE.Vector3();
-	this.positionWorld = new THREE.Vector3();
-	this.positionScreen = new THREE.Vector4();
+    this.id = 0;
 
-	this.visible = true;
+    this.v1 = new THREE.RenderableVertex();
+    this.v2 = new THREE.RenderableVertex();
+    this.v3 = new THREE.RenderableVertex();
 
-};
+    this.normalModel = new THREE.Vector3();
 
-THREE.RenderableVertex.prototype.copy = function ( vertex ) {
+    this.vertexNormalsModel = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+    this.vertexNormalsLength = 0;
 
-	this.positionWorld.copy( vertex.positionWorld );
-	this.positionScreen.copy( vertex.positionScreen );
+    this.color = new THREE.Color();
+    this.material = null;
+    this.uvs = [new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()];
 
-};
-
-//
-
-THREE.RenderableLine = function () {
-
-	this.id = 0;
-
-	this.v1 = new THREE.RenderableVertex();
-	this.v2 = new THREE.RenderableVertex();
-
-	this.vertexColors = [ new THREE.Color(), new THREE.Color() ];
-	this.material = null;
-
-	this.z = 0;
-	this.renderOrder = 0;
+    this.z = 0;
+    this.renderOrder = 0;
 
 };
 
 //
 
-THREE.RenderableSprite = function () {
+THREE.RenderableVertex = function() {
 
-	this.id = 0;
+    this.position = new THREE.Vector3();
+    this.positionWorld = new THREE.Vector3();
+    this.positionScreen = new THREE.Vector4();
 
-	this.object = null;
+    this.visible = true;
 
-	this.x = 0;
-	this.y = 0;
-	this.z = 0;
+};
 
-	this.rotation = 0;
-	this.scale = new THREE.Vector2();
+THREE.RenderableVertex.prototype.copy = function(vertex) {
 
-	this.material = null;
-	this.renderOrder = 0;
+    this.positionWorld.copy(vertex.positionWorld);
+    this.positionScreen.copy(vertex.positionScreen);
 
 };
 
 //
 
-THREE.Projector = function () {
+THREE.RenderableLine = function() {
 
-	var _object, _objectCount, _objectPool = [], _objectPoolLength = 0,
-	_vertex, _vertexCount, _vertexPool = [], _vertexPoolLength = 0,
-	_face, _faceCount, _facePool = [], _facePoolLength = 0,
-	_line, _lineCount, _linePool = [], _linePoolLength = 0,
-	_sprite, _spriteCount, _spritePool = [], _spritePoolLength = 0,
+    this.id = 0;
 
-	_renderData = { objects: [], lights: [], elements: [] },
+    this.v1 = new THREE.RenderableVertex();
+    this.v2 = new THREE.RenderableVertex();
 
-	_vector3 = new THREE.Vector3(),
-	_vector4 = new THREE.Vector4(),
+    this.vertexColors = [new THREE.Color(), new THREE.Color()];
+    this.material = null;
 
-	_clipBox = new THREE.Box3( new THREE.Vector3( - 1, - 1, - 1 ), new THREE.Vector3( 1, 1, 1 ) ),
-	_boundingBox = new THREE.Box3(),
-	_points3 = new Array( 3 ),
-	_points4 = new Array( 4 ),
+    this.z = 0;
+    this.renderOrder = 0;
 
-	_viewMatrix = new THREE.Matrix4(),
-	_viewProjectionMatrix = new THREE.Matrix4(),
+};
 
-	_modelMatrix,
-	_modelViewProjectionMatrix = new THREE.Matrix4(),
+//
 
-	_normalMatrix = new THREE.Matrix3(),
+THREE.RenderableSprite = function() {
 
-	_frustum = new THREE.Frustum(),
+    this.id = 0;
 
-	_clippedVertex1PositionScreen = new THREE.Vector4(),
-	_clippedVertex2PositionScreen = new THREE.Vector4();
+    this.object = null;
 
-	//
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
 
-	this.projectVector = function ( vector, camera ) {
+    this.rotation = 0;
+    this.scale = new THREE.Vector2();
 
-		console.warn( 'THREE.Projector: .projectVector() is now vector.project().' );
-		vector.project( camera );
+    this.material = null;
+    this.renderOrder = 0;
 
-	};
+};
 
-	this.unprojectVector = function ( vector, camera ) {
+//
 
-		//console.warn( 'THREE.Projector: .unprojectVector() is now vector.unproject().' );
-		vector.unproject( camera );
+THREE.Projector = function() {
 
-	};
+    var _object, _objectCount, _objectPool = [],
+        _objectPoolLength = 0,
+        _vertex, _vertexCount, _vertexPool = [],
+        _vertexPoolLength = 0,
+        _face, _faceCount, _facePool = [],
+        _facePoolLength = 0,
+        _line, _lineCount, _linePool = [],
+        _linePoolLength = 0,
+        _sprite, _spriteCount, _spritePool = [],
+        _spritePoolLength = 0,
 
-	this.pickingRay = function ( vector, camera ) {
+        _renderData = {
+            objects: [],
+            lights: [],
+            elements: []
+        },
 
-		console.error( 'THREE.Projector: .pickingRay() is now raycaster.setFromCamera().' );
+        _vector3 = new THREE.Vector3(),
+        _vector4 = new THREE.Vector4(),
 
-	};
+        _clipBox = new THREE.Box3(new THREE.Vector3(-1, -1, -1), new THREE.Vector3(1, 1, 1)),
+        _boundingBox = new THREE.Box3(),
+        _points3 = new Array(3),
+        _points4 = new Array(4),
 
-	//
+        _viewMatrix = new THREE.Matrix4(),
+        _viewProjectionMatrix = new THREE.Matrix4(),
 
-	var RenderList = function () {
+        _modelMatrix,
+        _modelViewProjectionMatrix = new THREE.Matrix4(),
 
-		var normals = [];
-		var uvs = [];
+        _normalMatrix = new THREE.Matrix3(),
 
-		var object = null;
-		var material = null;
+        _frustum = new THREE.Frustum(),
 
-		var normalMatrix = new THREE.Matrix3();
+        _clippedVertex1PositionScreen = new THREE.Vector4(),
+        _clippedVertex2PositionScreen = new THREE.Vector4();
 
-		function setObject( value ) {
+    //
 
-			object = value;
-			material = object.material;
+    this.projectVector = function(vector, camera) {
 
-			normalMatrix.getNormalMatrix( object.matrixWorld );
+        console.warn('THREE.Projector: .projectVector() is now vector.project().');
+        vector.project(camera);
 
-			normals.length = 0;
-			uvs.length = 0;
+    };
 
-		}
+    this.unprojectVector = function(vector, camera) {
 
-		function projectVertex( vertex ) {
+        //console.warn( 'THREE.Projector: .unprojectVector() is now vector.unproject().' );
+        vector.unproject(camera);
 
-			var position = vertex.position;
-			var positionWorld = vertex.positionWorld;
-			var positionScreen = vertex.positionScreen;
+    };
 
-			positionWorld.copy( position ).applyMatrix4( _modelMatrix );
-			positionScreen.copy( positionWorld ).applyMatrix4( _viewProjectionMatrix );
+    this.pickingRay = function(vector, camera) {
 
-			var invW = 1 / positionScreen.w;
+        console.error('THREE.Projector: .pickingRay() is now raycaster.setFromCamera().');
 
-			positionScreen.x *= invW;
-			positionScreen.y *= invW;
-			positionScreen.z *= invW;
+    };
 
-			vertex.visible = positionScreen.x >= - 1 && positionScreen.x <= 1 &&
-					 positionScreen.y >= - 1 && positionScreen.y <= 1 &&
-					 positionScreen.z >= - 1 && positionScreen.z <= 1;
+    //
 
-		}
+    var RenderList = function() {
 
-		function pushVertex( x, y, z ) {
+        var normals = [];
+        var uvs = [];
 
-			_vertex = getNextVertexInPool();
-			_vertex.position.set( x, y, z );
+        var object = null;
+        var material = null;
 
-			projectVertex( _vertex );
+        var normalMatrix = new THREE.Matrix3();
 
-		}
+        function setObject(value) {
 
-		function pushNormal( x, y, z ) {
+            object = value;
+            material = object.material;
 
-			normals.push( x, y, z );
+            normalMatrix.getNormalMatrix(object.matrixWorld);
 
-		}
+            normals.length = 0;
+            uvs.length = 0;
 
-		function pushUv( x, y ) {
+        }
 
-			uvs.push( x, y );
+        function projectVertex(vertex) {
 
-		}
+            var position = vertex.position;
+            var positionWorld = vertex.positionWorld;
+            var positionScreen = vertex.positionScreen;
 
-		function checkTriangleVisibility( v1, v2, v3 ) {
+            positionWorld.copy(position).applyMatrix4(_modelMatrix);
+            positionScreen.copy(positionWorld).applyMatrix4(_viewProjectionMatrix);
 
-			if ( v1.visible === true || v2.visible === true || v3.visible === true ) return true;
+            var invW = 1 / positionScreen.w;
 
-			_points3[ 0 ] = v1.positionScreen;
-			_points3[ 1 ] = v2.positionScreen;
-			_points3[ 2 ] = v3.positionScreen;
+            positionScreen.x *= invW;
+            positionScreen.y *= invW;
+            positionScreen.z *= invW;
 
-			return _clipBox.intersectsBox( _boundingBox.setFromPoints( _points3 ) );
+            vertex.visible = positionScreen.x >= -1 && positionScreen.x <= 1 &&
+                positionScreen.y >= -1 && positionScreen.y <= 1 &&
+                positionScreen.z >= -1 && positionScreen.z <= 1;
 
-		}
+        }
 
-		function checkBackfaceCulling( v1, v2, v3 ) {
+        function pushVertex(x, y, z) {
 
-			return ( ( v3.positionScreen.x - v1.positionScreen.x ) *
-				    ( v2.positionScreen.y - v1.positionScreen.y ) -
-				    ( v3.positionScreen.y - v1.positionScreen.y ) *
-				    ( v2.positionScreen.x - v1.positionScreen.x ) ) < 0;
+            _vertex = getNextVertexInPool();
+            _vertex.position.set(x, y, z);
 
-		}
+            projectVertex(_vertex);
 
-		function pushLine( a, b ) {
+        }
 
-			var v1 = _vertexPool[ a ];
-			var v2 = _vertexPool[ b ];
+        function pushNormal(x, y, z) {
 
-			_line = getNextLineInPool();
+            normals.push(x, y, z);
 
-			_line.id = object.id;
-			_line.v1.copy( v1 );
-			_line.v2.copy( v2 );
-			_line.z = ( v1.positionScreen.z + v2.positionScreen.z ) / 2;
-			_line.renderOrder = object.renderOrder;
+        }
 
-			_line.material = object.material;
+        function pushUv(x, y) {
 
-			_renderData.elements.push( _line );
+            uvs.push(x, y);
 
-		}
+        }
 
-		function pushTriangle( a, b, c ) {
+        function checkTriangleVisibility(v1, v2, v3) {
 
-			var v1 = _vertexPool[ a ];
-			var v2 = _vertexPool[ b ];
-			var v3 = _vertexPool[ c ];
+            if (v1.visible === true || v2.visible === true || v3.visible === true) return true;
 
-			if ( checkTriangleVisibility( v1, v2, v3 ) === false ) return;
+            _points3[0] = v1.positionScreen;
+            _points3[1] = v2.positionScreen;
+            _points3[2] = v3.positionScreen;
 
-			if ( material.side === THREE.DoubleSide || checkBackfaceCulling( v1, v2, v3 ) === true ) {
+            return _clipBox.intersectsBox(_boundingBox.setFromPoints(_points3));
 
-				_face = getNextFaceInPool();
+        }
 
-				_face.id = object.id;
-				_face.v1.copy( v1 );
-				_face.v2.copy( v2 );
-				_face.v3.copy( v3 );
-				_face.z = ( v1.positionScreen.z + v2.positionScreen.z + v3.positionScreen.z ) / 3;
-				_face.renderOrder = object.renderOrder;
+        function checkBackfaceCulling(v1, v2, v3) {
 
-				// use first vertex normal as face normal
+            return ((v3.positionScreen.x - v1.positionScreen.x) *
+                (v2.positionScreen.y - v1.positionScreen.y) -
+                (v3.positionScreen.y - v1.positionScreen.y) *
+                (v2.positionScreen.x - v1.positionScreen.x)) < 0;
 
-				_face.normalModel.fromArray( normals, a * 3 );
-				_face.normalModel.applyMatrix3( normalMatrix ).normalize();
+        }
 
-				for ( var i = 0; i < 3; i ++ ) {
+        function pushLine(a, b) {
 
-					var normal = _face.vertexNormalsModel[ i ];
-					normal.fromArray( normals, arguments[ i ] * 3 );
-					normal.applyMatrix3( normalMatrix ).normalize();
+            var v1 = _vertexPool[a];
+            var v2 = _vertexPool[b];
 
-					var uv = _face.uvs[ i ];
-					uv.fromArray( uvs, arguments[ i ] * 2 );
+            _line = getNextLineInPool();
 
-				}
+            _line.id = object.id;
+            _line.v1.copy(v1);
+            _line.v2.copy(v2);
+            _line.z = (v1.positionScreen.z + v2.positionScreen.z) / 2;
+            _line.renderOrder = object.renderOrder;
 
-				_face.vertexNormalsLength = 3;
+            _line.material = object.material;
 
-				_face.material = object.material;
+            _renderData.elements.push(_line);
 
-				_renderData.elements.push( _face );
+        }
 
-			}
+        function pushTriangle(a, b, c) {
 
-		}
+            var v1 = _vertexPool[a];
+            var v2 = _vertexPool[b];
+            var v3 = _vertexPool[c];
 
-		return {
-			setObject: setObject,
-			projectVertex: projectVertex,
-			checkTriangleVisibility: checkTriangleVisibility,
-			checkBackfaceCulling: checkBackfaceCulling,
-			pushVertex: pushVertex,
-			pushNormal: pushNormal,
-			pushUv: pushUv,
-			pushLine: pushLine,
-			pushTriangle: pushTriangle
-		}
+            if (checkTriangleVisibility(v1, v2, v3) === false) return;
 
-	};
+            if (material.side === THREE.DoubleSide || checkBackfaceCulling(v1, v2, v3) === true) {
 
-	var renderList = new RenderList();
+                _face = getNextFaceInPool();
 
-	this.projectScene = function ( scene, camera, sortObjects, sortElements ) {
+                _face.id = object.id;
+                _face.v1.copy(v1);
+                _face.v2.copy(v2);
+                _face.v3.copy(v3);
+                _face.z = (v1.positionScreen.z + v2.positionScreen.z + v3.positionScreen.z) / 3;
+                _face.renderOrder = object.renderOrder;
 
-		_faceCount = 0;
-		_lineCount = 0;
-		_spriteCount = 0;
+                // use first vertex normal as face normal
 
-		_renderData.elements.length = 0;
+                _face.normalModel.fromArray(normals, a * 3);
+                _face.normalModel.applyMatrix3(normalMatrix).normalize();
 
-		if ( scene.autoUpdate === true ) scene.updateMatrixWorld();
-		if ( camera.parent === null ) camera.updateMatrixWorld();
+                for (var i = 0; i < 3; i++) {
 
-		_viewMatrix.copy( camera.matrixWorldInverse.getInverse( camera.matrixWorld ) );
-		_viewProjectionMatrix.multiplyMatrices( camera.projectionMatrix, _viewMatrix );
+                    var normal = _face.vertexNormalsModel[i];
+                    normal.fromArray(normals, arguments[i] * 3);
+                    normal.applyMatrix3(normalMatrix).normalize();
 
-		_frustum.setFromMatrix( _viewProjectionMatrix );
+                    var uv = _face.uvs[i];
+                    uv.fromArray(uvs, arguments[i] * 2);
 
-		//
+                }
 
-		_objectCount = 0;
+                _face.vertexNormalsLength = 3;
 
-		_renderData.objects.length = 0;
-		_renderData.lights.length = 0;
+                _face.material = object.material;
 
-		scene.traverseVisible( function ( object ) {
+                _renderData.elements.push(_face);
 
-			if ( object instanceof THREE.Light ) {
+            }
 
-				_renderData.lights.push( object );
+        }
 
-			} else if ( object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Sprite ) {
+        return {
+            setObject: setObject,
+            projectVertex: projectVertex,
+            checkTriangleVisibility: checkTriangleVisibility,
+            checkBackfaceCulling: checkBackfaceCulling,
+            pushVertex: pushVertex,
+            pushNormal: pushNormal,
+            pushUv: pushUv,
+            pushLine: pushLine,
+            pushTriangle: pushTriangle
+        }
 
-				var material = object.material;
+    };
 
-				if ( material.visible === false ) return;
+    var renderList = new RenderList();
 
-				if ( object.frustumCulled === false || _frustum.intersectsObject( object ) === true ) {
+    this.projectScene = function(scene, camera, sortObjects, sortElements) {
 
-					_object = getNextObjectInPool();
-					_object.id = object.id;
-					_object.object = object;
+        _faceCount = 0;
+        _lineCount = 0;
+        _spriteCount = 0;
 
-					_vector3.setFromMatrixPosition( object.matrixWorld );
-					_vector3.applyProjection( _viewProjectionMatrix );
-					_object.z = _vector3.z;
-					_object.renderOrder = object.renderOrder;
+        _renderData.elements.length = 0;
 
-					_renderData.objects.push( _object );
+        if (scene.autoUpdate === true) scene.updateMatrixWorld();
+        if (camera.parent === null) camera.updateMatrixWorld();
 
-				}
+        _viewMatrix.copy(camera.matrixWorldInverse.getInverse(camera.matrixWorld));
+        _viewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, _viewMatrix);
 
-			}
+        _frustum.setFromMatrix(_viewProjectionMatrix);
 
-		} );
+        //
 
-		if ( sortObjects === true ) {
+        _objectCount = 0;
 
-			_renderData.objects.sort( painterSort );
+        _renderData.objects.length = 0;
+        _renderData.lights.length = 0;
 
-		}
+        scene.traverseVisible(function(object) {
 
-		//
+            if (object instanceof THREE.Light) {
 
-		for ( var o = 0, ol = _renderData.objects.length; o < ol; o ++ ) {
+                _renderData.lights.push(object);
 
-			var object = _renderData.objects[ o ].object;
-			var geometry = object.geometry;
+            } else if (object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Sprite) {
 
-			renderList.setObject( object );
+                var material = object.material;
 
-			_modelMatrix = object.matrixWorld;
+                if (material.visible === false) return;
 
-			_vertexCount = 0;
+                if (object.frustumCulled === false || _frustum.intersectsObject(object) === true) {
 
-			if ( object instanceof THREE.Mesh ) {
+                    _object = getNextObjectInPool();
+                    _object.id = object.id;
+                    _object.object = object;
 
-				if ( geometry instanceof THREE.BufferGeometry ) {
+                    _vector3.setFromMatrixPosition(object.matrixWorld);
+                    _vector3.applyProjection(_viewProjectionMatrix);
+                    _object.z = _vector3.z;
+                    _object.renderOrder = object.renderOrder;
 
-					var attributes = geometry.attributes;
-					var groups = geometry.groups;
+                    _renderData.objects.push(_object);
 
-					if ( attributes.position === undefined ) continue;
+                }
 
-					var positions = attributes.position.array;
+            }
 
-					for ( var i = 0, l = positions.length; i < l; i += 3 ) {
+        });
 
-						renderList.pushVertex( positions[ i ], positions[ i + 1 ], positions[ i + 2 ] );
+        if (sortObjects === true) {
 
-					}
+            _renderData.objects.sort(painterSort);
 
-					if ( attributes.normal !== undefined ) {
+        }
 
-						var normals = attributes.normal.array;
+        //
 
-						for ( var i = 0, l = normals.length; i < l; i += 3 ) {
+        for (var o = 0, ol = _renderData.objects.length; o < ol; o++) {
 
-							renderList.pushNormal( normals[ i ], normals[ i + 1 ], normals[ i + 2 ] );
+            var object = _renderData.objects[o].object;
+            var geometry = object.geometry;
 
-						}
+            renderList.setObject(object);
 
-					}
+            _modelMatrix = object.matrixWorld;
 
-					if ( attributes.uv !== undefined ) {
+            _vertexCount = 0;
 
-						var uvs = attributes.uv.array;
+            if (object instanceof THREE.Mesh) {
 
-						for ( var i = 0, l = uvs.length; i < l; i += 2 ) {
+                if (geometry instanceof THREE.BufferGeometry) {
 
-							renderList.pushUv( uvs[ i ], uvs[ i + 1 ] );
+                    var attributes = geometry.attributes;
+                    var groups = geometry.groups;
 
-						}
+                    if (attributes.position === undefined) continue;
 
-					}
+                    var positions = attributes.position.array;
 
-					if ( geometry.index !== null ) {
+                    for (var i = 0, l = positions.length; i < l; i += 3) {
 
-						var indices = geometry.index.array;
+                        renderList.pushVertex(positions[i], positions[i + 1], positions[i + 2]);
 
-						if ( groups.length > 0 ) {
+                    }
 
-							for ( var o = 0; o < groups.length; o ++ ) {
+                    if (attributes.normal !== undefined) {
 
-								var group = groups[ o ];
+                        var normals = attributes.normal.array;
 
-								for ( var i = group.start, l = group.start + group.count; i < l; i += 3 ) {
+                        for (var i = 0, l = normals.length; i < l; i += 3) {
 
-									renderList.pushTriangle( indices[ i ], indices[ i + 1 ], indices[ i + 2 ] );
+                            renderList.pushNormal(normals[i], normals[i + 1], normals[i + 2]);
 
-								}
+                        }
 
-							}
+                    }
 
-						} else {
+                    if (attributes.uv !== undefined) {
 
-							for ( var i = 0, l = indices.length; i < l; i += 3 ) {
+                        var uvs = attributes.uv.array;
 
-								renderList.pushTriangle( indices[ i ], indices[ i + 1 ], indices[ i + 2 ] );
+                        for (var i = 0, l = uvs.length; i < l; i += 2) {
 
-							}
+                            renderList.pushUv(uvs[i], uvs[i + 1]);
 
-						}
+                        }
 
-					} else {
+                    }
 
-						for ( var i = 0, l = positions.length / 3; i < l; i += 3 ) {
+                    if (geometry.index !== null) {
 
-							renderList.pushTriangle( i, i + 1, i + 2 );
+                        var indices = geometry.index.array;
 
-						}
+                        if (groups.length > 0) {
 
-					}
+                            for (var o = 0; o < groups.length; o++) {
 
-				} else if ( geometry instanceof THREE.Geometry ) {
+                                var group = groups[o];
 
-					var vertices = geometry.vertices;
-					var faces = geometry.faces;
-					var faceVertexUvs = geometry.faceVertexUvs[ 0 ];
+                                for (var i = group.start, l = group.start + group.count; i < l; i += 3) {
 
-					_normalMatrix.getNormalMatrix( _modelMatrix );
+                                    renderList.pushTriangle(indices[i], indices[i + 1], indices[i + 2]);
 
-					var material = object.material;
+                                }
 
-					var isFaceMaterial = material instanceof THREE.MultiMaterial;
-					var objectMaterials = isFaceMaterial === true ? object.material : null;
+                            }
 
-					for ( var v = 0, vl = vertices.length; v < vl; v ++ ) {
+                        } else {
 
-						var vertex = vertices[ v ];
+                            for (var i = 0, l = indices.length; i < l; i += 3) {
 
-						_vector3.copy( vertex );
+                                renderList.pushTriangle(indices[i], indices[i + 1], indices[i + 2]);
 
-						if ( material.morphTargets === true ) {
+                            }
 
-							var morphTargets = geometry.morphTargets;
-							var morphInfluences = object.morphTargetInfluences;
+                        }
 
-							for ( var t = 0, tl = morphTargets.length; t < tl; t ++ ) {
+                    } else {
 
-								var influence = morphInfluences[ t ];
+                        for (var i = 0, l = positions.length / 3; i < l; i += 3) {
 
-								if ( influence === 0 ) continue;
+                            renderList.pushTriangle(i, i + 1, i + 2);
 
-								var target = morphTargets[ t ];
-								var targetVertex = target.vertices[ v ];
+                        }
 
-								_vector3.x += ( targetVertex.x - vertex.x ) * influence;
-								_vector3.y += ( targetVertex.y - vertex.y ) * influence;
-								_vector3.z += ( targetVertex.z - vertex.z ) * influence;
+                    }
 
-							}
+                } else if (geometry instanceof THREE.Geometry) {
 
-						}
+                    var vertices = geometry.vertices;
+                    var faces = geometry.faces;
+                    var faceVertexUvs = geometry.faceVertexUvs[0];
 
-						renderList.pushVertex( _vector3.x, _vector3.y, _vector3.z );
+                    _normalMatrix.getNormalMatrix(_modelMatrix);
 
-					}
+                    var material = object.material;
 
-					for ( var f = 0, fl = faces.length; f < fl; f ++ ) {
+                    var isFaceMaterial = material instanceof THREE.MultiMaterial;
+                    var objectMaterials = isFaceMaterial === true ? object.material : null;
 
-						var face = faces[ f ];
+                    for (var v = 0, vl = vertices.length; v < vl; v++) {
 
-						material = isFaceMaterial === true
-							 ? objectMaterials.materials[ face.materialIndex ]
-							 : object.material;
+                        var vertex = vertices[v];
 
-						if ( material === undefined ) continue;
+                        _vector3.copy(vertex);
 
-						var side = material.side;
+                        if (material.morphTargets === true) {
 
-						var v1 = _vertexPool[ face.a ];
-						var v2 = _vertexPool[ face.b ];
-						var v3 = _vertexPool[ face.c ];
+                            var morphTargets = geometry.morphTargets;
+                            var morphInfluences = object.morphTargetInfluences;
 
-						if ( renderList.checkTriangleVisibility( v1, v2, v3 ) === false ) continue;
+                            for (var t = 0, tl = morphTargets.length; t < tl; t++) {
 
-						var visible = renderList.checkBackfaceCulling( v1, v2, v3 );
+                                var influence = morphInfluences[t];
 
-						if ( side !== THREE.DoubleSide ) {
+                                if (influence === 0) continue;
 
-							if ( side === THREE.FrontSide && visible === false ) continue;
-							if ( side === THREE.BackSide && visible === true ) continue;
+                                var target = morphTargets[t];
+                                var targetVertex = target.vertices[v];
 
-						}
+                                _vector3.x += (targetVertex.x - vertex.x) * influence;
+                                _vector3.y += (targetVertex.y - vertex.y) * influence;
+                                _vector3.z += (targetVertex.z - vertex.z) * influence;
 
-						_face = getNextFaceInPool();
+                            }
 
-						_face.id = object.id;
-						_face.v1.copy( v1 );
-						_face.v2.copy( v2 );
-						_face.v3.copy( v3 );
+                        }
 
-						_face.normalModel.copy( face.normal );
+                        renderList.pushVertex(_vector3.x, _vector3.y, _vector3.z);
 
-						if ( visible === false && ( side === THREE.BackSide || side === THREE.DoubleSide ) ) {
+                    }
 
-							_face.normalModel.negate();
+                    for (var f = 0, fl = faces.length; f < fl; f++) {
 
-						}
+                        var face = faces[f];
 
-						_face.normalModel.applyMatrix3( _normalMatrix ).normalize();
+                        material = isFaceMaterial === true ? objectMaterials.materials[face.materialIndex] : object.material;
 
-						var faceVertexNormals = face.vertexNormals;
+                        if (material === undefined) continue;
 
-						for ( var n = 0, nl = Math.min( faceVertexNormals.length, 3 ); n < nl; n ++ ) {
+                        var side = material.side;
 
-							var normalModel = _face.vertexNormalsModel[ n ];
-							normalModel.copy( faceVertexNormals[ n ] );
+                        var v1 = _vertexPool[face.a];
+                        var v2 = _vertexPool[face.b];
+                        var v3 = _vertexPool[face.c];
 
-							if ( visible === false && ( side === THREE.BackSide || side === THREE.DoubleSide ) ) {
+                        if (renderList.checkTriangleVisibility(v1, v2, v3) === false) continue;
 
-								normalModel.negate();
+                        var visible = renderList.checkBackfaceCulling(v1, v2, v3);
 
-							}
+                        if (side !== THREE.DoubleSide) {
 
-							normalModel.applyMatrix3( _normalMatrix ).normalize();
+                            if (side === THREE.FrontSide && visible === false) continue;
+                            if (side === THREE.BackSide && visible === true) continue;
 
-						}
+                        }
 
-						_face.vertexNormalsLength = faceVertexNormals.length;
+                        _face = getNextFaceInPool();
 
-						var vertexUvs = faceVertexUvs[ f ];
+                        _face.id = object.id;
+                        _face.v1.copy(v1);
+                        _face.v2.copy(v2);
+                        _face.v3.copy(v3);
 
-						if ( vertexUvs !== undefined ) {
+                        _face.normalModel.copy(face.normal);
 
-							for ( var u = 0; u < 3; u ++ ) {
+                        if (visible === false && (side === THREE.BackSide || side === THREE.DoubleSide)) {
 
-								_face.uvs[ u ].copy( vertexUvs[ u ] );
+                            _face.normalModel.negate();
 
-							}
+                        }
 
-						}
+                        _face.normalModel.applyMatrix3(_normalMatrix).normalize();
 
-						_face.color = face.color;
-						_face.material = material;
+                        var faceVertexNormals = face.vertexNormals;
 
-						_face.z = ( v1.positionScreen.z + v2.positionScreen.z + v3.positionScreen.z ) / 3;
-						_face.renderOrder = object.renderOrder;
+                        for (var n = 0, nl = Math.min(faceVertexNormals.length, 3); n < nl; n++) {
 
-						_renderData.elements.push( _face );
+                            var normalModel = _face.vertexNormalsModel[n];
+                            normalModel.copy(faceVertexNormals[n]);
 
-					}
+                            if (visible === false && (side === THREE.BackSide || side === THREE.DoubleSide)) {
 
-				}
+                                normalModel.negate();
 
-			} else if ( object instanceof THREE.Line ) {
+                            }
 
-				if ( geometry instanceof THREE.BufferGeometry ) {
+                            normalModel.applyMatrix3(_normalMatrix).normalize();
 
-					var attributes = geometry.attributes;
+                        }
 
-					if ( attributes.position !== undefined ) {
+                        _face.vertexNormalsLength = faceVertexNormals.length;
 
-						var positions = attributes.position.array;
+                        var vertexUvs = faceVertexUvs[f];
 
-						for ( var i = 0, l = positions.length; i < l; i += 3 ) {
+                        if (vertexUvs !== undefined) {
 
-							renderList.pushVertex( positions[ i ], positions[ i + 1 ], positions[ i + 2 ] );
+                            for (var u = 0; u < 3; u++) {
 
-						}
+                                _face.uvs[u].copy(vertexUvs[u]);
 
-						if ( geometry.index !== null ) {
+                            }
 
-							var indices = geometry.index.array;
+                        }
 
-							for ( var i = 0, l = indices.length; i < l; i += 2 ) {
+                        _face.color = face.color;
+                        _face.material = material;
 
-								renderList.pushLine( indices[ i ], indices[ i + 1 ] );
+                        _face.z = (v1.positionScreen.z + v2.positionScreen.z + v3.positionScreen.z) / 3;
+                        _face.renderOrder = object.renderOrder;
 
-							}
+                        _renderData.elements.push(_face);
 
-						} else {
+                    }
 
-							var step = object instanceof THREE.LineSegments ? 2 : 1;
+                }
 
-							for ( var i = 0, l = ( positions.length / 3 ) - 1; i < l; i += step ) {
+            } else if (object instanceof THREE.Line) {
 
-								renderList.pushLine( i, i + 1 );
+                if (geometry instanceof THREE.BufferGeometry) {
 
-							}
+                    var attributes = geometry.attributes;
 
-						}
+                    if (attributes.position !== undefined) {
 
-					}
+                        var positions = attributes.position.array;
 
-				} else if ( geometry instanceof THREE.Geometry ) {
+                        for (var i = 0, l = positions.length; i < l; i += 3) {
 
-					_modelViewProjectionMatrix.multiplyMatrices( _viewProjectionMatrix, _modelMatrix );
+                            renderList.pushVertex(positions[i], positions[i + 1], positions[i + 2]);
 
-					var vertices = object.geometry.vertices;
+                        }
 
-					if ( vertices.length === 0 ) continue;
+                        if (geometry.index !== null) {
 
-					v1 = getNextVertexInPool();
-					v1.positionScreen.copy( vertices[ 0 ] ).applyMatrix4( _modelViewProjectionMatrix );
+                            var indices = geometry.index.array;
 
-					var step = object instanceof THREE.LineSegments ? 2 : 1;
+                            for (var i = 0, l = indices.length; i < l; i += 2) {
 
-					for ( var v = 1, vl = vertices.length; v < vl; v ++ ) {
+                                renderList.pushLine(indices[i], indices[i + 1]);
 
-						v1 = getNextVertexInPool();
-						v1.positionScreen.copy( vertices[ v ] ).applyMatrix4( _modelViewProjectionMatrix );
+                            }
 
-						if ( ( v + 1 ) % step > 0 ) continue;
+                        } else {
 
-						v2 = _vertexPool[ _vertexCount - 2 ];
+                            var step = object instanceof THREE.LineSegments ? 2 : 1;
 
-						_clippedVertex1PositionScreen.copy( v1.positionScreen );
-						_clippedVertex2PositionScreen.copy( v2.positionScreen );
+                            for (var i = 0, l = (positions.length / 3) - 1; i < l; i += step) {
 
-						if ( clipLine( _clippedVertex1PositionScreen, _clippedVertex2PositionScreen ) === true ) {
+                                renderList.pushLine(i, i + 1);
 
-							// Perform the perspective divide
-							_clippedVertex1PositionScreen.multiplyScalar( 1 / _clippedVertex1PositionScreen.w );
-							_clippedVertex2PositionScreen.multiplyScalar( 1 / _clippedVertex2PositionScreen.w );
+                            }
 
-							_line = getNextLineInPool();
+                        }
 
-							_line.id = object.id;
-							_line.v1.positionScreen.copy( _clippedVertex1PositionScreen );
-							_line.v2.positionScreen.copy( _clippedVertex2PositionScreen );
+                    }
 
-							_line.z = Math.max( _clippedVertex1PositionScreen.z, _clippedVertex2PositionScreen.z );
-							_line.renderOrder = object.renderOrder;
+                } else if (geometry instanceof THREE.Geometry) {
 
-							_line.material = object.material;
+                    _modelViewProjectionMatrix.multiplyMatrices(_viewProjectionMatrix, _modelMatrix);
 
-							if ( object.material.vertexColors === THREE.VertexColors ) {
+                    var vertices = object.geometry.vertices;
 
-								_line.vertexColors[ 0 ].copy( object.geometry.colors[ v ] );
-								_line.vertexColors[ 1 ].copy( object.geometry.colors[ v - 1 ] );
+                    if (vertices.length === 0) continue;
 
-							}
+                    v1 = getNextVertexInPool();
+                    v1.positionScreen.copy(vertices[0]).applyMatrix4(_modelViewProjectionMatrix);
 
-							_renderData.elements.push( _line );
+                    var step = object instanceof THREE.LineSegments ? 2 : 1;
 
-						}
+                    for (var v = 1, vl = vertices.length; v < vl; v++) {
 
-					}
+                        v1 = getNextVertexInPool();
+                        v1.positionScreen.copy(vertices[v]).applyMatrix4(_modelViewProjectionMatrix);
 
-				}
+                        if ((v + 1) % step > 0) continue;
 
-			} else if ( object instanceof THREE.Sprite ) {
+                        v2 = _vertexPool[_vertexCount - 2];
 
-				_vector4.set( _modelMatrix.elements[ 12 ], _modelMatrix.elements[ 13 ], _modelMatrix.elements[ 14 ], 1 );
-				_vector4.applyMatrix4( _viewProjectionMatrix );
+                        _clippedVertex1PositionScreen.copy(v1.positionScreen);
+                        _clippedVertex2PositionScreen.copy(v2.positionScreen);
 
-				var invW = 1 / _vector4.w;
+                        if (clipLine(_clippedVertex1PositionScreen, _clippedVertex2PositionScreen) === true) {
 
-				_vector4.z *= invW;
+                            // Perform the perspective divide
+                            _clippedVertex1PositionScreen.multiplyScalar(1 / _clippedVertex1PositionScreen.w);
+                            _clippedVertex2PositionScreen.multiplyScalar(1 / _clippedVertex2PositionScreen.w);
 
-				if ( _vector4.z >= - 1 && _vector4.z <= 1 ) {
+                            _line = getNextLineInPool();
 
-					_sprite = getNextSpriteInPool();
-					_sprite.id = object.id;
-					_sprite.x = _vector4.x * invW;
-					_sprite.y = _vector4.y * invW;
-					_sprite.z = _vector4.z;
-					_sprite.renderOrder = object.renderOrder;
-					_sprite.object = object;
+                            _line.id = object.id;
+                            _line.v1.positionScreen.copy(_clippedVertex1PositionScreen);
+                            _line.v2.positionScreen.copy(_clippedVertex2PositionScreen);
 
-					_sprite.rotation = object.rotation;
+                            _line.z = Math.max(_clippedVertex1PositionScreen.z, _clippedVertex2PositionScreen.z);
+                            _line.renderOrder = object.renderOrder;
 
-					_sprite.scale.x = object.scale.x * Math.abs( _sprite.x - ( _vector4.x + camera.projectionMatrix.elements[ 0 ] ) / ( _vector4.w + camera.projectionMatrix.elements[ 12 ] ) );
-					_sprite.scale.y = object.scale.y * Math.abs( _sprite.y - ( _vector4.y + camera.projectionMatrix.elements[ 5 ] ) / ( _vector4.w + camera.projectionMatrix.elements[ 13 ] ) );
+                            _line.material = object.material;
 
-					_sprite.material = object.material;
+                            if (object.material.vertexColors === THREE.VertexColors) {
 
-					_renderData.elements.push( _sprite );
+                                _line.vertexColors[0].copy(object.geometry.colors[v]);
+                                _line.vertexColors[1].copy(object.geometry.colors[v - 1]);
 
-				}
+                            }
 
-			}
+                            _renderData.elements.push(_line);
 
-		}
+                        }
 
-		if ( sortElements === true ) {
+                    }
 
-			_renderData.elements.sort( painterSort );
+                }
 
-		}
+            } else if (object instanceof THREE.Sprite) {
 
-		return _renderData;
+                _vector4.set(_modelMatrix.elements[12], _modelMatrix.elements[13], _modelMatrix.elements[14], 1);
+                _vector4.applyMatrix4(_viewProjectionMatrix);
 
-	};
+                var invW = 1 / _vector4.w;
 
-	// Pools
+                _vector4.z *= invW;
 
-	function getNextObjectInPool() {
+                if (_vector4.z >= -1 && _vector4.z <= 1) {
 
-		if ( _objectCount === _objectPoolLength ) {
+                    _sprite = getNextSpriteInPool();
+                    _sprite.id = object.id;
+                    _sprite.x = _vector4.x * invW;
+                    _sprite.y = _vector4.y * invW;
+                    _sprite.z = _vector4.z;
+                    _sprite.renderOrder = object.renderOrder;
+                    _sprite.object = object;
 
-			var object = new THREE.RenderableObject();
-			_objectPool.push( object );
-			_objectPoolLength ++;
-			_objectCount ++;
-			return object;
+                    _sprite.rotation = object.rotation;
 
-		}
+                    _sprite.scale.x = object.scale.x * Math.abs(_sprite.x - (_vector4.x + camera.projectionMatrix.elements[0]) / (_vector4.w + camera.projectionMatrix.elements[12]));
+                    _sprite.scale.y = object.scale.y * Math.abs(_sprite.y - (_vector4.y + camera.projectionMatrix.elements[5]) / (_vector4.w + camera.projectionMatrix.elements[13]));
 
-		return _objectPool[ _objectCount ++ ];
+                    _sprite.material = object.material;
 
-	}
+                    _renderData.elements.push(_sprite);
 
-	function getNextVertexInPool() {
+                }
 
-		if ( _vertexCount === _vertexPoolLength ) {
+            }
 
-			var vertex = new THREE.RenderableVertex();
-			_vertexPool.push( vertex );
-			_vertexPoolLength ++;
-			_vertexCount ++;
-			return vertex;
+        }
 
-		}
+        if (sortElements === true) {
 
-		return _vertexPool[ _vertexCount ++ ];
+            _renderData.elements.sort(painterSort);
 
-	}
+        }
 
-	function getNextFaceInPool() {
+        return _renderData;
 
-		if ( _faceCount === _facePoolLength ) {
+    };
 
-			var face = new THREE.RenderableFace();
-			_facePool.push( face );
-			_facePoolLength ++;
-			_faceCount ++;
-			return face;
+    // Pools
 
-		}
+    function getNextObjectInPool() {
 
-		return _facePool[ _faceCount ++ ];
+        if (_objectCount === _objectPoolLength) {
 
+            var object = new THREE.RenderableObject();
+            _objectPool.push(object);
+            _objectPoolLength++;
+            _objectCount++;
+            return object;
 
-	}
+        }
 
-	function getNextLineInPool() {
+        return _objectPool[_objectCount++];
 
-		if ( _lineCount === _linePoolLength ) {
+    }
 
-			var line = new THREE.RenderableLine();
-			_linePool.push( line );
-			_linePoolLength ++;
-			_lineCount ++;
-			return line;
+    function getNextVertexInPool() {
 
-		}
+        if (_vertexCount === _vertexPoolLength) {
 
-		return _linePool[ _lineCount ++ ];
+            var vertex = new THREE.RenderableVertex();
+            _vertexPool.push(vertex);
+            _vertexPoolLength++;
+            _vertexCount++;
+            return vertex;
 
-	}
+        }
 
-	function getNextSpriteInPool() {
+        return _vertexPool[_vertexCount++];
 
-		if ( _spriteCount === _spritePoolLength ) {
+    }
 
-			var sprite = new THREE.RenderableSprite();
-			_spritePool.push( sprite );
-			_spritePoolLength ++;
-			_spriteCount ++;
-			return sprite;
+    function getNextFaceInPool() {
 
-		}
+        if (_faceCount === _facePoolLength) {
 
-		return _spritePool[ _spriteCount ++ ];
+            var face = new THREE.RenderableFace();
+            _facePool.push(face);
+            _facePoolLength++;
+            _faceCount++;
+            return face;
 
-	}
+        }
 
-	//
+        return _facePool[_faceCount++];
 
-	function painterSort( a, b ) {
 
-		if ( a.renderOrder !== b.renderOrder ) {
+    }
 
-			return a.renderOrder - b.renderOrder;
+    function getNextLineInPool() {
 
-		} else if ( a.z !== b.z ) {
+        if (_lineCount === _linePoolLength) {
 
-			return b.z - a.z;
+            var line = new THREE.RenderableLine();
+            _linePool.push(line);
+            _linePoolLength++;
+            _lineCount++;
+            return line;
 
-		} else if ( a.id !== b.id ) {
+        }
 
-			return a.id - b.id;
+        return _linePool[_lineCount++];
 
-		} else {
+    }
 
-			return 0;
+    function getNextSpriteInPool() {
 
-		}
+        if (_spriteCount === _spritePoolLength) {
 
-	}
+            var sprite = new THREE.RenderableSprite();
+            _spritePool.push(sprite);
+            _spritePoolLength++;
+            _spriteCount++;
+            return sprite;
 
-	function clipLine( s1, s2 ) {
+        }
 
-		var alpha1 = 0, alpha2 = 1,
+        return _spritePool[_spriteCount++];
 
-		// Calculate the boundary coordinate of each vertex for the near and far clip planes,
-		// Z = -1 and Z = +1, respectively.
-		bc1near =  s1.z + s1.w,
-		bc2near =  s2.z + s2.w,
-		bc1far =  - s1.z + s1.w,
-		bc2far =  - s2.z + s2.w;
+    }
 
-		if ( bc1near >= 0 && bc2near >= 0 && bc1far >= 0 && bc2far >= 0 ) {
+    //
 
-			// Both vertices lie entirely within all clip planes.
-			return true;
+    function painterSort(a, b) {
 
-		} else if ( ( bc1near < 0 && bc2near < 0 ) || ( bc1far < 0 && bc2far < 0 ) ) {
+        if (a.renderOrder !== b.renderOrder) {
 
-			// Both vertices lie entirely outside one of the clip planes.
-			return false;
+            return a.renderOrder - b.renderOrder;
 
-		} else {
+        } else if (a.z !== b.z) {
 
-			// The line segment spans at least one clip plane.
+            return b.z - a.z;
 
-			if ( bc1near < 0 ) {
+        } else if (a.id !== b.id) {
 
-				// v1 lies outside the near plane, v2 inside
-				alpha1 = Math.max( alpha1, bc1near / ( bc1near - bc2near ) );
+            return a.id - b.id;
 
-			} else if ( bc2near < 0 ) {
+        } else {
 
-				// v2 lies outside the near plane, v1 inside
-				alpha2 = Math.min( alpha2, bc1near / ( bc1near - bc2near ) );
+            return 0;
 
-			}
+        }
 
-			if ( bc1far < 0 ) {
+    }
 
-				// v1 lies outside the far plane, v2 inside
-				alpha1 = Math.max( alpha1, bc1far / ( bc1far - bc2far ) );
+    function clipLine(s1, s2) {
 
-			} else if ( bc2far < 0 ) {
+        var alpha1 = 0,
+            alpha2 = 1,
 
-				// v2 lies outside the far plane, v2 inside
-				alpha2 = Math.min( alpha2, bc1far / ( bc1far - bc2far ) );
+            // Calculate the boundary coordinate of each vertex for the near and far clip planes,
+            // Z = -1 and Z = +1, respectively.
+            bc1near = s1.z + s1.w,
+            bc2near = s2.z + s2.w,
+            bc1far = -s1.z + s1.w,
+            bc2far = -s2.z + s2.w;
 
-			}
+        if (bc1near >= 0 && bc2near >= 0 && bc1far >= 0 && bc2far >= 0) {
 
-			if ( alpha2 < alpha1 ) {
+            // Both vertices lie entirely within all clip planes.
+            return true;
 
-				// The line segment spans two boundaries, but is outside both of them.
-				// (This can't happen when we're only clipping against just near/far but good
-				//  to leave the check here for future usage if other clip planes are added.)
-				return false;
+        } else if ((bc1near < 0 && bc2near < 0) || (bc1far < 0 && bc2far < 0)) {
 
-			} else {
+            // Both vertices lie entirely outside one of the clip planes.
+            return false;
 
-				// Update the s1 and s2 vertices to match the clipped line segment.
-				s1.lerp( s2, alpha1 );
-				s2.lerp( s1, 1 - alpha2 );
+        } else {
 
-				return true;
+            // The line segment spans at least one clip plane.
 
-			}
+            if (bc1near < 0) {
 
-		}
+                // v1 lies outside the near plane, v2 inside
+                alpha1 = Math.max(alpha1, bc1near / (bc1near - bc2near));
 
-	}
+            } else if (bc2near < 0) {
+
+                // v2 lies outside the near plane, v1 inside
+                alpha2 = Math.min(alpha2, bc1near / (bc1near - bc2near));
+
+            }
+
+            if (bc1far < 0) {
+
+                // v1 lies outside the far plane, v2 inside
+                alpha1 = Math.max(alpha1, bc1far / (bc1far - bc2far));
+
+            } else if (bc2far < 0) {
+
+                // v2 lies outside the far plane, v2 inside
+                alpha2 = Math.min(alpha2, bc1far / (bc1far - bc2far));
+
+            }
+
+            if (alpha2 < alpha1) {
+
+                // The line segment spans two boundaries, but is outside both of them.
+                // (This can't happen when we're only clipping against just near/far but good
+                //  to leave the check here for future usage if other clip planes are added.)
+                return false;
+
+            } else {
+
+                // Update the s1 and s2 vertices to match the clipped line segment.
+                s1.lerp(s2, alpha1);
+                s2.lerp(s1, 1 - alpha2);
+
+                return true;
+
+            }
+
+        }
+
+    }
 
 };
