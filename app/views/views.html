@@ -184,7 +184,7 @@
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
                             </div>
-                            <div class="panel-body" ng-show="showStep2 && chosenView.metaData.connectionsAvailable === 'true'">
+                            <div class="panel-body" ng-show="showStep2 && chosenView.metaData.connectionsAvailable">
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" ng-model="chosenView.useConnections"> Verbindungen nutzen</input>
@@ -278,7 +278,7 @@
                                 -->
                                 </div>
                             </div>
-                            <div class="alert alert-warning" ng-show="showStep2 && chosenView.metaData.connectionsAvailable === 'false'">Da es keine Verbindungen gibt, kann man keine auswählen</div>
+                            <div class="alert alert-warning" ng-show="showStep2 && !chosenView.metaData.connectionsAvailable">Da es keine Verbindungen gibt, kann man keine auswählen</div>
                         </div>
                         <!-- SCHRITT 3 - Daten aggregieren -->
                         <div class="panel panel-default">

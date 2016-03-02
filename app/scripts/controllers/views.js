@@ -275,7 +275,7 @@ angular.module('datacityApp')
 
                         $('#collapseAll').collapse();
 
-                        if (view.metaData.connectionsAvailable === "true") {
+                        if (view.metaData.connectionsAvailable) {
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
                                 REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
                                     var incomingConnections = incoming.data._embedded['rh:doc'][0];
