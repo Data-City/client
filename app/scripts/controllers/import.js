@@ -28,7 +28,7 @@ angular.module('datacityApp')
             var fileInput = document.getElementById('csv-file');
             filename = getFilename(fileInput);
             $log.info(filename);
-
+            
             $scope.msg = "Interpretiere Daten...";
             $scope.percentage = 20;
             Papa.parse(fileInput.files[0], {
@@ -48,6 +48,7 @@ angular.module('datacityApp')
                 }
             });
         };
+        
 
         var startUpload = function (fn) {
             REST.putOnCollection(db, filename, null, uploadedObj, function (result) {
