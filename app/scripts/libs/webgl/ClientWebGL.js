@@ -208,28 +208,42 @@ function getCamToSave() {
     return camToSave;
 }
 
+var ctrlIsPressed;
+
 
 /**
  * Fügt Listener für einen Screenshot hinzu
  */
-window.addEventListener("keyup", function(e) {
+window.addEventListener("keydown", function(e) {
     var imgData, imgNode;
 
-    //Druck auf 'Entfernen'
-    if (e.which !== 46) return;
-    try {
-        imgData = renderer.domElement.toDataURL();
-    } catch (e) {
-        console.log("Browser does not support taking screenshot of 3d context");
-        return;
+    if (e.which == 16) {
+        ctrlIsPressed = true;
     }
+    
+    //Druck auf 'Pos1'
+    if (e.which == 13 && ctrlIsPressed) {
+        e.preventDefault();
+        try {
+            imgData = renderer.domElement.toDataURL();
+        } catch (e) {
+            console.log("Browser does not support taking screenshot of 3d context");
+            return;
+        }
 
-    imgNode = document.createElement("img");
-    imgNode.src = imgData;
+        imgNode = document.createElement("img");
+        imgNode.src = imgData;
 
-    var myWindow = window.open("", "");
-    myWindow.document.write("<div id='imageDownload'></div>");
-    myWindow.document.getElementById('imageDownload').appendChild(imgNode);
+        var myWindow = window.open("", "");
+        myWindow.document.write("<div id='imageDownload'></div>");
+        myWindow.document.getElementById('imageDownload').appendChild(imgNode);
+    }
+});
+
+window.addEventListener("keyup", function(e) {
+    if (e.which == 16) {
+        ctrlIsPressed = false;
+    }
 });
 
 /**
