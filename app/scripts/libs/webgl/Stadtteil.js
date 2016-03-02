@@ -616,8 +616,8 @@ function getDrawnDimValue(aBuilding, dimString) {
         if (isNaN(parseFloat(aBuilding[association[dimString]]))) {
             console.log("Erwartet wurde eine Zahl. Bekommen habe ich: " + aBuilding[association[dimString]]);
         }
-        if (metaData["min_" + association[dimString]] > 2) {
-            toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData["min_" + association[dimString]]) + 1.5;
+        if (metaData["avg_" + association[dimString]] > 2) {
+            toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData["avg_" + association[dimString]]) + 1.5;
         } else {
             toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
         }
