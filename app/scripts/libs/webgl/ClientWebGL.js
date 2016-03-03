@@ -16,8 +16,9 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
     minSumOfConn: Number.MAX_VALUE
 };
 var camToSave = {}; //speichert Anfangseinstellung
-var useStreets = true;
-var usingConnections = true;
+var useStreets;
+var usingConnections;
+var scalingOption;
 var SpeedForShiftByKeys = 5;
 
 /**
@@ -137,6 +138,7 @@ function initData(data, association, incomingCalls, outgoingCalls) {
     setMetaData(association.metaData);
 
     usingConnections = association.useConnections;
+    scalingOption = association.scalingOption;
 
     if (usingConnections) {
         setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
