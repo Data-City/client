@@ -338,7 +338,14 @@ angular.module('datacityApp')
         };
 
         this.createCollection = function (collName, dataArray, succCallback, errCallback, updateLoader) {
-            rest.putOnCollection(DATABASEFORCOLLECTIONS, collName, null, {}, function (result) {
+            rest.putOnCollection(DATABASEFORCOLLECTIONS, collName, null, null, function (result) {
+                $log.info("RESULT");
+                $log.info(result);
+                
+                rest.getData(function(doc) {
+                    $log.info(doc);
+                }, DATABASEFORCOLLECTIONS, collName, null);
+                
                 rest.getCurrentETag(DATABASEFORCOLLECTIONS, collName, function (etag) {
                     var url = createURL(DATABASEFORCOLLECTIONS, collName);
                     var config = {
@@ -348,7 +355,7 @@ angular.module('datacityApp')
                     };
                     var counter = 0;
                     async.eachSeries(dataArray, function iteratee(item, callback) {
-                        $log.info(item);
+                        //$log.info(item);
                         $http.post(url, item, config).then(function () {
                             rest.getCurrentETag(DATABASEFORCOLLECTIONS, collName, function (newEtag) {
                                 config.headers["If-Match"] = newEtag;
@@ -360,18 +367,16 @@ angular.module('datacityApp')
                     }, function done() {
                         succCallback();
                     });
-
-
-
-
                 });
             });
         };
 
         this.putOnCollection = function (database, collection, etag, params, fn) {
+            /*
             if (!params) {
                 return;
             }
+            */
             setAuthHeader();
             var config = {
                 headers: {

@@ -29,7 +29,7 @@ angular.module('datacityApp')
 
         var updateLoader = function(currentItem) {
             $scope.percentage = Math.round((currentItem / $scope.numberOfDocs) * 100);
-        }
+        };
 
         $scope.startImport = function () {
             if (!settingsValid()) {
