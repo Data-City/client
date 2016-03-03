@@ -198,6 +198,7 @@
                                         <br></br>
                                     </label>
                                     <br>
+                                    <p><i>Hinweis: Die Regenbögen sind in der Erstellung performanter, weshalb diese bei großen Datensätzen zu bevorzugen sind.</i></p>
                                     <fieldset class="formgroup" ng-show="chosenView.useConnections">
                                         <div class="radio">
                                             <label>
@@ -213,13 +214,20 @@
                                     </fieldset>
                                     </br>
                                     <div ng-if="chosenView.useConnections">
-                                        <p> Die Vorgärten, die auf die Gebäude zeigen, stellen die eingehenden Verbindungen dar.
-                                            Die anderen stehen für die ausgehenden Verbindungen.</p>
-                                        <p> Je dunkler bzw. grüner ein Vorgarten ist, umso mehr ausgehende oder eingehende Verbindungen
-                                            liegen vor.</p>
-                                        <p> Je dunkler die Straße bzw. die Linie ist, umso höher sind die Verbindungen von A
-                                            nach B.</p>
-                                    </div>
+                                        <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#demo">Erläuterung</button>
+                                        <div id="demo" class="collapse">
+                                            <div class="panel panel-primary">
+                                                <div class="panel-body">
+                                                    <p> Die Vorgärten, die auf die Gebäude zeigen, stellen die eingehenden Verbindungen dar.
+                                                        Die anderen stehen für die ausgehenden Verbindungen.</p>
+                                                    <p> Je dunkler bzw. grüner ein Vorgarten ist, umso mehr ausgehende oder eingehende Verbindungen
+                                                        liegen vor.</p>
+                                                    <p> Je dunkler die Straße bzw. die Linie ist, umso höher sind die Verbindungen von A
+                                                        nach B.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                     </div>
                                     <!-- Filterung der Verbindungen erstmal auskommentiert
                                     
                                     
