@@ -513,13 +513,20 @@
                                         </td>
                                     </tr>
                                 </table>
+                                <label class="radio-inline">
+                                    <input type="radio" ng-model="chosenView.scalingOption" value="min">Mit Minimum runter skalieren
+                                    <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Hier werden die Originalwerte benutzt. Kein Informationsverlust"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio"  ng-model="chosenView.scalingOption" value="avg">Mit Durchschnitt runter skalieren
+                                    <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Hier werden die Originalwerte komprimiert. Schönere Darstellng, eventuell Informationsverlust"></span>
+                                </label> 
                             </div>
                         </div>
                     </div>
                 </form>
 
                 <div>
-
                     <button type="button" class="btn btn-success btn-xs" ng-click="updateView();" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-ok"></span> Änderungen speichern</button>
                     <button type="button" class="btn btn-danger btn-xs" ng-click="discardChanges()" ng-show="dimform.$dirty"> <span class="glyphicon glyphicon-remove"></span> Änderungen verwerfen</button>
                     <button type="button" class="btn btn-primary btn-lg pull-right" ng-click="drawCity();" onclick="this.innerHTML='Stadt aktualisieren'; removeWebGLCanvasFromDomElement('Stadt')"
