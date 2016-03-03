@@ -1,17 +1,21 @@
 <div ng-app="datacityApp" ng-controller="MainCtrl" class="container">
 
     <!-- Fehlerausgabe, falls man nicht eingeloggt ist -->
+    <!--
     <div class="alert alert-danger" role="alert" ng-hide="loggedIn">
         <h3>Sie sind nicht eingeloggt!</h3>
         <p><a ng-href="#/login"><i class=" glyphicon glyphicon-chevron-right"></i> Login</a></p>
     </div>
+    -->
 
     <!-- Spinner um zu zeigen, dass geladen wird -->
-    <span us-spinner ng-show="loggedIn && loader"></span>
+    <!-- <span us-spinner ng-show="loggedIn && loader"></span> -->
+    <span us-spinner ng-show="loader"></span>
     
 
     <!-- Panel zur Anzeige der Datensätze -->
-    <div class="panel panel-primary" ng-show="loggedIn && !loader">
+    <!-- <div class="panel panel-primary" ng-show="loggedIn && !loader"> -->
+    <div class="panel panel-primary" ng-show="!loader">
         <div class="panel-heading">
             <h3 class="panel-title">{{getDatasOrData(numberOfCollections)}}</h3>
         </div>
@@ -51,7 +55,8 @@
       
         </div>
     </div>
-    <button type="button" class="btn btn-default pull-right" ng-click="getImportLink()" ng-show="loggedIn && !loader">
+    <!-- <button type="button" class="btn btn-default pull-right" ng-click="getImportLink()" ng-show="loggedIn && !loader"> -->
+    <button type="button" class="btn btn-default pull-right" ng-click="getImportLink()" ng-show="!loader">
         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> CSV-Datei importieren
     </button>
       

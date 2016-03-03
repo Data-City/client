@@ -2,13 +2,17 @@
     <!-- class="container"-->
 
     <!-- Fehlerausgabe, falls man nicht eingeloggt ist -->
+    <!--
     <div class="alert alert-danger" role="alert" ng-hide="loggedIn">
         <h3>Sie sind nicht eingeloggt!</h3>
     </div>
+    -->
 
-    <span us-spinner ng-show="loggedIn && loader"></span>
+    <!-- <span us-spinner ng-show="loggedIn && loader"></span> -->
+    <span us-spinner ng-show="loader"></span>
 
-    <div ng-show="loggedIn && !loader" id="collapseAll" class="panel-collapse collapse in">
+    <!-- <div ng-show="loggedIn && !loader" id="collapseAll" class="panel-collapse collapse in"> -->
+    <div ng-show="!loader" id="collapseAll" class="panel-collapse collapse in">
         <a ng-href="#/data"><i class=" glyphicon glyphicon-chevron-left"></i>Einen Datensatz auswählen</a>
         <div class="alert alert-danger" role="alert" ng-hide="collID">
             <h3>Kein Datensatz gewählt!</h3>
@@ -52,7 +56,8 @@
         </div>
         <br>
         <!-- Spinner um zu zeigen, dass geladen wird -->
-        <span us-spinner ng-show="loggedIn && loader"></span>
+        <!-- <span us-spinner ng-show="loggedIn && loader"></span> -->
+        <span us-spinner ng-show="loader"></span>
         <div class="panel panel-primary" id="dimensions" ng-show="chosenView">
             <div class="panel-heading">
                 <h4 class="panel-title">
