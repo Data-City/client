@@ -5,25 +5,63 @@
         <br></br>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Datensatz importieren</h3>
+                <h3>Datensatz importieren</h3>
             </div>
             <div class="panel-body">
                 <uploadformdatasourcefile></uploadformdatasourcefile>
-                <div class="container">
-                    <b>Datensatz:</b>
-                    <input id="csv-file" name="Datei" type="file" size="50" accept="csv/*">
-                    <br></br>
-                    <input type="checkbox" ng-model="withConnections"> mit Verbindungen</input>
-                    <br></br>
-                    <div ng-show="withConnections">
-                        <b>Verbindungen:(optional)</b>
-                    <input name="Verbindungsdatei" type="file" size="50" accept="csv/*">
-                    <br></br>
+                <h4>CSV-Datei mit Datensätzen</h4>
+                <div class="row">
+                    <div class="{{leftCol}}">
+                        <input id="csv-file" name="Datei" type="file" size="50" accept="csv/*">
                     </div>
-                    
-                    <p><i>Metadaten und Verbindungsdatei noch nicht implementiert!</i></p>
-                    <button type="button" class="btn btn-default" ng-click="startImport()">Datei(en) importieren</button>
+                    <div class="{{rightCol}}">
+                        Bitte wählen Sie die CSV-Datei mit den Datensätzen aus. Ein Datensatz bzw. die Aggregation von Datensätzen entspricht später
+                        den Häusern.
+                    </div>
                 </div>
+
+                <h4>Name der Collection</h4>
+                <div class="row">
+                    <div class="{{leftCol}}">
+                        <fieldset>
+                            <label>
+                                <input type="radio" ng-model="useFilenameAsColName" ng-value="true"> Name der CSV-Datei nutzen
+                            </label>
+                            <label>
+                                <input type="radio" ng-model="useFilenameAsColName" ng-value="false"> Namen angeben
+                            </label>
+                            <label>  
+                                <input id="colName" name="colName" type="text" name="input" ng-model="colName" ng-disabled="useFilenameAsColName" placeholder="Name" required>
+                            </label>
+                        </fieldset>
+                    </div>
+                    <div class="{{rightCol}}">
+                        Der Name einer Collection muss eindeutig sein und darf <b>keine Sonder- oder Leerzeichen</b> enthalten. Existierende Collections werden nicht überschrieben, sondern müssen zuvor
+                        in der Übersicht gelöscht werden.
+                    </div>
+                </div>
+
+                <h4>Verbindungen</h4>
+                <div class="row">
+                    <div class="{{leftCol}}">
+                        <fieldset>
+                            <label>
+                                <input type="checkbox" ng-model="withConnections"> Verbindungen nutzen
+                            </label>
+                            <label>  
+                                <input id="connections-csv-file" name="Verbindungsdatei" type="file" size="50" accept="csv/*" ng-disabled="!withConnections">
+                            </label>
+                        </fieldset>
+                    </div>
+                    <div class="{{rightCol}}">
+                        Wenn Sie Verbindungen nutzen wollen, können Sie hier die dazu notwendige CSV-Datei hochladen
+                    </div>
+                </div>
+                <br />
+                <button type="button" class="btn btn-default btn-lg pull-right" ng-click="startImport()">
+                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Import starten
+                    </button>
+
             </div>
         </div>
     </div>

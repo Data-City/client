@@ -18,8 +18,12 @@ angular.module('datacityApp')
 
         $scope.msg = "Eine mögliche Nachricht!";
         $scope.percentage = 0;
-
         $scope.loader = false;
+        
+        $scope.leftCol="col-sm-6";
+        $scope.rightCol="col-sm-6";
+        $scope.useFilenameAsColName=true;
+        
 
         $scope.startImport = function() {
             $scope.msg = "Lade Daten in Browser-Cache...";
