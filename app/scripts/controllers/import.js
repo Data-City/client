@@ -18,6 +18,7 @@ angular.module('datacityApp')
 
         $scope.msg = "Eine mögliche Nachricht!";
         $scope.percentage = 0;
+        $scope.numberOfDocs = 0;
         $scope.loader = false;
 
         $scope.leftCol = "col-sm-6";
@@ -26,41 +27,55 @@ angular.module('datacityApp')
         $scope.colName = "";
         $scope.withConnections = false;
 
+        var updateLoader = function(currentItem) {
+            $scope.percentage = Math.round((currentItem / $scope.numberOfDocs) * 100);
+        }
 
         $scope.startImport = function () {
             if (!settingsValid()) {
                 return false;
             }
 
-            $scope.msg = "Lade Daten in Browser-Cache...";
-            $scope.percentage = 10;
-            $scope.loader = true;
             var fileInput = document.getElementById('csv-file');
+
+            var collectionsName = $scope.useFilenameAsColName ? getFilename(fileInput) : $scope.colName;
+
+
+            parse(fileInput, function (parseObj) {
+                // Parsen erfolgreich?
+                if (parseObj.meta.aborted) {
+                    alert("Fehler beim Parsen!");
+                    return false;
+                }
+                $scope.msg = "Lade Datensätze hoch...";
+                $scope.percentage = 0;
+                $scope.numberOfDocs = parseObj.data.length;
+                
+                $scope.loader = true;
+                
+                REST.createCollection(collectionsName, parseObj.data,
+                    function(result) {
+                        $log.info(result);
+                        
+                    },
+                    function (error) {
+                        $log.error(error);
+                    }, updateLoader);
+            });
+                
+            /*
             filename = getFilename(fileInput);
             $log.info(filename);
-
+            
             $scope.msg = "Interpretiere Daten...";
             $scope.percentage = 20;
-            Papa.parse(fileInput.files[0], {
-                header: true,
-                dynamicTyping: true,
-                complete: function (obj) {
-                    uploadedObj = obj;
-                    $scope.msg = "Lade Daten auf Server...";
-                    $scope.percentage = 30;
-                    startUpload(function () {
-                        $scope.msg = "Fertig (Eigentlich müsste hier noch eine Menge passieren...)";
-                        $scope.percentage = 70;
-                        setTimeout(function () {
-                            $scope.loader = false;
-                        }, 2000);
-                    });
-                }
-            });
+            */
+
         };
 
         var settingsValid = function () {
             var pathToCsvFile = document.getElementById('csv-file').value;
+            var pathToConnectionsCsvFile = document.getElementById('connections-csv-file').value;
             // Wurde Datei Datensätzen ausgewählt?
             if (pathToCsvFile === "") {
                 alert("Bitte wählen Sie eine Datei mit Datensätzen aus!");
@@ -68,50 +83,53 @@ angular.module('datacityApp')
             }
 
             // Handelt es sich um eine CSV-Datei?
-            if (getFileExtension(pathToCsvFile) !== "csv") {
+            else if (getFileExtension(pathToCsvFile) !== "csv") {
                 alert("Bitte wählen Sie eine CSV-Datei aus!");
                 return false;
             }
             
             // Wurde "eigener Name" gewählt aber keiner angegeben?
-            if (!$scope.useFilenameAsColName && $scope.colName === "") {
+            else if (!$scope.useFilenameAsColName && $scope.colName === "") {
                 alert("Bitte geben Sie einen Namen ein oder nutzen Sie den Namen der CSV-Datei!");
                 return false;
             }
-            
-            var connectionsFilePath = document.getElementById('connections-csv-file').value;
             // Wurde Verbindungen nutzen gewählt, aber keine Datei gewählt?
-            if ($scope.withConnections && connectionsFilePath === "") {
+            else if ($scope.withConnections && pathToConnectionsCsvFile === "") {
                 alert("Bitte wählen Sie eine Datei mit Verbindungen aus oder deaktivieren Sie die Verbindungen!");
                 return false;
             }
-            
             // Ist die Verbindungsdatei keine CSV-Datei?
-            if (getFileExtension(connectionsFilePath) !== "csv") {
+            else if ($scope.withConnections && getFileExtension(pathToConnectionsCsvFile) !== "csv") {
                 alert("Die Verbindungsdatei muss eine CSV-Datei sein!");
                 return false;
+            } else {
+                // Jetzt müsste alles in Ordnung sein!
+                return true;
             }
-            
-            // Jetzt müsste alles in Ordnung sein!
-            return true;
+
         };
 
         var getFileExtension = function (path) {
             return path.substr(path.lastIndexOf('.') + 1);
         };
 
-        var startUpload = function (fn) {
-            REST.putOnCollection(db, filename, null, uploadedObj, function (result) {
-                $log.info(result);
-                if (fn) {
-                    fn();
-                }
-            });
-        };
 
         var getFilename = function (fileInput) {
             var path = fileInput.value;
             var filenameWithExtension = path.split(/(\\|\/)/g).pop();
             return filenameWithExtension.substr(0, filenameWithExtension.lastIndexOf('.')) || filenameWithExtension;
+        };
+        
+        /**
+         * Parst eine CSV-Datei und ruft anschließend die Callback-Funktion mit Obj auf
+         * 
+         * @param fileInput document.getElementById('id des Elements')
+         */
+        var parse = function (fileInput, callback) {
+            Papa.parse(fileInput.files[0], {
+                header: true,
+                dynamicTyping: true,
+                complete: callback
+            });
         };
     });

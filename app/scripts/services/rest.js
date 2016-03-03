@@ -8,7 +8,7 @@
  * Provider in the datacityApp.
  */
 angular.module('datacityApp')
-    .provider('REST', function() {
+    .provider('REST', function () {
         // Private
         var $http = null;
         var $log = null;
@@ -33,15 +33,15 @@ angular.module('datacityApp')
 
         var numberOfEntries = 0;
 
-        this.setUsername = function(user) {
+        this.setUsername = function (user) {
             username = user;
         };
 
-        this.setPassword = function(pw) {
+        this.setPassword = function (pw) {
             password = pw;
         };
 
-        var getAuthorizationHeader = function() {
+        var getAuthorizationHeader = function () {
             var pw = null;
             if (token) {
                 pw = token;
@@ -55,14 +55,14 @@ angular.module('datacityApp')
         /**
          * Setzt Benutzername + Passwort passend in den Auth-Header
          */
-        var setAuthHeader = function() {
+        var setAuthHeader = function () {
             $http.defaults.headers.common.Authorization = getAuthorizationHeader();
         };
 
         /**
          * Holt ein Dokument einer Collection
          */
-        this.getDocument = function(database, collection, oid, fn) {
+        this.getDocument = function (database, collection, oid, fn) {
             setAuthHeader();
             this.getData(fn, database, collection, oid);
         };
@@ -70,7 +70,7 @@ angular.module('datacityApp')
         /**
          * Holt alle Einträge einer Collection
          */
-        this.getDocuments = function(database, collection, fn) {
+        this.getDocuments = function (database, collection, fn) {
             setAuthHeader();
             this.getData(fn, database, collection, null);
         };
@@ -78,7 +78,7 @@ angular.module('datacityApp')
         /**
          * Holt alle Collections einer DB
          */
-        this.getCollections = function(database, fn) {
+        this.getCollections = function (database, fn) {
             setAuthHeader();
             this.getData(fn, database, null, null);
         };
@@ -86,7 +86,7 @@ angular.module('datacityApp')
         /**
          * Holt alle Datenbanken
          */
-        this.getDatabases = function(fn) {
+        this.getDatabases = function (fn) {
             setAuthHeader();
             this.getData(fn, null, null, null);
         };
@@ -94,7 +94,7 @@ angular.module('datacityApp')
         /**
          * Holt alle Ansichten zu einer Collection
          */
-        this.getViewsOfCollection = function(collection, fn) {
+        this.getViewsOfCollection = function (collection, fn) {
             setAuthHeader();
             var config = {
                 params: {
@@ -123,7 +123,7 @@ angular.module('datacityApp')
         /**
          * Erzeugt eine ganze URL zu einer Collection
          */
-        var createURL = function(database, collection) {
+        var createURL = function (database, collection) {
             return BASEURL + "/" + database + "/" + collection;
         };
 
@@ -132,7 +132,7 @@ angular.module('datacityApp')
          * 
          * db, collection und id können null sein
          */
-        this.getData = function(fn, db, collection, id) {
+        this.getData = function (fn, db, collection, id) {
             setAuthHeader();
             var url = BASEURL;
             if (db) {
@@ -146,7 +146,7 @@ angular.module('datacityApp')
             }
             //$log.info("Getting " + url);
             $http.get(url).then(
-                function(response) {
+                function (response) {
                     rest.setAuthToken(response);
                     fn(response);
                 },
@@ -159,10 +159,10 @@ angular.module('datacityApp')
         /**
          * Löscht eine Collection
          */
-        this.deleteCollection = function(db, collection, fn) {
+        this.deleteCollection = function (db, collection, fn) {
             // Die Collection löschen
-            this.getCurrentETag(db, collection, function(etag) {
-                rest.deleteData(function(r) {
+            this.getCurrentETag(db, collection, function (etag) {
+                rest.deleteData(function (r) {
                     //$log.info('Gelöscht:\t' + db + '/' + collection);
                     if (fn) {
                         fn(r);
@@ -171,7 +171,7 @@ angular.module('datacityApp')
             });
 
             //Die dazugehörigen Ansichten löschen 
-            this.getViewsOfCollection(collection, function(views) {
+            this.getViewsOfCollection(collection, function (views) {
                 for (var iteration in views) {
                     rest.deleteView(views[iteration], null);
                 }
@@ -183,7 +183,7 @@ angular.module('datacityApp')
          * 
          * db, collection und id können null sein
          */
-        this.deleteData = function(fn, etag, db, collection, id) {
+        this.deleteData = function (fn, etag, db, collection, id) {
             setAuthHeader();
             var config = {
                 headers: {
@@ -203,7 +203,7 @@ angular.module('datacityApp')
             }
             //$log.info("Getting " + url);
             $http.delete(url, config).then(
-                function(response) {
+                function (response) {
                     rest.setAuthToken(response);
                     fn(response);
                 },
@@ -214,13 +214,13 @@ angular.module('datacityApp')
         };
 
 
-        this.updateView = function(view, fn) {
+        this.updateView = function (view, fn) {
             //$log.info(view);
             setAuthHeader();
 
             var relUrl = ANSICHTEN + '/' + view._id;
 
-            rest.getCurrentETagForRelURL(relUrl, function(etag) {
+            rest.getCurrentETagForRelURL(relUrl, function (etag) {
                 var config = {
                     headers: {
                         "If-Match": etag
@@ -246,7 +246,7 @@ angular.module('datacityApp')
          * @param view Die Ansicht, die gelöscht werden soll
          * @param fn Funktion, die nach erfolgreichem Löschen aufgerufen wird
          */
-        this.deleteView = function(view, fn) {
+        this.deleteView = function (view, fn) {
             setAuthHeader();
             var config = {
                 headers: {
@@ -255,7 +255,7 @@ angular.module('datacityApp')
             };
             var url = BASEURL + ANSICHTEN + '/' + view._id;
 
-            $http.delete(url, config).then(function(response) {
+            $http.delete(url, config).then(function (response) {
                 rest.setAuthToken(response);
                 if (fn) {
                     fn(response);
@@ -268,7 +268,7 @@ angular.module('datacityApp')
         /**
          * Erzeugt eine neue Ansicht für eine gegebene Collection
          */
-        this.createView = function(view, collection, fn) {
+        this.createView = function (view, collection, fn) {
             setAuthHeader();
             var url = BASEURL + ANSICHTEN + '/' + view.timeOfCreation;
 
@@ -287,7 +287,7 @@ angular.module('datacityApp')
             this.createCollectionForView(view, collection, null);
         };
 
-        this.createCollectionForView = function(view, collection, fn) {
+        this.createCollectionForView = function (view, collection, fn) {
             setAuthHeader();
             var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + "_dc_data" + "_" + view.timeOfCreation;
             //var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + this.META_DATA_PART + "_" + view.timeOfCreation;
@@ -306,7 +306,7 @@ angular.module('datacityApp')
                 });
         };
 
-        this.createAggregation = function(database, collection, etag, params, fn) {
+        this.createAggregation = function (database, collection, etag, params, fn) {
             //$log.info("So far!");
             setAuthHeader();
             if (!params) {
@@ -337,7 +337,38 @@ angular.module('datacityApp')
                 });
         };
 
-        this.putOnCollection = function(database, collection, etag, params, fn) {
+        this.createCollection = function (collName, dataArray, succCallback, errCallback, updateLoader) {
+            rest.putOnCollection(DATABASEFORCOLLECTIONS, collName, null, {}, function (result) {
+                rest.getCurrentETag(DATABASEFORCOLLECTIONS, collName, function (etag) {
+                    var url = createURL(DATABASEFORCOLLECTIONS, collName);
+                    var config = {
+                        headers: {
+                            "If-Match": etag,
+                        }
+                    };
+                    var counter = 0;
+                    async.eachSeries(dataArray, function iteratee(item, callback) {
+                        $log.info(item);
+                        $http.post(url, item, config).then(function () {
+                            rest.getCurrentETag(DATABASEFORCOLLECTIONS, collName, function (newEtag) {
+                                config.headers["If-Match"] = newEtag;
+                                counter++;
+                                updateLoader(counter);
+                                callback();
+                            });
+                        }, errCallback);
+                    }, function done() {
+                        succCallback();
+                    });
+
+
+
+
+                });
+            });
+        };
+
+        this.putOnCollection = function (database, collection, etag, params, fn) {
             if (!params) {
                 return;
             }
@@ -364,7 +395,7 @@ angular.module('datacityApp')
         };
 
         //Holt beliebige URL ab Base URL, Beispiel /database/collection
-        this.getURL = function(relUrl, parameters, funcSucc, funcError) {
+        this.getURL = function (relUrl, parameters, funcSucc, funcError) {
             setAuthHeader();
             var req = {
                 method: 'GET',
@@ -378,9 +409,9 @@ angular.module('datacityApp')
         /**
          * Holt alle vorhandenen Aggregationen
          */
-        this.getAggregations = function(database, collection, fn) {
+        this.getAggregations = function (database, collection, fn) {
             this.getDocuments(database, collection,
-                function(response) {
+                function (response) {
                     if (response.data) {
                         fn(response.data.aggrs);
                     } else {
@@ -396,8 +427,8 @@ angular.module('datacityApp')
         /**
          * Besitzt die Collection Aggregationen?
          */
-        this.hasCollectionAggregations = function(database, collection, fn) {
-            this.getAggregations(database, collection, function(aggrs) {
+        this.hasCollectionAggregations = function (database, collection, fn) {
+            this.getAggregations(database, collection, function (aggrs) {
                 var hasAggregations = (aggrs) ? true : false;
                 fn(hasAggregations);
             });
@@ -406,10 +437,10 @@ angular.module('datacityApp')
         /**
          * Fügt eine Aggregation zu den bestehenden hinzu
          */
-        this.addAggregation = function(database, collection, aggr, fn) {
+        this.addAggregation = function (database, collection, aggr, fn) {
             //$log.info("Füge Aggregation hinzu: " + database + "\tcoll:" + collection);
-            rest.getCurrentETag(database, collection, function(etag) {
-                rest.createAggregation(database, collection, etag, aggr, function(r) {
+            rest.getCurrentETag(database, collection, function (etag) {
+                rest.createAggregation(database, collection, etag, aggr, function (r) {
                     fn(r);
                 });
             });
@@ -421,11 +452,11 @@ angular.module('datacityApp')
          * Beispiel:
          * /db/collection/_aggrs/AGGR.META_DATA_AGGR_URI
          */
-        this.callCollectionsMetaDataAggrURI = function(database, collection, fn) {
+        this.callCollectionsMetaDataAggrURI = function (database, collection, fn) {
             this.callCollectionAggr(database, collection, AGGR.META_DATA_AGGR_URI, fn);
         };
 
-        this.callCollectionAggr = function(database, collection, aggr, fn) {
+        this.callCollectionAggr = function (database, collection, aggr, fn) {
             setAuthHeader();
             //var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr + '?noauthchallenge';
             var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr;
@@ -444,18 +475,18 @@ angular.module('datacityApp')
                     $log.error('Adresse: ' + BASEURL + relUrl);
                     fn(response);
                 }
-            );
+                );
         };
 
         /**
          * Fügt einer Collection die Meta-Daten-Aggregation hinzu
          */
-        this.createMetaDataAggregation = function(database, collection, fn) {
+        this.createMetaDataAggregation = function (database, collection, fn) {
             setAuthHeader();
-            rest.getURL('/' + database + '/' + collection, null, function(resp) {
+            rest.getURL('/' + database + '/' + collection, null, function (resp) {
                 var attributesOfCollection = getAttributesWithType(resp.data._embedded['rh:doc']);
                 var aggr = AGGR.createMinMedMaxAggrParam(attributesOfCollection, collection);
-                rest.addAggregation(database, collection, aggr, function(response) {
+                rest.addAggregation(database, collection, aggr, function (response) {
                     fn(response);
                 });
             }, null);
@@ -472,13 +503,13 @@ angular.module('datacityApp')
          * ""	=>	null
          * true	=>	boolean
          */
-        var getType = function(thing) {
+        var getType = function (thing) {
             if (thing === null) {
                 return "null";
             } else if (thing === "") {
                 return "null";
             }
-            return typeof(thing);
+            return typeof (thing);
         };
 
 
@@ -513,7 +544,7 @@ angular.module('datacityApp')
          *	}
          * };
          */
-        var getAttributesWithType = function(data) {
+        var getAttributesWithType = function (data) {
             var firstEntry = data[0];
             var attrs = [];
             // Alle Attribute ermitteln, die nicht mit '_' beginnen
@@ -564,12 +595,12 @@ angular.module('datacityApp')
          * Garantiert, dass Meta-Daten einer Collection vorhanden sind und 
          * ruft die Funktion mit diesen auf
          */
-        this.ensureCollectionsMetaData = function(database, collection, fn) {
+        this.ensureCollectionsMetaData = function (database, collection, fn) {
             setAuthHeader();
             // Meta-Daten holen
             //$log.info('=======================================================================');
             //$log.info("Hole Meta-Data");
-            rest.getCollectionsMetaData(database, collection, function(metaData) {
+            rest.getCollectionsMetaData(database, collection, function (metaData) {
                 // Einfacher Fall: Meta-Daten vorhanden
                 if (metaData) {
                     //$log.info("Meta-Daten gefunden");
@@ -585,7 +616,7 @@ angular.module('datacityApp')
                         AGGR.META_DATA_AGGR_URI;
 
                     // Ja => Abrufen und Daten in collection speichern
-                    var funcSucc = function(respWithMetaData) {
+                    var funcSucc = function (respWithMetaData) {
                         //$log.info('Tabelle gefunden!');
                         //$log.info(respWithMetaData);
 
@@ -601,8 +632,8 @@ angular.module('datacityApp')
                                 'data': respWithMetaData.data._embedded['rh:doc'][0],
                                 'numberOfEntries': numberOfEntries,
                             };
-                            rest.getCurrentETag(database, collection, function(etag) {
-                                rest.putOnCollection(database, collection, etag, params, function(response) {
+                            rest.getCurrentETag(database, collection, function (etag) {
+                                rest.putOnCollection(database, collection, etag, params, function (response) {
                                     // REKURSION
                                     rest.ensureCollectionsMetaData(database, collection, fn);
                                 });
@@ -610,16 +641,16 @@ angular.module('datacityApp')
                         }
                     };
                     // Nein => Gibt es die nötige Aggregation?
-                    var funcError = function(resp) {
+                    var funcError = function (resp) {
                         //$log.info('Keine Tabelle gefunden. Hinweis: dadurch der 404-Fehler (;');
                         //$log.info('Gibt es die nötige Aggregation?');
                         // Gibt es eine Aggregation?
-                        rest.getAggregations(database, collection, function(aggrs) {
+                        rest.getAggregations(database, collection, function (aggrs) {
                             if (aggrs) {
                                 //$log.info('Das sind die vorhandenen Aggregationen:');
                                 //$log.info(aggrs);
                                 var metaDataAggrExists = false;
-                                aggrs.forEach(function(element) {
+                                aggrs.forEach(function (element) {
                                     if (element.uri === AGGR.META_DATA_AGGR_URI) {
                                         metaDataAggrExists = true;
                                     }
@@ -627,14 +658,14 @@ angular.module('datacityApp')
                                 // Ja, die nötige Aggregation ist da => Abrufen
                                 if (metaDataAggrExists) {
                                     //$log.info('MetaDaten-Aggregation gefunden');
-                                    rest.callCollectionsMetaDataAggrURI(database, collection, function(response) {
+                                    rest.callCollectionsMetaDataAggrURI(database, collection, function (response) {
                                         // REKURSION
                                         //$log.info(response);
                                         rest.ensureCollectionsMetaData(database, collection, fn);
                                     });
                                 } else {
                                     // Nein => Aggregation anlegen
-                                    rest.createMetaDataAggregation(database, collection, function(response) {
+                                    rest.createMetaDataAggregation(database, collection, function (response) {
                                         // REKURSION
                                         rest.ensureCollectionsMetaData(database, collection, fn);
                                     });
@@ -643,7 +674,7 @@ angular.module('datacityApp')
                             } else {
                                 //$log.info('Keine Aggregation gefunden => Anlegen!');
                                 // Aggregation anlegen
-                                rest.createMetaDataAggregation(database, collection, function(response) {
+                                rest.createMetaDataAggregation(database, collection, function (response) {
                                     // REKURSION
                                     rest.ensureCollectionsMetaData(database, collection, fn);
                                 });
@@ -659,8 +690,8 @@ angular.module('datacityApp')
         /**
          * Prüft, ob eine Collection Meta-Daten gespeichert hat
          */
-        this.hasCollectionMetaData = function(database, collection, fn) {
-            this.getCollectionsMetaData(database, collection, function(metaData) {
+        this.hasCollectionMetaData = function (database, collection, fn) {
+            this.getCollectionsMetaData(database, collection, function (metaData) {
                 var boolean = (metaData) ? true : false;
                 fn(boolean);
             });
@@ -671,10 +702,10 @@ angular.module('datacityApp')
          * 
          * null, falls nicht vorhanden
          */
-        this.getCollectionsMetaData = function(database, collection, fn) {
+        this.getCollectionsMetaData = function (database, collection, fn) {
             var relUrl = "/" + database + "/" + collection + this.META_DATA_PART + this.META_DATA_SUFFIX;
 
-            var funcSucc = function(response) {
+            var funcSucc = function (response) {
                 if (response.data && response.data._embedded) {
                     fn(response.data._embedded['rh:doc'][0]);
                 } else {
@@ -684,7 +715,7 @@ angular.module('datacityApp')
                 }
             };
 
-            var funcError = function(response) {
+            var funcError = function (response) {
                 $log.error("Fehler beim Holen der Meta Daten: " + relUrl);
                 $log.error(response);
             };
@@ -698,11 +729,11 @@ angular.module('datacityApp')
          * Nötig für _ALLE_ Änderungen an der Collection.
          * Siehe RESTHeart Doku
          */
-        this.getCurrentETag = function(database, collection, fn) {
+        this.getCurrentETag = function (database, collection, fn) {
             setAuthHeader();
             var url = createURL(database, collection);
             //$log.info("getCurrentETag URL: " + url);
-            $http.get(url).then(function(response) {
+            $http.get(url).then(function (response) {
                 fn(response.data._etag.$oid);
             });
         };
@@ -713,10 +744,10 @@ angular.module('datacityApp')
          * Nötig für _ALLE_ Änderungen
          * Siehe RESTHeart Doku
          */
-        this.getCurrentETagForRelURL = function(relUrl, fn) {
+        this.getCurrentETagForRelURL = function (relUrl, fn) {
             setAuthHeader();
 
-            $http.get(BASEURL + relUrl).then(function(response) {
+            $http.get(BASEURL + relUrl).then(function (response) {
                 fn(response.data._etag.$oid);
             });
         };
@@ -725,22 +756,22 @@ angular.module('datacityApp')
         /**
          * Speichert $http in Provider
          */
-        this.setHTTP = function(http) {
+        this.setHTTP = function (http) {
             $http = http;
         };
 
         /**
          * Speichert $log in Provider
          */
-        this.setLOG = function(log) {
+        this.setLOG = function (log) {
             $log = log;
         };
 
-        this.setAGGR = function(aggr) {
+        this.setAGGR = function (aggr) {
             AGGR = aggr;
         };
 
-        this.setSETTINGS = function(settings) {
+        this.setSETTINGS = function (settings) {
             SETTINGS = settings;
 
 
@@ -756,12 +787,12 @@ angular.module('datacityApp')
             this.AGGREGATION_SUFFIX = SETTINGS.aggregation_suffix;
         };
 
-        this.stackTrace = function() {
+        this.stackTrace = function () {
             var err = new Error();
             return err.stack;
         };
 
-        this.setAuthToken = function(response) {
+        this.setAuthToken = function (response) {
             if (response) {
                 var responseHeader = response.headers();
                 var authToken = responseHeader['auth-token'];
@@ -774,7 +805,7 @@ angular.module('datacityApp')
         /**
          * Instanziert Provider
          */
-        this.$get = function($http, $log, AGGR, SETTINGS) {
+        this.$get = function ($http, $log, AGGR, SETTINGS) {
             rest = this;
             this.setHTTP($http);
             this.setLOG($log);
