@@ -373,8 +373,8 @@ angular.module('datacityApp')
                             function (res) {
                                 var brokenDoc = res.data._embedded['rh:doc'][0];
                                 $log.info(brokenDoc);
-                                var etag = brokenDoc._etag['$oid'];
-                                var id = brokenDoc._id['$oid'];
+                                var etag = brokenDoc._etag.$oid;
+                                var id = brokenDoc._id.$oid;
                                 $log.info("ETAG: " + etag);
                                 $log.info("ID: " + id);
                                 rest.deleteDoc(DATABASEFORCOLLECTIONS, collName, id, etag,
