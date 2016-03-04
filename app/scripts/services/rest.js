@@ -348,6 +348,7 @@ angular.module('datacityApp')
             $http.delete(url, config).then(succ, err);
         };
 
+
         this.createCollection = function (collName, dataArray, succCallback, errCallback, updateLoader) {
             rest.putOnCollection(DATABASEFORCOLLECTIONS, collName, null, null, function (result) {
                 rest.getCurrentETag(DATABASEFORCOLLECTIONS, collName, function (etag) {
@@ -369,29 +370,7 @@ angular.module('datacityApp')
                             });
                         }, errCallback);
                     }, function done() {
-                        $http.get(url + '?pagesize=1').then(
-                            function (res) {
-                                var brokenDoc = res.data._embedded['rh:doc'][0];
-                                $log.info(brokenDoc);
-                                var etag = brokenDoc._etag.$oid;
-                                var id = brokenDoc._id.$oid;
-                                $log.info("ETAG: " + etag);
-                                $log.info("ID: " + id);
-                                rest.deleteDoc(DATABASEFORCOLLECTIONS, collName, id, etag,
-                                    function (result) {
-                                        $log.info("DELETE");
-                                        $log.info(result);
-                                        succCallback();
-                                    }, function err(error) {
-                                        $log.error(error);
-                                        errCallback();
-                                    });
-                            }, function (err) {
-                                errCallback();
-                            }
-                            );
-                        ///prelife/kleineTestdatei?pagesize=1
-                        
+                        succCallback();
                     });
                 });
             });
