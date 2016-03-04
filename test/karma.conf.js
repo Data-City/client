@@ -39,6 +39,7 @@ module.exports = function(config) {
       'bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js',
       'bower_components/angular-bootstrap-slider/slider.js',
       'bower_components/papaparse/papaparse.js',
+      'bower_components/async/lib/async.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
