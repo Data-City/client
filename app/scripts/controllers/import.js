@@ -20,6 +20,9 @@ angular.module('datacityApp')
         $scope.percentage = 0;
         $scope.numberOfDocs = 0;
         $scope.loader = false;
+        $scope.buttonMsg = 'Zum Datensatz';
+        $scope.buttonUrl = null;
+        $scope.finishMsg = "Import abgeschlossen.";
 
         $scope.leftCol = "col-sm-6";
         $scope.rightCol = "col-sm-6";
@@ -50,6 +53,9 @@ angular.module('datacityApp')
                 $scope.msg = "Lade Datensätze hoch...";
                 $scope.percentage = 0;
                 $scope.numberOfDocs = parseObj.data.length;
+                
+                $scope.buttonUrl = '/#/views/' + collectionsName;
+                $scope.finishMsg = "Datensatz " + collectionsName + " importiert!";
                 
                 $scope.loader = true;
                 
