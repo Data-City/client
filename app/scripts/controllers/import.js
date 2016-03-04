@@ -18,6 +18,7 @@ angular.module('datacityApp')
 
         $scope.msg = "Eine mögliche Nachricht!";
         $scope.percentage = 0;
+        $scope.importedDocs = 0;
         $scope.numberOfDocs = 0;
         $scope.loader = false;
         $scope.buttonMsg = 'Zum Datensatz';
@@ -30,8 +31,9 @@ angular.module('datacityApp')
         $scope.colName = "";
         $scope.withConnections = false;
 
-        var updateLoader = function(currentItem) {
-            $scope.percentage = Math.round((currentItem / $scope.numberOfDocs) * 100);
+        var updateLoader = function () {
+            $scope.importedDocs++;
+            $scope.percentage = Math.round(($scope.importedDocs / $scope.numberOfDocs) * 100);
         };
 
         $scope.startImport = function () {
@@ -43,6 +45,11 @@ angular.module('datacityApp')
 
             var collectionsName = $scope.useFilenameAsColName ? getFilename(fileInput) : $scope.colName;
 
+            $scope.msg = "Lade Datensätze hoch...";
+            $scope.buttonUrl = '/#/views/' + collectionsName;
+            $scope.finishMsg = "Datensatz " + collectionsName + " importiert!";
+            $scope.percentage = 0;
+            $scope.loader = true;
 
             parse(fileInput, function (parseObj) {
                 // Parsen erfolgreich?
@@ -50,19 +57,30 @@ angular.module('datacityApp')
                     alert("Fehler beim Parsen!");
                     return false;
                 }
-                $scope.msg = "Lade Datensätze hoch...";
-                $scope.percentage = 0;
                 $scope.numberOfDocs = parseObj.data.length;
-                
-                $scope.buttonUrl = '/#/views/' + collectionsName;
-                $scope.finishMsg = "Datensatz " + collectionsName + " importiert!";
-                
-                $scope.loader = true;
-                
+
                 REST.createCollection(collectionsName, parseObj.data,
-                    function(result) {
-                        $log.info(result);
-                        
+                    function (result) {
+
+                        if ($scope.withConnections) {
+                            $scope.msg = "Lade Verbindungsdaten hoch...";
+                            $scope.percentage = 0;
+                            parse(document.getElementById('connections-csv-file'), function (connParseObj) {
+                                // Parsen erfolgreich?
+                                if (connParseObj.meta.aborted) {
+                                    alert("Fehler beim Parsen der Verbindungsdatei!");
+                                    return false;
+                                }
+                                $scope.numberOfDocs = connParseObj.data.length;
+                                //_dc_connections_tmp
+                                var connectionsCol = collectionsName + SETTINGS.meta_data_part + SETTINGS.TMP_CONNECTIONS;
+                                REST.createCollection(connectionsCol, connParseObj.data, function success(result) {
+                                }, function err(error) {
+                                    $log.error(error);
+                                }, updateLoader);
+
+                            });
+                        }
                     },
                     function (error) {
                         $log.error(error);

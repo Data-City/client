@@ -36,7 +36,7 @@
                         <input type="checkbox" ng-model="withConnections"> Verbindungen nutzen
                     </label>
                     <br />
-                    <input id="connections-csv-file" name="Verbindungsdatei" type="file" size="50" accept="csv/*" ng-disabled="!withConnections">
+                    <input id="connections-csv-file" name="Verbindungsdatei" type="file" size="50" accept=".csv" ng-disabled="!withConnections">
                 </fieldset>
                 <br />
                 <button type="button" class="btn btn-default btn-lg pull-right" ng-click="startImport()">

@@ -28,6 +28,7 @@ angular.module('datacityApp')
         meta_data_suffix: 'maxminavg',
         aggregation_suffix: 'aggregation',
         data_suffix: 'data',
+        TMP_CONNECTIONS: 'connections_tmp',
     });
 
 /*

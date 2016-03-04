@@ -358,14 +358,12 @@ angular.module('datacityApp')
                             "If-Match": etag,
                         }
                     };
-                    var counter = 0;
                     async.eachSeries(dataArray, function iteratee(item, callback) {
                         //$log.info(item);
                         $http.post(url, item, config).then(function () {
                             rest.getCurrentETag(DATABASEFORCOLLECTIONS, collName, function (newEtag) {
                                 config.headers["If-Match"] = newEtag;
-                                counter++;
-                                updateLoader(counter);
+                                updateLoader();
                                 callback();
                             });
                         }, errCallback);
