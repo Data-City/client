@@ -617,12 +617,14 @@ function getDrawnDimValue(aBuilding, dimString) {
             console.log("Erwartet wurde eine Zahl. Bekommen habe ich: " + aBuilding[association[dimString]]);
         }
         if (metaData[scalingOption + "_" + association[dimString]] > 2) {
-            toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData[scalingOption + "_" + association[dimString]]) + 1.5;
+            //toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData[scalingOption + "_" + association[dimString]]) + 1.5;
+            toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData[scalingOption + "_" + association[dimString]]);
         } else {
-            toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
+            //toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
+            toReturn = parseFloat(aBuilding[association[dimString]]);
         }
     } else {
-        toReturn = 1.5;
+        toReturn = 1 / parseFloat(metaData[scalingOption + "_" + association[dimString]]);
     }
     return toReturn;
 }

@@ -531,7 +531,7 @@ function linearizeExtrema(aString) {
  * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
  */
 function scaleLogarithmically(aDistrict, aString) {
-    return (Math.log(aDistrict["_" + aString]) / Math.log(2));
+    return (Math.log(aDistrict["_" + aString] + 1) / Math.log(2));
 }
 
 
