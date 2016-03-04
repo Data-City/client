@@ -18,7 +18,7 @@ angular.module('datacityApp')
             '</div>' +
             '</div>' +
             '<div class="alert alert-success" role="alert" ng-show="percentage >= 100"><strong>Fertig!</strong> {{finishMsg}}</div>' +
-            '<a href="{{buttonUrl}}" class="btn btn-default pull-right" aria-label="Left Align">' +
+            '<a href="{{buttonUrl}}" class="btn btn-default pull-right" aria-label="Left Align" ng-show="percentage >= 100">' +
             '{{buttonMsg}}' +
             '</a>' +
             '</div>' +
