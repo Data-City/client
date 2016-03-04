@@ -10,60 +10,42 @@
             <div class="panel-body">
                 <uploadformdatasourcefile></uploadformdatasourcefile>
                 <h4>CSV-Datei mit Datensätzen</h4>
-                <div class="row">
-                    <div class="{{leftCol}}">
-                        <input id="csv-file" name="Datei" type="file" size="50" accept=".csv">
-                    </div>
-                    <div class="{{rightCol}}">
-                        Bitte wählen Sie die CSV-Datei mit den Datensätzen aus. Ein Datensatz bzw. die Aggregation von Datensätzen entspricht später
-                        den Häusern.
-                    </div>
-                </div>
-
-                <h4>Name der Collection</h4>
-                <div class="row">
-                    <div class="{{leftCol}}">
-                        <fieldset>
-                            <label>
-                                <input type="radio" ng-model="useFilenameAsColName" ng-value="true"> Name der CSV-Datei nutzen
-                            </label>
-                            <label>
-                                <input type="radio" ng-model="useFilenameAsColName" ng-value="false"> Namen angeben
-                            </label>
-                            <label>  
-                                <input id="colName" name="colName" type="text" name="input" ng-model="colName" ng-disabled="useFilenameAsColName" placeholder="Name" required>
-                            </label>
-                        </fieldset>
-                    </div>
-                    <div class="{{rightCol}}">
-                        Der Name einer Collection muss eindeutig sein und darf <b>keine Sonder- oder Leerzeichen</b> enthalten. Existierende Collections werden nicht überschrieben, sondern müssen zuvor
-                        in der Übersicht gelöscht werden.
-                    </div>
-                </div>
-
+                <p>Bitte wählen Sie die CSV-Datei mit den Datensätzen aus. Ein Datensatz bzw. die Aggregation von Datensätzen
+                    entspricht später den Häusern.</p>
+                <input id="csv-file" name="Datei" type="file" size="50" accept=".csv">
+                <br />
+                <h4>Name der Collection</h4> Der Name einer Collection muss eindeutig sein und darf <b>keine Sonder- oder Leerzeichen</b> enthalten.
+                Existierende Collections werden nicht überschrieben, sondern müssen zuvor in der Übersicht gelöscht werden.
+                <fieldset>
+                    <label>
+                        <input type="radio" ng-model="useFilenameAsColName" ng-value="true"> Name der CSV-Datei nutzen
+                    </label>
+                    <br />
+                    <label>
+                        <input type="radio" ng-model="useFilenameAsColName" ng-value="false"> Namen angeben:
+                    </label>
+                    <label>
+                        <input id="colName" name="colName" type="text" name="input" ng-model="colName" ng-disabled="useFilenameAsColName" required>
+                    </label>
+                </fieldset>
+                <br />
                 <h4>Verbindungen</h4>
-                <div class="row">
-                    <div class="{{leftCol}}">
-                        <fieldset>
-                            <label>
-                                <input type="checkbox" ng-model="withConnections"> Verbindungen nutzen
-                            </label>
-                            <label>  
-                                <input id="connections-csv-file" name="Verbindungsdatei" type="file" size="50" accept="csv/*" ng-disabled="!withConnections">
-                            </label>
-                        </fieldset>
-                    </div>
-                    <div class="{{rightCol}}">
-                        Wenn Sie Verbindungen nutzen wollen, können Sie hier die dazu notwendige CSV-Datei hochladen
-                    </div>
-                </div>
+                <p>Wenn Sie Verbindungen nutzen wollen, können Sie hier die dazu notwendige CSV-Datei hochladen</p>
+                <fieldset>
+                    <label>
+                        <input type="checkbox" ng-model="withConnections"> Verbindungen nutzen
+                    </label>
+                    <br />
+                    <input id="connections-csv-file" name="Verbindungsdatei" type="file" size="50" accept="csv/*" ng-disabled="!withConnections">
+                </fieldset>
                 <br />
                 <button type="button" class="btn btn-default btn-lg pull-right" ng-click="startImport()">
                     <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Import starten
-                    </button>
+                </button>
 
             </div>
         </div>
     </div>
-    <loadingpanel percentage={{percentage}} msg={{msg}} buttonurl={{buttonUrl}} buttonMsg={{buttonMsg}} finishmsg={{finishMsg}} ng-show="loader"></loadingpanel>
+    <loadingpanel percentage={{percentage}} msg={{msg}} buttonurl={{buttonUrl}} buttonMsg={{buttonMsg}} finishmsg={{finishMsg}}
+    ng-show="loader"></loadingpanel>
 </div>
