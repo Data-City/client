@@ -135,6 +135,7 @@ angular.module('datacityApp')
             Papa.parse(fileInput.files[0], {
                 header: true,
                 dynamicTyping: true,
+                skipEmptyLines: true,
                 complete: callback
             });
         };
