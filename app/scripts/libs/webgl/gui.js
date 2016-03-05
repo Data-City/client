@@ -283,7 +283,7 @@ function addCityToScene(mainDistrict, scene, camera) {
         addEachDistrict(buildings[i], scene, extrema, 0, boxGeom, gardenGeom, myGeometry, matrix, quaternion, color);
     }
     //Den Boden ganz unten verschieben wir noch ein kleines bisschen nach unten und danach zeichnen wir den auch noch
-    mainDistrict._centerPosition[1] = -1.5;
+    mainDistrict._centerPosition[1] = -getDistrictHeight()/2;
     addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, boxGeom, myGeometry, matrix, quaternion);
     setCameraPos(camera, mainDistrict, extrema);
 
