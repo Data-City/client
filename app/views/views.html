@@ -103,7 +103,7 @@
 
                 <!-- SCHRITT 1 - Daten reduzieren -->
                 <form name="dimform" id="dimform">
-                    <div class="panel panel-default">
+                    <div class="panel panel-success">
                         <div class="panel-heading" ng-click="showStep1 = true; showStep2 = false; showStep3 = false; showStep4 = false; showStep5 = false;">
                             <span class="panel-title">1. Daten reduzieren (SELECT... FROM... WHERE)</span>
                             <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep1" aria-hidden="true"></span>
@@ -183,7 +183,7 @@
                         </div>
                         <br>
                         <!-- SCHRITT 2 - Verbindungen -->
-                        <div class="panel panel-default">
+                        <div class="panel panel-success">
                             <div class="panel-heading" ng-click="showStep1 = false; showStep2 = true; showStep3 = false; showStep4 = false; showStep5 = false;">
                                 <span class="panel-title">2. Verbindungen</span>
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep2" aria-hidden="true"></span>
@@ -294,7 +294,7 @@
                             <div class="alert alert-warning" ng-show="showStep2 && !chosenView.metaData.connectionsAvailable">Da es keine Verbindungen gibt, kann man keine auswählen</div>
                         </div>
                         <!-- SCHRITT 3 - Daten aggregieren -->
-                        <div class="panel panel-default">
+                        <div class="panel panel-success">
                             <div class="panel-heading" ng-click="showStep1 = false; showStep2 = false; showStep3 = true; showStep4 = false; showStep5 = false;">
                                 <span class="panel-title">3. Daten aggregieren (GROUP BY)</span>
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep3" aria-hidden="true"></span>
@@ -371,7 +371,7 @@
                             </div>
                         </div>
                         <!-- SCHRITT 4 - Blöcke bilden -->
-                        <div class="panel panel-default">
+                        <div class="panel panel-success">
                             <div class="panel-heading" ng-click="showStep1 = false; showStep2 = false; showStep3 = false; showStep4 = true; showStep5 = false;">
                                 <span class="panel-title">4. Blöcke definieren (ORDER BY)</span>
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
@@ -428,7 +428,7 @@
                         </div>
 
                         <!-- SCHRITT 5 - Dimensionen bestimmen -->
-                        <div class="panel panel-default">
+                        <div class="panel panel-success">
                             <div class="panel-heading" ng-click="showStep1 = false; showStep2 = false; showStep3 = false; showStep4 = false; showStep5 = true;">
                                 <span class="panel-title">5. Dimensionen der Gebäude definieren</span>
                                 <span class="glyphicon glyphicon-chevron-up pull-right" ng-show="showStep4" aria-hidden="true"></span>
