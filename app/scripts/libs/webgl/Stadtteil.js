@@ -613,22 +613,22 @@ function sortBuildings(aDistrict, namePrefix) {
 function getDrawnDimValue(aBuilding, dimString) {
     var toReturn;
    
-    var building = aBuilding[association[dimString]];
+    var buildingDimension = aBuilding[association[dimString]];
     var scalingString = metaData[scalingOption + "_" + association[dimString]]; //z.B. "min_ID"
     
-    if (building != undefined && building != "" && building != 0) {
+    if (buildingDimension != undefined && buildingDimension != "" && buildingDimension != 0) {
         /* Wird hoffentlich nicht mehr benötigt, da nur Zahlen übergeben werden
         if (isNaN(parseFloat(aBuilding[association[dimString]]))) {
-            console.log("Erwartet wurde eine Zahl. Bekommen habe ich: " + building);
+            console.log("Erwartet wurde eine Zahl. Bekommen habe ich: " + buildingDimension);
             return;
         }
         */
         if (scalingString > 2) {
             //toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData[scalingOption + "_" + association[dimString]]) + 1.5;
-            toReturn = parseFloat(building) / parseFloat(scalingString);
+            toReturn = parseFloat(buildingDimension) / parseFloat(scalingString);
         } else {
             //toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
-            toReturn = parseFloat(building);
+            toReturn = parseFloat(buildingDimension);
         }
     } else {
         // Wenn die Dimension undefined ist oder die Größe 0 hat, dann den minimalsten Wert aller Gebäude ansetzen
