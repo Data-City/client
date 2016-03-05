@@ -8,7 +8,7 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-    .controller('ImportCtrl', function ($scope, $routeParams, sharedLogin, $log, REST, SETTINGS) {
+    .controller('ImportCtrl', function($scope, $routeParams, sharedLogin, $log, REST, SETTINGS) {
 
         var uploadedObj = null;
         var filename = null;
@@ -31,12 +31,12 @@ angular.module('datacityApp')
         $scope.colName = "";
         $scope.withConnections = false;
 
-        var updateLoader = function () {
+        var updateLoader = function() {
             $scope.importedDocs++;
             $scope.percentage = Math.round(($scope.importedDocs / $scope.numberOfDocs) * 100);
         };
 
-        $scope.startImport = function () {
+        $scope.startImport = function() {
             if (!settingsValid()) {
                 return false;
             }
@@ -51,7 +51,7 @@ angular.module('datacityApp')
             $scope.percentage = 0;
             $scope.loader = true;
 
-            parse(fileInput, function (parseObj) {
+            parse(fileInput, function(parseObj) {
                 // Parsen erfolgreich?
                 if (parseObj.meta.aborted) {
                     alert("Fehler beim Parsen!");
@@ -60,12 +60,12 @@ angular.module('datacityApp')
                 $scope.numberOfDocs = parseObj.data.length;
 
                 REST.createCollection(collectionsName, parseObj.data,
-                    function (result) {
+                    function(result) {
 
                         if ($scope.withConnections) {
                             $scope.msg = "Lade Verbindungsdaten hoch...";
                             $scope.percentage = 0;
-                            parse(document.getElementById('connections-csv-file'), function (connParseObj) {
+                            parse(document.getElementById('connections-csv-file'), function(connParseObj) {
                                 // Parsen erfolgreich?
                                 if (connParseObj.meta.aborted) {
                                     alert("Fehler beim Parsen der Verbindungsdatei!");
@@ -74,19 +74,18 @@ angular.module('datacityApp')
                                 $scope.numberOfDocs = connParseObj.data.length;
                                 //_dc_connections_tmp
                                 var connectionsCol = collectionsName + SETTINGS.meta_data_part + SETTINGS.TMP_CONNECTIONS;
-                                REST.createCollection(connectionsCol, connParseObj.data, function success(result) {
-                                }, function err(error) {
+                                REST.createCollection(connectionsCol, connParseObj.data, function success(result) {}, function err(error) {
                                     $log.error(error);
                                 }, updateLoader);
 
                             });
                         }
                     },
-                    function (error) {
+                    function(error) {
                         $log.error(error);
                     }, updateLoader);
             });
-                
+
             /*
             filename = getFilename(fileInput);
             $log.info(filename);
@@ -97,7 +96,7 @@ angular.module('datacityApp')
 
         };
 
-        var settingsValid = function () {
+        var settingsValid = function() {
             var pathToCsvFile = document.getElementById('csv-file').value;
             var pathToConnectionsCsvFile = document.getElementById('connections-csv-file').value;
             // Wurde Datei Datensätzen ausgewählt?
@@ -111,7 +110,7 @@ angular.module('datacityApp')
                 alert("Bitte wählen Sie eine CSV-Datei aus!");
                 return false;
             }
-            
+
             // Wurde "eigener Name" gewählt aber keiner angegeben?
             else if (!$scope.useFilenameAsColName && $scope.colName === "") {
                 alert("Bitte geben Sie einen Namen ein oder nutzen Sie den Namen der CSV-Datei!");
@@ -133,23 +132,23 @@ angular.module('datacityApp')
 
         };
 
-        var getFileExtension = function (path) {
+        var getFileExtension = function(path) {
             return path.substr(path.lastIndexOf('.') + 1);
         };
 
 
-        var getFilename = function (fileInput) {
+        var getFilename = function(fileInput) {
             var path = fileInput.value;
             var filenameWithExtension = path.split(/(\\|\/)/g).pop();
             return filenameWithExtension.substr(0, filenameWithExtension.lastIndexOf('.')) || filenameWithExtension;
         };
-        
+
         /**
          * Parst eine CSV-Datei und ruft anschließend die Callback-Funktion mit Obj auf
          * 
          * @param fileInput document.getElementById('id des Elements')
          */
-        var parse = function (fileInput, callback) {
+        var parse = function(fileInput, callback) {
             Papa.parse(fileInput.files[0], {
                 header: true,
                 dynamicTyping: true,

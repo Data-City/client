@@ -57,7 +57,7 @@ angular.module('datacityApp')
                 field: null,
                 attrs: {}
             };
-            this.scalingOption="min"; // Standard
+            this.scalingOption = "min"; // Standard
         }
 
         $scope.resetAggregationOps = function() {
@@ -250,10 +250,10 @@ angular.module('datacityApp')
                 window.alert("Schritt 5: \nEs wurden eine oder mehr Dimensionen nicht ausgewählt!\n(Gegebenenfalls wurde in Schritt 1 zu viel heraus gefiltert)");
                 return false;
             }
-            
+
             if (!view.scalingOption) {
                 window.alert("Schritt 5: \nEs wurde keine Skalierungsart ausgewählt!");
-                return false;    
+                return false;
             }
 
             // Spinner anzeigen
