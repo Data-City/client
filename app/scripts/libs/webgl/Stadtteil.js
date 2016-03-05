@@ -612,23 +612,30 @@ function sortBuildings(aDistrict, namePrefix) {
  */
 function getDrawnDimValue(aBuilding, dimString) {
     var toReturn;
-    if (aBuilding[association[dimString]] != undefined && aBuilding[association[dimString]] != "") {
+   
+    var building = aBuilding[association[dimString]];
+    var scalingString = metaData[scalingOption + "_" + association[dimString]]; //z.B. "min_ID"
+    
+    if (building != undefined && building != "" && building != 0) {
+        /* Wird hoffentlich nicht mehr benötigt, da nur Zahlen übergeben werden
         if (isNaN(parseFloat(aBuilding[association[dimString]]))) {
-            console.log("Erwartet wurde eine Zahl. Bekommen habe ich: " + aBuilding[association[dimString]]);
+            console.log("Erwartet wurde eine Zahl. Bekommen habe ich: " + building);
+            return;
         }
-        if (metaData[scalingOption + "_" + association[dimString]] > 2) {
+        */
+        if (scalingString > 2) {
             //toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData[scalingOption + "_" + association[dimString]]) + 1.5;
-            toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData[scalingOption + "_" + association[dimString]]);
+            toReturn = parseFloat(building) / parseFloat(scalingString);
         } else {
             //toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
-            toReturn = parseFloat(aBuilding[association[dimString]]);
+            toReturn = parseFloat(building);
         }
     } else {
-        toReturn = 1 / parseFloat(metaData[scalingOption + "_" + association[dimString]]);
+        // Wenn die Dimension undefined ist oder die Größe 0 hat, dann den minimalsten Wert aller Gebäude ansetzen
+        toReturn = parseFloat(metaData["min_" + association[dimString]]) / parseFloat(scalingString);
     }
     return toReturn;
 }
-
 
 /*
  * Methode zur Initialisierung des Districts bzw. des Gebaeudes
