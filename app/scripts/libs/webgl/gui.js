@@ -365,9 +365,10 @@ function addBoxes(aColor, aBuilding, boxGeom, myGeometry, matrix, quaternion) {
     myGeometry.merge(boxGeom, matrix);
 
     var length = myGeometry.faces.length;
+    var nameOfDimension = aBuilding[association.name];
     for (var i = length - 1; i >= length - 12; i--) {
         face = myGeometry.faces[i];
-        face.building = aBuilding[association.name];
+        face.building = nameOfDimension;
         aBuilding._faces.push(face);
     }
 }
