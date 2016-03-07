@@ -81,3 +81,12 @@ body {
     border-bottom: 0;
   }
 }
+
+/* Symbole für Sortierung */
+.sortorder:after {
+  content: '\25b2';
+}
+.sortorder.reverse:after {
+  content: '\25bc';
+}
+/* ENDE SORTIERUNG */

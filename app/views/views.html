@@ -30,14 +30,14 @@
             <div class="panel-body">
                 <table class="table">
                     <tr>
-                        <th>Name</th>
-                        <th>Datensatz</th>
+                        <th><a  ng-click="order('name')">Name </a><span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span></th>
+                        <th><a  ng-click="order('collID')">Datensatz </a><span class="sortorder" ng-show="predicate === 'collID'" ng-class="{reverse:reverse}"></span></th>
                         <!--<th>Erstellt von</th> -->
-                        <th>Erstellt am</th>
+                        <th><a  ng-click="order('timeOfCreation')">Erstellt </a><span class="sortorder" ng-show="predicate === 'timeOfCreation'" ng-class="{reverse:reverse}"></span></th>
                         <!--<th>Geändert von</th> -->
-                        <th>Geändert am</th>
+                        <th><a  ng-click="order('timeOfLastModification')">Geändert </a><span class="sortorder" ng-show="predicate === 'timeOfLastModification'" ng-class="{reverse:reverse}"></span></th>
                     </tr>
-                    <tr ng-repeat="view in views | filter:collID:true" ng-click="setChosenView(view);">
+                    <tr ng-repeat="view in views | filter:collID:true | orderBy:predicate:reverse" ng-click="setChosenView(view);">
                         <td>{{view.name}}</td>
                         <td>{{view.collID}}</td>
                         <!-- <td>{{view.creator}}</td> -->
