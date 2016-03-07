@@ -578,7 +578,9 @@ function scaleAll(aString, scalingMethod) {
             hashMap[x]["_" + aString] = scalingMethod(hashMap[x], aString);
         }
     }
-	if(aString=="height") setDistrictHeight(scalingMethod({_height: getDistrictHeight()}, "height"));
+    if (aString == "height") setDistrictHeight(scalingMethod({
+        _height: getDistrictHeight()
+    }, "height"));
 }
 
 /**

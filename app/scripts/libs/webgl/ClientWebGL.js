@@ -106,7 +106,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
 function setAndDrawCity(mainDistrict, scaling, scalingString, scalingExtrema) {
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
-    shiftBack(mainDistrict, {}, {}, (-1)*getDistrictHeight()/2);
+    shiftBack(mainDistrict, {}, {}, (-1) * getDistrictHeight() / 2);
     if (usingConnections) setGraph();
 
     if (scaling) {

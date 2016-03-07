@@ -23,10 +23,10 @@ var districtHeight; //Hoehe von einem Boden
 var metaData; //Objekt, das max, min-Werte enthaelt, die uebergeben worden sind
 
 /**
-* Setter fuer districtHeight
-* @param: newHeight: die neue Hoehe von dem Boden
-*/
-function setDistrictHeight(newHeight){
+ * Setter fuer districtHeight
+ * @param: newHeight: die neue Hoehe von dem Boden
+ */
+function setDistrictHeight(newHeight) {
     districtHeight = newHeight;
 }
 
@@ -34,7 +34,7 @@ function setDistrictHeight(newHeight){
 Getter fuer districtHeight
 *@return: districtHeight: Hoehe von dem Boden
 */
-function getDistrictHeight(){
+function getDistrictHeight() {
     return districtHeight;
 }
 
@@ -242,7 +242,7 @@ function addANode(aJSON, theKey, theValue, aDistrict, belongsToBuilding) {
  */
 function setPath(vertices, start, target) {
     if (start._district == target._district) {
-        setPathOnOneDistrict(vertices, start.nodeID, target.nodeID, start._centerPosition[1] - (start._height / 2) + districtHeight/2 + 0.1);
+        setPathOnOneDistrict(vertices, start.nodeID, target.nodeID, start._centerPosition[1] - (start._height / 2) + districtHeight / 2 + 0.1);
     } else {
         var startDistricts = (start._district).split(".");
         var targetDistricts = (target._district).split(".");
@@ -254,7 +254,7 @@ function setPath(vertices, start, target) {
         var currentDistrict = buildingsHashMap[nameOfTargetDistrict];
 
         currentDistrict = addPathFromLowerToUpperDistrict(nameOfTargetDistrict, targetDistricts, k, vertices, currentDistrict, height);
-        height = currentDistrict._centerPosition[1] + currentDistrict._height / 2 + districtHeight/2 + 0.1;
+        height = currentDistrict._centerPosition[1] + currentDistrict._height / 2 + districtHeight / 2 + 0.1;
 
         lastStepInCreatingPath(targetDistricts, vertices, currentDistrict, target, height, k);
     }
@@ -272,14 +272,14 @@ function addPathFromUpperToLowerDistrict(start, vertices, startDistricts, k) {
     var currentDistrict = buildingsHashMap[start._district]; //ein Districtobjekt
     var startingNode = nodeHashMap[start.nodeID]; //ein Knotenobjekt
     var endingNode = nodeHashMap[currentDistrict.exitNodeID]; //ein Knotenobjekt
-    var height = start._centerPosition[1] - (start._height / 2) + districtHeight/2 + 0.1;
+    var height = start._centerPosition[1] - (start._height / 2) + districtHeight / 2 + 0.1;
     vertices.push(new THREE.Vector3(start._centerPosition[0], height, start._centerPosition[2]));
     for (var i = 0; i < startDistricts.length - 1 - k; i++) {
         setPathOnOneDistrict(vertices, startingNode.id, endingNode.id, height);
         vertices.push(
             new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2] + currentDistrict._width / 2 + 0.1)
         );
-        height = currentDistrict._centerPosition[1] - (currentDistrict._height / 2) + districtHeight/2 + 0.1;
+        height = currentDistrict._centerPosition[1] - (currentDistrict._height / 2) + districtHeight / 2 + 0.1;
         vertices.push(
             new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2] + currentDistrict._width / 2 + 0.1)
         );
@@ -335,7 +335,7 @@ function addPathBetweenDistrictsOnTheSameDistrict(startDistricts, targetDistrict
 function addPathFromLowerToUpperDistrict(nameOfTargetDistrict, targetDistricts, k, vertices, currentDistrict, height) {
     var localNameOfTargetDistrict = nameOfTargetDistrict + targetDistricts[k + 1] + ".";
     vertices.push(new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2] + currentDistrict._width / 2 + 0.1));
-    height = currentDistrict._centerPosition[1] + currentDistrict._height / 2 + districtHeight/2 + 0.1;
+    height = currentDistrict._centerPosition[1] + currentDistrict._height / 2 + districtHeight / 2 + 0.1;
     vertices.push(new THREE.Vector3(currentDistrict._centerPosition[0], height, currentDistrict._centerPosition[2] + currentDistrict._width / 2 + 0.1));
     var localDistrict = currentDistrict
 
@@ -346,7 +346,7 @@ function addPathFromLowerToUpperDistrict(nameOfTargetDistrict, targetDistricts, 
         localNameOfTargetDistrict = localNameOfTargetDistrict + targetDistricts[i] + ".";
 
         vertices.push(new THREE.Vector3(localDistrict._centerPosition[0], height, localDistrict._centerPosition[2] + localDistrict._width / 2 + 0.1));
-        height = localDistrict._centerPosition[1] + localDistrict._height / 2 + districtHeight/2 + 0.1;
+        height = localDistrict._centerPosition[1] + localDistrict._height / 2 + districtHeight / 2 + 0.1;
         vertices.push(new THREE.Vector3(localDistrict._centerPosition[0], height, localDistrict._centerPosition[2] + localDistrict._width / 2 + 0.1));
     }
     return localDistrict;
@@ -509,7 +509,7 @@ function setGardenPos(aBuilding) {
 
     if (right) {
         right._centerPosition[0] = cP[0] + right._width / 2 - right.radius / 2;
-        right._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight/2 + 0.01;
+        right._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight / 2 + 0.01;
         right._centerPosition[2] = cP[2] + 1 + right.radius + aBuilding._width / 2;
 
         right.nextLinePos[0] = right._centerPosition[0];
@@ -518,7 +518,7 @@ function setGardenPos(aBuilding) {
 
     if (left) {
         left._centerPosition[0] = cP[0] - left._width / 2;
-        left._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight/2 + 0.01;
+        left._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight / 2 + 0.01;
         left._centerPosition[2] = cP[2] + 1 + left.depth - left.radius + aBuilding._width / 2;
 
         left.nextLinePos[0] = left._centerPosition[0];
@@ -569,11 +569,11 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
             setCenterPosition(
                 b,
                 b._centerPosition[0] - width / 2,
-				floorHeight+ b._height/2,
+                floorHeight + b._height / 2,
                 //b._centerPosition[1] + districtHeight/2,
                 b._centerPosition[2] - width / 2
             );
-            shiftBack(b, nodesSortByX, nodesSortByZ, floorHeight + districtHeight/2);
+            shiftBack(b, nodesSortByX, nodesSortByZ, floorHeight + districtHeight / 2);
         }
         if (doWeUseConnections() && doWeUseStreets()) {
             var exitNodeZCoord = Math.max.apply(Math, Object.keys(nodesSortByZ));
@@ -632,10 +632,10 @@ function sortBuildings(aDistrict, namePrefix) {
  */
 function getDrawnDimValue(aBuilding, dimString) {
     var toReturn;
-   
+
     var buildingDimension = aBuilding[association[dimString]];
     var scalingString = metaData[scalingOption + "_" + association[dimString]]; //z.B. "min_ID"
-    
+
     if (buildingDimension != undefined && buildingDimension != "" && buildingDimension != 0) {
         /* Wird hoffentlich nicht mehr benötigt, da nur Zahlen übergeben werden
         if (isNaN(parseFloat(aBuilding[association[dimString]]))) {
