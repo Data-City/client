@@ -460,11 +460,11 @@ function drawLines(aGarden, updateBoolean) {
     for (var x in aGarden.linesTo) {
         for (var i = 0; i < length; i++) {
             if (aGarden.isLeftGarden == true) {
-                if (hashMap[x] && hashMap[x]._rightGarden.on == false && hashMap[x]._isRemoved == false) {
+                if (hashMap[x]._rightGarden.on == false && hashMap[x]._isRemoved == false) {
                     drawALine(aGarden, hashMap[x]._rightGarden);
                 }
             } else {
-                if (hashMap[x] && hashMap[x]._leftGarden.on == false && hashMap[x]._isRemoved == false) {
+                if (hashMap[x]._leftGarden.on == false && hashMap[x]._isRemoved == false) {
                     drawALine(aGarden, hashMap[x]._leftGarden);
                 }
             }
