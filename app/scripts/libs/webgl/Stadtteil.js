@@ -81,6 +81,12 @@ function setCalls(income, outgoing) {
         outgoingCalls = outgoing;
     }
 }
+/**
+ * Getter fuer incomingCalls, outgoingCalls
+ */
+function getCalls(){
+    return [incomingCalls, outgoingCalls];
+}
 
 
 /**
