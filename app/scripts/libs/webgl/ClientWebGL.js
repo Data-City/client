@@ -22,6 +22,8 @@ var scalingOption;
 var SpeedForShiftByKeys = 5;
 var nameOfAllBuildings = [];
 
+var animationId = null;
+
 /**
  * Getter fuer scene
  * @return: scene: die Scene fuer die WebGL-Canvas, auf die gezeichnet wird
@@ -54,7 +56,72 @@ function getControls() {
     return trackballControls;
 }
 
+/**
+ * Löscht alle Kind-Elemente des Elements
+ * @param Object Das Element, dessen Kinder gelöscht werden sollen
+ */
+function empty(elem) {
+    while (elem.lastChild) elem.removeChild(elem.lastChild);
+}
 
+function doDispose(obj)
+    {
+        if (obj !== null)
+        {
+            for (var i = 0; i < obj.children.length; i++)
+            {
+                doDispose(obj.children[i]);
+            }
+            if (obj.geometry)
+            {
+                obj.geometry.dispose();
+                obj.geometry = undefined;
+            }
+            if (obj.material)
+            {
+                if (obj.material.materials)
+                {
+                    for (i = 0; i < obj.material.materials.length; i++)
+                    {
+                        obj.material.materials[i].dispose();
+                    }
+                }
+                else
+                {
+                    obj.material.dispose();
+                }
+                obj.material = undefined;
+            }
+            if (obj.texture)
+            {
+                obj.texture.dispose();
+                obj.texture = undefined;
+            }
+        }
+        obj = undefined;
+    }
+
+
+function dispose(obj) {
+    for (var o in obj) {
+            delete obj[o];
+    } 
+    delete obj;
+    /*
+    if (obj) {
+        for (var o in obj) {
+            var item = obj[o];
+            if (Array.isArray(item) || typeof item === 'object') {
+                dispose(item);
+            } else {
+                delete item;
+            }
+    } 
+        //if (isNaN(parseInt(o))) delete obj[o];
+        delete obj;
+    }
+    */
+}
 /**
  * wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
  * @param: data: JSON vom Datenbank-Team, das fuer jedes Gebaeude die Hoehe, Breite, Farbe, etc. gespeichert hat der Form
@@ -73,7 +140,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
 
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         camera.aspect = window.innerWidth / window.innerHeight;
         renderer.setSize(window.innerWidth, window.innerHeight);
     }, false);
@@ -93,7 +160,74 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     animate();
     saveCamera();
     goToInitialView();
+
     if (settings != undefined) setSpecificView(settings);
+
+    return function freeWebGlMem() {
+        //console.log(scene);
+        
+        //console.log(totalGeom);
+        //console.log(totalMaterial);
+        
+        
+        //console.log(mainDistrict.buildings[0].buildings[0]);
+        //mainDistrict.buildings[0].buildings[0].dispose();
+        scene.remove(drawnObject);
+        doDispose(drawnObject);
+        //onsole.log(drawnObject);
+        dispose(mainDistrict);
+
+        totalGeom.dispose();
+        totalGeom = null;
+        totalMaterial.dispose();
+        totalMaterial = null;
+
+        window.cancelAnimationFrame(animationId);
+
+        document.removeEventListener('mousemove', onDocumentMouseMove, false);
+        renderer.domElement.removeEventListener('mousedown', onDocumentMouseDown, false);
+
+        renderer.dispose();
+
+        association = {}; //Hier wird die Legende gespeichert
+        incomingCalls = {}; //speichert Infos ueber Eingehende Verbindungen
+        outgoingCalls = {}; //speichert Infos ueber ausgehende Verbindungen
+        gap = 10; //Abstand zwischen den Gebaeuden
+        gardenRadius = 6; //Groesse der Gaerten
+
+        arrayOfBuildings = null;
+        maxWidth = null;
+        maxDepth = null;
+        startToBuildInZDirection = null;
+        extension = null;
+        buildingInZDirection = null;
+        lastMaxWidth = null;
+        width = null;
+        startToBuildInXDirection; //fuer setOneDistrict
+
+        buildingsHashMap = {}; //Hashmap fuer Gebaeude: mapt Gebaeude-ID mit dem Objekt
+
+        jsonOfNodes = {}; //man greift erst auf die x-Position zu, dann auf die z-Position, dann bekommt man den Knoten
+
+        graph = {};
+        nodeHashMap = {};
+        nodeID = 0;
+
+        metaData = null;
+        console.log("AUFRUF!");
+        associations = null; //die Legende
+        camera = null;
+        scene = null;
+        renderer = null;
+        trackballControls = null;
+        orbitControls = null;
+        raycaster = null;
+
+
+        //dispose(mainDistrict);
+        //sizeof(mainDistrict);
+        //empty(mainDistrict);
+    };
 }
 
 
@@ -234,7 +368,7 @@ var ctrlIsPressed;
 /**
  * Fügt Listener für einen Screenshot hinzu
  */
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     var imgData, imgNode;
 
     if (e.which == 16) {
@@ -260,7 +394,7 @@ window.addEventListener("keydown", function(e) {
     }
 });
 
-window.addEventListener("keyup", function(e) {
+window.addEventListener("keyup", function (e) {
     if (e.which == 16) {
         ctrlIsPressed = false;
     }
@@ -269,7 +403,7 @@ window.addEventListener("keyup", function(e) {
 /**
  * Navigation über die Pfeiltasten
  */
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
 
     //Pfeiltaste links
     if (e.which === 37) {
@@ -463,14 +597,16 @@ function removeWebGLCanvasFromDomElement(nameOfDivElement) {
  *schaut regelmäßig, ob was passiert und updatet und zeichnet neu
  */
 function animate() {
-    // schaut, ob was passiert ist
-    requestAnimationFrame(animate);
-    requestAnimationFrame(update);
     // update
     orbitControls.update();
     trackballControls.update();
     //malt neu
     render();
+    
+    // schaut, ob was passiert ist
+    animationId = requestAnimationFrame(animate);
+    //requestAnimationFrame(update);
+    
 }
 
 
@@ -754,7 +890,7 @@ function onDocumentMouseDown(event) {
                     b[association["color"]],
                     b[association["name"]],
                     intersects[0]
-                );
+                    );
             }
         }
     }
