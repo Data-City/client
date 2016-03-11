@@ -20,6 +20,7 @@ var useStreets;
 var usingConnections;
 var scalingOption;
 var SpeedForShiftByKeys = 5;
+var nameOfAllBuildings = [];
 
 /**
  * Getter fuer scene
@@ -140,6 +141,9 @@ function initData(data, association, incomingCalls, outgoingCalls) {
     usingConnections = association.useConnections;
     scalingOption = association.scalingOption;
 
+    initAssociation(association);
+    initMainDistrict(data, association);
+
     if (usingConnections) {
         setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(outgoingCalls));
         if (association.typeOfConnections === "1") {
@@ -148,9 +152,6 @@ function initData(data, association, incomingCalls, outgoingCalls) {
             useStreets = false;
         }
     }
-
-    initAssociation(association);
-    initMainDistrict(data, association);
 }
 
 /**
@@ -180,6 +181,23 @@ function initMainDistrict(data, association) {
         mainDistrict = createMainDistrict(data[0].buildings, association.dimensions);
     } else {
         mainDistrict = data[0];
+    }
+    setNameOfAllBuildings(mainDistrict);
+}
+
+
+/**
+ * initialisiert nameOfAllBuildings, setzt es gleich mit einem Array, das aus den Namen der Gebaeude besteht
+ *@param: aDistrict: Das Distrikt, dessen Gebäudenamen alle in nameOfAllBuildings gespeichert werden soll
+*/
+function setNameOfAllBuildings(aDistrict){
+    if(aDistrict.buildings==undefined) {
+        nameOfAllBuildings.push(aDistrict[associations.dimensions.name]);
+    }
+    else{
+        for(var i=0; i<aDistrict.buildings.length; i++){
+            setNameOfAllBuildings(aDistrict.buildings[i]);
+        }
     }
 }
 
@@ -368,12 +386,6 @@ function getMainDistrictFromJSON(aDistrict) {
  * @param: color: Farbe, die ggf. geupdatet werden soll
  */
 function updateExtrema(width, height, color) {
-    /*if (width + 1.5 > extrema.maxWidth) extrema.maxWidth = width + 1.5;
-    if (height + 1.5 > extrema.maxHeight) extrema.maxHeight = height + 1.5;
-    if (color + 1.5 > extrema.maxColor) extrema.maxColor = color + 1.5;
-    if (width + 1.5 < extrema.minWidth) extrema.minWidth = width + 1.5;
-    if (height + 1.5 < extrema.minHeigth) extrema.minHeigth = height + 1.5;
-    if (color + 1.5 < extrema.minColor) extrema.minColor = color + 1.5;*/
     if (width > extrema.maxWidth) extrema.maxWidth = width;
     if (height > extrema.maxHeight) extrema.maxHeight = height;
     if (color > extrema.maxColor) extrema.maxColor = color;
@@ -591,16 +603,26 @@ function getOriginalAssociations() {
 function getIncomingConnections(connectionData) {
     var newJson = {};
     var ithConn;
+    var toSubstract;
     for (var i = 0; i < connectionData.connections.length; i++) {
         ithConn = connectionData.connections[i];
-        newJson[ithConn.Ziel] = {};
-        newJson[ithConn.Ziel].connections = {};
-        for (var j = 0; j < ithConn.incomingConnections.length; j++) {
-            newJson[ithConn.Ziel].connections[ithConn.incomingConnections[j].Start] = ithConn.incomingConnections[j].Gewichtung;
-            updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung, "Connections");
+        if(nameOfAllBuildings.indexOf(ithConn.Ziel)>-1) {
+            toSubstract = 0;
+            newJson[ithConn.Ziel] = {};
+            newJson[ithConn.Ziel].connections = {};
+            for (var j = 0; j < ithConn.incomingConnections.length; j++) {
+
+                if (nameOfAllBuildings.indexOf(ithConn.incomingConnections[j].Start)>-1){
+                    newJson[ithConn.Ziel].connections[ithConn.incomingConnections[j].Start] = ithConn.incomingConnections[j].Gewichtung;
+                    updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung, "Connections");
+                }
+                else {
+                    toSubstract = toSubstract + ithConn.incomingConnections[j].Gewichtung;
+                }
+            }
+            newJson[ithConn.Ziel].sumOfConnections = ithConn.Gewichtung - toSubstract;
+            updateConnectionExtrema(ithConn.Gewichtung, "SumOfConn");
         }
-        newJson[ithConn.Ziel].sumOfConnections = ithConn.Gewichtung;
-        updateConnectionExtrema(ithConn.Gewichtung, "SumOfConn");
     }
     return newJson;
 }
@@ -618,15 +640,25 @@ function getIncomingConnections(connectionData) {
  */
 function getOutgoingConnections(connectionData) {
     var newJSON = {};
+    var ithConn;
+    var toSubstract;
     for (var i = 0; i < connectionData.connections.length; i++) {
-        newJSON[connectionData.connections[i].Start] = {};
-        newJSON[connectionData.connections[i].Start].connections = {};
-        for (var j = 0; j < connectionData.connections[i].outgoingConnections.length; j++) {
-            newJSON[connectionData.connections[i].Start].connections[connectionData.connections[i].outgoingConnections[j].Ziel] =
-                connectionData.connections[i].outgoingConnections[j].Gewichtung;
+        ithConn = connectionData.connections[i];
+        toSubstract = 0;
+        if(nameOfAllBuildings.indexOf(ithConn.Start)>-1) {
+            newJSON[ithConn.Start] = {};
+            newJSON[ithConn.Start].connections = {};
+            for (var j = 0; j < ithConn.outgoingConnections.length; j++) {
+                if(nameOfAllBuildings.indexOf(ithConn.outgoingConnections[j].Ziel) > -1){
+                    newJSON[ithConn.Start].connections[ithConn.outgoingConnections[j].Ziel] = ithConn.outgoingConnections[j].Gewichtung;
+                }
+                else{
+                    toSubstract = toSubstract + ithConn.outgoingConnections[j].Gewichtung;
+                }
+            }
+            newJSON[ithConn.Start].sumOfConnections = ithConn.Gewichtung - toSubstract;
+            updateConnectionExtrema(ithConn.Gewichtung, "SumOfConn");
         }
-        newJSON[connectionData.connections[i].Start].sumOfConnections = connectionData.connections[i].Gewichtung;
-        updateConnectionExtrema(connectionData.connections[i].Gewichtung, "SumOfConn");
     }
     return newJSON;
 }
