@@ -247,7 +247,7 @@ function initData(data, association, incomingCalls, outgoingCalls) {
 
     usingConnections = association.useConnections;
     scalingOption = association.scalingOption;
-
+    
     initAssociation(association);
     initMainDistrict(data, association);
 
@@ -272,6 +272,13 @@ function initAssociation(association) {
     association.dimensions.height = association.dimensionSettings.height.name;
     setAssociation(association["dimensions"]);
     associations = association;
+    
+    if (association.scalingOption === "avg") {
+        gap = 6 + 2*Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];   
+    } else {
+        gap = 6 + 2*Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]);    
+    }
+    
     setBuildingColor(association.buildingcolor);
 }
 

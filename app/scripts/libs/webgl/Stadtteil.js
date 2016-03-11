@@ -2,7 +2,7 @@ var association = {}; //Hier wird die Legende gespeichert
 var incomingCalls = {}; //speichert Infos ueber Eingehende Verbindungen
 var outgoingCalls = {}; //speichert Infos ueber ausgehende Verbindungen
 
-var gap = 10; //Abstand zwischen den Gebaeuden
+var gap; //Abstand zwischen den Gebaeuden
 var gardenRadius = 6; //Groesse der Gaerten
 
 var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, buildingInZDirection, lastMaxWidth, width, startToBuildInXDirection; //fuer setOneDistrict
