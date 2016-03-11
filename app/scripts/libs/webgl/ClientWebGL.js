@@ -384,14 +384,12 @@ window.addEventListener("keyup", function (e) {
  * Navigation über die Pfeiltasten
  */
 window.addEventListener("keydown", function (e) {
-
     //Pfeiltaste links
     if (e.which === 37) {
         e.preventDefault();
         try {
             //console.log("Links");
-            camera.position.x = camera.position.x - SpeedForShiftByKeys;
-            trackballControls.target.x -= SpeedForShiftByKeys;
+            shiftCam(37);
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;
@@ -403,8 +401,7 @@ window.addEventListener("keydown", function (e) {
         e.preventDefault();
         try {
             //console.log("hoch");   
-            camera.position.z = camera.position.z - SpeedForShiftByKeys;
-            trackballControls.target.z -= SpeedForShiftByKeys;
+            shiftCam(38);
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;
@@ -416,8 +413,7 @@ window.addEventListener("keydown", function (e) {
         e.preventDefault();
         try {
             //console.log("rechts");    
-            camera.position.x = camera.position.x + SpeedForShiftByKeys;
-            trackballControls.target.x += SpeedForShiftByKeys;
+            shiftCam(39);
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;
@@ -429,14 +425,73 @@ window.addEventListener("keydown", function (e) {
         e.preventDefault();
         try {
             //console.log("runter");  
-            camera.position.z = camera.position.z + SpeedForShiftByKeys;
-            trackballControls.target.z += SpeedForShiftByKeys;
+            shiftCam(40);
         } catch (e) {
             console.log("Die Navigation über die Pfeiltasten lief schief!");
             return;
         }
     }
 });
+
+
+/**
+ * verschiebt die Kamera und das Target durch Druecken auf eine Taste
+ * @param: theKey: 37 fuer links, 38 fuer hoch, 39 fuer rechts, 40 fuer runter
+ */
+function shiftCam(theKey) {
+    var shiftingVector = getShiftingVector(theKey);
+    var lengthOfshiftingVector = Math.sqrt(Math.pow(shiftingVector.x, 2)+Math.pow(shiftingVector.z, 2));
+    shiftingVector.x = shiftingVector.x * SpeedForShiftByKeys / lengthOfshiftingVector;
+    shiftingVector.z = shiftingVector.z * SpeedForShiftByKeys / lengthOfshiftingVector;
+    camera.position.x = camera.position.x - shiftingVector.x;
+    camera.position.z = camera.position.z - shiftingVector.z;
+    trackballControls.target.x -= shiftingVector.x;
+    trackballControls.target.z -= shiftingVector.z;
+}
+
+/**
+ * Hilfsmethode fuer ShiftCam, gibt den Normalenvektor von dem Verbindungsvektor der Kamera zum Target
+ * @param: theKey: 37 fuer links, 38 fuer hoch, 39 fuer rechts, 40 fuer runter
+ * @return: shiftingVector: der Vektor, um den die Kamera und der Target verschoben werden sollen
+*/
+function getShiftingVector(theKey){
+    var x = trackballControls.target.x - camera.position.x;
+    var z = trackballControls.target.z - camera.position.z;
+    var shiftingVector;
+    if(theKey == 37) {
+        if (x <= 0) {
+            shiftingVector = {x: -z/x, z: 1};
+        }
+        else {
+            shiftingVector = {x: z/x, z: -1};
+        }
+    }
+    else if (theKey == 38) {
+        if (z >= 0) {
+            shiftingVector = {x: x, z: z};
+        }
+        else {
+            shiftingVector = {x: -x, z: -z};
+        }
+    }
+    else if (theKey == 39) {
+        if (x <= 0) {
+            shiftingVector = {x: z/x, z: -1};
+        }
+        else {
+            shiftingVector = {x: -z/x, z: 1};
+        }
+    }
+    else {
+        if (z >= 0) {
+            shiftingVector = {x: -x, z: -z}
+        }
+        else {
+            shiftingVector = {x: x, z: z};
+        }
+    }
+    return shiftingVector;
+}
 
 
 /**
