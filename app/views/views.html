@@ -438,18 +438,17 @@
                                 <table class="table">
 
                                     <!-- ID -->
-                                    <!--
+                                    
                                     <tr>
                                         <td>
                                             <p><i>Hinweis: Wenn die ID's' nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. die Suche)</i></p>
                                             <div class="input-group">
                                                 <span class="input-group-addon">ID</span>
-                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number' | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name">
+                                                <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name">
                                                 </select>
                                             </div>
                                         </td>
                                     </tr>
-                                    -->
                                     <!--
                                     <tr>
                                         <td>
@@ -468,22 +467,24 @@
                                         </td>
                                     </tr>
                                     -->
+                                    <!--
                                     <tr>
                                         <td>
                                             <p><i>Hinweis: Wenn die ID's' nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. die Suche)</i></p>
                                             <div class="input-group">
                                                 <span class="input-group-addon">ID</span>
-                                                <!-- | bychooseability | bytype:'number' | bygrouping:chosenView.useGrouping:chosenView.grouping -->
+                                                <!-- | bychooseability | bytype:'number' | bygrouping:chosenView.useGrouping:chosenView.grouping 
                                                 <select class="form-control" ng-model="chosenView.dimensionSettings.name"
                                                 ng-options="value as value.name for (key, value) in (chosenView.attributes | bychooseability | bygrouping:chosenView.useGrouping:chosenView.grouping)">
-                                                    <!--
+                                                    
                                                     <option
                                                     ng-repeat="a in (chosenView.attributes | bychooseability | bygrouping:chosenView.useGrouping:chosenView.grouping) track by a.name"
-                                                    value="{{a}}">{{a.name}}</option>-->
+                                                    value="{{a}}">{{a.name}}</option>-
                                         </select>
                                             </div>
                                         </td>
                                     </tr>
+                                    -->
                                     <!-- FLÄCHE -->
                                     <tr>
                                         <td>
