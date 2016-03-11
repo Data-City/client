@@ -56,13 +56,7 @@ function getControls() {
     return trackballControls;
 }
 
-/**
- * Löscht alle Kind-Elemente des Elements
- * @param Object Das Element, dessen Kinder gelöscht werden sollen
- */
-function empty(elem) {
-    while (elem.lastChild) elem.removeChild(elem.lastChild);
-}
+
 
 function doDispose(obj)
     {
@@ -102,26 +96,6 @@ function doDispose(obj)
     }
 
 
-function dispose(obj) {
-    for (var o in obj) {
-            delete obj[o];
-    } 
-    delete obj;
-    /*
-    if (obj) {
-        for (var o in obj) {
-            var item = obj[o];
-            if (Array.isArray(item) || typeof item === 'object') {
-                dispose(item);
-            } else {
-                delete item;
-            }
-    } 
-        //if (isNaN(parseInt(o))) delete obj[o];
-        delete obj;
-    }
-    */
-}
 /**
  * wird vom Client-Team aufgerufen und fuehrt alles aus, was getan werden muss, um die Stadtansicht zu erstellen
  * @param: data: JSON vom Datenbank-Team, das fuer jedes Gebaeude die Hoehe, Breite, Farbe, etc. gespeichert hat der Form
@@ -174,8 +148,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
         //mainDistrict.buildings[0].buildings[0].dispose();
         scene.remove(drawnObject);
         doDispose(drawnObject);
-        //onsole.log(drawnObject);
-        dispose(mainDistrict);
+        mainDistrict = null;
 
         totalGeom.dispose();
         totalGeom = null;
