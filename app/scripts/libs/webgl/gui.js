@@ -627,7 +627,7 @@ function removeLines(aGarden, updateBoolean) {
         hashMap[x]._numOfActivatedConnections = hashMap[x]._numOfActivatedConnections - 1;
         if (hashMap[x]._numOfActivatedConnections==0) {
             var factor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
-            colorObject(hashMap[x], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor))
+            colorObject(hashMap[x], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
         }
     }
     if (updateBoolean) {
@@ -774,28 +774,58 @@ function updateHighlightingLines(buildingID) {
  * @param aGarden: ein Gartenobjekt
  */
 function highlightGardenLines(aGarden) {
-    var hashMap = getBuildingsHashMap();
-    if (aGarden != undefined && aGarden.on) {
+    if (aGarden.on) {
+        var hashMap = getBuildingsHashMap();
         var meshLines = aGarden.meshLines;
         var length;
         for (var x in meshLines) {
             length = meshLines[x].length;
             for (var i = 0; i < length; i++) {
                 meshLines[x][i].material.color.setHex(0xFF0000);
-                //hashMap[x].mesh.material.emissive.setHex(0xff0000);
             }
             colorObject(hashMap[x], 0xff0000);
         }
     }
+    else {
+        highlightSourceBuildings(aGarden);
+    }           
 }
+
+
+
+/**
+ * Hilfsmethode zum Highlighten der "Quell"-Gebaeude, wenn dessen Garten an ist
+ * @param: aGarden: der Zielgarten, dessen Quellgebaude gehighlighted werden sollen
+ */
+function highlightSourceBuildings(aGarden){
+    var hashMap = getBuildingsHashMap();
+    if (aGarden.building._numOfActivatedConnections > 0) {
+        var linesTo = aGarden.linesTo;
+        if (aGarden.isLeftGarden) {
+            for (var x in linesTo) {
+                if (hashMap[x]._rightGarden.on ) {
+                    colorObject(hashMap[x], 0xff0000);
+                }
+             }
+        }
+        else {
+            for (var x in linesTo) {
+                if (hashMap[x]._leftGarden.on ) {
+                    colorObject(hashMap[x], 0xff0000);
+                }
+            }
+        }
+    }
+}
+
 
 /**
  * Methode, die das highlighten der Gartenlinien rueckgaengig macht
  * @param aGarden: ein Gartenobjekt
  */
 function removeHighlightingGardenLines(aGarden) {
-    var hashMap = getBuildingsHashMap();
-    if (aGarden != undefined && aGarden.on) {
+    if (aGarden.on) {
+        var hashMap = getBuildingsHashMap();
         var meshLines = aGarden.meshLines;
         var length;
         var factor;
@@ -809,8 +839,52 @@ function removeHighlightingGardenLines(aGarden) {
             colorObject(hashMap[x], 0x40FF00);
         }
     }
+    else {
+        removeHighlightingOfSourceBuildings(aGarden);
+    }           
 }
 
+
+/**
+ * Hilfsmethode zum Entfernen des Highlighten der "Quell"-Gebaeude, wenn dessen Garten an ist
+ * @param: aGarden: der Zielgarten, dessen Quellgebaude nicht mehr gehighlighted werden sollen
+ */
+function removeHighlightingOfSourceBuildings(aGarden) {
+    var hashMap = getBuildingsHashMap();
+    if (aGarden.building._numOfActivatedConnections > 0) {
+        var linesTo = aGarden.linesTo;
+        var factor;
+        if (aGarden.isLeftGarden) {
+            for (var x in linesTo) {
+                if (hashMap[x]._rightGarden.on ) {
+                    setOldColor(hashMap[x]);
+                }
+            }
+        }
+        else {
+            for (var x in linesTo) {
+                if (hashMap[x]._leftGarden.on ) {
+                    setOldColor(hashMap[x]);
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Hilfsmethode fuer removeHighlightingOfSourceBuildings
+ * gibt den entsprechenden Gebaeuden die richtige Farbe zurueck
+ * @param: aBuilding: das Zielgebaeude, dessen Farbe wieder gerichtet werden soll nach dem Highlighten
+*/
+function setOldColor(aBuilding) {
+    if (aBuilding._numOfActivatedConnections == 0) {
+        factor = getColorFactor(getExtrema(), aBuilding._color, "Color");
+        colorObject(aBuilding, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
+    }
+    else {
+        colorObject(aBuilding, 0x40FF00);
+    }
+}
 
 
 /**
