@@ -33,7 +33,7 @@ var buildingInformation = {
     "undo": function() {
         if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
     }*/
-    "Verbindungen":false
+    "Verbindungen": false
 };
 
 //entsteht, wenn Nutzer die Legende aendert
@@ -210,14 +210,14 @@ function initDropDownMenue() {
         "width": "Klicken Sie bitte auf ein Gebäude",
         "color": "Klicken Sie bitte auf ein Gebäude",
         "name": "Klicken Sie bitte auf ein Gebäude",
-            /*,
-                    "remove": function() {
-                        remove(buildingInformation.mesh);
-                    },
-                    "undo": function() {
-                        if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
-                    }*/
-       "Verbindungen": false
+        /*,
+                "remove": function() {
+                    remove(buildingInformation.mesh);
+                },
+                "undo": function() {
+                    if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
+                }*/
+        "Verbindungen": false
     };
 
     //entsteht, wenn Nutzer die Legende aendert
@@ -304,11 +304,11 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
     h.add(buildingInformation, "Verbindungen").name("Verbindungen").onChange(function(value) {
-        buildingInformation["Verbindungen"] = value;
-        highlightBuildingsWithConnections(value);
-    })
-    /*h.add(buildingInformation, "remove").name("Ausblenden");
-    h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
+            buildingInformation["Verbindungen"] = value;
+            highlightBuildingsWithConnections(value);
+        })
+        /*h.add(buildingInformation, "remove").name("Ausblenden");
+        h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
 
     //*****************************************************************
 
@@ -463,7 +463,7 @@ function getChangedLegend() {
 /**Methode um die Gebaeude zu highlighten, die Verbindungen haben
  * @param: value: der Wert aus der Legende, also ein Boolean (true = Gebaeude sind markiert, false = Gebaeude sind nicht markiert)
  */
-function highlightBuildingsWithConnections(value){
+function highlightBuildingsWithConnections(value) {
     var arr = getCalls();
     var income = arr[0];
     var outgoing = arr[1];
@@ -471,19 +471,19 @@ function highlightBuildingsWithConnections(value){
         var element = arrayOfBuildings[index];
         var newarray = element.buildings;
         for (var i = 0; i < newarray.length; i++) {
-           var x = newarray[i];
-           if(value){
-                if(income[x[association.name]] || outgoing[x[association.name]]){
+            var x = newarray[i];
+            if (value) {
+                if (income[x[association.name]] || outgoing[x[association.name]]) {
                     colorObject(x, 0xFFBF00);
                     goToInitialView();
                 }
-           } else{
-               if(income[x[association.name]] || outgoing[x[association.name]]){
+            } else {
+                if (income[x[association.name]] || outgoing[x[association.name]]) {
                     var hashMap = getBuildingsHashMap();
                     var factor = getColorFactor(getExtrema(), hashMap[x[association.name]]._color, "Color");
                     colorObject(hashMap[x[association.name]], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
-               }
-           }
+                }
+            }
         }
     }
 }
