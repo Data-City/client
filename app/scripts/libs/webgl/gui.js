@@ -502,9 +502,12 @@ function drawALine(aGarden, destGarden) {
 function pushVerticesForStreet(aGarden, destGarden, geometry) {
     var center = aGarden.building._centerPosition;
     var destCenter = destGarden.building._centerPosition;
-    geometry.vertices.push(new THREE.Vector3(center[0], center[1] - (aGarden.building._height / 2), center[2]));
-    setPath(geometry.vertices, aGarden.building, destGarden.building);
-    geometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1] - destGarden.building._height / 2, destCenter[2]));
+    var otherGeometry = new THREE.Geometry();
+    otherGeometry.vertices.push(new THREE.Vector3(center[0], center[1] - (aGarden.building._height / 2), center[2]));
+    setPath(otherGeometry.vertices, aGarden.building, destGarden.building);
+    otherGeometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1] - destGarden.building._height / 2, destCenter[2]));
+    pushVerticesFiveTimes(geometry, otherGeometry, true);
+    
 }
 
 /**
@@ -523,6 +526,18 @@ function pushVerticesForBow(aGarden, destGarden, geometry) {
 
     var otherGeometry = new THREE.Geometry();
     otherGeometry.vertices = curve.getPoints(50);
+    pushVerticesFiveTimes(geometry, otherGeometry, false);
+}
+
+
+
+/**
+ * fuegt den vertices einer THREE.Geometry() versetzt 5 Linien hinzu
+ * @param: geometry: die THREE.Geometry, dessen vertices um 5 Linien ergaenzt werden soll
+ * @param: otherGeometry: die Hilfs-THREE.Geometry, die die mittlere Linie in den vertices gespeichert hat
+ * @param: alsoZCoord: true, wenn man auch in z-Richtung fuer die Strassen die Linien versetzen will
+*/
+function pushVerticesFiveTimes(geometry, otherGeometry, alsoZCoord){
     otherGeometry.translate(-0.2, 0, 0);
     for(var i=0; i<5; i++){
         if (i%2 == 0) {
@@ -533,8 +548,19 @@ function pushVerticesForBow(aGarden, destGarden, geometry) {
         }
         otherGeometry.translate(0.1, 0, 0);
     }
+    if(alsoZCoord) {
+        otherGeometry.translate(-0.2, 0, -0,2);
+        for(var i=0; i<5; i++){
+            if (i%2 == 1) {
+                pushToArray(geometry.vertices, otherGeometry.vertices, false);
+            }
+            else {
+                pushToArray(geometry.vertices, otherGeometry.vertices, true);
+            }
+            otherGeometry.translate(0, 0, 0.1);
+        }
+    }
 }
-
 
 
 /**
