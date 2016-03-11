@@ -13,7 +13,7 @@ angular.module('datacityApp')
                 '<div class="panel-heading"><span class="glyphicon glyphicon-hourglass"></span> {{msg}}</div>' +
                 '<div class="panel-body">' +
                 '<div class="progress" ng-hide="percentage >= 100">' +
-                '<div class="progress-bar" role="progressbar" aria-valuenow="{{percentage}}" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{percentage}}%;">' +
+                '<div class="progress-bar" role="progressbar" aria-valuenow="{{percentage}}" aria-valuemin="0" aria-valuemax="100" ng-style="width={width:\'{{percentage}}%\'}" style="min-width: 2em;">' +
                 '{{percentage}}%' +
                 '</div>' +
                 '</div>' +
