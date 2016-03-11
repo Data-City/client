@@ -31,6 +31,8 @@ var totalGeom;
 var totalMaterial;
 var qwert = 0;
 
+var drawnObject = null;
+
 /**
  * Setter fuer die Farbe der Gebaeude aus settings.js
  *@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
@@ -286,7 +288,7 @@ function addCityToScene(mainDistrict, scene, camera) {
     mainDistrict._centerPosition[1] = -getDistrictHeight() / 2;
     addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, boxGeom, myGeometry, matrix, quaternion);
     setCameraPos(camera, mainDistrict, extrema);
-
+    
     maximalHeight = getExtrema().maxHeight;
     totalMaterial = new THREE.MeshPhongMaterial({
         color: 0xffffff,
@@ -294,7 +296,7 @@ function addCityToScene(mainDistrict, scene, camera) {
         transparent: true,
         opacity: 1
     })
-    var drawnObject = new THREE.Mesh(
+    drawnObject = new THREE.Mesh(
         myGeometry,
         totalMaterial
     );
