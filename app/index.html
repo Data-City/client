@@ -16,6 +16,27 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
+  
+    <!-- CSS Styles fuer die Navbar -->
+  <style>
+     .brand {
+     height: 50px;
+     }
+    .navbar-default {
+    background-color: #daeeed;
+    border-color: #a1b8b7;
+    }
+    .navbar-default .navbar-brand {
+    color: #1d51a5;
+    }
+    .navbar-default .navbar-brand:hover,
+    .navbar-default .navbar-brand:focus {
+    color: #1d51a5;
+    }
+    .navbar-default .navbar-header .navbar-toggle {
+    background-color: #d9534f;
+}
+   </style>
   <body ng-app="datacityApp">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -23,7 +44,7 @@
 
     <!-- Navigations-Leiste am oberen Bildschirmrand -->
     <div class="header">
-      <div class="navbar navbar-inverse" role="navigation">
+      <div class="navbar navbar-default" role="navigation">
         
           <!-- Anweisungen, falls der Bildschirm extrem klein wird (Smartphone) -->
           <div class="navbar-header">
@@ -35,6 +56,13 @@
             </button>
             <div class="navbar-brand">- DataCity -</div>
           </div>
+          
+           <!-- RuV und Tu Darmstadt Logo -->
+          <ul class="nav navbar-nav navbar-right">
+         <img class="brand" id="brand-image" alt="RuV Logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/R%2BV-Logo.svg/2000px-R%2BV-Logo.svg.png" />
+         <em> in Kooperation mit &nbsp </em>
+         <img class="brand" id="brand-image" style="margin-right: 20px;" alt="TuDarmstadt Logo" src="https://upload.wikimedia.org/wikipedia/de/2/24/TU_Darmstadt_Logo.svg" />
+          </ul>
 
           <!-- Normale Anzeige oben links -->
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
@@ -89,7 +117,7 @@
     <script src="bower_components/three.js/build/three.js"></script>
     <script src="bower_components/spin.js/spin.js"></script>
     <script src="bower_components/angular-spinner/angular-spinner.js"></script>
-    <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
+    <script src="bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js"></script>
     <script src="bower_components/angular-bootstrap-slider/slider.js"></script>
     <script src="bower_components/papaparse/papaparse.js"></script>
     <script src="bower_components/async/lib/async.js"></script>
