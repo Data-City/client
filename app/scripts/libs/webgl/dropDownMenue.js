@@ -33,7 +33,9 @@ var buildingInformation = {
     "undo": function() {
         if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
     }*/
-    "Verbindungen": false
+    "Verbindungen": false,
+    "eingehendeVerbindungenaktivieren": false,
+    "ausgehendeVerbindungenaktivieren":false
 };
 
 //entsteht, wenn Nutzer die Legende aendert
@@ -217,7 +219,9 @@ function initDropDownMenue() {
                 "undo": function() {
                     if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
                 }*/
-        "Verbindungen": false
+        "Verbindungen": false,
+        "eingehendeVerbindungenaktivieren": false,
+        "ausgehendeVerbindungenaktivieren": false
     };
 
     //entsteht, wenn Nutzer die Legende aendert
@@ -303,10 +307,17 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         }
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
-    h.add(buildingInformation, "Verbindungen").name("Verbindungen").onChange(function(value) {
-            buildingInformation["Verbindungen"] = value;
-            highlightBuildingsWithConnections(value);
-        })
+    h.add(buildingInformation, "Verbindungen").name("Gebäude mit Verbindungen").onChange(function(value) {
+        buildingInformation["Verbindungen"] = value;
+        highlightBuildingsWithConnections(value);
+    })
+    h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name("eingehende Verbindungen").onChange(function(value){
+        buildingInformation["eingehendeVerbindungenaktivieren"] = value;
+        showIncomingConnections(value);      
+    })
+    h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verbindungen").onChange(function(value){
+        buildingInformation["ausgehendeVerbindungenaktivieren"] = value;      
+    })
         /*h.add(buildingInformation, "remove").name("Ausblenden");
         h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
 
@@ -481,6 +492,14 @@ function highlightBuildingsWithConnections(value) {
                 }
             }
     }
+}
+
+function showIncomingConnections(value){
+    var b = buildingInformation["name"];
+    var arr = getCalls();
+    var income = arr[0];
+    
+    
 }
 
 
