@@ -90,3 +90,21 @@ body {
   content: '\25bc';
 }
 /* ENDE SORTIERUNG */
+
+
+/* Styles fuer Navbar */
+     .brand {
+     height: 50px;
+     }
+    .navbar-default {
+    background-color: #daeeed;
+    border-color: #a1b8b7;
+    }
+    .navbar-default .navbar-brand {
+    color: #1d51a5;
+    }
+    .navbar-default .navbar-brand:hover,
+    .navbar-default .navbar-brand:focus {
+    color: #1d51a5;
+    }
+/* ENDE NAVBAR STYLE */
