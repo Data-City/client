@@ -458,7 +458,7 @@ function getShiftingVector(theKey){
     var x = trackballControls.target.x - camera.position.x;
     var z = trackballControls.target.z - camera.position.z;
     var shiftingVector;
-    if(theKey == 37) {
+    if(theKey == 39) {
         if (x <= 0) {
             shiftingVector = {x: -z/x, z: 1};
         }
@@ -474,7 +474,7 @@ function getShiftingVector(theKey){
             shiftingVector = {x: -x, z: -z};
         }
     }
-    else if (theKey == 39) {
+    else if (theKey == 37) {
         if (x <= 0) {
             shiftingVector = {x: z/x, z: -1};
         }
