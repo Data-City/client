@@ -467,24 +467,19 @@ function highlightBuildingsWithConnections(value) {
     var arr = getCalls();
     var income = arr[0];
     var outgoing = arr[1];
-    for (var index = 0; index < arrayOfBuildings.length; index++) {
-        var element = arrayOfBuildings[index];
-        var newarray = element.buildings;
-        for (var i = 0; i < newarray.length; i++) {
-            var x = newarray[i];
-            if (value) {
-                if (income[x[association.name]] || outgoing[x[association.name]]) {
-                    colorObject(x, 0xFFBF00);
-                    goToInitialView();
+    var hashmap = getBuildingsHashMap();
+     for(var y in hashmap){
+        if (value) {
+                if (income[y] || outgoing[y]) {
+                    colorObject(hashmap[y], 0xFFBF00);
                 }
             } else {
-                if (income[x[association.name]] || outgoing[x[association.name]]) {
+                if (income[y] || outgoing[y]) {
                     var hashMap = getBuildingsHashMap();
-                    var factor = getColorFactor(getExtrema(), hashMap[x[association.name]]._color, "Color");
-                    colorObject(hashMap[x[association.name]], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
+                    var factor = getColorFactor(getExtrema(), hashMap[y]._color, "Color");
+                    colorObject(hashMap[y], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
                 }
             }
-        }
     }
 }
 
