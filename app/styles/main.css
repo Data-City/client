@@ -101,10 +101,16 @@ body {
     border-color: #a1b8b7;
     }
     .navbar-default .navbar-brand {
-    color: #1d51a5;
+    /*color: #1d51a5;*/
+    color: #0066B3;
     }
     .navbar-default .navbar-brand:hover,
     .navbar-default .navbar-brand:focus {
-    color: #1d51a5;
+    /*color: #1d51a5;*/
+    color: #0066B3;
+    }
+    
+    #datacity-brand {
+        color: #0066B3;
     }
 /* ENDE NAVBAR STYLE */

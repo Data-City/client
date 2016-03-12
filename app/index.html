@@ -1,6 +1,7 @@
 <!doctype html>
 <html ng-app="datacityApp">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title>DataCity</title>
     <meta name="description" content="">
@@ -15,37 +16,37 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
-  </head>
-  
-  <body ng-app="datacityApp">
+</head>
+
+<body ng-app="datacityApp">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Navigations-Leiste am oberen Bildschirmrand -->
     <div class="header">
-      <div class="navbar navbar-default" role="navigation">
-        
-          <!-- Anweisungen, falls der Bildschirm extrem klein wird (Smartphone) -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <div class="navbar-brand"><a ng-href="#/data"><b> - DataCity - </b></a> </div>
-          </div>
-          
-           <!-- RuV und Tu Darmstadt Logo -->
-          <ul class="nav navbar-nav navbar-right">
-         <img class="brand" id="brand-image" alt="RuV Logo" src="images/R+V-Logo.svg.png" />
-         <em> in Kooperation mit &nbsp </em>
-         <img class="brand" id="brand-image" style="margin-right: 20px;" alt="TuDarmstadt Logo" src="images/tud_logo.png" />
-          </ul>
+        <div class="navbar navbar-default" role="navigation">
+            <div class="container">
+                <!-- Anweisungen, falls der Bildschirm extrem klein wird (Smartphone) -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="navbar-brand ruv-color"><a ng-href="#/data" id="datacity-brand" ><b> - DataCity - </b></a> </div>
+                </div>
 
+                <!-- RuV und Tu Darmstadt Logo -->
+                <ul class="nav navbar-nav navbar-right">
+                    <img class="brand" id="brand-image" alt="RuV Logo" src="images/R+V-Logo.svg.png" />
+                    <em> in Kooperation mit &nbsp </em>
+                    <img class="brand" id="brand-image" style="margin-right: 20px;" alt="TuDarmstadt Logo" src="images/tud_logo.png" />
+                </ul>
 
-            <!-- Login/Logout oben rechts --> 
+            </div>
+            <!-- Login/Logout oben rechts -->
             <!-- auskommentiert
             <ul class="nav navbar-nav navbar-right" ng-controller="LoginCtrl">
                 <li ng-show="loggedIn"><a href="#/admin">Eingeloggt als <i>{{username}}</i></a></li>
@@ -55,11 +56,11 @@
                 </li>
             </ul>
             -->
-      </div>
+        </div>
     </div>
 
     <div>
-      <div ng-view=""></div>
+        <div ng-view=""></div>
     </div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -99,42 +100,43 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/views.js"></script>
-        <script src="scripts/controllers/login.js"></script>
-		<script src="scripts/libs/lib_view.js"></script>
-		
-		<!-- WebGL -->
-        <script src="scripts/libs/webgl/ClientWebGL.js"></script>
-        <script src="scripts/libs/webgl/gui.js"></script>
-        <script src="scripts/libs/webgl/Stadtteil.js"></script>
-        <script src="scripts/libs/webgl/dropDownMenue.js"></script>
-		<script src="scripts/libs/webgl/dijkstra.js"></script>
-        
-        <script src="scripts/libs/webgl/js/Projector.js"></script>
-        <!--<script src="scripts/libs/webgl/js/dat.gui.min.js"></script>-->
-        <script src="scripts/libs/webgl/js/Detector.js"></script>
-        <!--<script src="scripts/libs/webgl/js/three.min.js"></script>-->
-        <script src="scripts/libs/webgl/js/TrackballControls.js"></script>
-        <script src="scripts/libs/webgl/js/OrbitControls.js"></script>
-		
-		<!-- Weitere Skripte (nicht WebGL) -->
-        <script src="scripts/controllers/import.js"></script>
-        <script src="scripts/controllers/preview.js"></script>
-        <script src="scripts/services/sharedlogin.js"></script>
-        <script src="scripts/filters/bytype.js"></script>
-        <script src="scripts/filters/bychooseability.js"></script>
-        <script src="scripts/filters/colsbydisplayability.js"></script>
-        <script src="scripts/filters/attrbyname.js"></script>
-        <script src="scripts/services/aggr.js"></script>
-        <script src="scripts/services/rest.js"></script>
-        <script src="scripts/controllers/storedview.js"></script>
-        <script src="scripts/filters/bygrouping.js"></script>
-        <script src="scripts/libs/sizeof.compressed.js"></script>
-        <script src="scripts/directives/loadingpanel.js"></script>
-        <!-- endbuild -->
-        <script src="scripts/controllers/settings.js"></script>
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/views.js"></script>
+    <script src="scripts/controllers/login.js"></script>
+    <script src="scripts/libs/lib_view.js"></script>
+
+    <!-- WebGL -->
+    <script src="scripts/libs/webgl/ClientWebGL.js"></script>
+    <script src="scripts/libs/webgl/gui.js"></script>
+    <script src="scripts/libs/webgl/Stadtteil.js"></script>
+    <script src="scripts/libs/webgl/dropDownMenue.js"></script>
+    <script src="scripts/libs/webgl/dijkstra.js"></script>
+
+    <script src="scripts/libs/webgl/js/Projector.js"></script>
+    <!--<script src="scripts/libs/webgl/js/dat.gui.min.js"></script>-->
+    <script src="scripts/libs/webgl/js/Detector.js"></script>
+    <!--<script src="scripts/libs/webgl/js/three.min.js"></script>-->
+    <script src="scripts/libs/webgl/js/TrackballControls.js"></script>
+    <script src="scripts/libs/webgl/js/OrbitControls.js"></script>
+
+    <!-- Weitere Skripte (nicht WebGL) -->
+    <script src="scripts/controllers/import.js"></script>
+    <script src="scripts/controllers/preview.js"></script>
+    <script src="scripts/services/sharedlogin.js"></script>
+    <script src="scripts/filters/bytype.js"></script>
+    <script src="scripts/filters/bychooseability.js"></script>
+    <script src="scripts/filters/colsbydisplayability.js"></script>
+    <script src="scripts/filters/attrbyname.js"></script>
+    <script src="scripts/services/aggr.js"></script>
+    <script src="scripts/services/rest.js"></script>
+    <script src="scripts/controllers/storedview.js"></script>
+    <script src="scripts/filters/bygrouping.js"></script>
+    <script src="scripts/libs/sizeof.compressed.js"></script>
+    <script src="scripts/directives/loadingpanel.js"></script>
+    <!-- endbuild -->
+    <script src="scripts/controllers/settings.js"></script>
 </body>
+
 </html>
