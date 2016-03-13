@@ -501,18 +501,20 @@ function highlightBuildingsWithConnections(value) {
  */
 function showIncomingConnections(value){
     var b = buildingInformation["name"];
+    if(b == "Klicken Sie bitte auf ein Gebäude"){
+        alert("Klicken Sie bitte ein Gebäude an!");
+        value == false;
+    }
     var hashmap = getBuildingsHashMap();
     for(var x in hashmap){
         var rightgarden = hashmap[x]._rightGarden;
-        if (value && x == b && rightgarden.on == false){
-            setGardenOn(rightgarden);
-        } else if(!value && x == b && rightgarden.on == true) {
-            setGardenOff(rightgarden);
-        } //else if(value && x != b){
-          //alert("Das angeklickte Gebäude hat keine eingehenden Verbindungen!");
-            //value == false;
-            //break;
-        //}
+        if(x == b){
+            if (value && x == b && rightgarden.on == false){
+                setGardenOn(rightgarden);
+            } else if(!value && x == b && rightgarden.on == true) {
+                setGardenOff(rightgarden);
+            } 
+        }
     }
 }
 
@@ -523,18 +525,20 @@ function showIncomingConnections(value){
  */
 function showOutgoingConnections(value){
     var b = buildingInformation["name"];
+    if(b == "Klicken Sie bitte auf ein Gebäude"){
+        alert("Klicken Sie bitte ein Gebäude an!");
+        value == false;
+    }
     var hashmap = getBuildingsHashMap();
     for(var x in hashmap){
         var leftgarden = hashmap[x]._leftGarden;
-        if (value && x == b && leftgarden.on == false){
-            setGardenOn(leftgarden);
-        } else if(!value && x == b && leftgarden.on == true) {
-            setGardenOff(leftgarden);
-        } //else if(value && x != b){
-            //alert("Das angeklickte Gebäude hat keine ausgehende Verbindungen!");
-            //value == false;
-            //break;
-        //}
+        if(x == b){
+            if (value && leftgarden.on == false){
+                setGardenOn(leftgarden);
+            } else if(!value && leftgarden.on == true) {
+                setGardenOff(leftgarden);
+            } 
+        }    
     }
 }
 
