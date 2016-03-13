@@ -83,6 +83,7 @@ function setCalls(income, outgoing) {
 }
 /**
  * Getter fuer incomingCalls, outgoingCalls
+ * @returns das Array mit den eingehenden und den ausgehenden Verbindungen
  */
 function getCalls() {
     return [incomingCalls, outgoingCalls];
