@@ -540,7 +540,19 @@ function setGardenPos(aBuilding) {
  * @param: namePrefix: Praefix vom Namen der Form "maindistrict.package1.package2."
  */
 function setMainDistrict(mainDistrict, namePrefix) {
-    districtHeight = parseFloat(metaData["min_" + association.height]) / parseFloat(metaData[scalingOption + "_" + association.height]);
+    /*
+    console.log(metaData[scalingOption + "_" + association.width] + "; " + metaData["min_" + association.width]);
+    
+    if (scalingOption === "avg") {
+        districtHeight = Math.sqrt(Math.sqrt(parseFloat(metaData["avg_" + association.width])));
+    } else {
+        districtHeight = 3 + Math.sqrt(parseFloat(metaData["avg_" + association.width]));
+    }
+    console.log("District Heigth: ");
+    console.log(districtHeight);
+    */
+    districtHeight = parseFloat(metaData["min_" + association.width]) / parseFloat(metaData[scalingOption + "_" + association.width]) + 3;
+    
     if (mainDistrict["buildings"] != undefined) {
         var buildings = mainDistrict["buildings"];
         var length = buildings.length;
