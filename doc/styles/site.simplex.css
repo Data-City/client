@@ -6931,8 +6931,9 @@ footer {
   padding-top: 15px;
 }
 code {
-  background-color: inherit;
+  background-color: none;
   border: none;
+  color: orange;
 }
 .buffered-name {
   padding-top: 62px;

@@ -288,7 +288,7 @@ function addCityToScene(mainDistrict, scene, camera) {
     mainDistrict._centerPosition[1] = -getDistrictHeight() / 2;
     addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), mainDistrict, boxGeom, myGeometry, matrix, quaternion);
     setCameraPos(camera, mainDistrict, extrema);
-    
+
     maximalHeight = getExtrema().maxHeight;
     totalMaterial = new THREE.MeshPhongMaterial({
         color: 0xffffff,
@@ -463,7 +463,7 @@ function drawLines(aGarden, updateBoolean) {
         } else {
             drawALine(aGarden, hashMap[x]._leftGarden);
         }
-        
+
     }
 }
 
@@ -486,12 +486,12 @@ function drawALine(aGarden, destGarden) {
         color: new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor)
     });
     var curveObject = new THREE.Line(geometry, material);
-	
+
 
     scene.add(curveObject);
 
     workUpGarden(aGarden, destGarden, curveObject);
-    workUpGarden(destGarden, aGarden, curveObject); 
+    workUpGarden(destGarden, aGarden, curveObject);
     destGarden.building._numOfActivatedConnections++;
 }
 
@@ -500,7 +500,7 @@ function drawALine(aGarden, destGarden) {
  * @param: aGarden: der Start-Garten
  * @param: destGarden: der Ziel-Garten
  * @param: geometry: die THREE.Geometry()-Instanz fuer die Strasse
-*/
+ */
 function pushVerticesForStreet(aGarden, destGarden, geometry) {
     var center = aGarden.building._centerPosition;
     var destCenter = destGarden.building._centerPosition;
@@ -509,7 +509,7 @@ function pushVerticesForStreet(aGarden, destGarden, geometry) {
     setPath(otherGeometry.vertices, aGarden.building, destGarden.building);
     otherGeometry.vertices.push(new THREE.Vector3(destCenter[0], destCenter[1] - destGarden.building._height / 2, destCenter[2]));
     pushVerticesFiveTimes(geometry, otherGeometry, true);
-    
+
 }
 
 /**
@@ -517,7 +517,7 @@ function pushVerticesForStreet(aGarden, destGarden, geometry) {
  * @param: aGarden: der Start-Garten
  * @param: destGarden: der Ziel-Garten
  * @param: geometry: die THREE.Geometry()-Instanz fuer die Boegen
-*/
+ */
 function pushVerticesForBow(aGarden, destGarden, geometry) {
     var curve = new THREE.CubicBezierCurve3(
         new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
@@ -538,25 +538,23 @@ function pushVerticesForBow(aGarden, destGarden, geometry) {
  * @param: geometry: die THREE.Geometry, dessen vertices um 5 Linien ergaenzt werden soll
  * @param: otherGeometry: die Hilfs-THREE.Geometry, die die mittlere Linie in den vertices gespeichert hat
  * @param: alsoZCoord: true, wenn man auch in z-Richtung fuer die Strassen die Linien versetzen will
-*/
-function pushVerticesFiveTimes(geometry, otherGeometry, alsoZCoord){
+ */
+function pushVerticesFiveTimes(geometry, otherGeometry, alsoZCoord) {
     otherGeometry.translate(-0.2, 0, 0);
-    for(var i=0; i<5; i++){
-        if (i%2 == 0) {
+    for (var i = 0; i < 5; i++) {
+        if (i % 2 == 0) {
             pushToArray(geometry.vertices, otherGeometry.vertices, false);
-        }
-        else {
+        } else {
             pushToArray(geometry.vertices, otherGeometry.vertices, true);
         }
         otherGeometry.translate(0.1, 0, 0);
     }
-    if(alsoZCoord) {
-        otherGeometry.translate(-0.2, 0, -0,2);
-        for(var i=0; i<5; i++){
-            if (i%2 == 1) {
+    if (alsoZCoord) {
+        otherGeometry.translate(-0.2, 0, -0, 2);
+        for (var i = 0; i < 5; i++) {
+            if (i % 2 == 1) {
                 pushToArray(geometry.vertices, otherGeometry.vertices, false);
-            }
-            else {
+            } else {
                 pushToArray(geometry.vertices, otherGeometry.vertices, true);
             }
             otherGeometry.translate(0, 0, 0.1);
@@ -571,17 +569,16 @@ function pushVerticesFiveTimes(geometry, otherGeometry, alsoZCoord){
  * @param: firstArray: das Array, an das die Elemente drangehaengt werden sollen
  * @param: secondArray: das Array, dessen Elemente an das erste Array angehaengt werden sollen
  * @param: isReversed: true, wenn die Elemente des zweiten Arrays in umgekehrter Reihenfolge an das erste drangehaengt werden sollen, ansonsten false
-*/
-function pushToArray(firstArray, secondArray, isReversed){
+ */
+function pushToArray(firstArray, secondArray, isReversed) {
     var length = secondArray.length;
-    if(isReversed) {
-        for(var i=length-1; i>=0; i--){
+    if (isReversed) {
+        for (var i = length - 1; i >= 0; i--) {
             firstArray.push(new THREE.Vector3(secondArray[i].x, secondArray[i].y, secondArray[i].z));
             //secondArray[i].x = secondArray[i].x + 0.1;
         }
-    }
-    else {
-        for (var i=0; i<length; i++) {
+    } else {
+        for (var i = 0; i < length; i++) {
             firstArray.push(new THREE.Vector3(secondArray[i].x, secondArray[i].y, secondArray[i].z));
             //secondArray[i].x = secondArray[i].x + 0.1;
         }
@@ -625,7 +622,7 @@ function removeLines(aGarden, updateBoolean) {
             scene.remove(aGarden.meshLines[x][i]);
         }
         hashMap[x]._numOfActivatedConnections = hashMap[x]._numOfActivatedConnections - 1;
-        if (hashMap[x]._numOfActivatedConnections==0) {
+        if (hashMap[x]._numOfActivatedConnections == 0) {
             var factor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
             colorObject(hashMap[x], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
         }
@@ -785,10 +782,9 @@ function highlightGardenLines(aGarden) {
             }
             colorObject(hashMap[x], 0xff0000);
         }
-    }
-    else {
+    } else {
         highlightSourceBuildings(aGarden);
-    }           
+    }
 }
 
 
@@ -797,20 +793,19 @@ function highlightGardenLines(aGarden) {
  * Hilfsmethode zum Highlighten der "Quell"-Gebaeude, wenn dessen Garten an ist
  * @param: aGarden: der Zielgarten, dessen Quellgebaude gehighlighted werden sollen
  */
-function highlightSourceBuildings(aGarden){
+function highlightSourceBuildings(aGarden) {
     var hashMap = getBuildingsHashMap();
     if (aGarden.building._numOfActivatedConnections > 0) {
         var linesTo = aGarden.linesTo;
         if (aGarden.isLeftGarden) {
             for (var x in linesTo) {
-                if (hashMap[x]._rightGarden.on ) {
+                if (hashMap[x]._rightGarden.on) {
                     colorObject(hashMap[x], 0xff0000);
                 }
-             }
-        }
-        else {
+            }
+        } else {
             for (var x in linesTo) {
-                if (hashMap[x]._leftGarden.on ) {
+                if (hashMap[x]._leftGarden.on) {
                     colorObject(hashMap[x], 0xff0000);
                 }
             }
@@ -838,10 +833,9 @@ function removeHighlightingGardenLines(aGarden) {
             factor = getColorFactor(extrema, hashMap[x]._color, "Color");
             colorObject(hashMap[x], 0x40FF00);
         }
-    }
-    else {
+    } else {
         removeHighlightingOfSourceBuildings(aGarden);
-    }           
+    }
 }
 
 
@@ -856,14 +850,13 @@ function removeHighlightingOfSourceBuildings(aGarden) {
         var factor;
         if (aGarden.isLeftGarden) {
             for (var x in linesTo) {
-                if (hashMap[x]._rightGarden.on ) {
+                if (hashMap[x]._rightGarden.on) {
                     setOldColor(hashMap[x]);
                 }
             }
-        }
-        else {
+        } else {
             for (var x in linesTo) {
-                if (hashMap[x]._leftGarden.on ) {
+                if (hashMap[x]._leftGarden.on) {
                     setOldColor(hashMap[x]);
                 }
             }
@@ -875,13 +868,12 @@ function removeHighlightingOfSourceBuildings(aGarden) {
  * Hilfsmethode fuer removeHighlightingOfSourceBuildings
  * gibt den entsprechenden Gebaeuden die richtige Farbe zurueck
  * @param: aBuilding: das Zielgebaeude, dessen Farbe wieder gerichtet werden soll nach dem Highlighten
-*/
+ */
 function setOldColor(aBuilding) {
     if (aBuilding._numOfActivatedConnections == 0) {
         factor = getColorFactor(getExtrema(), aBuilding._color, "Color");
         colorObject(aBuilding, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
-    }
-    else {
+    } else {
         colorObject(aBuilding, 0x40FF00);
     }
 }

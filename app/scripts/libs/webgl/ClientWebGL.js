@@ -58,42 +58,32 @@ function getControls() {
 
 
 
-function doDispose(obj)
-    {
-        if (obj !== null)
-        {
-            for (var i = 0; i < obj.children.length; i++)
-            {
-                doDispose(obj.children[i]);
-            }
-            if (obj.geometry)
-            {
-                obj.geometry.dispose();
-                obj.geometry = undefined;
-            }
-            if (obj.material)
-            {
-                if (obj.material.materials)
-                {
-                    for (i = 0; i < obj.material.materials.length; i++)
-                    {
-                        obj.material.materials[i].dispose();
-                    }
-                }
-                else
-                {
-                    obj.material.dispose();
-                }
-                obj.material = undefined;
-            }
-            if (obj.texture)
-            {
-                obj.texture.dispose();
-                obj.texture = undefined;
-            }
+function doDispose(obj) {
+    if (obj !== null) {
+        for (var i = 0; i < obj.children.length; i++) {
+            doDispose(obj.children[i]);
         }
-        obj = undefined;
+        if (obj.geometry) {
+            obj.geometry.dispose();
+            obj.geometry = undefined;
+        }
+        if (obj.material) {
+            if (obj.material.materials) {
+                for (i = 0; i < obj.material.materials.length; i++) {
+                    obj.material.materials[i].dispose();
+                }
+            } else {
+                obj.material.dispose();
+            }
+            obj.material = undefined;
+        }
+        if (obj.texture) {
+            obj.texture.dispose();
+            obj.texture = undefined;
+        }
     }
+    obj = undefined;
+}
 
 
 /**
@@ -114,7 +104,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
     init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
 
-    window.addEventListener('resize', function () {
+    window.addEventListener('resize', function() {
         camera.aspect = window.innerWidth / window.innerHeight;
         renderer.setSize(window.innerWidth, window.innerHeight);
     }, false);
@@ -139,11 +129,11 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
 
     return function freeWebGlMem() {
         //console.log(scene);
-        
+
         //console.log(totalGeom);
         //console.log(totalMaterial);
-        
-        
+
+
         //console.log(mainDistrict.buildings[0].buildings[0]);
         //mainDistrict.buildings[0].buildings[0].dispose();
         scene.remove(drawnObject);
@@ -247,7 +237,7 @@ function initData(data, association, incomingCalls, outgoingCalls) {
 
     usingConnections = association.useConnections;
     scalingOption = association.scalingOption;
-    
+
     initAssociation(association);
     initMainDistrict(data, association);
 
@@ -272,13 +262,13 @@ function initAssociation(association) {
     association.dimensions.height = association.dimensionSettings.height.name;
     setAssociation(association["dimensions"]);
     associations = association;
-    
+
     if (association.scalingOption === "avg") {
-        gap = 6 + 2*Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];   
+        gap = 6 + 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
     } else {
-        gap = 6 + 2*Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]);    
+        gap = 6 + 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]);
     }
-    
+
     setBuildingColor(association.buildingcolor);
 }
 
@@ -303,13 +293,12 @@ function initMainDistrict(data, association) {
 /**
  * initialisiert nameOfAllBuildings, setzt es gleich mit einem Array, das aus den Namen der Gebaeude besteht
  *@param: aDistrict: Das Distrikt, dessen Gebäudenamen alle in nameOfAllBuildings gespeichert werden soll
-*/
-function setNameOfAllBuildings(aDistrict){
-    if(aDistrict.buildings==undefined) {
+ */
+function setNameOfAllBuildings(aDistrict) {
+    if (aDistrict.buildings == undefined) {
         nameOfAllBuildings.push(aDistrict[associations.dimensions.name]);
-    }
-    else{
-        for(var i=0; i<aDistrict.buildings.length; i++){
+    } else {
+        for (var i = 0; i < aDistrict.buildings.length; i++) {
             setNameOfAllBuildings(aDistrict.buildings[i]);
         }
     }
@@ -348,7 +337,7 @@ var ctrlIsPressed;
 /**
  * Fügt Listener für einen Screenshot hinzu
  */
-window.addEventListener("keydown", function (e) {
+window.addEventListener("keydown", function(e) {
     var imgData, imgNode;
 
     if (e.which == 16) {
@@ -374,7 +363,7 @@ window.addEventListener("keydown", function (e) {
     }
 });
 
-window.addEventListener("keyup", function (e) {
+window.addEventListener("keyup", function(e) {
     if (e.which == 16) {
         ctrlIsPressed = false;
     }
@@ -383,7 +372,7 @@ window.addEventListener("keyup", function (e) {
 /**
  * Navigation über die Pfeiltasten
  */
-window.addEventListener("keydown", function (e) {
+window.addEventListener("keydown", function(e) {
     //Pfeiltaste links
     if (e.which === 37) {
         e.preventDefault();
@@ -440,7 +429,7 @@ window.addEventListener("keydown", function (e) {
  */
 function shiftCam(theKey) {
     var shiftingVector = getShiftingVector(theKey);
-    var lengthOfshiftingVector = Math.sqrt(Math.pow(shiftingVector.x, 2)+Math.pow(shiftingVector.z, 2));
+    var lengthOfshiftingVector = Math.sqrt(Math.pow(shiftingVector.x, 2) + Math.pow(shiftingVector.z, 2));
     shiftingVector.x = shiftingVector.x * SpeedForShiftByKeys / lengthOfshiftingVector;
     shiftingVector.z = shiftingVector.z * SpeedForShiftByKeys / lengthOfshiftingVector;
     camera.position.x = camera.position.x - shiftingVector.x;
@@ -453,41 +442,58 @@ function shiftCam(theKey) {
  * Hilfsmethode fuer ShiftCam, gibt den Normalenvektor von dem Verbindungsvektor der Kamera zum Target
  * @param: theKey: 37 fuer links, 38 fuer hoch, 39 fuer rechts, 40 fuer runter
  * @return: shiftingVector: der Vektor, um den die Kamera und der Target verschoben werden sollen
-*/
-function getShiftingVector(theKey){
+ */
+function getShiftingVector(theKey) {
     var x = trackballControls.target.x - camera.position.x;
     var z = trackballControls.target.z - camera.position.z;
     var shiftingVector;
-    if(theKey == 39) {
+    if (theKey == 39) {
         if (x <= 0) {
-            shiftingVector = {x: -z/x, z: 1};
+            shiftingVector = {
+                x: -z / x,
+                z: 1
+            };
+        } else {
+            shiftingVector = {
+                x: z / x,
+                z: -1
+            };
         }
-        else {
-            shiftingVector = {x: z/x, z: -1};
-        }
-    }
-    else if (theKey == 38) {
+    } else if (theKey == 38) {
         if (z >= 0) {
-            shiftingVector = {x: x, z: z};
+            shiftingVector = {
+                x: x,
+                z: z
+            };
+        } else {
+            shiftingVector = {
+                x: -x,
+                z: -z
+            };
         }
-        else {
-            shiftingVector = {x: -x, z: -z};
-        }
-    }
-    else if (theKey == 37) {
+    } else if (theKey == 37) {
         if (x <= 0) {
-            shiftingVector = {x: z/x, z: -1};
+            shiftingVector = {
+                x: z / x,
+                z: -1
+            };
+        } else {
+            shiftingVector = {
+                x: -z / x,
+                z: 1
+            };
         }
-        else {
-            shiftingVector = {x: -z/x, z: 1};
-        }
-    }
-    else {
+    } else {
         if (z >= 0) {
-            shiftingVector = {x: -x, z: -z}
-        }
-        else {
-            shiftingVector = {x: x, z: z};
+            shiftingVector = {
+                x: -x,
+                z: -z
+            }
+        } else {
+            shiftingVector = {
+                x: x,
+                z: z
+            };
         }
     }
     return shiftingVector;
@@ -637,11 +643,11 @@ function animate() {
     trackballControls.update();
     //malt neu
     render();
-    
+
     // schaut, ob was passiert ist
     animationId = requestAnimationFrame(animate);
     //requestAnimationFrame(update);
-    
+
 }
 
 
@@ -777,17 +783,16 @@ function getIncomingConnections(connectionData) {
     var toSubstract;
     for (var i = 0; i < connectionData.connections.length; i++) {
         ithConn = connectionData.connections[i];
-        if(nameOfAllBuildings.indexOf(ithConn.Ziel)>-1) {
+        if (nameOfAllBuildings.indexOf(ithConn.Ziel) > -1) {
             toSubstract = 0;
             newJson[ithConn.Ziel] = {};
             newJson[ithConn.Ziel].connections = {};
             for (var j = 0; j < ithConn.incomingConnections.length; j++) {
 
-                if (nameOfAllBuildings.indexOf(ithConn.incomingConnections[j].Start)>-1){
+                if (nameOfAllBuildings.indexOf(ithConn.incomingConnections[j].Start) > -1) {
                     newJson[ithConn.Ziel].connections[ithConn.incomingConnections[j].Start] = ithConn.incomingConnections[j].Gewichtung;
                     updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung, "Connections");
-                }
-                else {
+                } else {
                     toSubstract = toSubstract + ithConn.incomingConnections[j].Gewichtung;
                 }
             }
@@ -816,14 +821,13 @@ function getOutgoingConnections(connectionData) {
     for (var i = 0; i < connectionData.connections.length; i++) {
         ithConn = connectionData.connections[i];
         toSubstract = 0;
-        if(nameOfAllBuildings.indexOf(ithConn.Start)>-1) {
+        if (nameOfAllBuildings.indexOf(ithConn.Start) > -1) {
             newJSON[ithConn.Start] = {};
             newJSON[ithConn.Start].connections = {};
             for (var j = 0; j < ithConn.outgoingConnections.length; j++) {
-                if(nameOfAllBuildings.indexOf(ithConn.outgoingConnections[j].Ziel) > -1){
+                if (nameOfAllBuildings.indexOf(ithConn.outgoingConnections[j].Ziel) > -1) {
                     newJSON[ithConn.Start].connections[ithConn.outgoingConnections[j].Ziel] = ithConn.outgoingConnections[j].Gewichtung;
-                }
-                else{
+                } else {
                     toSubstract = toSubstract + ithConn.outgoingConnections[j].Gewichtung;
                 }
             }
@@ -925,7 +929,7 @@ function onDocumentMouseDown(event) {
                     b[association["color"]],
                     b[association["name"]],
                     intersects[0]
-                    );
+                );
             }
         }
     }
