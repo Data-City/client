@@ -316,7 +316,8 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         showIncomingConnections(value);      
     })
     h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verbindungen").onChange(function(value){
-        buildingInformation["ausgehendeVerbindungenaktivieren"] = value;      
+        buildingInformation["ausgehendeVerbindungenaktivieren"] = value;
+        showOutgoingConnections(value);      
     })
         /*h.add(buildingInformation, "remove").name("Ausblenden");
         h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
@@ -494,13 +495,49 @@ function highlightBuildingsWithConnections(value) {
     }
 }
 
+/**Methode um die eingehenden Verbindungen des angeklickten Gebaeude zu zeichnen
+ * @params: value: der Wert aus der Legende, also ein Boolean, true = Verbindungen sind eingeschaltet, false = ausgeschaltet
+ * 
+ */
 function showIncomingConnections(value){
     var b = buildingInformation["name"];
-    var arr = getCalls();
-    var income = arr[0];
-    
-    
+    var hashmap = getBuildingsHashMap();
+    for(var x in hashmap){
+        var rightgarden = hashmap[x]._rightGarden;
+        if (value && x == b && rightgarden.on == false){
+            setGardenOn(rightgarden);
+        } else if(!value && x == b && rightgarden.on == true) {
+            setGardenOff(rightgarden);
+        } //else if(value && x != b){
+          //alert("Das angeklickte Gebäude hat keine eingehenden Verbindungen!");
+            //value == false;
+            //break;
+        //}
+    }
 }
+
+
+/**Methode um die ausgehenden Verbindungen des angeklickten Gebaeude zu zeichnen
+ * @params: value: der Wert aus der Legende, also ein Boolean, true = Verbindungen sind eingeschaltet, false = ausgeschaltet
+ * 
+ */
+function showOutgoingConnections(value){
+    var b = buildingInformation["name"];
+    var hashmap = getBuildingsHashMap();
+    for(var x in hashmap){
+        var leftgarden = hashmap[x]._leftGarden;
+        if (value && x == b && leftgarden.on == false){
+            setGardenOn(leftgarden);
+        } else if(!value && x == b && leftgarden.on == true) {
+            setGardenOff(leftgarden);
+        } //else if(value && x != b){
+            //alert("Das angeklickte Gebäude hat keine ausgehende Verbindungen!");
+            //value == false;
+            //break;
+        //}
+    }
+}
+
 
 
 /**
