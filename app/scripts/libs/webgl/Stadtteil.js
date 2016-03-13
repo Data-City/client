@@ -553,7 +553,7 @@ function setMainDistrict(mainDistrict, namePrefix) {
     console.log(districtHeight);
     */
     districtHeight = parseFloat(metaData["min_" + association.width]) / parseFloat(metaData[scalingOption + "_" + association.width]) + 3;
-    
+
     if (mainDistrict["buildings"] != undefined) {
         var buildings = mainDistrict["buildings"];
         var length = buildings.length;
