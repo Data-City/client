@@ -552,7 +552,7 @@ function setMainDistrict(mainDistrict, namePrefix) {
     console.log("District Heigth: ");
     console.log(districtHeight);
     */
-    districtHeight = parseFloat(metaData["min_" + association.width]) / parseFloat(metaData[scalingOption + "_" + association.width]) + 3;
+    //districtHeight = parseFloat(metaData["min_" + association.width]) / parseFloat(metaData[scalingOption + "_" + association.width]) + 3;
 
     if (mainDistrict["buildings"] != undefined) {
         var buildings = mainDistrict["buildings"];
@@ -653,7 +653,7 @@ function getDrawnDimValue(aBuilding, dimString) {
     var toReturn;
 
     var buildingDimension = aBuilding[association[dimString]];
-    var scalingString = metaData[scalingOption + "_" + association[dimString]]; //z.B. "min_ID"
+    var scalingString = 0.5*metaData[scalingOption + "_" + association[dimString]]; //z.B. "min_ID"
 
     if (buildingDimension != undefined && buildingDimension != "" && buildingDimension != 0) {
         /* Wird hoffentlich nicht mehr benötigt, da nur Zahlen übergeben werden

@@ -177,7 +177,6 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
         nodeID = 0;
 
         metaData = null;
-        console.log("AUFRUF!");
         associations = null; //die Legende
         camera = null;
         scene = null;
@@ -263,11 +262,23 @@ function initAssociation(association) {
     setAssociation(association["dimensions"]);
     associations = association;
 
+    scalingOption = "avg";
+
     if (association.scalingOption === "avg") {
-        gap = 6 + 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
+        gap = 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
     } else {
-        gap = 6 + 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]);
+        gap = 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]);
     }
+    //console.log("gap: ");
+    //console.log(gap);
+    
+    //console.log("Wurzel von: " + association.dimensionSettings.area.numberValueFilter[1] + " ist " + Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]));
+    //console.log("Wurzel von Avg: " + metaData["avg_" + association.dimensions.area] +  " ist " + Math.sqrt(metaData["avg_" + association.dimensions.area]));
+    
+    districtHeight = 1.5* Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);
+    
+    //console.log("districtHeight:");
+    //console.log(districtHeight);
 
     setBuildingColor(association.buildingcolor);
 }
