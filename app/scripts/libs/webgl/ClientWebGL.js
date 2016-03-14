@@ -271,12 +271,12 @@ function initAssociation(association) {
     }
     //console.log("gap: ");
     //console.log(gap);
-    
+
     //console.log("Wurzel von: " + association.dimensionSettings.area.numberValueFilter[1] + " ist " + Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]));
     //console.log("Wurzel von Avg: " + metaData["avg_" + association.dimensions.area] +  " ist " + Math.sqrt(metaData["avg_" + association.dimensions.area]));
-    
-    districtHeight = 1.5* Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);
-    
+
+    districtHeight = 1.5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);
+
     //console.log("districtHeight:");
     //console.log(districtHeight);
 
