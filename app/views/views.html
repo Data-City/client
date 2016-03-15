@@ -1,4 +1,4 @@
-<div ng-app="datacityApp" ng-controller="ViewsCtrl">
+<div ng-app="datacityApp" ng-controller="ViewsCtrl" class="container">
     <!-- class="container"-->
 
     <!-- Fehlerausgabe, falls man nicht eingeloggt ist -->
@@ -9,7 +9,8 @@
     -->
 
     <!-- <span us-spinner ng-show="loggedIn && loader"></span> -->
-    <span us-spinner ng-show="loader"></span>
+    <loadingpanel ng-show="percentage < 100" msg="msg" percentage="{{percentage}}"></loadingpanel>
+    <!--<span us-spinner ng-show="loader"></span>-->
 
     <!-- <div ng-show="loggedIn && !loader" id="collapseAll" class="panel-collapse collapse in"> -->
     <div ng-show="!loader" id="collapseAll" class="panel-collapse collapse in">

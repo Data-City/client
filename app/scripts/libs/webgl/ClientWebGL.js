@@ -97,98 +97,50 @@ function doDispose(obj) {
  * @param: settings: undefined oder ein JSON zum Wiederaufrufen einer bestimmten Ansicht, siehe setSpecificView()
  * @param: incomingCalls: JSON fuer die eingehenden Verbindungen, siehe getIncomingConnections(...) oder undefined
  * @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
+ * @param  function setLoaderSettings Funktion, mit der sich Nachricht und Prozent der Ladeanzeige setzen lassen
  */
-function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls) {
+function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls, setLoaderSettings) {
+    return new Promise(function (resolve, reject) {
+        try {
+            if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
 
-    if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
-    init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
+            init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
 
-    window.addEventListener('resize', function() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    }, false);
+            window.addEventListener('resize', function () {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }, false);
+                initData(data, association, incomingCalls, outgoingCalls);
+                setLoaderSettings("Zeichne Stadt...", 70).then(function () {
+                    setAndDrawCity(mainDistrict, false);
+                    setLoaderSettings("Setze Kamera und starte Animation...", 90).then(function () {
+                            
+                        // Erstelle die Legende
+                        if (Detector.webgl) {
+                            var ourDivElement = document.getElementById(nameOfDivElement);
+                            if (ourDivElement.children["dropdownmenu"]) {
+                                ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
+                            }
+                            setMenue(scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);
+                        }
+                        updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
+                        animate();
+                        saveCamera();
+                        goToInitialView();
 
-    initData(data, association, incomingCalls, outgoingCalls);
-    setAndDrawCity(mainDistrict, false);
+                        setLoaderSettings("Fertig!", 100);
+                        if (settings != undefined) {
+                            setSpecificView(settings);
+                        }
+                        resolve();
+                    });
 
-    // Erstelle die Legende
-    if (Detector.webgl) {
-        var ourDivElement = document.getElementById(nameOfDivElement);
-        if (ourDivElement.children["dropdownmenu"]) {
-            ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
+            });
+        } catch (error) {
+            alert(error);
+            reject(error);
         }
-        setMenue(scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);
-    }
-    updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
-    animate();
-    saveCamera();
-    goToInitialView();
-
-    if (settings != undefined) setSpecificView(settings);
-
-    return function freeWebGlMem() {
-        //console.log(scene);
-
-        //console.log(totalGeom);
-        //console.log(totalMaterial);
-
-
-        //console.log(mainDistrict.buildings[0].buildings[0]);
-        //mainDistrict.buildings[0].buildings[0].dispose();
-        scene.remove(drawnObject);
-        doDispose(drawnObject);
-        mainDistrict = null;
-
-        totalGeom.dispose();
-        totalGeom = null;
-        totalMaterial.dispose();
-        totalMaterial = null;
-
-        window.cancelAnimationFrame(animationId);
-
-        document.removeEventListener('mousemove', onDocumentMouseMove, false);
-        renderer.domElement.removeEventListener('mousedown', onDocumentMouseDown, false);
-
-        renderer.dispose();
-
-        association = {}; //Hier wird die Legende gespeichert
-        incomingCalls = {}; //speichert Infos ueber Eingehende Verbindungen
-        outgoingCalls = {}; //speichert Infos ueber ausgehende Verbindungen
-        gap = 10; //Abstand zwischen den Gebaeuden
-        gardenRadius = 6; //Groesse der Gaerten
-
-        arrayOfBuildings = null;
-        maxWidth = null;
-        maxDepth = null;
-        startToBuildInZDirection = null;
-        extension = null;
-        buildingInZDirection = null;
-        lastMaxWidth = null;
-        width = null;
-        startToBuildInXDirection; //fuer setOneDistrict
-
-        buildingsHashMap = {}; //Hashmap fuer Gebaeude: mapt Gebaeude-ID mit dem Objekt
-
-        jsonOfNodes = {}; //man greift erst auf die x-Position zu, dann auf die z-Position, dann bekommt man den Knoten
-
-        graph = {};
-        nodeHashMap = {};
-        nodeID = 0;
-
-        metaData = null;
-        associations = null; //die Legende
-        camera = null;
-        scene = null;
-        renderer = null;
-        trackballControls = null;
-        orbitControls = null;
-        raycaster = null;
-
-
-        //dispose(mainDistrict);
-        //sizeof(mainDistrict);
-        //empty(mainDistrict);
-    };
+    });
 }
 
 
@@ -259,7 +211,7 @@ function initAssociation(association) {
     association.dimensions.height = association.dimensionSettings.height.name;
     setAssociation(association["dimensions"]);
     associations = association;
-    
+
     drawGardens = association.drawGardens;
 
     gap = 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
@@ -343,7 +295,7 @@ var ctrlIsPressed;
 /**
  * Fügt Listener für einen Screenshot hinzu
  */
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     var imgData, imgNode;
 
     if (e.which == 16) {
@@ -369,7 +321,7 @@ window.addEventListener("keydown", function(e) {
     }
 });
 
-window.addEventListener("keyup", function(e) {
+window.addEventListener("keyup", function (e) {
     if (e.which == 16) {
         ctrlIsPressed = false;
     }
@@ -378,7 +330,7 @@ window.addEventListener("keyup", function(e) {
 /**
  * Navigation über die Pfeiltasten
  */
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     //Pfeiltaste links
     if (e.which === 37) {
         e.preventDefault();
@@ -935,7 +887,7 @@ function onDocumentMouseDown(event) {
                     b[association["color"]],
                     b[association["name"]],
                     intersects[0]
-                );
+                    );
             }
         }
     }

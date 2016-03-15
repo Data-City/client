@@ -114,3 +114,24 @@ body {
         color: #0066B3;
     }
 /* ENDE NAVBAR STYLE */
+
+/* Fix Progressbar */
+.progress {
+    position: relative;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+    .progress .bar {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    transition: none;
+}​
+ }
+
+/* </progressbar> */
