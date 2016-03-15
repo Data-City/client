@@ -18,7 +18,6 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
 var camToSave = {}; //speichert Anfangseinstellung
 var useStreets;
 var usingConnections;
-var scalingOption;
 var SpeedForShiftByKeys = 5;
 var nameOfAllBuildings = [];
 
@@ -235,7 +234,6 @@ function initData(data, association, incomingCalls, outgoingCalls) {
     setMetaData(association.metaData);
 
     usingConnections = association.useConnections;
-    scalingOption = association.scalingOption;
 
     initAssociation(association);
     initMainDistrict(data, association);
@@ -262,13 +260,8 @@ function initAssociation(association) {
     setAssociation(association["dimensions"]);
     associations = association;
 
-    scalingOption = "avg";
-
-    if (association.scalingOption === "avg") {
-        gap = 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
-    } else {
-        gap = 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]);
-    }
+    gap = 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
+    
     //console.log("gap: ");
     //console.log(gap);
 

@@ -541,19 +541,6 @@ function setGardenPos(aBuilding) {
  * @param: namePrefix: Praefix vom Namen der Form "maindistrict.package1.package2."
  */
 function setMainDistrict(mainDistrict, namePrefix) {
-    /*
-    console.log(metaData[scalingOption + "_" + association.width] + "; " + metaData["min_" + association.width]);
-    
-    if (scalingOption === "avg") {
-        districtHeight = Math.sqrt(Math.sqrt(parseFloat(metaData["avg_" + association.width])));
-    } else {
-        districtHeight = 3 + Math.sqrt(parseFloat(metaData["avg_" + association.width]));
-    }
-    console.log("District Heigth: ");
-    console.log(districtHeight);
-    */
-    //districtHeight = parseFloat(metaData["min_" + association.width]) / parseFloat(metaData[scalingOption + "_" + association.width]) + 3;
-
     if (mainDistrict["buildings"] != undefined) {
         var buildings = mainDistrict["buildings"];
         var length = buildings.length;
@@ -653,7 +640,7 @@ function getDrawnDimValue(aBuilding, dimString) {
     var toReturn;
 
     var buildingDimension = aBuilding[association[dimString]];
-    var scalingString = 0.5 * metaData[scalingOption + "_" + association[dimString]]; //z.B. "min_ID"
+    var scalingString = 0.5 * metaData["avg_" + association[dimString]]; //z.B. "min_ID"
 
     if (buildingDimension != undefined && buildingDimension != "" && buildingDimension != 0) {
         /* Wird hoffentlich nicht mehr benötigt, da nur Zahlen übergeben werden
@@ -663,7 +650,6 @@ function getDrawnDimValue(aBuilding, dimString) {
         }
         */
         if (scalingString > 2) {
-            //toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData[scalingOption + "_" + association[dimString]]) + 1.5;
             toReturn = parseFloat(buildingDimension) / parseFloat(scalingString);
         } else {
             //toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
