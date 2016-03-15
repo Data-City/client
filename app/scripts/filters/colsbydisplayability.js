@@ -19,7 +19,7 @@ angular.module('datacityApp')
             collections.forEach(function(element, index) {
                 /*jshint -W117 */
                 var myRegExp = /^(?!.*\.tmp$)[\/\w\.-]+$/i;
-                
+
                 if (element._id.indexOf(REST.META_DATA_PART) < 0 && element._id.match(myRegExp)) {
                     displayableCollections.push(element);
                 }

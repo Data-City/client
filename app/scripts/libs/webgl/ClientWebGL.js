@@ -100,40 +100,40 @@ function doDispose(obj) {
  * @param  function setLoaderSettings Funktion, mit der sich Nachricht und Prozent der Ladeanzeige setzen lassen
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls, setLoaderSettings) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
         try {
             if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
 
             init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
 
-            window.addEventListener('resize', function () {
+            window.addEventListener('resize', function() {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 renderer.setSize(window.innerWidth, window.innerHeight);
             }, false);
-                initData(data, association, incomingCalls, outgoingCalls);
-                setLoaderSettings("Zeichne Stadt...", 70).then(function () {
-                    setAndDrawCity(mainDistrict, false);
-                    setLoaderSettings("Setze Kamera und starte Animation...", 90).then(function () {
-                            
-                        // Erstelle die Legende
-                        if (Detector.webgl) {
-                            var ourDivElement = document.getElementById(nameOfDivElement);
-                            if (ourDivElement.children["dropdownmenu"]) {
-                                ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
-                            }
-                            setMenue(scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);
-                        }
-                        updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
-                        animate();
-                        saveCamera();
-                        goToInitialView();
+            initData(data, association, incomingCalls, outgoingCalls);
+            setLoaderSettings("Zeichne Stadt...", 70).then(function() {
+                setAndDrawCity(mainDistrict, false);
+                setLoaderSettings("Setze Kamera und starte Animation...", 90).then(function() {
 
-                        setLoaderSettings("Fertig!", 100);
-                        if (settings != undefined) {
-                            setSpecificView(settings);
+                    // Erstelle die Legende
+                    if (Detector.webgl) {
+                        var ourDivElement = document.getElementById(nameOfDivElement);
+                        if (ourDivElement.children["dropdownmenu"]) {
+                            ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
                         }
-                        resolve();
-                    });
+                        setMenue(scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);
+                    }
+                    updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
+                    animate();
+                    saveCamera();
+                    goToInitialView();
+
+                    setLoaderSettings("Fertig!", 100);
+                    if (settings != undefined) {
+                        setSpecificView(settings);
+                    }
+                    resolve();
+                });
 
             });
         } catch (error) {
@@ -215,7 +215,7 @@ function initAssociation(association) {
     drawGardens = association.drawGardens;
 
     gap = 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
-    
+
     //console.log("gap: ");
     //console.log(gap);
 
@@ -295,7 +295,7 @@ var ctrlIsPressed;
 /**
  * Fügt Listener für einen Screenshot hinzu
  */
-window.addEventListener("keydown", function (e) {
+window.addEventListener("keydown", function(e) {
     var imgData, imgNode;
 
     if (e.which == 16) {
@@ -321,7 +321,7 @@ window.addEventListener("keydown", function (e) {
     }
 });
 
-window.addEventListener("keyup", function (e) {
+window.addEventListener("keyup", function(e) {
     if (e.which == 16) {
         ctrlIsPressed = false;
     }
@@ -330,7 +330,7 @@ window.addEventListener("keyup", function (e) {
 /**
  * Navigation über die Pfeiltasten
  */
-window.addEventListener("keydown", function (e) {
+window.addEventListener("keydown", function(e) {
     //Pfeiltaste links
     if (e.which === 37) {
         e.preventDefault();
@@ -887,7 +887,7 @@ function onDocumentMouseDown(event) {
                     b[association["color"]],
                     b[association["name"]],
                     intersects[0]
-                    );
+                );
             }
         }
     }

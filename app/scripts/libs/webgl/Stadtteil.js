@@ -522,7 +522,7 @@ function setGardenPos(aBuilding) {
         } else {
             right._centerPosition[0] = cP[0];
             right._centerPosition[1] = cP[1];
-            right._centerPosition[2] = cP[2];   
+            right._centerPosition[2] = cP[2];
         }
 
         right.nextLinePos[0] = right._centerPosition[0];
@@ -531,15 +531,15 @@ function setGardenPos(aBuilding) {
 
     if (left) {
         if (drawGardens) {
-             left._centerPosition[0] = cP[0] - left._width / 2;
-             left._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight / 2 + 0.01;
-             left._centerPosition[2] = cP[2] + 1 + left.depth - left.radius + aBuilding._width / 2;
+            left._centerPosition[0] = cP[0] - left._width / 2;
+            left._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight / 2 + 0.01;
+            left._centerPosition[2] = cP[2] + 1 + left.depth - left.radius + aBuilding._width / 2;
         } else {
             left._centerPosition[0] = cP[0];
             left._centerPosition[1] = cP[1];
-            left._centerPosition[2] = cP[2];   
+            left._centerPosition[2] = cP[2];
         }
-        
+
 
         left.nextLinePos[0] = left._centerPosition[0];
         left.nextLinePos[1] = left._centerPosition[2];
