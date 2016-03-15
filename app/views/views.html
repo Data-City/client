@@ -190,105 +190,46 @@
                                 <span class="glyphicon glyphicon-chevron-down pull-right" ng-hide="showStep2" aria-hidden="true"></span>
                             </div>
                             <div class="panel-body" ng-show="showStep2 && chosenView.metaData.connectionsAvailable">
-                                <div class="checkbox">
+                                <div class="container">
                                     <label>
                                         <input type="checkbox" ng-model="chosenView.useConnections"> Verbindungen nutzen</input>
                                         <!--Hinweis-->
                                         <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ist 'Verbindungen nutzen' ausgewählt, erscheinen diese als zwei Vorgärten vor dem Gebäude."></span>
                                         <br></br>
                                     </label>
-                                    <br>
-                                    <p><i>Hinweis: Die Bögen sind in der Erstellung performanter, weshalb diese bei großen Datensätzen zu bevorzugen sind.</i></p>
-                                    <fieldset class="formgroup" ng-show="chosenView.useConnections">
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" ng-model="chosenView.typeOfConnections" value=0> Bögen
-                                            </label>
-                                            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Gebogene Linien, die zwei Gebäude durch die Luft verbinden"></span>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" ng-model="chosenView.typeOfConnections" value=1> Straßen
-                                            </label>
-                                        </div>
-                                    </fieldset>
-                                    </br>
-                                    <div ng-if="chosenView.useConnections">
-                                        <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#demo">Erläuterung</button>
-                                        <div id="demo" class="collapse">
-                                            <div class="panel panel-primary">
-                                                <div class="panel-body">
-                                                    <p> Die Vorgärten, die auf die Gebäude zeigen, stellen die eingehenden Verbindungen dar.
-                                                        Die anderen stehen für die ausgehenden Verbindungen.</p>
-                                                    <p> Je dunkler bzw. grüner ein Vorgarten ist, umso mehr ausgehende oder eingehende Verbindungen
-                                                        liegen vor.</p>
-                                                    <p> Je dunkler die Straße bzw. die Linie ist, umso höher sind die Verbindungen von A
-                                                        nach B.</p>
+                                    <div ng-show="chosenView.useConnections">
+                                        <input type="checkbox" ng-model="chosenView.drawGardens"> Vorgärten zeichnen</input>
+                                        <p><i>Hinweis: Die Bögen sind in der Erstellung performanter, weshalb diese bei großen Datensätzen zu bevorzugen sind.</i></p>
+                                        <fieldset class="formgroup" ng-show="chosenView.useConnections">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" ng-model="chosenView.typeOfConnections" value=0> Bögen
+                                                </label>
+                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Gebogene Linien, die zwei Gebäude durch die Luft verbinden"></span>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" ng-model="chosenView.typeOfConnections" value=1> Straßen
+                                                </label>
+                                            </div>
+                                        </fieldset>
+                                        </br>
+                                        <div ng-if="chosenView.useConnections">
+                                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#demo">Erläuterung</button>
+                                            <div id="demo" class="collapse">
+                                                <div class="panel panel-primary">
+                                                    <div class="panel-body">
+                                                        <p> Die Vorgärten, die auf die Gebäude zeigen, stellen die eingehenden Verbindungen dar.
+                                                            Die anderen stehen für die ausgehenden Verbindungen.</p>
+                                                        <p> Je dunkler bzw. grüner ein Vorgarten ist, umso mehr ausgehende oder eingehende Verbindungen
+                                                            liegen vor.</p>
+                                                        <p> Je dunkler die Straße bzw. die Linie ist, umso höher sind die Verbindungen von A
+                                                            nach B.</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                      </div>
-                                    <!-- Filterung der Verbindungen erstmal auskommentiert
-                                    
-                                    
-                                        <p><i>Filterung ist noch nicht implementiert!</i></p>
-                                    <table  class="table table-striped table-bordered table-condensed table-responsive">
-                                        <colgroup>
-                                            <col span="1" style="width: 25%;"></col>
-                                            <col span="1" style="width: 75%;"></col>
-                                        </colgroup>
-                                        <tbody>
-                                            <div>
-                                                <td>Eingehende Verbindungen</td>
-                                                <td>
-                                                    <div class="row">
-                                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
-                                                            <div class="row">
-                                                                <div class="col-md-4 col-sm-4"> <span class="pull-left">Minimum: </span></div>
-                                                                <div class="col-md-4 col-sm-4"> <span class="center-block text-center"> Durchschnitt: </span></div>
-                                                                <div class="col-md-4 col-sm-4"> <span class="pull-right"> Maximum:  </span></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
-                                                            <slider ng-model="attr.numberValueFilter" value="attr.numberValueFilter" range="true"></slider>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </div>
-                                        </tbody>
-                                    </table>
-
-                                    <table ng-if="chosenView.useConnections" class="table table-striped table-bordered table-condensed table-responsive">
-                                        <colgroup>
-                                            <col span="1" style="width: 25%;"></col>
-                                            <col span="1" style="width: 75%;"></col>
-                                        </colgroup>
-                                        <tbody>
-                                            <div>
-                                                <td>Ausgehende Verbindungen</td>
-                                                <td>
-                                                    <div class="row">
-                                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
-                                                            <div class="row">
-                                                                <div class="col-md-4 col-sm-4"> <span class="pull-left">Minimum: </span></div>
-                                                                <div class="col-md-4 col-sm-4"> <span class="center-block text-center"> Durchschnitt: </span></div>
-                                                                <div class="col-md-4 col-sm-4"> <span class="pull-right"> Maximum:  </span></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
-                                                            <slider ng-model="attr.numberValueFilter" value="attr.numberValueFilter" range="true"></slider>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </div>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                -->
                                 </div>
                             </div>
                             <div class="alert alert-warning" ng-show="showStep2 && !chosenView.metaData.connectionsAvailable">Da es keine Verbindungen gibt, kann man keine auswählen</div>

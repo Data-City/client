@@ -33,6 +33,8 @@ var qwert = 0;
 
 var drawnObject = null;
 
+var drawGardens;
+
 /**
  * Setter fuer die Farbe der Gebaeude aus settings.js
  *@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
@@ -325,14 +327,14 @@ function addEachDistrict(aDistrict, scene, extrema, colorBoolean, boxGeom, garde
     if (aDistrict["buildings"] == undefined) {
         var factor = getColorFactor(extrema, aDistrict._color, "Color");
         addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor), aDistrict, boxGeom, myGeometry, matrix, quaternion);
-        //if (doWeUseConnections()) addGarden(aDistrict, scene, gardenGeom, myGeometry, matrix, quaternion);
+        if (doWeUseConnections() && drawGardens) addGarden(aDistrict, scene, gardenGeom, myGeometry, matrix, quaternion);
     } else {
         if (colorBoolean == 0) {
             addBoxes(0xDBDBDC, aDistrict, boxGeom, myGeometry, matrix, quaternion);
         } else {
             addBoxes((new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), alphaForDistrictColor), aDistrict, boxGeom, myGeometry, matrix, quaternion);
         }
-        //if (doWeUseConnections()) addGarden(aDistrict, scene, gardenGeom, myGeometry, matrix, quaternion);
+        if (doWeUseConnections() && drawGardens) addGarden(aDistrict, scene, gardenGeom, myGeometry, matrix, quaternion);
 
         var buildings = aDistrict["buildings"];
         var length = buildings.length;

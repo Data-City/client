@@ -515,18 +515,31 @@ function setGardenPos(aBuilding) {
     var cP = aBuilding._centerPosition;
 
     if (right) {
-        right._centerPosition[0] = cP[0];
-        right._centerPosition[1] = cP[1];
-        right._centerPosition[2] = cP[2];
+        if (drawGardens) {
+            right._centerPosition[0] = cP[0] + right._width / 2 - right.radius / 2;
+            right._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight / 2 + 0.01;
+            right._centerPosition[2] = cP[2] + 1 + right.radius + aBuilding._width / 2;
+        } else {
+            right._centerPosition[0] = cP[0];
+            right._centerPosition[1] = cP[1];
+            right._centerPosition[2] = cP[2];   
+        }
 
         right.nextLinePos[0] = right._centerPosition[0];
         right.nextLinePos[1] = right._centerPosition[2];
     }
 
     if (left) {
-        left._centerPosition[0] = cP[0];
-        left._centerPosition[1] = cP[1];
-        left._centerPosition[2] = cP[2];
+        if (drawGardens) {
+             left._centerPosition[0] = cP[0] - left._width / 2;
+             left._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight / 2 + 0.01;
+             left._centerPosition[2] = cP[2] + 1 + left.depth - left.radius + aBuilding._width / 2;
+        } else {
+            left._centerPosition[0] = cP[0];
+            left._centerPosition[1] = cP[1];
+            left._centerPosition[2] = cP[2];   
+        }
+        
 
         left.nextLinePos[0] = left._centerPosition[0];
         left.nextLinePos[1] = left._centerPosition[2];

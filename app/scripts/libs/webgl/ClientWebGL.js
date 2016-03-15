@@ -259,6 +259,8 @@ function initAssociation(association) {
     association.dimensions.height = association.dimensionSettings.height.name;
     setAssociation(association["dimensions"]);
     associations = association;
+    
+    drawGardens = association.drawGardens;
 
     gap = 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
     
