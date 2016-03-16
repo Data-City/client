@@ -307,6 +307,13 @@ angular.module('datacityApp')
                         view.dimensions.area = view.dimensionSettings.area.name;
                         view.dimensions.color = view.dimensionSettings.color.name;
                         view.buildingcolor = SETTINGS.farbefuerGebauede;
+                        
+                        console.log(view);
+                        
+                        if(!$scope.experimentalMode) {
+                            view.drawGardens = false; //Keine Straßen zeichnen
+                            typeOfConnections = 0; //Bögen
+                        }
 
                         $('#collapseAll').collapse();
 
@@ -561,6 +568,13 @@ angular.module('datacityApp')
             }
             $scope.actualEntries = actualEntries;
         });
+        
+        $scope.changeViewMode = function() {
+            if (!$scope.experimentalMode) {
+                window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nBenutzung auf eigene Gefahr!");
+            }     
+            $scope.experimentalMode = !$scope.experimentalMode;
+        };
 
         /**
          * Hilfsfunktion fuer die Filterung der Verbindungen, erstmal auskommentiert 

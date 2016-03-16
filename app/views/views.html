@@ -75,6 +75,12 @@
 						<button type="button" class="btn btn-default" data-toggle="tooltip" title="Kopie erstellen" ng-click="copyView(chosenView)">
 							<span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
 						</button>
+                        <button type="button" class="btn btn-default" data-toggle="tooltip" title="Experimentelle Version ausschalten" ng-click="changeViewMode()" ng-show="!experimentalMode">
+							<span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+						</button>
+                        <button type="button" class="btn btn-default" data-toggle="tooltip" title="Experimentelle Version anschalten" ng-click="changeViewMode()" ng-show="experimentalMode">
+							<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+						</button>
 					</div>
 				</h4>
             </div>
@@ -199,33 +205,35 @@
                                         <br></br>
                                     </label>
                                     <div ng-show="chosenView.useConnections">
-                                        <input type="checkbox" ng-model="chosenView.drawGardens"> Vorgärten zeichnen</input>
-                                        <p><i>Hinweis: Die Bögen sind in der Erstellung performanter, weshalb diese bei großen Datensätzen zu bevorzugen sind.</i></p>
-                                        <fieldset class="formgroup" ng-show="chosenView.useConnections">
-                                            <div class="radio">
-                                                <label>
-                                                    <input type="radio" ng-model="chosenView.typeOfConnections" value=0> Bögen
-                                                </label>
-                                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Gebogene Linien, die zwei Gebäude durch die Luft verbinden"></span>
-                                            </div>
-                                            <div class="radio">
-                                                <label>
-                                                    <input type="radio" ng-model="chosenView.typeOfConnections" value=1> Straßen
-                                                </label>
-                                            </div>
-                                        </fieldset>
-                                        </br>
-                                        <div ng-if="chosenView.useConnections">
-                                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#demo">Erläuterung</button>
-                                            <div id="demo" class="collapse">
-                                                <div class="panel panel-primary">
-                                                    <div class="panel-body">
-                                                        <p> Die Vorgärten, die auf die Gebäude zeigen, stellen die eingehenden Verbindungen dar.
-                                                            Die anderen stehen für die ausgehenden Verbindungen.</p>
-                                                        <p> Je dunkler bzw. grüner ein Vorgarten ist, umso mehr ausgehende oder eingehende Verbindungen
-                                                            liegen vor.</p>
-                                                        <p> Je dunkler die Straße bzw. die Linie ist, umso höher sind die Verbindungen von A
-                                                            nach B.</p>
+                                        <div ng-show="experimentalMode">
+                                            <input type="checkbox" ng-model="chosenView.drawGardens"> Vorgärten zeichnen</input>
+                                            <p><i>Hinweis: Die Bögen sind in der Erstellung performanter, weshalb diese bei großen Datensätzen zu bevorzugen sind.</i></p>
+                                            <fieldset class="formgroup" ng-show="chosenView.useConnections">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" ng-model="chosenView.typeOfConnections" value=0> Bögen
+                                                    </label>
+                                                    <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Gebogene Linien, die zwei Gebäude durch die Luft verbinden"></span>
+                                                </div>
+                                                <div class="radio" ng-show="experimentalMode">
+                                                    <label>
+                                                        <input type="radio" ng-model="chosenView.typeOfConnections" value=1> Straßen
+                                                    </label>
+                                                </div>
+                                            </fieldset>
+                                            </br>
+                                            <div ng-if="chosenView.useConnections">
+                                                <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#demo">Erläuterung</button>
+                                                <div id="demo" class="collapse">
+                                                    <div class="panel panel-primary">
+                                                        <div class="panel-body">
+                                                            <p> Die Vorgärten, die auf die Gebäude zeigen, stellen die eingehenden Verbindungen dar.
+                                                                Die anderen stehen für die ausgehenden Verbindungen.</p>
+                                                            <p> Je dunkler bzw. grüner ein Vorgarten ist, umso mehr ausgehende oder eingehende Verbindungen
+                                                                liegen vor.</p>
+                                                            <p> Je dunkler die Straße bzw. die Linie ist, umso höher sind die Verbindungen von A
+                                                                nach B.</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
