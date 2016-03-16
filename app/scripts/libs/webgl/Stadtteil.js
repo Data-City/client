@@ -654,7 +654,7 @@ function getDrawnDimValue(aBuilding, dimString) {
 
     var buildingDimension = aBuilding[association[dimString]];
     //var scalingString = 0.5 * metaData["avg_" + association[dimString]];
-    var scalingString = 0.5 * metaData["avg_" + association.width];
+    var scalingString = 0.25 * metaData["avg_" + association.width];
 
     if (buildingDimension != undefined && buildingDimension != "" && buildingDimension != 0) {
         /* Wird hoffentlich nicht mehr benötigt, da nur Zahlen übergeben werden
@@ -790,12 +790,17 @@ function getLandWidth(aBuilding) {
     var width = aBuilding._width;
     var left = aBuilding._leftGarden;
     var right = aBuilding._rightGarden;
-    if (left._width == 0 && right._width == 0) {
+    
+    if (drawGardens === false){
         return width;
     } else {
-        return Math.max(width + 1 + left.depth,
-            width + 1 + right.depth,
-            left._width + right._width + 2);
+        if (left._width == 0 && right._width == 0) {
+            return width;
+        } else {
+            return Math.max(width + 1 + left.depth,
+                width + 1 + right.depth,
+                left._width + right._width + 2);
+        }   
     }
 }
 
