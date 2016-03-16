@@ -316,9 +316,9 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         showIncomingConnections(value);
     })
     h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verbindungen").onChange(function(value) {
-            buildingInformation["ausgehendeVerbindungenaktivieren"] = value;
-            showOutgoingConnections(value);
-        })
+        buildingInformation["ausgehendeVerbindungenaktivieren"] = value;
+        showOutgoingConnections(value);
+    })
         /*h.add(buildingInformation, "remove").name("Ausblenden");
         h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
 
@@ -509,10 +509,11 @@ function showIncomingConnections(value) {
     for (var x in hashmap) {
         var rightgarden = hashmap[x]._rightGarden;
         if (x == b) {
-            if (value && x == b && rightgarden.on == false) {
+            if (value && rightgarden.on == false) {
                 setGardenOn(rightgarden);
-            } else if (!value && x == b && rightgarden.on == true) {
+            } else if (!value && rightgarden.on == true) {
                 setGardenOff(rightgarden);
+                highlightBuildingsWithConnections(true);
             }
         }
     }
@@ -537,6 +538,7 @@ function showOutgoingConnections(value) {
                 setGardenOn(leftgarden);
             } else if (!value && leftgarden.on == true) {
                 setGardenOff(leftgarden);
+                highlightBuildingsWithConnections(true);
             }
         }
     }
