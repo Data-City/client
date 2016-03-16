@@ -18,6 +18,8 @@ var graph = {};
 var nodeHashMap = {};
 var nodeID = 0;
 
+var logScaling;
+
 var districtHeight; //Hoehe von einem Boden
 
 var metaData; //Objekt, das max, min-Werte enthaelt, die uebergeben worden sind
@@ -687,6 +689,9 @@ function initBuilding(aBuilding, namePrefix) {
         for (var i = 3; i--;) {
             var dim = dimensions[i];
             aBuilding["_" + dim] = getDrawnDimValue(aBuilding, dim);
+            if (logScaling[dim]){
+                aBuilding["_" + dim] = scaleLogarithmically(aBuilding, dim);   
+            } 
         }
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
         var theLeftGarden = garden(true, aBuilding, outgoingCalls[aBuilding[association.name]]);

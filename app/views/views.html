@@ -387,16 +387,18 @@
                             <div class="panel-body" ng-show="showStep5">
                                 <table class="table">
 
-                                    <!-- ID -->
-                                    
+                                    <!-- ID -->                   
                                     <tr>
+                                        <p><i>Hinweis: Wenn die ID's nicht eindeutig sind, können manche Funktionalitäten nicht bereit gestellt werden (z.B. die Suche, Verbindungen etc)</i></p>
                                         <td>
-                                            <p><i>Hinweis: Wenn die ID's nicht eindeutig sind, können manche Funktionalitäten nicht bereit gestellt werden (z.B. die Suche, Verbindungen etc)</i></p>
                                             <div class="input-group">
                                                 <span class="input-group-addon">ID</span>
                                                 <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name">
                                                 </select>
                                             </div>
+                                        </td>
+                                        <td>
+                                            logarithmieren
                                         </td>
                                     </tr>
                                     <!--
@@ -444,6 +446,9 @@
                                                 </select>
                                             </div>
                                         </td>
+                                        <td>
+                                            <input type="checkbox" ng-model="chosenView.logScaling.width">
+                                        </td>
                                     </tr>
                                     <!-- HÖHE -->
                                     <tr>
@@ -452,6 +457,9 @@
                                                 <span class="input-group-addon">Höhe</span>
                                                 <select class="form-control" ng-model="chosenView.dimensionSettings.height" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number' | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name"></select>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" ng-model="chosenView.logScaling.height">
                                         </td>
                                     </tr>
                                     <!-- FARBE -->
@@ -462,9 +470,11 @@
                                                 <select class="form-control" ng-model="chosenView.dimensionSettings.color" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bytype:'number' | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name"></select>
                                             </div>
                                         </td>
+                                        <td>
+                                            <input type="checkbox" ng-model="chosenView.logScaling.color">
+                                        </td>
                                     </tr>
                                 </table>
-
                             </div>
                         </div>
                     </div>
