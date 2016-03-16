@@ -233,12 +233,9 @@ function initDropDownMenue() {
     changedLegend = undefined;
 
     //fuer den Ordner "Skalierung"
-    scaling = {
-        "logarithmicHeight": false,
-        "logarithmicWidth": false,
-        "logarithmicColor": false
-    };
-
+    scaling["logarithmicHeight"] = logScaling.height;
+    scaling["logarithmicWidth"] = logScaling.width;
+    scaling["logarithmicColor"] = logScaling.color;
 
     //fuer den Ordner "Steuerung"
     controlling = {
