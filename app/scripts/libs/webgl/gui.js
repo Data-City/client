@@ -906,7 +906,9 @@ function getGarden(aFace) {
  */
 function setGardenOn(theGarden) {
     drawLines(theGarden, true);
-    colorObject(theGarden, 0x424242);
+    if (drawGardens) {
+        colorObject(theGarden, 0x424242);
+    }
     if (theGarden.isLeftGarden == true) {
         clickedLeftGardens.push(theGarden.building[association.name]);
     } else {
@@ -924,7 +926,9 @@ function setGardenOn(theGarden) {
 function setGardenOff(theGarden) {
     removeLines(theGarden, true);
     var factor = getColorFactor(getExtrema(), theGarden.color, "SumOfConn");
-    colorObject(theGarden, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));
+    if (drawGardens) {
+        colorObject(theGarden, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));   
+    }
     if (theGarden.isLeftGarden == true) {
         clickedLeftGardens.splice(clickedLeftGardens.indexOf(theGarden.building[association.name]), 1);
     } else {

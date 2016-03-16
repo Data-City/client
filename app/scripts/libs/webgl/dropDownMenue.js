@@ -7,6 +7,8 @@ var storedBuilding = [];
 var removedBuildings = [];
 var arrayOfRemovedBuildings = [];
 
+var eingehendeVerbindungen, ausgehendeVerbindungen;
+
 // Dimensionen, die wir abbilden
 var myDimensions = ["ID", "Breite", "Höhe", "Farbe"];
 
@@ -197,6 +199,9 @@ function getGui() {
  * Initiiert die Legende auf den Anfangszustand
  */
 function initDropDownMenue() {
+    
+    eingehendeVerbindungen = false;
+    ausgehendeVerbindungen = false;
 
     //fuer den Ordner 'Legende'
     legend = {
@@ -307,17 +312,15 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         }
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
-    h.add(buildingInformation, "Verbindungen").name("Gebäude mit Verbindungen").onChange(function(value) {
+    h.add(buildingInformation, "Verbindungen").name("Geb. mit Verb. hervorheben").onChange(function(value) {
         buildingInformation["Verbindungen"] = value;
         highlightBuildingsWithConnections(value);
     })
-    h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name("eingehende Verbindungen").onChange(function(value) {
-        buildingInformation["eingehendeVerbindungenaktivieren"] = value;
-        showIncomingConnections(value);
+    h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name("eingehende Verb. per Klick").onChange(function(value) {
+        eingehendeVerbindungen = value;
     })
-    h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verbindungen").onChange(function(value) {
-        buildingInformation["ausgehendeVerbindungenaktivieren"] = value;
-        showOutgoingConnections(value);
+    h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verb. per Klick").onChange(function(value) {
+        ausgehendeVerbindungen = value;
     })
         /*h.add(buildingInformation, "remove").name("Ausblenden");
         h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
@@ -494,57 +497,6 @@ function highlightBuildingsWithConnections(value) {
         }
     }
 }
-
-/**Methode um die eingehenden Verbindungen des angeklickten Gebaeude zu zeichnen
- * @params: value: der Wert aus der Legende, also ein Boolean, true = Verbindungen sind eingeschaltet, false = ausgeschaltet
- * 
- */
-function showIncomingConnections(value) {
-    var b = buildingInformation["name"];
-    if (b == "Klicken Sie bitte auf ein Gebäude") {
-        alert("Klicken Sie bitte ein Gebäude an!");
-        value == false;
-    }
-    var hashmap = getBuildingsHashMap();
-    for (var x in hashmap) {
-        var rightgarden = hashmap[x]._rightGarden;
-        if (x == b) {
-            if (value && rightgarden.on == false) {
-                setGardenOn(rightgarden);
-            } else if (!value && rightgarden.on == true) {
-                setGardenOff(rightgarden);
-                highlightBuildingsWithConnections(true);
-            }
-        }
-    }
-}
-
-
-/**Methode um die ausgehenden Verbindungen des angeklickten Gebaeude zu zeichnen
- * @params: value: der Wert aus der Legende, also ein Boolean, true = Verbindungen sind eingeschaltet, false = ausgeschaltet
- * 
- */
-function showOutgoingConnections(value) {
-    var b = buildingInformation["name"];
-    if (b == "Klicken Sie bitte auf ein Gebäude") {
-        alert("Klicken Sie bitte ein Gebäude an!");
-        value == false;
-    }
-    var hashmap = getBuildingsHashMap();
-    for (var x in hashmap) {
-        var leftgarden = hashmap[x]._leftGarden;
-        if (x == b) {
-            if (value && leftgarden.on == false) {
-                setGardenOn(leftgarden);
-            } else if (!value && leftgarden.on == true) {
-                setGardenOff(leftgarden);
-                highlightBuildingsWithConnections(true);
-            }
-        }
-    }
-}
-
-
 
 /**
  * skaliert die Gebaeude und zeichnet sie neu

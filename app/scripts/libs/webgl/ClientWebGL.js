@@ -877,6 +877,24 @@ function onDocumentMouseDown(event) {
                     b[association["name"]],
                     intersects[0]
                 );
+                if (ausgehendeVerbindungen === true) {
+                    
+                    var theGarden = b._rightGarden;
+                    if (theGarden.on == false) {
+                        setGardenOn(theGarden);
+                    } else {
+                        setGardenOff(theGarden);
+                    }
+                };
+                if (eingehendeVerbindungen === true) {
+                    var theGarden = b._leftGarden;
+                    if (theGarden.on == false) {
+                        setGardenOn(theGarden);
+                    } else {
+                        setGardenOff(theGarden);
+                    }
+                };
+                
             }
         }
     }
