@@ -332,6 +332,7 @@ angular.module('datacityApp')
                             $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65, $scope);
                             drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined, $scope.setLoaderSettings);
                         }
+                        $scope.loader = false;
                     });
                 });
             });
