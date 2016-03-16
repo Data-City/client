@@ -312,7 +312,7 @@ angular.module('datacityApp')
                         
                         if(!$scope.experimentalMode) {
                             view.drawGardens = false; //Keine Straßen zeichnen
-                            typeOfConnections = 0; //Bögen
+                            view.typeOfConnections = 0; //Bögen
                         }
 
                         $('#collapseAll').collapse();
