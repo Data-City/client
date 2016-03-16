@@ -44,6 +44,7 @@ angular.module('datacityApp')
             });
         };
 
+        $scope.collID = storedJSON.collID;
         /**
          * Liest die Parameter aus dem JSON aus (Winkel der Kamera etc), holt alle benötigten Datenbanken (Collection, Verbindungen, die Ansicht)
          * und übergibt sie an das WebGL, damit die Stadt gezeichnet werden kann
@@ -59,7 +60,7 @@ angular.module('datacityApp')
                     REST.getData(function(viewResponse) {
                         if (viewResponse.data) {
                             $scope.chosenView = viewResponse.data;
-
+                            
                             var settings = storedJSON;
                             $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65);
                             drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings, incomingConnections, outgoingConnections, $scope.setLoaderSettings);
