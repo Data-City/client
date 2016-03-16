@@ -653,7 +653,8 @@ function getDrawnDimValue(aBuilding, dimString) {
     var toReturn;
 
     var buildingDimension = aBuilding[association[dimString]];
-    var scalingString = 0.5 * metaData["avg_" + association[dimString]]; //z.B. "min_ID"
+    //var scalingString = 0.5 * metaData["avg_" + association[dimString]];
+    var scalingString = 0.5 * metaData["avg_" + association.width];
 
     if (buildingDimension != undefined && buildingDimension != "" && buildingDimension != 0) {
         /* Wird hoffentlich nicht mehr benötigt, da nur Zahlen übergeben werden
