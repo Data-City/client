@@ -28,6 +28,7 @@ angular.module('datacityApp')
         url = url.replace(/%22/g, '"');
         url = url.replace(/%5B/g, '[');
         url = url.replace(/%5D/g, ']');
+        url = url.replace(/%C3%B6/g, 'ö');
 
         var storedJSON = JSON.parse(url.split("?webGLSettings=")[1]);
 
