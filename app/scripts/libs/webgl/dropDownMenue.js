@@ -199,7 +199,7 @@ function getGui() {
  * Initiiert die Legende auf den Anfangszustand
  */
 function initDropDownMenue() {
-    
+
     eingehendeVerbindungen = false;
     ausgehendeVerbindungen = false;
 
@@ -317,8 +317,8 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         eingehendeVerbindungen = value;
     })
     h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verb. per Klick").onChange(function(value) {
-        ausgehendeVerbindungen = value;
-    })
+            ausgehendeVerbindungen = value;
+        })
         /*h.add(buildingInformation, "remove").name("Ausblenden");
         h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
 

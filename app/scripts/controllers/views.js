@@ -307,8 +307,8 @@ angular.module('datacityApp')
                         view.dimensions.area = view.dimensionSettings.area.name;
                         view.dimensions.color = view.dimensionSettings.color.name;
                         view.buildingcolor = SETTINGS.farbefuerGebauede;
-                        
-                        if(!$scope.chosenView.experimentalMode) {
+
+                        if (!$scope.chosenView.experimentalMode) {
                             view.typeOfConnections = 0; //Bögen
                         }
 
@@ -565,11 +565,11 @@ angular.module('datacityApp')
             }
             $scope.actualEntries = actualEntries;
         });
-        
+
         $scope.changeViewMode = function() {
             if (!$scope.chosenView.experimentalMode) {
                 window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nBenutzung auf eigene Gefahr!");
-            }     
+            }
             $scope.chosenView.experimentalMode = !$scope.chosenView.experimentalMode;
             $scope.dimform.$setDirty();
         };

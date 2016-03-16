@@ -689,9 +689,9 @@ function initBuilding(aBuilding, namePrefix) {
         for (var i = 3; i--;) {
             var dim = dimensions[i];
             aBuilding["_" + dim] = getDrawnDimValue(aBuilding, dim);
-            if (logScaling[dim]){
-                aBuilding["_" + dim] = scaleLogarithmically(aBuilding, dim);   
-            } 
+            if (logScaling[dim]) {
+                aBuilding["_" + dim] = scaleLogarithmically(aBuilding, dim);
+            }
         }
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
         var theLeftGarden = garden(true, aBuilding, outgoingCalls[aBuilding[association.name]]);
@@ -795,8 +795,8 @@ function getLandWidth(aBuilding) {
     var width = aBuilding._width;
     var left = aBuilding._leftGarden;
     var right = aBuilding._rightGarden;
-    
-    if (drawGardens === false){
+
+    if (drawGardens === false) {
         return width;
     } else {
         return Math.max(width + 1 + left.depth,

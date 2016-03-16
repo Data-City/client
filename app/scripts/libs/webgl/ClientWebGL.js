@@ -878,7 +878,7 @@ function onDocumentMouseDown(event) {
                     intersects[0]
                 );
                 if (ausgehendeVerbindungen === true) {
-                    
+
                     var theGarden = b._rightGarden;
                     if (theGarden.on == false) {
                         setGardenOn(theGarden);
@@ -894,7 +894,7 @@ function onDocumentMouseDown(event) {
                         setGardenOff(theGarden);
                     }
                 };
-                
+
             }
         }
     }

@@ -61,7 +61,7 @@ angular.module('datacityApp')
                     REST.getData(function(viewResponse) {
                         if (viewResponse.data) {
                             $scope.chosenView = viewResponse.data;
-                            
+
                             var settings = storedJSON;
                             $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65);
                             drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings, incomingConnections, outgoingConnections, $scope.setLoaderSettings);

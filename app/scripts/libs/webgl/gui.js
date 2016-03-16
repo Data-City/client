@@ -927,7 +927,7 @@ function setGardenOff(theGarden) {
     removeLines(theGarden, true);
     var factor = getColorFactor(getExtrema(), theGarden.color, "SumOfConn");
     if (drawGardens) {
-        colorObject(theGarden, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));   
+        colorObject(theGarden, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(0x01DF01), factor));
     }
     if (theGarden.isLeftGarden == true) {
         clickedLeftGardens.splice(clickedLeftGardens.indexOf(theGarden.building[association.name]), 1);
