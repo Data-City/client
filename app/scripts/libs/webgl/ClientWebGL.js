@@ -100,36 +100,36 @@ function doDispose(obj) {
  * @param  function setLoaderSettings Funktion, mit der sich Nachricht und Prozent der Ladeanzeige setzen lassen
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls, setLoaderSettings) {
-            if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
+    if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
 
-            init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
+    init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
 
-            window.addEventListener('resize', function() {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }, false);
-            initData(data, association, incomingCalls, outgoingCalls);
-            setLoaderSettings("Zeichne Stadt...", 70);
-                setAndDrawCity(mainDistrict, false);
-                setLoaderSettings("Setze Kamera und starte Animation...", 90);
+    window.addEventListener('resize', function() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }, false);
+    initData(data, association, incomingCalls, outgoingCalls);
+    setLoaderSettings("Zeichne Stadt...", 70);
+    setAndDrawCity(mainDistrict, false);
+    setLoaderSettings("Setze Kamera und starte Animation...", 90);
 
-                    // Erstelle die Legende
-                    if (Detector.webgl) {
-                        var ourDivElement = document.getElementById(nameOfDivElement);
-                        if (ourDivElement.children["dropdownmenu"]) {
-                            ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
-                        }
-                        setMenue(scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);
-                    }
-                    updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
-                    animate();
-                    saveCamera();
-                    goToInitialView();
+    // Erstelle die Legende
+    if (Detector.webgl) {
+        var ourDivElement = document.getElementById(nameOfDivElement);
+        if (ourDivElement.children["dropdownmenu"]) {
+            ourDivElement.removeChild(ourDivElement.children["dropdownmenu"]);
+        }
+        setMenue(scene, mainDistrict, camera, orbitControls, trackballControls, nameOfDivElement);
+    }
+    updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
+    animate();
+    saveCamera();
+    goToInitialView();
 
-                    setLoaderSettings("Fertig!", 100);
-                    if (settings != undefined) {
-                        setSpecificView(settings);
-                    }
+    setLoaderSettings("Fertig!", 100);
+    if (settings != undefined) {
+        setSpecificView(settings);
+    }
 }
 
 

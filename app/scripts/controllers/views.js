@@ -227,16 +227,16 @@ angular.module('datacityApp')
         }];
 
         $scope.setLoaderSettings = function(msg, percentage) {
-                $scope.$evalAsync(function() {
-                    //$log.info(msg + percentage);
-                    $scope.percentage = percentage;
-                    $scope.msg = msg;
-                    /*
-                    setTimeout(function() {
-                        resolve();
-                    }, 150);
-                    */
-                });
+            $scope.$evalAsync(function() {
+                //$log.info(msg + percentage);
+                $scope.percentage = percentage;
+                $scope.msg = msg;
+                /*
+                setTimeout(function() {
+                    resolve();
+                }, 150);
+                */
+            });
         };
 
         /**
@@ -293,45 +293,45 @@ angular.module('datacityApp')
                     $scope.setLoaderSettings("Rufe Aggregationsergebnis ab...", 40);
                     REST.getURL(relUrl, null, function(collection) {
                         $scope.setLoaderSettings("Daten erhalten...", 50);
-                            view.numberOfEntries = $scope.collection.data._returned;
-                            if (view.numberOfEntries === 0) {
-                                window.alert("Die Filterung bzw. Aggregation wurde so eingestellt, dass keine Datensätze übrig bleiben!");
-                                $scope.loader = false;
-                                return false;
-                            }
-                            view.dimensions.name = {
-                                name: view.dimensionSettings.name.name
-                            };
-                            view.metaData = $scope.chosenView.metaData;
-                            view.dimensions.height = view.dimensionSettings.height.name;
-                            view.dimensions.area = view.dimensionSettings.area.name;
-                            view.dimensions.color = view.dimensionSettings.color.name;
-                            view.buildingcolor = SETTINGS.farbefuerGebauede;
+                        view.numberOfEntries = $scope.collection.data._returned;
+                        if (view.numberOfEntries === 0) {
+                            window.alert("Die Filterung bzw. Aggregation wurde so eingestellt, dass keine Datensätze übrig bleiben!");
+                            $scope.loader = false;
+                            return false;
+                        }
+                        view.dimensions.name = {
+                            name: view.dimensionSettings.name.name
+                        };
+                        view.metaData = $scope.chosenView.metaData;
+                        view.dimensions.height = view.dimensionSettings.height.name;
+                        view.dimensions.area = view.dimensionSettings.area.name;
+                        view.dimensions.color = view.dimensionSettings.color.name;
+                        view.buildingcolor = SETTINGS.farbefuerGebauede;
 
-                            $('#collapseAll').collapse();
+                        $('#collapseAll').collapse();
 
-                            if (view.metaData.connectionsAvailable) {
-                                $scope.setLoaderSettings("Rufe Verbindungsdaten ab...", 60);
-                                REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
-                                    REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
-                                        var incomingConnections = incoming.data._embedded['rh:doc'][0];
-                                        var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
-                                        $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65);
-                                        drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections, $scope.setLoaderSettings);
-                                        /*
-                                            .then(function success() {
-                                                $scope.setLoaderSettings("Fertig.", 100);
-                                                $scope.cityLoaded = true;
-                                            }, function error(e) {
-                                                $scope.setLoaderSettings("Fehler aufgetreten", 100);
-                                            });
-                                            */
-                                    });
+                        if (view.metaData.connectionsAvailable) {
+                            $scope.setLoaderSettings("Rufe Verbindungsdaten ab...", 60);
+                            REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
+                                REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
+                                    var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                                    var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
+                                    $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65);
+                                    drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections, $scope.setLoaderSettings);
+                                    /*
+                                        .then(function success() {
+                                            $scope.setLoaderSettings("Fertig.", 100);
+                                            $scope.cityLoaded = true;
+                                        }, function error(e) {
+                                            $scope.setLoaderSettings("Fehler aufgetreten", 100);
+                                        });
+                                        */
                                 });
-                            } else {
-                                $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65, $scope);
-                                    drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined, $scope.setLoaderSettings);
-                            }
+                            });
+                        } else {
+                            $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65, $scope);
+                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined, $scope.setLoaderSettings);
+                        }
                     });
                 });
             });
