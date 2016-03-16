@@ -310,7 +310,7 @@ angular.module('datacityApp')
                         
                         console.log(view);
                         
-                        if(!$scope.experimentalMode) {
+                        if(!$scope.chosenView.experimentalMode) {
                             view.drawGardens = false; //Keine Straßen zeichnen
                             view.typeOfConnections = 0; //Bögen
                         }
@@ -570,10 +570,11 @@ angular.module('datacityApp')
         });
         
         $scope.changeViewMode = function() {
-            if (!$scope.experimentalMode) {
+            if (!$scope.chosenView.experimentalMode) {
                 window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nBenutzung auf eigene Gefahr!");
             }     
-            $scope.experimentalMode = !$scope.experimentalMode;
+            $scope.chosenView.experimentalMode = !$scope.chosenView.experimentalMode;
+            $scope.dimform.$setDirty();
         };
 
         /**
