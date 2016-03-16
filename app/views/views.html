@@ -391,7 +391,7 @@
                                     
                                     <tr>
                                         <td>
-                                            <p><i>Hinweis: Wenn die ID's' nicht eindeutig sind, werden ein paar Funktionalitäten nicht richtig bereit gestellt (z.B. die Suche)</i></p>
+                                            <p><i>Hinweis: Wenn die ID's nicht eindeutig sind, können manche Funktionalitäten nicht bereit gestellt werden (z.B. die Suche, Verbindungen etc)</i></p>
                                             <div class="input-group">
                                                 <span class="input-group-addon">ID</span>
                                                 <select class="form-control" ng-model="chosenView.dimensionSettings.name" ng-options="attr as attr.name for attr in (chosenView.attributes | bychooseability | bygrouping:chosenView.useGrouping:chosenView.grouping) track by attr.name">
