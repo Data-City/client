@@ -794,13 +794,9 @@ function getLandWidth(aBuilding) {
     if (drawGardens === false){
         return width;
     } else {
-        if (left._width == 0 && right._width == 0) {
-            return width;
-        } else {
-            return Math.max(width + 1 + left.depth,
-                width + 1 + right.depth,
-                left._width + right._width + 2);
-        }   
+        return Math.max(width + 1 + left.depth,
+            width + 1 + right.depth,
+            left._width + right._width + 2);
     }
 }
 
