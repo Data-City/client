@@ -858,7 +858,6 @@ function onDocumentMouseDown(event) {
     var intersects = ray.intersectObjects(targetList);
     // if there is one (or more) intersections
     if (intersects.length > 0 && intersects[0].material == undefined) {
-        //console.log(intersects[0]);
         if (intersects[0].face.isLeftGarden != undefined) {
             var theGarden = getGarden(intersects[0]);
             if (theGarden.on == false) {

@@ -247,7 +247,7 @@ angular.module('datacityApp')
             $scope.setLoaderSettings("Prüfe Einstellungen", 15);
             var view = $scope.chosenView;
 
-            if (view.useConnections && !view.typeOfConnections) {
+            if (view.useConnections && view.experimentalMode && !view.typeOfConnections) {
                 window.alert("Schritt 2: \nEs wurden Verbindungen, aber keine Option ausgewählt!");
                 return false;
             }
@@ -308,10 +308,7 @@ angular.module('datacityApp')
                         view.dimensions.color = view.dimensionSettings.color.name;
                         view.buildingcolor = SETTINGS.farbefuerGebauede;
                         
-                        console.log(view);
-                        
                         if(!$scope.chosenView.experimentalMode) {
-                            view.drawGardens = false; //Keine Straßen zeichnen
                             view.typeOfConnections = 0; //Bögen
                         }
 
