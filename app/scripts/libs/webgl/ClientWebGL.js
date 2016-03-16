@@ -100,8 +100,6 @@ function doDispose(obj) {
  * @param  function setLoaderSettings Funktion, mit der sich Nachricht und Prozent der Ladeanzeige setzen lassen
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls, outgoingCalls, setLoaderSettings) {
-    return new Promise(function(resolve, reject) {
-        try {
             if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
 
             init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
@@ -111,9 +109,9 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
                 renderer.setSize(window.innerWidth, window.innerHeight);
             }, false);
             initData(data, association, incomingCalls, outgoingCalls);
-            setLoaderSettings("Zeichne Stadt...", 70).then(function() {
+            setLoaderSettings("Zeichne Stadt...", 70);
                 setAndDrawCity(mainDistrict, false);
-                setLoaderSettings("Setze Kamera und starte Animation...", 90).then(function() {
+                setLoaderSettings("Setze Kamera und starte Animation...", 90);
 
                     // Erstelle die Legende
                     if (Detector.webgl) {
@@ -132,15 +130,6 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
                     if (settings != undefined) {
                         setSpecificView(settings);
                     }
-                    resolve();
-                });
-
-            });
-        } catch (error) {
-            alert(error);
-            reject(error);
-        }
-    });
 }
 
 
