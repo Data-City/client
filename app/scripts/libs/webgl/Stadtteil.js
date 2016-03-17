@@ -18,7 +18,7 @@ var graph = {};
 var nodeHashMap = {};
 var nodeID = 0;
 
-var logScaling;
+var logScaling = {};
 
 var districtHeight; //Hoehe von einem Boden
 

@@ -312,6 +312,12 @@ angular.module('datacityApp')
                             view.typeOfConnections = 0; //Bögen
                         }
 
+                        if (!view.logScaling) {
+                            logScaling.color = false;
+                            logScaling.width = false;
+                            logScaling.height = false;
+                        }
+
                         $('#collapseAll').collapse();
 
                         if (view.metaData.connectionsAvailable) {
