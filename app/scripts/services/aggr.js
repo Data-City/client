@@ -300,7 +300,7 @@ angular.module('datacityApp')
 
             return stages;
         };
-        
+
         /**
          * Hilfsfunktion zum Escapen eines Strings
          */
