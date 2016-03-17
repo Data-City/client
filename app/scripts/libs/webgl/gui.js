@@ -9,8 +9,8 @@
 var buildingColor = 0x0000FF;
 var colorOfTargetBuildings = 0x40FF00;
 var colorOfBuildingsWithConns = 0xFFBF00;
-var colorYellowBright = 0xF4FA58;
-var colorYellowDark = 0xFF8000;
+var colorYellowBright = 0xFFA500;
+var colorYellowDark = 0xFF0000;
 var colorOfHighlightingByMouseOver = 0xFF0000;
 var alphaForDistrictColor = 0.3;
 var maximalHeight; //speichert max. hoehe der Gebaeude, um Linien in dieser Hoehe zu zeichnen, ohne extrema zu uebergeben
