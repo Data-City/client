@@ -68,7 +68,9 @@ angular.module('datacityApp')
         }];
 
         /**
-         * Erzeugt Project-Stage
+         * Erzeugt MongoDB Project-Stage
+         * 
+         * @param Object params Alle Parametet mit boolean chooseable als Eigenschaft
          */
         this.projectStage = function(params) {
             /*
@@ -86,6 +88,11 @@ angular.module('datacityApp')
             return project;
         };
 
+        /**
+         * Erzeugt eine MongoDB Limit-Stage 
+         * 
+         * @param number limit Die Zahl der maximal zu verarbeitenden Einträge
+         */
         this.createLimitStage = function(limit) {
             return {
                 $limit: limit
@@ -93,9 +100,10 @@ angular.module('datacityApp')
         };
 
         /**
-         * Erzeugt eine match-Stage:
+         * Erzeugt eine MongoDB match-Stage:
+         * "_$match": matchStage(params)
          * 
-         * "_$match": matchStage(params) 
+         * @param Object params Ein Objekt, das Collection-Attribute enthält, die gematcht werden sollen 
          */
         this.matchStage = function(params) {
             var matchers = [];
@@ -134,6 +142,11 @@ angular.module('datacityApp')
             return ret;
         };
 
+        /**
+         * Erzeugt MongoDB Group-Stage
+         * 
+         * @param Object grouping Ein Gruppierungsobjekt aus der Oberfläche
+         */
         this.groupingStage = function(grouping) {
             var stages = [];
 
@@ -167,7 +180,11 @@ angular.module('datacityApp')
         };
 
         /**
-         * Setzt einzelne Aggregationsschritte zu einem vollständigen Aggregationsparameter zusammen
+         * Setzt einzelne Aggregationsschritte zu einem vollständigen RESTHeart-Aggregationsparameter zusammen
+         * 
+         * @param String collection Name der Collection
+         * @param Array stages Array der zu verwendenden Stages
+         * @param id viewID Id der Ansicht
          */
         this.buildAggregationPipe = function(collection, stages, viewID) {
             var aggr = {
@@ -185,6 +202,12 @@ angular.module('datacityApp')
             return aggr;
         };
 
+        /**
+         * Erzeugt eine Aggregationsstufe zur Erzeugung der Stadtteile (districts)
+         * 
+         * @param Array districts Die in der Weboberfläche eingestellten Stadtteile
+         * @param Object attributes Die Felder des Datensatzes
+         */
         this.createDistrictAggregationStages = function(districts, attributes) {
             var stages = [];
 
@@ -277,20 +300,40 @@ angular.module('datacityApp')
 
             return stages;
         };
+        
+        /**
+         * Hilfsfunktion zum Escapen eines Strings
+         */
         var escapeRegExp = function(str) {
             return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
         };
 
+        /**
+         * Ersetzt alle Vorkommen von find in str mit replace
+         * 
+         * @param String str zu durchsuchender String
+         * @param String find String, der ersetzt werden soll
+         * @param String replace String, mit dem ersetzt wird
+         */
         var replaceAll = function(str, find, replace) {
             return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
         };
 
+        /**
+         * Baut MongoDB-Code zu Code um, mit dem RESTHeart umgehen kann
+         */
         this.mongoDBCodeToRESTHeart = function(obj) {
             var str = JSON.stringify(obj);
             str = replaceAll(str, '$', '_$');
             return JSON.parse(str);
         };
 
+        /**
+         * Erzeugt Aggregationsstufen für RESTHEart um die Metadaten zu erzeugen
+         * 
+         * @param Object attrs Attribute der Collection
+         * @param String colname Name der Collection
+         */
         this.createMinMedMaxAggrParam = function(attrs, colname) {
             /*
                 var aggrs =  {aggrs: [
@@ -350,10 +393,20 @@ angular.module('datacityApp')
             return aggrs;
         };
 
+        /**
+         * Hilfsfunktion um nach der Initialisierung des Controllers auf $log zugreifen zu können
+         * 
+         * @param $log log
+         */
         this.setLog = function(log) {
             $log = log;
         };
 
+        /**
+         * Hilfsfunktion um die Einstellungen bei der Initialisierung zu setzen
+         * 
+         * @param SETTINGS s
+         */
         this.setSettings = function(s) {
             SETTINGS = s;
 
@@ -364,7 +417,9 @@ angular.module('datacityApp')
             DATA_SUFFIX = SETTINGS.data_suffix;
         };
 
-        // Method for instantiating
+        /**
+         * Kontruktor
+         */
         this.$get = function($log, SETTINGS) {
             this.setLog($log);
             this.setSettings(SETTINGS);
