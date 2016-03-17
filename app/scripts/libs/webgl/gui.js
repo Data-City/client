@@ -498,7 +498,6 @@ function drawALine(aGarden, destGarden) {
     scene.add(curveObject);
 
     workUpGarden(aGarden, destGarden, curveObject);
-    workUpGarden(destGarden, aGarden, curveObject);
     destGarden.building._numOfActivatedConnections++;
 }
 
