@@ -7,7 +7,7 @@ var storedBuilding = [];
 var removedBuildings = [];
 var arrayOfRemovedBuildings = [];
 
-var eingehendeVerbindungen, ausgehendeVerbindungen;
+var eingehendeVerbindungen, ausgehendeVerbindungen, highlightBuildingsConnections;
 
 var experimentalMode = false;
 
@@ -174,7 +174,7 @@ function getGui() {
  * Initiiert die Legende auf den Anfangszustand
  */
 function initDropDownMenue() {
-
+	highlightBuildingsConnections = false;
     eingehendeVerbindungen = false;
     ausgehendeVerbindungen = false;
 
@@ -386,21 +386,23 @@ function getChangedLegend() {
  * @param: value: der Wert aus der Legende, also ein Boolean (true = Gebaeude sind markiert, false = Gebaeude sind nicht markiert)
  */
 function highlightBuildingsWithConnections(value) {
+	highlightBuildingsConnections = value;
     var arr = getCalls();
     var income = arr[0];
     var outgoing = arr[1];
     var hashmap = getBuildingsHashMap();
     for (var y in hashmap) {
-        if (value) {
-            if (income[y] || outgoing[y]) {
-                colorObject(hashmap[y], 0xFFBF00);
-            }
-        } else {
-            if (income[y] || outgoing[y]) {
-                var hashMap = getBuildingsHashMap();
-                var factor = getColorFactor(getExtrema(), hashMap[y]._color, "Color");
-                colorObject(hashMap[y], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
-            }
+		if (hashmap[y]._numOfActivatedConnections <= 0) {
+			if (value) {
+				if (income[y] || outgoing[y]) {
+					colorObject(hashmap[y], colorOfBuildingsWithConns);
+				}
+			} else {
+				if (income[y] || outgoing[y]) {
+					var factor = getColorFactor(getExtrema(), hashmap[y]._color, "Color");
+					colorObject(hashmap[y], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
+				}
+			}
         }
     }
 }
