@@ -309,8 +309,8 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         }
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
-        /*h.add(buildingInformation, "remove").name("Ausblenden");
-        h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
+    /*h.add(buildingInformation, "remove").name("Ausblenden");
+    h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
 
     //*****************************************************************
 
@@ -357,7 +357,7 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
     h.add(currentView, "goToArielView").name("Vogelperspektive");
     h.add(currentView, "Link").name("aktuelle Ansicht").listen();
     h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
-    
+
     //********************************************************************
 
     h = gui.addFolder("Verbindungen");
