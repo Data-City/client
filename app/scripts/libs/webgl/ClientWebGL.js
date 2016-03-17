@@ -401,16 +401,21 @@ function getShiftingVector(theKey) {
     var z = trackballControls.target.z - camera.position.z;
     var shiftingVector;
     if (theKey == 39) {
-        if (x <= 0) {
+        if (x < 0) {
             shiftingVector = {
                 x: -z / x,
                 z: 1
             };
-        } else {
+        } else if (x > 0){
             shiftingVector = {
                 x: z / x,
                 z: -1
             };
+        } else {
+			shiftingVector = {
+				x: -1,
+				z: 0
+			};
         }
     } else if (theKey == 38) {
         if (z >= 0) {
@@ -425,17 +430,22 @@ function getShiftingVector(theKey) {
             };
         }
     } else if (theKey == 37) {
-        if (x <= 0) {
+        if (x < 0) {
             shiftingVector = {
                 x: z / x,
                 z: -1
             };
-        } else {
+        } else if (x > 0){
             shiftingVector = {
                 x: -z / x,
                 z: 1
             };
-        }
+        } else {
+			shiftingVector = {
+				x: 1,
+				z: 0
+			};
+		}
     } else {
         if (z >= 0) {
             shiftingVector = {
