@@ -309,16 +309,6 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         }
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
-    h.add(buildingInformation, "Verbindungen").name("Geb. mit Verb. hervorheben").onChange(function(value) {
-        buildingInformation["Verbindungen"] = value;
-        highlightBuildingsWithConnections(value);
-    })
-    h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name("eingehende Verb. per Klick").onChange(function(value) {
-        eingehendeVerbindungen = value;
-    })
-    h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verb. per Klick").onChange(function(value) {
-            ausgehendeVerbindungen = value;
-        })
         /*h.add(buildingInformation, "remove").name("Ausblenden");
         h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
 
@@ -367,6 +357,20 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
     h.add(currentView, "goToArielView").name("Vogelperspektive");
     h.add(currentView, "Link").name("aktuelle Ansicht").listen();
     h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
+    
+    //********************************************************************
+
+    h = gui.addFolder("Verbindungen");
+    h.add(buildingInformation, "Verbindungen").name("Geb. mit Verb. hervorheben").onChange(function(value) {
+        buildingInformation["Verbindungen"] = value;
+        highlightBuildingsWithConnections(value);
+    })
+    h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name("eingehende Verb. per Klick").onChange(function(value) {
+        eingehendeVerbindungen = value;
+    })
+    h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verb. per Klick").onChange(function(value) {
+        ausgehendeVerbindungen = value;
+    })
 }
 
 /**
