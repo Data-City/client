@@ -447,7 +447,7 @@ function getShiftingVector(theKey) {
 			};
 		}
     } else {
-        if (camera.rotation.z < 0 && z >= 0) {
+        if (z >= 0) {
             shiftingVector = {
                 x: -x*Math.sign(camera.rotation.z),
                 z: -z*Math.sign(camera.rotation.z)
