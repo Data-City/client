@@ -978,6 +978,10 @@ function getJsonForCurrentLink() {
     aJson.leftGarden = clickedLeftGardens;
     aJson.rightGarden = clickedRightGardens;
     aJson.scaling = getScalingBooleans();
+    aJson.connections = {};
+    aJson.connections.eingehendeVerbindungen = eingehendeVerbindungen;
+    aJson.connections.ausgehendeVerbindungen = ausgehendeVerbindungen;
+    aJson.connections.highlightBuildingsConnections = highlightBuildingsConnections;
     //aJson.removedBuildings = getRemovedBuildings();
     aJson.changedLegend = getChangedLegend();
     aJson.collID = getOriginalAssociations().collID;
