@@ -9,6 +9,8 @@ var arrayOfRemovedBuildings = [];
 
 var eingehendeVerbindungen, ausgehendeVerbindungen;
 
+var experimentalMode = false;
+
 // Dimensionen, die wir abbilden
 var myDimensions = ["ID", "Breite", "Höhe", "Farbe"];
 
@@ -29,12 +31,6 @@ var buildingInformation = {
     "width": "Klicken Sie bitte auf ein Gebäude",
     "color": "Klicken Sie bitte auf ein Gebäude",
     "name": "Klicken Sie bitte auf ein Gebäude",
-    /*"remove": function() {
-        remove(buildingInformation.mesh);
-    },
-    "undo": function() {
-        if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
-    }*/
     "Verbindungen": false,
     "eingehendeVerbindungenaktivieren": false,
     "ausgehendeVerbindungenaktivieren": false
@@ -85,26 +81,6 @@ var update = function() {
 };
 
 
-
-/**
- * Getter fuer buildingInformation
- * @return: buildingInformation
- */
-/*function getBuildingInformation() {
-    return buildingInformation;
-}*/
-
-/**
- * loescht ein District von der Bildflaeche und speichert dies
- * @param: face: das Face-Objekt, auf das geklickt wurde und dessen Gebaeude geloescht werden soll
- */
-function remove(Face) {
-    var building = getBuildingsHashMap()[Face.face.building];
-    //if (mesh.length != 0) {
-    removeDistrict(getScene(), Face, true);
-    arrayOfRemovedBuildings.push(storedDistrict);
-    //}
-}
 
 
 /**
@@ -173,7 +149,6 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newName, aFace
     } else {
         buildingInformation["name"] = "Keine Daten";
     }
-    /*buildingInformation.face = aFace;*/
 }
 
 /**
@@ -217,13 +192,6 @@ function initDropDownMenue() {
         "width": "Klicken Sie bitte auf ein Gebäude",
         "color": "Klicken Sie bitte auf ein Gebäude",
         "name": "Klicken Sie bitte auf ein Gebäude",
-        /*,
-                "remove": function() {
-                    remove(buildingInformation.mesh);
-                },
-                "undo": function() {
-                    if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
-                }*/
         "Verbindungen": false,
         "eingehendeVerbindungenaktivieren": false,
         "ausgehendeVerbindungenaktivieren": false
@@ -309,24 +277,26 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         }
         h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[dimensionsFromDatabase[i]]).listen();
     }
-    /*h.add(buildingInformation, "remove").name("Ausblenden");
-    h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
 
     //*****************************************************************
 
-    h = gui.addFolder("Skalierung");
-    h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(function(value) {
-        scaling["logarithmicHeight"] = value;
-        scale(value, "height", scene, aDistrict, camera);
-    });
-    h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(function(value) {
-        scaling["logarithmicWidth"] = value;
-        scale(value, "width", scene, aDistrict, camera);
-    });
-    h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(function(value) {
-        scaling["logarithmicColor"] = value;
-        scale(value, "color", scene, aDistrict, camera);
-    });
+    if (experimentalMode) {
+        h = gui.addFolder("Skalierung");
+        h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(function(value) {
+            scaling["logarithmicHeight"] = value;
+            scale(value, "height", scene, aDistrict, camera);
+        });
+        h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(function(value) {
+            scaling["logarithmicWidth"] = value;
+            scale(value, "width", scene, aDistrict, camera);
+        });
+        h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(function(value) {
+            scaling["logarithmicColor"] = value;
+            scale(value, "color", scene, aDistrict, camera);
+        });   
+    }
+
+    
 
     //********************************************************************
 
@@ -411,70 +381,6 @@ function getChangedLegend() {
 }
 
 
-/**
- * Methode, um ein Distrikt oder ein Gebaeude zu loeschen
- * @param: scene: die Scene, auf der die Objekte gezeichnet wurden
- * @param: aMesh: Mesh vom Distrikt oder Gebaeude, das geloescht werden soll
- * @param: isFirstCall: true, wenn es der Initialaufruf dieser Methode ist
- */
-/*function removeDistrict(scene, aMesh, isFirstCall) {
-    if (isFirstCall) {
-        storedDistrict = [];
-        removedBuildings.push(aMesh.building[association.name]);
-    }
-    removeObject(scene, aMesh);
-    storedDistrict = storedDistrict.concat(storedBuilding);
-    if (aMesh.building.buildings != undefined) {
-        for (var i = 0; i < aMesh.building.buildings.length; i++) {
-            if (scene.children.indexOf(aMesh.building.buildings[i].mesh) != -1) {
-                removeDistrict(scene, aMesh.building.buildings[i].mesh, false);
-            }
-        }
-    }
-}*/
-
-/**
- * Methode, um das letzte geloeschte District wieder herzustellen
- * @param: scene: die Scene, auf der wir zeichnen
- */
-/*function undoRemoving(scene) {
-    storedDistrict = arrayOfRemovedBuildings.pop();
-    removedBuildings.splice(removedBuildings.indexOf(storedDistrict[0].building[association.name]), 1);
-    for (var i = 0; i < storedDistrict.length; i++) {
-        scene.add(storedDistrict[i]);
-        if (storedDistrict[i].building != undefined) {
-            storedDistrict[i].building._isRemoved = false;
-        }
-    }
-}*/
-
-/**
- * Methode, um Gebaeude zu loeschen
- * @param: scene: die Scene, auf die die Objekte gezeichnet wurden
- * @param: aMesh: das Mesh zum Gebaeude
- */
-/*function removeObject(scene, aMesh) {
-    storedBuilding = [];
-    storedBuilding.push(aMesh);
-    aMesh.building._isRemoved = true;
-    //removedBuildings.push(aMesh.building[association.name]);
-    if (aMesh.building._leftGarden.mesh != undefined) {
-        storedBuilding.push(aMesh.building._leftGarden.mesh);
-        for (var x in aMesh.building._leftGarden.meshLines) {
-            storedBuilding = storedBuilding.concat(aMesh.building._leftGarden.meshLines[x]);
-        }
-    }
-    if (aMesh.building._rightGarden.mesh != undefined) {
-        storedBuilding.push(aMesh.building._rightGarden.mesh);
-        for (var x in aMesh.building._rightGarden.meshLines) {
-            storedBuilding = storedBuilding.concat(aMesh.building._rightGarden.meshLines[x]);
-        }
-    }
-    for (var i = 0; i < storedBuilding.length; i++) {
-        scene.remove(storedBuilding[i]);
-    }
-}*/
-
 
 /**Methode um die Gebaeude zu highlighten, die Verbindungen haben
  * @param: value: der Wert aus der Legende, also ein Boolean (true = Gebaeude sind markiert, false = Gebaeude sind nicht markiert)
@@ -525,10 +431,6 @@ function scale(value, aString, scene, aDistrict, camera) {
     if (buildingInformation["Verbindungen"] === true) {
         highlightBuildingsWithConnections(true);
     };
-    /*updateRemovedBuildings();
-    if (buildingInformation.mesh != undefined) {
-        buildingInformation.mesh = buildingInformation.mesh.building.mesh;
-    }*/
     updateControls(Math.max(aDistrict._width, getExtrema().maxHeight));
     saveCamera();
 }
@@ -609,7 +511,6 @@ function removeAllObjects(scene, aString, scalingMethod) {
             }
         }
         scene.remove(object);
-        //delete object;
     }
 }
 
@@ -626,26 +527,5 @@ function scaleAll(aString, scalingMethod) {
             hashMap[x]["_" + aString] = scalingMethod(hashMap[x], aString);
         }
     }
-    /*
-    if (aString == "height") setDistrictHeight(scalingMethod({
-        _height: getDistrictHeight()
-    }, "height"));
-    */
 }
 
-/**
- * nach dem Skalieren update der geloeschten Objekte, damit sie auch wiederhergestellt werden koennen
- */
-/*function updateRemovedBuildings() {
-    for (var i = 0; i < arrayOfRemovedBuildings.length; i++) {
-        for (var j = 0; j < arrayOfRemovedBuildings[i].length; j++) {
-            if (arrayOfRemovedBuildings[i][j].building != undefined) {
-                arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].building.mesh;
-                scene.remove(arrayOfRemovedBuildings[i][j].building.mesh);
-            } else {
-                arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].garden.mesh;
-                scene.remove(arrayOfRemovedBuildings[i][j].garden.mesh);
-            }
-        }
-    }
-}*/

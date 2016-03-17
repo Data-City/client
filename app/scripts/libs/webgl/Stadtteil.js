@@ -440,13 +440,12 @@ function garden(isItLeftGarden, aBuilding, connections) {
             connections: {}
         };
     }
-
     return {
         building: aBuilding,
-        _width: (connections.sumOfConnections > 0) ? GARDEN_WIDTH : 0,
+        _width: (connections.sumOfConnections > 0 && drawGardens) ? GARDEN_WIDTH : 0,
         radius: gardenRadius,
         _height: 0.01,
-        depth: (connections.sumOfConnections > 0) ? GARDEN_DEPTH : 0,
+        depth: (connections.sumOfConnections > 0 && drawGardens) ? GARDEN_DEPTH : 0,
         color: connections.sumOfConnections,
         _centerPosition: [0, 0.05, 0],
         nextLinePos: [0, 0],
