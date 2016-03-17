@@ -420,13 +420,13 @@ function getShiftingVector(theKey) {
     } else if (theKey == 38) {
         if (z >= 0) {
             shiftingVector = {
-                x: x,
-                z: z
+                x: x*Math.sign(camera.rotation.z),
+                z: z*Math.sign(camera.rotation.z)
             };
         } else {
             shiftingVector = {
-                x: -x,
-                z: -z
+                x: -x*Math.sign(camera.rotation.z),
+                z: -z*Math.sign(camera.rotation.z)
             };
         }
     } else if (theKey == 37) {
@@ -447,15 +447,15 @@ function getShiftingVector(theKey) {
 			};
 		}
     } else {
-        if (z >= 0) {
+        if (camera.rotation.z < 0 && z >= 0) {
             shiftingVector = {
-                x: -x,
-                z: -z
+                x: -x*Math.sign(camera.rotation.z),
+                z: -z*Math.sign(camera.rotation.z)
             }
         } else {
             shiftingVector = {
-                x: x,
-                z: z
+                x: x*Math.sign(camera.rotation.z),
+                z: z*Math.sign(camera.rotation.z)
             };
         }
     }
