@@ -406,27 +406,27 @@ function getShiftingVector(theKey) {
                 x: -z / x,
                 z: 1
             };
-        } else if (x > 0){
+        } else if (x > 0) {
             shiftingVector = {
                 x: z / x,
                 z: -1
             };
         } else {
-			shiftingVector = {
-				x: -1,
-				z: 0
-			};
+            shiftingVector = {
+                x: -1,
+                z: 0
+            };
         }
     } else if (theKey == 38) {
         if (z >= 0) {
             shiftingVector = {
-                x: x*Math.sign(camera.rotation.z),
-                z: z*Math.sign(camera.rotation.z)
+                x: x * Math.sign(camera.rotation.z),
+                z: z * Math.sign(camera.rotation.z)
             };
         } else {
             shiftingVector = {
-                x: -x*Math.sign(camera.rotation.z),
-                z: -z*Math.sign(camera.rotation.z)
+                x: -x * Math.sign(camera.rotation.z),
+                z: -z * Math.sign(camera.rotation.z)
             };
         }
     } else if (theKey == 37) {
@@ -435,27 +435,27 @@ function getShiftingVector(theKey) {
                 x: z / x,
                 z: -1
             };
-        } else if (x > 0){
+        } else if (x > 0) {
             shiftingVector = {
                 x: -z / x,
                 z: 1
             };
         } else {
-			shiftingVector = {
-				x: 1,
-				z: 0
-			};
-		}
+            shiftingVector = {
+                x: 1,
+                z: 0
+            };
+        }
     } else {
         if (z >= 0) {
             shiftingVector = {
-                x: -x*Math.sign(camera.rotation.z),
-                z: -z*Math.sign(camera.rotation.z)
+                x: -x * Math.sign(camera.rotation.z),
+                z: -z * Math.sign(camera.rotation.z)
             }
         } else {
             shiftingVector = {
-                x: x*Math.sign(camera.rotation.z),
-                z: z*Math.sign(camera.rotation.z)
+                x: x * Math.sign(camera.rotation.z),
+                z: z * Math.sign(camera.rotation.z)
             };
         }
     }
@@ -672,18 +672,18 @@ function setSpecificView(aJson) {
 
     var hashMap = getBuildingsHashMap();
 
-if (experimentalMode) {
-    setScalingBooleans(aJson.scaling);
-    var scaleArray = ["height", "width", "color"];
-    var i = 0;
-    for (var x in aJson.scaling) {
-        if (aJson.scaling[x]) {
-            gui.__folders["Skalierung"].__controllers[i].setValue(true);
-            scale(true, scaleArray[i], scene, mainDistrict, camera, extrema);
+    if (experimentalMode) {
+        setScalingBooleans(aJson.scaling);
+        var scaleArray = ["height", "width", "color"];
+        var i = 0;
+        for (var x in aJson.scaling) {
+            if (aJson.scaling[x]) {
+                gui.__folders["Skalierung"].__controllers[i].setValue(true);
+                scale(true, scaleArray[i], scene, mainDistrict, camera, extrema);
+            }
+            i++;
         }
-        i++;
     }
-}
 
     drawStoredLines(aJson);
 
@@ -706,7 +706,7 @@ function drawStoredLines(aJson) {
     var stringArray = ["leftGarden", "rightGarden"];
     for (var j = 0; j < stringArray.length; j++) {
         for (var i = 0; i < aJson[stringArray[j]].length; i++) {
-			setGardenOn(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]]);
+            setGardenOn(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]]);
         }
     }
     setClickedGardens(aJson);
