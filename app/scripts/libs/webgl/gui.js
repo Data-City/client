@@ -7,6 +7,9 @@
  */
 
 var buildingColor = 0x0000FF;
+var colorOfTargetBuildings = 0x40FF00;
+var colorOfBuildingsWithConns = 0xFFBF00;
+var colorOfHighlightingByMouseOver = 0xFF0000;
 var alphaForDistrictColor = 0.3;
 var maximalHeight; //speichert max. hoehe der Gebaeude, um Linien in dieser Hoehe zu zeichnen, ohne extrema zu uebergeben
 var clickedLeftGardens = []; //Array aus ID der Gebaeude, dessen Gaerten an sind
@@ -482,7 +485,7 @@ function drawALine(aGarden, destGarden) {
     } else {
         pushVerticesForBow(aGarden, destGarden, geometry);
     }
-    colorObject(destGarden.building, 0x40FF00);
+    colorObject(destGarden.building, colorOfTargetBuildings);
     var factor = getColorFactor(getExtrema(), aGarden.linesTo[destGarden.building[association.name]], "Connections");
     var material = new THREE.LineBasicMaterial({
         color: new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor)
@@ -625,9 +628,17 @@ function removeLines(aGarden, updateBoolean) {
         }
         hashMap[x]._numOfActivatedConnections = hashMap[x]._numOfActivatedConnections - 1;
         if (hashMap[x]._numOfActivatedConnections == 0) {
-            var factor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
-            colorObject(hashMap[x], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
+			if (highlightBuildingsConnections) {
+				colorObject(hashMap[x], colorOfBuildingsWithConns);
+			}
+			else {
+				var factor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
+				colorObject(hashMap[x], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
+			}
         }
+		else {
+			colorObject(hashMap[x], colorOfTargetBuildings);
+		}
     }
     if (updateBoolean) {
         aGarden.meshLines = {};
@@ -780,13 +791,12 @@ function highlightGardenLines(aGarden) {
         for (var x in meshLines) {
             length = meshLines[x].length;
             for (var i = 0; i < length; i++) {
-                meshLines[x][i].material.color.setHex(0xFF0000);
+                meshLines[x][i].material.color.setHex(colorOfHighlightingByMouseOver);
             }
-            colorObject(hashMap[x], 0xff0000);
+            colorObject(hashMap[x], colorOfHighlightingByMouseOver);
         }
-    } else {
-        highlightSourceBuildings(aGarden);
     }
+    highlightSourceBuildings(aGarden);
 }
 
 
@@ -796,19 +806,19 @@ function highlightGardenLines(aGarden) {
  * @param: aGarden: der Zielgarten, dessen Quellgebaude gehighlighted werden sollen
  */
 function highlightSourceBuildings(aGarden) {
-    var hashMap = getBuildingsHashMap();
     if (aGarden.building._numOfActivatedConnections > 0) {
+		var hashMap = getBuildingsHashMap();
         var linesTo = aGarden.linesTo;
         if (aGarden.isLeftGarden) {
             for (var x in linesTo) {
                 if (hashMap[x]._rightGarden.on) {
-                    colorObject(hashMap[x], 0xff0000);
+                    colorObject(hashMap[x], colorOfHighlightingByMouseOver);
                 }
             }
         } else {
             for (var x in linesTo) {
                 if (hashMap[x]._leftGarden.on) {
-                    colorObject(hashMap[x], 0xff0000);
+                    colorObject(hashMap[x], colorOfHighlightingByMouseOver);
                 }
             }
         }
@@ -832,12 +842,10 @@ function removeHighlightingGardenLines(aGarden) {
                 factor = getColorFactor(getExtrema(), aGarden.linesTo[x], "Connections");
                 meshLines[x][i].material.color.set(new THREE.Color(0xFF0000).lerp(new THREE.Color(0x000000), factor));
             }
-            factor = getColorFactor(extrema, hashMap[x]._color, "Color");
-            colorObject(hashMap[x], 0x40FF00);
+            colorObject(hashMap[x], colorOfTargetBuildings);
         }
-    } else {
-        removeHighlightingOfSourceBuildings(aGarden);
     }
+    removeHighlightingOfSourceBuildings(aGarden);
 }
 
 
@@ -846,8 +854,8 @@ function removeHighlightingGardenLines(aGarden) {
  * @param: aGarden: der Zielgarten, dessen Quellgebaude nicht mehr gehighlighted werden sollen
  */
 function removeHighlightingOfSourceBuildings(aGarden) {
-    var hashMap = getBuildingsHashMap();
     if (aGarden.building._numOfActivatedConnections > 0) {
+		var hashMap = getBuildingsHashMap();
         var linesTo = aGarden.linesTo;
         var factor;
         if (aGarden.isLeftGarden) {
@@ -873,10 +881,16 @@ function removeHighlightingOfSourceBuildings(aGarden) {
  */
 function setOldColor(aBuilding) {
     if (aBuilding._numOfActivatedConnections == 0) {
-        factor = getColorFactor(getExtrema(), aBuilding._color, "Color");
-        colorObject(aBuilding, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
-    } else {
-        colorObject(aBuilding, 0x40FF00);
+		if (highlightBuildingsConnections) {
+			colorObject(aBuilding, colorOfBuildingsWithConns);
+		}
+		else {
+			var factor = getColorFactor(getExtrema(), aBuilding._color, "Color");
+			colorObject(aBuilding, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
+		}
+    }
+	else {
+        colorObject(aBuilding, colorOfTargetBuildings);
     }
 }
 

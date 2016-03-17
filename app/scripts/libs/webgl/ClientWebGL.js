@@ -125,7 +125,6 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls, 
     animate();
     saveCamera();
     goToInitialView();
-
     setLoaderSettings("Fertig!", 100);
     if (settings != undefined) {
         setSpecificView(settings);
