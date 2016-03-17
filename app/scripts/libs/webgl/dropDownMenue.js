@@ -522,9 +522,9 @@ function scale(value, aString, scene, aDistrict, camera) {
     setLight(scene);
     setAndDrawCity(aDistrict, true, aString, scalingExtrema);
     drawStoredLines(getJsonForCurrentLink());
-    if (buildingInformation["Verbindungen"] === true){
-        highlightBuildingsWithConnections(true);   
-    };    
+    if (buildingInformation["Verbindungen"] === true) {
+        highlightBuildingsWithConnections(true);
+    };
     /*updateRemovedBuildings();
     if (buildingInformation.mesh != undefined) {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
@@ -626,9 +626,11 @@ function scaleAll(aString, scalingMethod) {
             hashMap[x]["_" + aString] = scalingMethod(hashMap[x], aString);
         }
     }
+    /*
     if (aString == "height") setDistrictHeight(scalingMethod({
         _height: getDistrictHeight()
     }, "height"));
+    */
 }
 
 /**
