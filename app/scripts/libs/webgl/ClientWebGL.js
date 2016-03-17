@@ -208,7 +208,7 @@ function initAssociation(association) {
     drawGardens = association.drawGardens;
     logScaling = association.logScaling;
 
-    gap = 2 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
+    gap = 5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) / metaData["avg_" + association.dimensions.area];
 
     //console.log("gap: ");
     //console.log(gap);
