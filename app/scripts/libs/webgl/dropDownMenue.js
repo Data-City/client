@@ -9,6 +9,8 @@ var arrayOfRemovedBuildings = [];
 
 var eingehendeVerbindungen, ausgehendeVerbindungen;
 
+var experimentalMode = false;
+
 // Dimensionen, die wir abbilden
 var myDimensions = ["ID", "Breite", "Höhe", "Farbe"];
 
@@ -278,19 +280,23 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
 
     //*****************************************************************
 
-    h = gui.addFolder("Skalierung");
-    h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(function(value) {
-        scaling["logarithmicHeight"] = value;
-        scale(value, "height", scene, aDistrict, camera);
-    });
-    h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(function(value) {
-        scaling["logarithmicWidth"] = value;
-        scale(value, "width", scene, aDistrict, camera);
-    });
-    h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(function(value) {
-        scaling["logarithmicColor"] = value;
-        scale(value, "color", scene, aDistrict, camera);
-    });
+    if (experimentalMode) {
+        h = gui.addFolder("Skalierung");
+        h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(function(value) {
+            scaling["logarithmicHeight"] = value;
+            scale(value, "height", scene, aDistrict, camera);
+        });
+        h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(function(value) {
+            scaling["logarithmicWidth"] = value;
+            scale(value, "width", scene, aDistrict, camera);
+        });
+        h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(function(value) {
+            scaling["logarithmicColor"] = value;
+            scale(value, "color", scene, aDistrict, camera);
+        });   
+    }
+
+    
 
     //********************************************************************
 

@@ -200,7 +200,12 @@ function initAssociation(association) {
     association.dimensions.height = association.dimensionSettings.height.name;
     setAssociation(association["dimensions"]);
     associations = association;
-
+   
+    if (association.experimentalMode) {
+        experimentalMode = true;
+        console.log("wird gesetzt!");
+    }
+    
     drawGardens = association.drawGardens;
     logScaling = association.logScaling;
 
