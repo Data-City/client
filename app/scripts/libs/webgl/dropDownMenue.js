@@ -518,6 +518,7 @@ function scale(value, aString, scene, aDistrict, camera) {
     setLight(scene);
     setAndDrawCity(aDistrict, true, aString, scalingExtrema);
     drawStoredLines(getJsonForCurrentLink());
+    highlightBuildingsWithConnections(true);
     /*updateRemovedBuildings();
     if (buildingInformation.mesh != undefined) {
         buildingInformation.mesh = buildingInformation.mesh.building.mesh;
