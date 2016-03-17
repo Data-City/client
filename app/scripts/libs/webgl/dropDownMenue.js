@@ -395,7 +395,8 @@ function highlightBuildingsWithConnections(value) {
 		if (hashmap[y]._numOfActivatedConnections <= 0) {
 			if (value) {
 				if (income[y] || outgoing[y]) {
-					colorObject(hashmap[y], colorOfBuildingsWithConns);
+					var factor = (getColorFactor(getExtrema(), hashmap[y]._leftGarden.color, "SumOfConn")+getColorFactor(getExtrema(), hashmap[y]._rightGarden.color, "SumOfConn"))/2;
+					colorObject(hashmap[y], (new THREE.Color(colorYellowBright)).lerp(new THREE.Color(colorYellowDark), factor));
 				}
 			} else {
 				if (income[y] || outgoing[y]) {

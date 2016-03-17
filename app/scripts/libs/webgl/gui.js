@@ -9,6 +9,8 @@
 var buildingColor = 0x0000FF;
 var colorOfTargetBuildings = 0x40FF00;
 var colorOfBuildingsWithConns = 0xFFBF00;
+var colorYellowBright = 0xF4FA58;
+var colorYellowDark = 0xFF8000;
 var colorOfHighlightingByMouseOver = 0xFF0000;
 var alphaForDistrictColor = 0.3;
 var maximalHeight; //speichert max. hoehe der Gebaeude, um Linien in dieser Hoehe zu zeichnen, ohne extrema zu uebergeben
@@ -629,7 +631,8 @@ function removeLines(aGarden, updateBoolean) {
         hashMap[x]._numOfActivatedConnections = hashMap[x]._numOfActivatedConnections - 1;
         if (hashMap[x]._numOfActivatedConnections == 0) {
 			if (highlightBuildingsConnections) {
-				colorObject(hashMap[x], colorOfBuildingsWithConns);
+				var factor = (getColorFactor(getExtrema(), hashMap[x]._leftGarden.color, "SumOfConn")+getColorFactor(getExtrema(), hashMap[x]._leftGarden.color, "SumOfConn"))/2;
+				colorObject(hashMap[x], (new THREE.Color(colorYellowBright)).lerp(new THREE.Color(colorYellowDark), factor));
 			}
 			else {
 				var factor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
@@ -882,7 +885,8 @@ function removeHighlightingOfSourceBuildings(aGarden) {
 function setOldColor(aBuilding) {
     if (aBuilding._numOfActivatedConnections == 0) {
 		if (highlightBuildingsConnections) {
-			colorObject(aBuilding, colorOfBuildingsWithConns);
+			var factor = (getColorFactor(getExtrema(), aBuilding._leftGarden.color, "SumOfConn")+getColorFactor(getExtrema(), aBuilding._rightGarden.color, "SumOfConn"))/2;
+			colorObject(aBuilding, (new THREE.Color(colorYellowBright)).lerp(new THREE.Color(colorYellowDark), factor));
 		}
 		else {
 			var factor = getColorFactor(getExtrema(), aBuilding._color, "Color");
