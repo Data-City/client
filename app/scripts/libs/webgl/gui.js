@@ -630,18 +630,16 @@ function removeLines(aGarden, updateBoolean) {
         }
         hashMap[x]._numOfActivatedConnections = hashMap[x]._numOfActivatedConnections - 1;
         if (hashMap[x]._numOfActivatedConnections == 0) {
-			if (highlightBuildingsConnections) {
-				var factor = (getColorFactor(getExtrema(), hashMap[x]._leftGarden.color, "SumOfConn")+getColorFactor(getExtrema(), hashMap[x]._leftGarden.color, "SumOfConn"))/2;
-				colorObject(hashMap[x], (new THREE.Color(colorYellowBright)).lerp(new THREE.Color(colorYellowDark), factor));
-			}
-			else {
-				var factor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
-				colorObject(hashMap[x], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
-			}
+            if (highlightBuildingsConnections) {
+                var factor = (getColorFactor(getExtrema(), hashMap[x]._leftGarden.color, "SumOfConn") + getColorFactor(getExtrema(), hashMap[x]._leftGarden.color, "SumOfConn")) / 2;
+                colorObject(hashMap[x], (new THREE.Color(colorYellowBright)).lerp(new THREE.Color(colorYellowDark), factor));
+            } else {
+                var factor = getColorFactor(getExtrema(), hashMap[x]._color, "Color");
+                colorObject(hashMap[x], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
+            }
+        } else {
+            colorObject(hashMap[x], colorOfTargetBuildings);
         }
-		else {
-			colorObject(hashMap[x], colorOfTargetBuildings);
-		}
     }
     if (updateBoolean) {
         aGarden.meshLines = {};
@@ -810,7 +808,7 @@ function highlightGardenLines(aGarden) {
  */
 function highlightSourceBuildings(aGarden) {
     if (aGarden.building._numOfActivatedConnections > 0) {
-		var hashMap = getBuildingsHashMap();
+        var hashMap = getBuildingsHashMap();
         var linesTo = aGarden.linesTo;
         if (aGarden.isLeftGarden) {
             for (var x in linesTo) {
@@ -858,7 +856,7 @@ function removeHighlightingGardenLines(aGarden) {
  */
 function removeHighlightingOfSourceBuildings(aGarden) {
     if (aGarden.building._numOfActivatedConnections > 0) {
-		var hashMap = getBuildingsHashMap();
+        var hashMap = getBuildingsHashMap();
         var linesTo = aGarden.linesTo;
         var factor;
         if (aGarden.isLeftGarden) {
@@ -884,16 +882,14 @@ function removeHighlightingOfSourceBuildings(aGarden) {
  */
 function setOldColor(aBuilding) {
     if (aBuilding._numOfActivatedConnections == 0) {
-		if (highlightBuildingsConnections) {
-			var factor = (getColorFactor(getExtrema(), aBuilding._leftGarden.color, "SumOfConn")+getColorFactor(getExtrema(), aBuilding._rightGarden.color, "SumOfConn"))/2;
-			colorObject(aBuilding, (new THREE.Color(colorYellowBright)).lerp(new THREE.Color(colorYellowDark), factor));
-		}
-		else {
-			var factor = getColorFactor(getExtrema(), aBuilding._color, "Color");
-			colorObject(aBuilding, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
-		}
-    }
-	else {
+        if (highlightBuildingsConnections) {
+            var factor = (getColorFactor(getExtrema(), aBuilding._leftGarden.color, "SumOfConn") + getColorFactor(getExtrema(), aBuilding._rightGarden.color, "SumOfConn")) / 2;
+            colorObject(aBuilding, (new THREE.Color(colorYellowBright)).lerp(new THREE.Color(colorYellowDark), factor));
+        } else {
+            var factor = getColorFactor(getExtrema(), aBuilding._color, "Color");
+            colorObject(aBuilding, (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(buildingColor), factor));
+        }
+    } else {
         colorObject(aBuilding, colorOfTargetBuildings);
     }
 }
