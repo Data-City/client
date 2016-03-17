@@ -647,7 +647,7 @@ function getOrbitControls() {
  *@param maxDistance: der Abstand zum Koordinatenursprung, zu dem man maximal wegzoomen kann
  */
 function updateControls(maxDistance) {
-    trackballControls.maxDistance = maxDistance * 3;
+    trackballControls.maxDistance = maxDistance * 2.2;
 }
 
 
