@@ -383,7 +383,7 @@ angular.module('datacityApp')
             $http.delete(url, config).then(succ, err);
         };
 
-        
+
         /**
          * Erzeugt eine Collection mit den gegebenen Date
          * 

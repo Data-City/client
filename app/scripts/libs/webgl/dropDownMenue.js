@@ -293,10 +293,10 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
         h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(function(value) {
             scaling["logarithmicColor"] = value;
             scale(value, "color", scene, aDistrict, camera);
-        });   
+        });
     }
 
-    
+
 
     //********************************************************************
 
@@ -528,4 +528,3 @@ function scaleAll(aString, scalingMethod) {
         }
     }
 }
-
