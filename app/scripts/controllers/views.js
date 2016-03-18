@@ -577,6 +577,7 @@ angular.module('datacityApp')
             if (!$scope.chosenView.experimentalMode) {
                 window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nBenutzung auf eigene Gefahr!");
             }
+            $scope.chosenView.typeOfConnections = 0; //Bögen
             $scope.chosenView.experimentalMode = !$scope.chosenView.experimentalMode;
             $scope.dimform.$setDirty();
         };

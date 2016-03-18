@@ -53,14 +53,17 @@ angular.module('datacityApp')
         REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_data_" + storedJSON._id, function(collection) {
             REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_incoming", function(incoming) {
                 REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_outgoing", function(outgoing) {
-                    var incomingConnections = incoming.data._embedded['rh:doc'][0];
-                    var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
-
-                    $scope.chosenCollection = collection;
-
                     REST.getData(function(viewResponse) {
                         if (viewResponse.data) {
+                            var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                            var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
+
+                            $scope.chosenCollection = collection;
                             $scope.chosenView = viewResponse.data;
+                            
+                            if ($scope.chosenView.experimentalMode === false) {
+                                $scope.chosenView.typeOfConnections = 0;
+                            }
 
                             var settings = storedJSON;
                             $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65);
