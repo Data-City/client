@@ -681,11 +681,9 @@ function setSpecificView(aJson) {
     eingehendeVerbindungen = aJson.connections.eingehendeVerbindungen;
     ausgehendeVerbindungen = aJson.connections.ausgehendeVerbindungen;
     highlightBuildingsConnections = aJson.connections.highlightBuildingsConnections;
-    console.log(gui);
     gui.__folders["Verbindungen"].__controllers[0].setValue(highlightBuildingsConnections);
     gui.__folders["Verbindungen"].__controllers[1].setValue(eingehendeVerbindungen);
     gui.__folders["Verbindungen"].__controllers[2].setValue(ausgehendeVerbindungen);
-    console.log(gui);
 
     setCameraPosForLink(camera, aJson);
 }
