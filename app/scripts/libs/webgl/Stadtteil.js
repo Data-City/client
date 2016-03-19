@@ -2,7 +2,7 @@ var association = {}; //Hier wird die Legende gespeichert
 var incomingCalls = {}; //speichert Infos ueber Eingehende Verbindungen
 var outgoingCalls = {}; //speichert Infos ueber ausgehende Verbindungen
 
-var gap = 10; //Abstand zwischen den Gebaeuden
+var gap; //Abstand zwischen den Gebaeuden
 var gardenRadius = 6; //Groesse der Gaerten
 
 var arrayOfBuildings, maxWidth, maxDepth, startToBuildInZDirection, extension, buildingInZDirection, lastMaxWidth, width, startToBuildInXDirection; //fuer setOneDistrict
@@ -17,6 +17,8 @@ var jsonOfNodes = {}; //man greift erst auf die x-Position zu, dann auf die z-Po
 var graph = {};
 var nodeHashMap = {};
 var nodeID = 0;
+
+var logScaling = {};
 
 var districtHeight; //Hoehe von einem Boden
 
@@ -80,6 +82,13 @@ function setCalls(income, outgoing) {
     } else {
         outgoingCalls = outgoing;
     }
+}
+/**
+ * Getter fuer incomingCalls, outgoingCalls
+ * @returns das Array mit den eingehenden und den ausgehenden Verbindungen
+ */
+function getCalls() {
+    return [incomingCalls, outgoingCalls];
 }
 
 
@@ -431,13 +440,12 @@ function garden(isItLeftGarden, aBuilding, connections) {
             connections: {}
         };
     }
-
     return {
         building: aBuilding,
-        _width: (connections.sumOfConnections > 0) ? GARDEN_WIDTH : 0,
+        _width: (connections.sumOfConnections > 0 && drawGardens) ? GARDEN_WIDTH : 0,
         radius: gardenRadius,
         _height: 0.01,
-        depth: (connections.sumOfConnections > 0) ? GARDEN_DEPTH : 0,
+        depth: (connections.sumOfConnections > 0 && drawGardens) ? GARDEN_DEPTH : 0,
         color: connections.sumOfConnections,
         _centerPosition: [0, 0.05, 0],
         nextLinePos: [0, 0],
@@ -508,18 +516,31 @@ function setGardenPos(aBuilding) {
     var cP = aBuilding._centerPosition;
 
     if (right) {
-        right._centerPosition[0] = cP[0] + right._width / 2 - right.radius / 2;
-        right._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight / 2 + 0.01;
-        right._centerPosition[2] = cP[2] + 1 + right.radius + aBuilding._width / 2;
+        if (drawGardens) {
+            right._centerPosition[0] = cP[0] + right._width / 2 - right.radius / 2;
+            right._centerPosition[1] = cP[1] - aBuilding._height / 2;
+            right._centerPosition[2] = cP[2] + 1 + right.radius + aBuilding._width / 2;
+        } else {
+            right._centerPosition[0] = cP[0];
+            right._centerPosition[1] = cP[1];
+            right._centerPosition[2] = cP[2];
+        }
 
         right.nextLinePos[0] = right._centerPosition[0];
         right.nextLinePos[1] = right._centerPosition[2];
     }
 
     if (left) {
-        left._centerPosition[0] = cP[0] - left._width / 2;
-        left._centerPosition[1] = cP[1] - aBuilding._height / 2 + districtHeight / 2 + 0.01;
-        left._centerPosition[2] = cP[2] + 1 + left.depth - left.radius + aBuilding._width / 2;
+        if (drawGardens) {
+            left._centerPosition[0] = cP[0] - left._width / 2;
+            left._centerPosition[1] = cP[1] - aBuilding._height / 2;
+            left._centerPosition[2] = cP[2] + 1 + left.depth - left.radius + aBuilding._width / 2;
+        } else {
+            left._centerPosition[0] = cP[0];
+            left._centerPosition[1] = cP[1];
+            left._centerPosition[2] = cP[2];
+        }
+
 
         left.nextLinePos[0] = left._centerPosition[0];
         left.nextLinePos[1] = left._centerPosition[2];
@@ -534,7 +555,6 @@ function setGardenPos(aBuilding) {
  * @param: namePrefix: Praefix vom Namen der Form "maindistrict.package1.package2."
  */
 function setMainDistrict(mainDistrict, namePrefix) {
-    districtHeight = parseFloat(metaData["min_" + association.height]) / parseFloat(metaData[scalingOption + "_" + association.height]);
     if (mainDistrict["buildings"] != undefined) {
         var buildings = mainDistrict["buildings"];
         var length = buildings.length;
@@ -634,7 +654,8 @@ function getDrawnDimValue(aBuilding, dimString) {
     var toReturn;
 
     var buildingDimension = aBuilding[association[dimString]];
-    var scalingString = metaData[scalingOption + "_" + association[dimString]]; //z.B. "min_ID"
+    //var scalingString = 0.5 * metaData["avg_" + association[dimString]];
+    var scalingString = 0.25 * metaData["avg_" + association.width];
 
     if (buildingDimension != undefined && buildingDimension != "" && buildingDimension != 0) {
         /* Wird hoffentlich nicht mehr benötigt, da nur Zahlen übergeben werden
@@ -644,7 +665,6 @@ function getDrawnDimValue(aBuilding, dimString) {
         }
         */
         if (scalingString > 2) {
-            //toReturn = parseFloat(aBuilding[association[dimString]]) / parseFloat(metaData[scalingOption + "_" + association[dimString]]) + 1.5;
             toReturn = parseFloat(buildingDimension) / parseFloat(scalingString);
         } else {
             //toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
@@ -668,6 +688,9 @@ function initBuilding(aBuilding, namePrefix) {
         for (var i = 3; i--;) {
             var dim = dimensions[i];
             aBuilding["_" + dim] = getDrawnDimValue(aBuilding, dim);
+            if (logScaling[dim]) {
+                aBuilding["_" + dim] = scaleLogarithmically(aBuilding, dim);
+            }
         }
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
         var theLeftGarden = garden(true, aBuilding, outgoingCalls[aBuilding[association.name]]);
@@ -771,7 +794,8 @@ function getLandWidth(aBuilding) {
     var width = aBuilding._width;
     var left = aBuilding._leftGarden;
     var right = aBuilding._rightGarden;
-    if (left._width == 0 && right._width == 0) {
+
+    if (drawGardens === false) {
         return width;
     } else {
         return Math.max(width + 1 + left.depth,

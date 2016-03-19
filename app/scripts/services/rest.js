@@ -41,6 +41,9 @@ angular.module('datacityApp')
             password = pw;
         };
 
+        /**
+         * Gibt den Auth-Header mit Token (wenn nicht verfügbar mit Passwort) zurück
+         */
         var getAuthorizationHeader = function() {
             var pw = null;
             if (token) {
@@ -214,6 +217,12 @@ angular.module('datacityApp')
         };
 
 
+        /**
+         * Updated View und ruft mit Serverantwort Funktion fn auf
+         * 
+         * @param View view Das neue View-Objekt
+         * @param function fn Funktion, die mit Serverantwort aufgerufen wird
+         */
         this.updateView = function(view, fn) {
             //$log.info(view);
             setAuthHeader();
@@ -287,6 +296,13 @@ angular.module('datacityApp')
             this.createCollectionForView(view, collection, null);
         };
 
+        /**
+         * Erzeugt Collection für eine Ansicht: _dc_data_viewId
+         * 
+         * @param View view Die Ansicht
+         * @param String collection Name der Collections
+         * @param function fn Funktion die mit Serverantwort aufgerufen wird
+         */
         this.createCollectionForView = function(view, collection, fn) {
             setAuthHeader();
             var url = BASEURL + '/' + DATABASEFORCOLLECTIONS + '/' + collection + "_dc_data" + "_" + view.timeOfCreation;
@@ -306,6 +322,16 @@ angular.module('datacityApp')
                 });
         };
 
+        /**
+         * Erzeugt Aggregation
+         * 
+         * @param String database Name der Datenbank
+         * @param String collection Name der Colllection
+         * @param String etag Aktueller ETag der Collection
+         * @param Object params Aggregationsobjekt
+         * @param function fn Funktion, die mit Ergebnis aufgerufen wird
+         * 
+         */
         this.createAggregation = function(database, collection, etag, params, fn) {
             //$log.info("So far!");
             setAuthHeader();
@@ -337,6 +363,15 @@ angular.module('datacityApp')
                 });
         };
 
+        /**
+         * Löscht Document
+         * 
+         * @param String db Datenbankname
+         * @param String collection Name der Collection
+         * @param String docId Id des zu löschenden Documents
+         * @param function succ Funktion, die im Erfolgsfall mit Antwort aufgerufen wird
+         * @param function err Funktion, die im Fehlerfall mit Antwort aufgerufen wird     
+         */
         this.deleteDoc = function(db, collection, docId, etag, succ, err) {
             var config = {
                 headers: {
@@ -349,6 +384,15 @@ angular.module('datacityApp')
         };
 
 
+        /**
+         * Erzeugt eine Collection mit den gegebenen Date
+         * 
+         * @param String collName Name der neuen Collection
+         * @param Array dataArray Array mit den Daten für die neue Collection. Jedes Element wird zu einem Document
+         * @param function succCallback Funktion, die im Erfolgsfall aufgerufen wird
+         * @param function errCallback Funktion, die im Fehlerfall aufgerufen wird
+         * @param function updateLoader Funktion, die nach jedem importierten Document aufgerufen wird um Fortschritt anzuzeigen
+         */
         this.createCollection = function(collName, dataArray, succCallback, errCallback, updateLoader) {
             rest.putOnCollection(DATABASEFORCOLLECTIONS, collName, null, null, function(result) {
                 rest.getCurrentETag(DATABASEFORCOLLECTIONS, collName, function(etag) {
@@ -374,6 +418,15 @@ angular.module('datacityApp')
             });
         };
 
+        /**
+         * Führt ein PUT auf die Collection mit den Parametern durch
+         * 
+         * @param String database
+         * @param String collection
+         * @param String etag
+         * @param Object params Parameter für Put
+         * @param function fn Funktion, die im Erfolgsfall aufgerufen wird
+         */
         this.putOnCollection = function(database, collection, etag, params, fn) {
             /*
             if (!params) {
@@ -402,7 +455,9 @@ angular.module('datacityApp')
                 });
         };
 
-        //Holt beliebige URL ab Base URL, Beispiel /database/collection
+        /**
+         * Holt beliebige URL ab Base URL, Beispiel /database/collection
+         */
         this.getURL = function(relUrl, parameters, funcSucc, funcError) {
             setAuthHeader();
             var req = {
@@ -464,6 +519,14 @@ angular.module('datacityApp')
             this.callCollectionAggr(database, collection, AGGR.META_DATA_AGGR_URI, fn);
         };
 
+        /**
+         * Führt Aggregation aus
+         * 
+         * @param String database
+         * @param String collection 
+         * @param String aggr Aggreationsname
+         * @param function fn Funktion, die im Erfolgsfall aufgerufen wird
+         */
         this.callCollectionAggr = function(database, collection, aggr, fn) {
             setAuthHeader();
             //var relUrl = '/' + database + '/' + collection + '/_aggrs/' + aggr + '?noauthchallenge';
@@ -775,10 +838,16 @@ angular.module('datacityApp')
             $log = log;
         };
 
+        /**
+         * Speichert AGGR in Provider
+         */
         this.setAGGR = function(aggr) {
             AGGR = aggr;
         };
 
+        /**
+         * Speichert SETTINGS im Provider
+         */
         this.setSETTINGS = function(settings) {
             SETTINGS = settings;
 
@@ -795,11 +864,17 @@ angular.module('datacityApp')
             this.AGGREGATION_SUFFIX = SETTINGS.aggregation_suffix;
         };
 
+        /**
+         * Gibt Stacktrack zurück
+         */
         this.stackTrace = function() {
             var err = new Error();
             return err.stack;
         };
 
+        /**
+         * Setzt mit Antwort das Authentifizierungstoken
+         */
         this.setAuthToken = function(response) {
             if (response) {
                 var responseHeader = response.headers();

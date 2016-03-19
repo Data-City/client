@@ -1,139 +1,143 @@
 <!doctype html>
 <html ng-app="datacityApp">
-  <head>
-    <meta charset="utf-8">
-    <title>DataCity</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.) styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
-  </head>
-  <body ng-app="datacityApp">
-    <!--[if lte IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
 
-    <!-- Navigations-Leiste am oberen Bildschirmrand -->
-    <div class="header">
-      <div class="navbar navbar-inverse" role="navigation">
+<head>
+  <meta charset="utf-8">
+  <title>DataCity</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
 
-          <!-- Anweisungen, falls der Bildschirm extrem klein wird (Smartphone) -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <div class="navbar-brand">- DataCity -</div>
-          </div>
+<body ng-app="datacityApp">
+  <!--[if lte IE 8]>
+  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
 
-          <!-- Normale Anzeige oben links -->
-          <div class="collapse navbar-collapse" id="js-navbar-collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a ng-href="#/data">Datensätze</a></li>
-            </ul>
+  <!-- Navigations-Leiste am oberen Bildschirmrand -->
+  <div class="header">
+    <div class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <!-- Anweisungen, falls der Bildschirm extrem klein wird (Smartphone) -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="navbar-brand ruv-color"><a ng-href="#/data" id="datacity-brand" ><b> DataCity </b></a> </div>
+        </div>
 
-            <!-- Login/Logout oben rechts -->
-            <!-- auskommentiert
-            <ul class="nav navbar-nav navbar-right" ng-controller="LoginCtrl">
-                <li ng-show="loggedIn"><a href="#/admin">Eingeloggt als <i>{{username}}</i></a></li>
-                <li>
-                  <a ng-href="#/login" ng-show="loggedIn" ng-click="logout();"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
-                  <a ng-href="#/login" ng-hide="loggedIn"><span class="glyphicon glyphicon-log-in"></span> Login</a>
-                </li>
-            </ul>
-            -->
-          </div>
+        <!-- RuV und Tu Darmstadt Logo -->
+        <ul class="nav navbar-nav navbar-right">
+          <img class="brand" id="brand-image" alt="RuV Logo" src="images/R+V-Logo.png" />
+          <em> in Kooperation mit &nbsp </em>
+          <img class="brand" id="brand-image" style="margin-right: 20px;" alt="TuDarmstadt Logo" src="images/tud_logo.png" />
+        </ul>
+
       </div>
-    </div>
+      <!-- Login/Logout oben rechts -->
+      <!-- auskommentiert
+      <ul class="nav navbar-nav navbar-right" ng-controller="LoginCtrl">
+      <li ng-show="loggedIn"><a href="#/admin">Eingeloggt als <i>{{username}}</i></a></li>
+      <li>
+      <a ng-href="#/login" ng-show="loggedIn" ng-click="logout();"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
+      <a ng-href="#/login" ng-hide="loggedIn"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+    </li>
+  </ul>
+-->
+</div>
+</div>
 
-    <div>
-      <div ng-view=""></div>
-    </div>
+<div>
+  <div ng-view=""></div>
+</div>
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-    <!--
-     <script>
-       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+<!--
+<script>
+!function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
+(A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
+r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
+}(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
-    -->
+ga('create', 'UA-XXXXX-X');
+ga('send', 'pageview');
+</script>
+-->
 
-    <!-- build:js(.) scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-aria/angular-aria.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-messages/angular-messages.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/three.js/build/three.js"></script>
-    <script src="bower_components/spin.js/spin.js"></script>
-    <script src="bower_components/angular-spinner/angular-spinner.js"></script>
-    <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
-    <script src="bower_components/angular-bootstrap-slider/slider.js"></script>
-    <script src="bower_components/papaparse/papaparse.js"></script>
-    <script src="bower_components/async/lib/async.js"></script>
-    <script src="bower_components/dat.gui/dat.gui.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-messages/angular-messages.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/three.js/build/three.js"></script>
+<script src="bower_components/spin.js/spin.js"></script>
+<script src="bower_components/angular-spinner/angular-spinner.js"></script>
+<script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
+<script src="bower_components/angular-bootstrap-slider/slider.js"></script>
+<script src="bower_components/papaparse/papaparse.js"></script>
+<script src="bower_components/async/lib/async.js"></script>
+<script src="bower_components/dat.gui/dat.gui.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/views.js"></script>
-        <script src="scripts/controllers/login.js"></script>
-		<script src="scripts/libs/lib_view.js"></script>
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/controllers/main.js"></script>
+<script src="scripts/controllers/views.js"></script>
+<script src="scripts/controllers/login.js"></script>
+<script src="scripts/libs/lib_view.js"></script>
 
-		<!-- WebGL -->
-        <script src="scripts/libs/webgl/ClientWebGL.js"></script>
-        <script src="scripts/libs/webgl/gui.js"></script>
-        <script src="scripts/libs/webgl/Stadtteil.js"></script>
-        <script src="scripts/libs/webgl/dropDownMenue.js"></script>
-		<script src="scripts/libs/webgl/dijkstra.js"></script>
+<!-- WebGL -->
+<script src="scripts/libs/webgl/ClientWebGL.js"></script>
+<script src="scripts/libs/webgl/gui.js"></script>
+<script src="scripts/libs/webgl/Stadtteil.js"></script>
+<script src="scripts/libs/webgl/dropDownMenue.js"></script>
+<script src="scripts/libs/webgl/dijkstra.js"></script>
 
-        <script src="scripts/libs/webgl/js/Projector.js"></script>
-        <!--<script src="scripts/libs/webgl/js/dat.gui.min.js"></script>-->
-        <script src="scripts/libs/webgl/js/Detector.js"></script>
-        <script src="scripts/libs/webgl/js/three.min.js"></script>
-        <script src="scripts/libs/webgl/js/TrackballControls.js"></script>
-        <script src="scripts/libs/webgl/js/OrbitControls.js"></script>
-        <script src="scripts/libs/webgl/js/Lut.js"></script>
+<script src="scripts/libs/webgl/js/Projector.js"></script>
+<!--<script src="scripts/libs/webgl/js/dat.gui.min.js"></script>-->
+<script src="scripts/libs/webgl/js/Detector.js"></script>
+<script src="scripts/libs/webgl/js/three.min.js"></script>
+<script src="scripts/libs/webgl/js/TrackballControls.js"></script>
+<script src="scripts/libs/webgl/js/OrbitControls.js"></script>
+<script src="scripts/libs/webgl/js/Lut.js"></script>
 
-		<!-- Weitere Skripte (nicht WebGL) -->
-        <script src="scripts/controllers/import.js"></script>
-        <script src="scripts/controllers/preview.js"></script>
-        <script src="scripts/services/sharedlogin.js"></script>
-        <script src="scripts/filters/bytype.js"></script>
-        <script src="scripts/filters/bychooseability.js"></script>
-        <script src="scripts/filters/colsbydisplayability.js"></script>
-        <script src="scripts/filters/attrbyname.js"></script>
-        <script src="scripts/services/aggr.js"></script>
-        <script src="scripts/services/rest.js"></script>
-        <script src="scripts/controllers/storedview.js"></script>
-        <script src="scripts/filters/bygrouping.js"></script>
-        <script src="scripts/libs/sizeof.compressed.js"></script>
-        <script src="scripts/directives/loadingpanel.js"></script>
-        <!-- endbuild -->
-        <script src="scripts/controllers/settings.js"></script>
+<!-- Weitere Skripte (nicht WebGL) -->
+<script src="scripts/controllers/import.js"></script>
+<script src="scripts/controllers/preview.js"></script>
+<script src="scripts/services/sharedlogin.js"></script>
+<script src="scripts/filters/bytype.js"></script>
+<script src="scripts/filters/bychooseability.js"></script>
+<script src="scripts/filters/colsbydisplayability.js"></script>
+<script src="scripts/filters/attrbyname.js"></script>
+<script src="scripts/services/aggr.js"></script>
+<script src="scripts/services/rest.js"></script>
+<script src="scripts/controllers/storedview.js"></script>
+<script src="scripts/filters/bygrouping.js"></script>
+<script src="scripts/libs/sizeof.compressed.js"></script>
+<script src="scripts/directives/loadingpanel.js"></script>
+<!-- endbuild -->
+<script src="scripts/controllers/settings.js"></script>
 </body>
+
 </html>

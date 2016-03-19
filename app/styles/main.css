@@ -90,3 +90,55 @@ body {
   content: '\25bc';
 }
 /* ENDE SORTIERUNG */
+
+
+/* Styles fuer Navbar */
+ .brand {
+ height: 50px;
+ }
+.navbar-default {
+background-color: #daeeed;
+border-color: #a1b8b7;
+}
+.navbar-default .navbar-brand {
+/*color: #1d51a5;*/
+color: #0066B3;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+/*color: #1d51a5;*/
+color: #0066B3;
+}
+
+#datacity-brand {
+	color: #0066B3;
+}
+/* ENDE NAVBAR STYLE */
+
+/* Fix Progressbar */
+
+.progress {
+    position: absolute;
+    display: block;
+    width: 43%;
+    color: black;
+    
+}
+
+.progress .bar {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    transition: none;
+}
+
+
+/* DAT.GUI Interfrace WebGL */
+.dg .c input[type=text] {
+       border-radius: 2px;
+       border-style: solid;
+       border-width: 1.1px;
+       margin-top: 5px !important;
+       padding: 0px 3px 10px 3px !important;
+}

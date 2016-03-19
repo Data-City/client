@@ -7,14 +7,16 @@ var storedBuilding = [];
 var removedBuildings = [];
 var arrayOfRemovedBuildings = [];
 
+var eingehendeVerbindungen, ausgehendeVerbindungen,
+  highlightBuildingsConnections;
+var useConnections;
+var experimentalMode = false;
+
 // Dimensionen, die wir abbilden
 var myDimensions = ["ID", "Breite", "Höhe", "Farbe"];
 
 //Namen, auf die wir beim JSON-Objekt zugreifen fuer die Legende
 var dimensionsFromDatabase = ["name", "width", "height", "color"];
-
-// Farblegende
-var lut;
 
 //fuer den Ordner 'Legende'
 var legend = {
@@ -30,12 +32,9 @@ var buildingInformation = {
   "width": "Klicken Sie bitte auf ein Gebäude",
   "color": "Klicken Sie bitte auf ein Gebäude",
   "name": "Klicken Sie bitte auf ein Gebäude",
-  /*"remove": function() {
-  remove(buildingInformation.mesh);
-},
-"undo": function() {
-if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
-}*/
+  "Verbindungen": false,
+  "eingehendeVerbindungenaktivieren": false,
+  "ausgehendeVerbindungenaktivieren": false
 };
 
 //entsteht, wenn Nutzer die Legende aendert
@@ -82,27 +81,6 @@ var update = function() {
   requestAnimationFrame(update);
 };
 
-
-
-/**
- * Getter fuer buildingInformation
- * @return: buildingInformation
- */
-/*function getBuildingInformation() {
-return buildingInformation;
-}*/
-
-/**
- * loescht ein District von der Bildflaeche und speichert dies
- * @param: face: das Face-Objekt, auf das geklickt wurde und dessen Gebaeude geloescht werden soll
- */
-function remove(Face) {
-  var building = getBuildingsHashMap()[Face.face.building];
-  //if (mesh.length != 0) {
-  removeDistrict(getScene(), Face, true);
-  arrayOfRemovedBuildings.push(storedDistrict);
-  //}
-}
 
 
 /**
@@ -172,7 +150,6 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newName,
   } else {
     buildingInformation["name"] = "Keine Daten";
   }
-  /*buildingInformation.face = aFace;*/
 }
 
 /**
@@ -199,6 +176,9 @@ function getGui() {
  * Initiiert die Legende auf den Anfangszustand
  */
 function initDropDownMenue() {
+  highlightBuildingsConnections = false;
+  eingehendeVerbindungen = false;
+  ausgehendeVerbindungen = false;
 
   //fuer den Ordner 'Legende'
   legend = {
@@ -213,26 +193,19 @@ function initDropDownMenue() {
     "height": "Klicken Sie bitte auf ein Gebäude",
     "width": "Klicken Sie bitte auf ein Gebäude",
     "color": "Klicken Sie bitte auf ein Gebäude",
-    "name": "Klicken Sie bitte auf ein Gebäude"
-      /*,
-    "remove": function() {
-    remove(buildingInformation.mesh);
-  },
-  "undo": function() {
-  if (arrayOfRemovedBuildings.length > 0) undoRemoving(getScene());
-}*/
+    "name": "Klicken Sie bitte auf ein Gebäude",
+    "Verbindungen": false,
+    "eingehendeVerbindungenaktivieren": false,
+    "ausgehendeVerbindungenaktivieren": false
   };
 
   //entsteht, wenn Nutzer die Legende aendert
   changedLegend = undefined;
 
   //fuer den Ordner "Skalierung"
-  scaling = {
-    "logarithmicHeight": false,
-    "logarithmicWidth": false,
-    "logarithmicColor": false
-  };
-
+  scaling["logarithmicHeight"] = logScaling.height;
+  scaling["logarithmicWidth"] = logScaling.width;
+  scaling["logarithmicColor"] = logScaling.color;
 
   //fuer den Ordner "Steuerung"
   controlling = {
@@ -309,27 +282,29 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
     h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[
       dimensionsFromDatabase[i]]).listen();
   }
-  /*h.add(buildingInformation, "remove").name("Ausblenden");
-  h.add(buildingInformation, "undo").name("Ausblenden rückgängig");*/
 
   //*****************************************************************
 
-  h = gui.addFolder("Skalierung");
-  h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(
-    function(value) {
-      scaling["logarithmicHeight"] = value;
-      scale(value, "height", scene, aDistrict, camera);
-    });
-  h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(
-    function(value) {
-      scaling["logarithmicWidth"] = value;
-      scale(value, "width", scene, aDistrict, camera);
-    });
-  h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(
-    function(value) {
-      scaling["logarithmicColor"] = value;
-      scale(value, "color", scene, aDistrict, camera);
-    });
+  if (experimentalMode) {
+    h = gui.addFolder("Skalierung");
+    h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(
+      function(value) {
+        scaling["logarithmicHeight"] = value;
+        scale(value, "height", scene, aDistrict, camera);
+      });
+    h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(
+      function(value) {
+        scaling["logarithmicWidth"] = value;
+        scale(value, "width", scene, aDistrict, camera);
+      });
+    h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(
+      function(value) {
+        scaling["logarithmicColor"] = value;
+        scale(value, "color", scene, aDistrict, camera);
+      });
+  }
+
+
 
   //********************************************************************
 
@@ -364,8 +339,24 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
   h.add(currentView, "Link").name("aktuelle Ansicht").listen();
   h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
 
+  //********************************************************************
 
-
+  if (useConnections) {
+    h = gui.addFolder("Verbindungen");
+    h.add(buildingInformation, "Verbindungen").name(
+      "Geb. mit Verb. hervorheben").onChange(function(value) {
+      buildingInformation["Verbindungen"] = value;
+      highlightBuildingsWithConnections(value);
+    })
+    h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name(
+      "eingehende Verb. per Klick").onChange(function(value) {
+      eingehendeVerbindungen = value;
+    })
+    h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name(
+      "ausgehende Verb. per Klick").onChange(function(value) {
+      ausgehendeVerbindungen = value;
+    })
+  }
 }
 
 /**
@@ -406,70 +397,36 @@ function getChangedLegend() {
 }
 
 
-/**
- * Methode, um ein Distrikt oder ein Gebaeude zu loeschen
- * @param: scene: die Scene, auf der die Objekte gezeichnet wurden
- * @param: aMesh: Mesh vom Distrikt oder Gebaeude, das geloescht werden soll
- * @param: isFirstCall: true, wenn es der Initialaufruf dieser Methode ist
- */
-/*function removeDistrict(scene, aMesh, isFirstCall) {
-if (isFirstCall) {
-storedDistrict = [];
-removedBuildings.push(aMesh.building[association.name]);
-}
-removeObject(scene, aMesh);
-storedDistrict = storedDistrict.concat(storedBuilding);
-if (aMesh.building.buildings != undefined) {
-for (var i = 0; i < aMesh.building.buildings.length; i++) {
-if (scene.children.indexOf(aMesh.building.buildings[i].mesh) != -1) {
-removeDistrict(scene, aMesh.building.buildings[i].mesh, false);
-}
-}
-}
-}*/
 
-/**
- * Methode, um das letzte geloeschte District wieder herzustellen
- * @param: scene: die Scene, auf der wir zeichnen
+/**Methode um die Gebaeude zu highlighten, die Verbindungen haben
+ * @param: value: der Wert aus der Legende, also ein Boolean (true = Gebaeude sind markiert, false = Gebaeude sind nicht markiert)
  */
-/*function undoRemoving(scene) {
-storedDistrict = arrayOfRemovedBuildings.pop();
-removedBuildings.splice(removedBuildings.indexOf(storedDistrict[0].building[association.name]), 1);
-for (var i = 0; i < storedDistrict.length; i++) {
-scene.add(storedDistrict[i]);
-if (storedDistrict[i].building != undefined) {
-storedDistrict[i].building._isRemoved = false;
+function highlightBuildingsWithConnections(value) {
+  highlightBuildingsConnections = value;
+  var arr = getCalls();
+  var income = arr[0];
+  var outgoing = arr[1];
+  var hashmap = getBuildingsHashMap();
+  for (var y in hashmap) {
+    if (hashmap[y]._numOfActivatedConnections <= 0) {
+      if (value) {
+        if (income[y] || outgoing[y]) {
+          var factor = (getColorFactor(getExtrema(), hashmap[y]._leftGarden.color,
+            "SumOfConn") + getColorFactor(getExtrema(), hashmap[y]._rightGarden
+            .color, "SumOfConn")) / 2;
+          colorObject(hashmap[y], (new THREE.Color(colorYellowBright)).lerp(new THREE
+            .Color(colorYellowDark), factor));
+        }
+      } else {
+        if (income[y] || outgoing[y]) {
+          var factor = getColorFactor(getExtrema(), hashmap[y]._color, "Color");
+          colorObject(hashmap[y], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(
+            buildingColor), factor));
+        }
+      }
+    }
+  }
 }
-}
-}*/
-
-/**
- * Methode, um Gebaeude zu loeschen
- * @param: scene: die Scene, auf die die Objekte gezeichnet wurden
- * @param: aMesh: das Mesh zum Gebaeude
- */
-/*function removeObject(scene, aMesh) {
-storedBuilding = [];
-storedBuilding.push(aMesh);
-aMesh.building._isRemoved = true;
-//removedBuildings.push(aMesh.building[association.name]);
-if (aMesh.building._leftGarden.mesh != undefined) {
-storedBuilding.push(aMesh.building._leftGarden.mesh);
-for (var x in aMesh.building._leftGarden.meshLines) {
-storedBuilding = storedBuilding.concat(aMesh.building._leftGarden.meshLines[x]);
-}
-}
-if (aMesh.building._rightGarden.mesh != undefined) {
-storedBuilding.push(aMesh.building._rightGarden.mesh);
-for (var x in aMesh.building._rightGarden.meshLines) {
-storedBuilding = storedBuilding.concat(aMesh.building._rightGarden.meshLines[x]);
-}
-}
-for (var i = 0; i < storedBuilding.length; i++) {
-scene.remove(storedBuilding[i]);
-}
-}*/
-
 
 /**
  * skaliert die Gebaeude und zeichnet sie neu
@@ -494,10 +451,9 @@ function scale(value, aString, scene, aDistrict, camera) {
   setLight(scene);
   setAndDrawCity(aDistrict, true, aString, scalingExtrema);
   drawStoredLines(getJsonForCurrentLink());
-  /*updateRemovedBuildings();
-  if (buildingInformation.mesh != undefined) {
-  buildingInformation.mesh = buildingInformation.mesh.building.mesh;
-}*/
+  if (buildingInformation["Verbindungen"] === true) {
+    highlightBuildingsWithConnections(true);
+  };
   updateControls(Math.max(aDistrict._width, getExtrema().maxHeight));
   saveCamera();
 }
@@ -578,7 +534,6 @@ function removeAllObjects(scene, aString, scalingMethod) {
       }
     }
     scene.remove(object);
-    //delete object;
   }
 }
 
@@ -595,24 +550,4 @@ function scaleAll(aString, scalingMethod) {
       hashMap[x]["_" + aString] = scalingMethod(hashMap[x], aString);
     }
   }
-  if (aString == "height") setDistrictHeight(scalingMethod({
-    _height: getDistrictHeight()
-  }, "height"));
 }
-
-/**
- * nach dem Skalieren update der geloeschten Objekte, damit sie auch wiederhergestellt werden koennen
- */
-/*function updateRemovedBuildings() {
-for (var i = 0; i < arrayOfRemovedBuildings.length; i++) {
-for (var j = 0; j < arrayOfRemovedBuildings[i].length; j++) {
-if (arrayOfRemovedBuildings[i][j].building != undefined) {
-arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].building.mesh;
-scene.remove(arrayOfRemovedBuildings[i][j].building.mesh);
-} else {
-arrayOfRemovedBuildings[i][j] = arrayOfRemovedBuildings[i][j].garden.mesh;
-scene.remove(arrayOfRemovedBuildings[i][j].garden.mesh);
-}
-}
-}
-}*/

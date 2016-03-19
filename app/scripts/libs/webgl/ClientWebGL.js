@@ -18,41 +18,10 @@ var extrema = { //enthaelt die Extremwerte aus den Daten
 var camToSave = {}; //speichert Anfangseinstellung
 var useStreets;
 var usingConnections;
-var scalingOption;
 var SpeedForShiftByKeys = 5;
+var nameOfAllBuildings = [];
 
-function ColorLegend(min, max) {
-
-  var colorYellowBright = '0xFFA500';
-  var colorYellowDark = '0xFF0000';
-  var colorMap = [
-    [0.0, colorYellowDark],
-    [1.0, colorYellowBright]
-  ];
-  //var colorMap = [ [ 0.0, '0x0000FF' ], [ 0.2, '0x00FFFF' ], [ 0.5, '0x00FF00' ], [ 0.8, '0xFFFF00' ],  [ 1.0, '0xFF0000' ] ];
-  var lut = new THREE.Lut('rainbow', 5);
-  lut.addColorMap('connections', colorMap);
-  lut.changeColorMap('connections');
-  lut.setMin(min);
-  lut.setMax(max);
-
-
-  this.draw = function(scene) {
-    scene.add(lut.setLegendOn({
-      'layout': 'horizontal'
-    }));
-    var labels = lut.setLegendLabels({
-      'title': 'Verbindungen',
-      'ticks': 2
-    });
-    scene.add(labels['title']);
-
-    for (var i = 0; i < Object.keys(labels['ticks']).length; i++) {
-      scene.add(labels['ticks'][i]);
-      scene.add(labels['lines'][i]);
-    }
-  }
-}
+var animationId = null;
 
 /**
  * Getter fuer scene
@@ -72,7 +41,7 @@ function getExtrema() {
 
 /**
 *Getter fuer mainDistrict
-@return: mainDistrict: das Json fuer das District
+ @return: mainDistrict: das Json fuer das District
 */
 function getMainDistrict() {
   return mainDistrict;
@@ -84,6 +53,35 @@ function getMainDistrict() {
  */
 function getControls() {
   return trackballControls;
+}
+
+
+
+function doDispose(obj) {
+  if (obj !== null) {
+    for (var i = 0; i < obj.children.length; i++) {
+      doDispose(obj.children[i]);
+    }
+    if (obj.geometry) {
+      obj.geometry.dispose();
+      obj.geometry = undefined;
+    }
+    if (obj.material) {
+      if (obj.material.materials) {
+        for (i = 0; i < obj.material.materials.length; i++) {
+          obj.material.materials[i].dispose();
+        }
+      } else {
+        obj.material.dispose();
+      }
+      obj.material = undefined;
+    }
+    if (obj.texture) {
+      obj.texture.dispose();
+      obj.texture = undefined;
+    }
+  }
+  obj = undefined;
 }
 
 
@@ -99,11 +97,12 @@ function getControls() {
  * @param: settings: undefined oder ein JSON zum Wiederaufrufen einer bestimmten Ansicht, siehe setSpecificView()
  * @param: incomingCalls: JSON fuer die eingehenden Verbindungen, siehe getIncomingConnections(...) oder undefined
  * @param: outgoingCalls: JSON fuer die ausgehenden Verbindungen, siehe getOutgoingConnections(...) oder undefined
+ * @param  function setLoaderSettings Funktion, mit der sich Nachricht und Prozent der Ladeanzeige setzen lassen
  */
 function drawCity(data, association, nameOfDivElement, settings, incomingCalls,
-  outgoingCalls) {
-
+  outgoingCalls, setLoaderSettings) {
   if (!Detector.webgl) Detector.addGetWebGLMessage(); //Fehlermeldung, falls Browser kein WebGL unterstuetzt
+
   init(nameOfDivElement, incomingCalls, outgoingCalls); //bereitet WebGLCanvas vor
 
   window.addEventListener('resize', function() {
@@ -111,7 +110,9 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls,
     renderer.setSize(window.innerWidth, window.innerHeight);
   }, false);
   initData(data, association, incomingCalls, outgoingCalls);
+  setLoaderSettings("Zeichne Stadt...", 70);
   setAndDrawCity(mainDistrict, false);
+  setLoaderSettings("Setze Kamera und starte Animation...", 90);
 
   // Erstelle die Legende
   if (Detector.webgl) {
@@ -123,14 +124,13 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls,
       nameOfDivElement);
   }
   updateControls(Math.max(mainDistrict._width, extrema.maxHeight));
-
-  var cL = new ColorLegend(1, 100);
-  cL.draw(scene);
-
   animate();
   saveCamera();
   goToInitialView();
-  if (settings != undefined) setSpecificView(settings);
+  setLoaderSettings("Fertig!", 100);
+  if (settings != undefined) {
+    setSpecificView(settings);
+  }
 }
 
 
@@ -176,7 +176,9 @@ function initData(data, association, incomingCalls, outgoingCalls) {
   setMetaData(association.metaData);
 
   usingConnections = association.useConnections;
-  scalingOption = association.scalingOption;
+
+  initAssociation(association);
+  initMainDistrict(data, association);
 
   if (usingConnections) {
     setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(
@@ -187,9 +189,6 @@ function initData(data, association, incomingCalls, outgoingCalls) {
       useStreets = false;
     }
   }
-
-  initAssociation(association);
-  initMainDistrict(data, association);
 }
 
 /**
@@ -203,6 +202,30 @@ function initAssociation(association) {
   association.dimensions.height = association.dimensionSettings.height.name;
   setAssociation(association["dimensions"]);
   associations = association;
+
+  if (association.experimentalMode) {
+    experimentalMode = true;
+  }
+
+  useConnections = association.useConnections;
+  drawGardens = association.drawGardens;
+  logScaling = association.logScaling;
+
+  gap = 20 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) /
+    metaData["avg_" + association.dimensions.area];
+
+  //console.log("gap: ");
+  //console.log(gap);
+
+  //console.log("Wurzel von: " + association.dimensionSettings.area.numberValueFilter[1] + " ist " + Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]));
+  //console.log("Wurzel von Avg: " + metaData["avg_" + association.dimensions.area] +  " ist " + Math.sqrt(metaData["avg_" + association.dimensions.area]));
+
+  districtHeight = 1.5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[
+    1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);
+
+  //console.log("districtHeight:");
+  //console.log(districtHeight);
+
   setBuildingColor(association.buildingcolor);
 }
 
@@ -219,6 +242,22 @@ function initMainDistrict(data, association) {
     mainDistrict = createMainDistrict(data[0].buildings, association.dimensions);
   } else {
     mainDistrict = data[0];
+  }
+  setNameOfAllBuildings(mainDistrict);
+}
+
+
+/**
+ * initialisiert nameOfAllBuildings, setzt es gleich mit einem Array, das aus den Namen der Gebaeude besteht
+ *@param: aDistrict: Das Distrikt, dessen Gebäudenamen alle in nameOfAllBuildings gespeichert werden soll
+ */
+function setNameOfAllBuildings(aDistrict) {
+  if (aDistrict.buildings == undefined) {
+    nameOfAllBuildings.push(aDistrict[associations.dimensions.name]);
+  } else {
+    for (var i = 0; i < aDistrict.buildings.length; i++) {
+      setNameOfAllBuildings(aDistrict.buildings[i]);
+    }
   }
 }
 
@@ -292,14 +331,12 @@ window.addEventListener("keyup", function(e) {
  * Navigation über die Pfeiltasten
  */
 window.addEventListener("keydown", function(e) {
-
   //Pfeiltaste links
   if (e.which === 37) {
     e.preventDefault();
     try {
       //console.log("Links");
-      camera.position.x = camera.position.x - SpeedForShiftByKeys;
-      trackballControls.target.x -= SpeedForShiftByKeys;
+      shiftCam(37);
     } catch (e) {
       console.log("Die Navigation über die Pfeiltasten lief schief!");
       return;
@@ -311,8 +348,7 @@ window.addEventListener("keydown", function(e) {
     e.preventDefault();
     try {
       //console.log("hoch");
-      camera.position.z = camera.position.z - SpeedForShiftByKeys;
-      trackballControls.target.z -= SpeedForShiftByKeys;
+      shiftCam(38);
     } catch (e) {
       console.log("Die Navigation über die Pfeiltasten lief schief!");
       return;
@@ -324,8 +360,7 @@ window.addEventListener("keydown", function(e) {
     e.preventDefault();
     try {
       //console.log("rechts");
-      camera.position.x = camera.position.x + SpeedForShiftByKeys;
-      trackballControls.target.x += SpeedForShiftByKeys;
+      shiftCam(39);
     } catch (e) {
       console.log("Die Navigation über die Pfeiltasten lief schief!");
       return;
@@ -337,14 +372,89 @@ window.addEventListener("keydown", function(e) {
     e.preventDefault();
     try {
       //console.log("runter");
-      camera.position.z = camera.position.z + SpeedForShiftByKeys;
-      trackballControls.target.z += SpeedForShiftByKeys;
+      shiftCam(40);
     } catch (e) {
       console.log("Die Navigation über die Pfeiltasten lief schief!");
       return;
     }
   }
 });
+
+
+/**
+ * verschiebt die Kamera und das Target durch Druecken auf eine Taste
+ * @param: theKey: 37 fuer links, 38 fuer hoch, 39 fuer rechts, 40 fuer runter
+ */
+function shiftCam(theKey) {
+  var shiftingVector = getShiftingVector(theKey);
+  var lengthOfshiftingVector = Math.sqrt(Math.pow(shiftingVector.x, 2) + Math.pow(
+    shiftingVector.z, 2));
+  shiftingVector.x = shiftingVector.x * SpeedForShiftByKeys /
+    lengthOfshiftingVector;
+  shiftingVector.z = shiftingVector.z * SpeedForShiftByKeys /
+    lengthOfshiftingVector;
+  camera.position.x = camera.position.x - shiftingVector.x;
+  camera.position.z = camera.position.z - shiftingVector.z;
+  trackballControls.target.x -= shiftingVector.x;
+  trackballControls.target.z -= shiftingVector.z;
+}
+
+/**
+ * Hilfsmethode fuer ShiftCam, gibt den Normalenvektor von dem Verbindungsvektor der Kamera zum Target
+ * @param: theKey: 37 fuer links, 38 fuer hoch, 39 fuer rechts, 40 fuer runter
+ * @return: shiftingVector: der Vektor, um den die Kamera und der Target verschoben werden sollen
+ */
+function getShiftingVector(theKey) {
+  var x = trackballControls.target.x - camera.position.x;
+  var z = trackballControls.target.z - camera.position.z;
+  var shiftingVector;
+  if (theKey == 39) {
+    if (x < 0) {
+      shiftingVector = {
+        x: -z / x,
+        z: 1
+      };
+    } else if (x > 0) {
+      shiftingVector = {
+        x: z / x,
+        z: -1
+      };
+    } else {
+      shiftingVector = {
+        x: -1,
+        z: 0
+      };
+    }
+  } else if (theKey == 38) {
+    shiftingVector = {
+      x: -x,
+      z: -z
+    };
+  } else if (theKey == 37) {
+    if (x < 0) {
+      shiftingVector = {
+        x: z / x,
+        z: -1
+      };
+    } else if (x > 0) {
+      shiftingVector = {
+        x: -z / x,
+        z: 1
+      };
+    } else {
+      shiftingVector = {
+        x: 1,
+        z: 0
+      };
+    }
+  } else {
+    shiftingVector = {
+      x: x,
+      z: z
+    }
+  }
+  return shiftingVector;
+}
 
 
 /**
@@ -408,12 +518,6 @@ function getMainDistrictFromJSON(aDistrict) {
  * @param: color: Farbe, die ggf. geupdatet werden soll
  */
 function updateExtrema(width, height, color) {
-  /*if (width + 1.5 > extrema.maxWidth) extrema.maxWidth = width + 1.5;
-  if (height + 1.5 > extrema.maxHeight) extrema.maxHeight = height + 1.5;
-  if (color + 1.5 > extrema.maxColor) extrema.maxColor = color + 1.5;
-  if (width + 1.5 < extrema.minWidth) extrema.minWidth = width + 1.5;
-  if (height + 1.5 < extrema.minHeigth) extrema.minHeigth = height + 1.5;
-  if (color + 1.5 < extrema.minColor) extrema.minColor = color + 1.5;*/
   if (width > extrema.maxWidth) extrema.maxWidth = width;
   if (height > extrema.maxHeight) extrema.maxHeight = height;
   if (color > extrema.maxColor) extrema.maxColor = color;
@@ -491,14 +595,16 @@ function removeWebGLCanvasFromDomElement(nameOfDivElement) {
  *schaut regelmäßig, ob was passiert und updatet und zeichnet neu
  */
 function animate() {
-  // schaut, ob was passiert ist
-  requestAnimationFrame(animate);
-  requestAnimationFrame(update);
   // update
   orbitControls.update();
   trackballControls.update();
   //malt neu
   render();
+
+  // schaut, ob was passiert ist
+  animationId = requestAnimationFrame(animate);
+  //requestAnimationFrame(update);
+
 }
 
 
@@ -536,7 +642,7 @@ function getOrbitControls() {
  *@param maxDistance: der Abstand zum Koordinatenursprung, zu dem man maximal wegzoomen kann
  */
 function updateControls(maxDistance) {
-  trackballControls.maxDistance = maxDistance * 3;
+  trackballControls.maxDistance = maxDistance * 2.2;
 }
 
 
@@ -560,21 +666,17 @@ function setSpecificView(aJson) {
 
   var hashMap = getBuildingsHashMap();
 
-  /*var buildings = aJson.removedBuildings;
-            var length = buildings.length;
-            for (var j = 0; j < length; j++) {
-            remove(hashMap[buildings[j]].mesh);
-          }*/
-
-  setScalingBooleans(aJson.scaling);
-  var scaleArray = ["height", "width", "color"];
-  var i = 0;
-  for (var x in aJson.scaling) {
-    if (aJson.scaling[x]) {
-      gui.__folders["Skalierung"].__controllers[i].setValue(true);
-      scale(true, scaleArray[i], scene, mainDistrict, camera, extrema);
+  if (experimentalMode) {
+    setScalingBooleans(aJson.scaling);
+    var scaleArray = ["height", "width", "color"];
+    var i = 0;
+    for (var x in aJson.scaling) {
+      if (aJson.scaling[x]) {
+        gui.__folders["Skalierung"].__controllers[i].setValue(true);
+        scale(true, scaleArray[i], scene, mainDistrict, camera, extrema);
+      }
+      i++;
     }
-    i++;
   }
 
   drawStoredLines(aJson);
@@ -586,6 +688,16 @@ function setSpecificView(aJson) {
     gui.__folders["Legende"].__controllers[i].setValue(aJson.changedLegend[
       myDimensions[i]]);
   }
+
+  eingehendeVerbindungen = aJson.connections.eingehendeVerbindungen;
+  ausgehendeVerbindungen = aJson.connections.ausgehendeVerbindungen;
+  highlightBuildingsConnections = aJson.connections.highlightBuildingsConnections;
+  gui.__folders["Verbindungen"].__controllers[0].setValue(
+    highlightBuildingsConnections);
+  gui.__folders["Verbindungen"].__controllers[1].setValue(
+    eingehendeVerbindungen);
+  gui.__folders["Verbindungen"].__controllers[2].setValue(
+    ausgehendeVerbindungen);
 
   setCameraPosForLink(camera, aJson);
 }
@@ -599,11 +711,7 @@ function drawStoredLines(aJson) {
   var stringArray = ["leftGarden", "rightGarden"];
   for (var j = 0; j < stringArray.length; j++) {
     for (var i = 0; i < aJson[stringArray[j]].length; i++) {
-      if (hashMap[aJson[stringArray[j]][i]]._isRemoved == false) {
-        drawLines(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]], true);
-        colorObject(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]],
-          0x424242);
-      }
+      setGardenOn(hashMap[aJson[stringArray[j]][i]]["_" + stringArray[j]]);
     }
   }
   setClickedGardens(aJson);
@@ -633,18 +741,30 @@ function getOriginalAssociations() {
 function getIncomingConnections(connectionData) {
   var newJson = {};
   var ithConn;
+  var toSubstract;
   for (var i = 0; i < connectionData.connections.length; i++) {
     ithConn = connectionData.connections[i];
-    newJson[ithConn.Ziel] = {};
-    newJson[ithConn.Ziel].connections = {};
-    for (var j = 0; j < ithConn.incomingConnections.length; j++) {
-      newJson[ithConn.Ziel].connections[ithConn.incomingConnections[j].Start] =
-        ithConn.incomingConnections[j].Gewichtung;
-      updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung,
-        "Connections");
+    if (nameOfAllBuildings.indexOf(ithConn.Ziel) > -1) {
+      toSubstract = 0;
+      newJson[ithConn.Ziel] = {};
+      newJson[ithConn.Ziel].connections = {};
+      for (var j = 0; j < ithConn.incomingConnections.length; j++) {
+
+        if (nameOfAllBuildings.indexOf(ithConn.incomingConnections[j].Start) >
+          -1) {
+          if (ithConn.incomingConnections[j].Gewichtung > 0) {
+            newJson[ithConn.Ziel].connections[ithConn.incomingConnections[j].Start] =
+              ithConn.incomingConnections[j].Gewichtung;
+            updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung,
+              "Connections");
+          }
+        } else {
+          toSubstract = toSubstract + ithConn.incomingConnections[j].Gewichtung;
+        }
+      }
+      newJson[ithConn.Ziel].sumOfConnections = ithConn.Gewichtung - toSubstract;
+      updateConnectionExtrema(ithConn.Gewichtung, "SumOfConn");
     }
-    newJson[ithConn.Ziel].sumOfConnections = ithConn.Gewichtung;
-    updateConnectionExtrema(ithConn.Gewichtung, "SumOfConn");
   }
   return newJson;
 }
@@ -662,18 +782,29 @@ function getIncomingConnections(connectionData) {
  */
 function getOutgoingConnections(connectionData) {
   var newJSON = {};
+  var ithConn;
+  var toSubstract;
   for (var i = 0; i < connectionData.connections.length; i++) {
-    newJSON[connectionData.connections[i].Start] = {};
-    newJSON[connectionData.connections[i].Start].connections = {};
-    for (var j = 0; j < connectionData.connections[i].outgoingConnections.length; j++) {
-      newJSON[connectionData.connections[i].Start].connections[connectionData.connections[
-          i].outgoingConnections[j].Ziel] =
-        connectionData.connections[i].outgoingConnections[j].Gewichtung;
+    ithConn = connectionData.connections[i];
+    toSubstract = 0;
+    if (nameOfAllBuildings.indexOf(ithConn.Start) > -1) {
+      newJSON[ithConn.Start] = {};
+      newJSON[ithConn.Start].connections = {};
+      for (var j = 0; j < ithConn.outgoingConnections.length; j++) {
+        if (nameOfAllBuildings.indexOf(ithConn.outgoingConnections[j].Ziel) > -
+          1) {
+          if (ithConn.outgoingConnections[j].Gewichtung > 0) {
+            newJSON[ithConn.Start].connections[ithConn.outgoingConnections[j].Ziel] =
+              ithConn.outgoingConnections[j].Gewichtung;
+          }
+        } else {
+          toSubstract = toSubstract + ithConn.outgoingConnections[j].Gewichtung;
+        }
+      }
+      newJSON[ithConn.Start].sumOfConnections = ithConn.Gewichtung -
+        toSubstract;
+      updateConnectionExtrema(ithConn.Gewichtung, "SumOfConn");
     }
-    newJSON[connectionData.connections[i].Start].sumOfConnections =
-      connectionData.connections[i].Gewichtung;
-    updateConnectionExtrema(connectionData.connections[i].Gewichtung,
-      "SumOfConn");
   }
   return newJSON;
 }
@@ -750,15 +881,10 @@ function onDocumentMouseDown(event) {
   // create an array containing all objects in the scene with which the ray intersects
   var intersects = ray.intersectObjects(targetList);
   // if there is one (or more) intersections
-  if (intersects.length > 0 && intersects[0].material == undefined) {
-    //console.log(intersects[0]);
-    if (intersects[0].face.isLeftGarden != undefined) {
+  if (intersects.length > 0 && intersects[0].material == undefined) { //prueft, dass es keine Linie ist, sondern Garten oder Gebaeude
+    if (intersects[0].face.isLeftGarden != undefined) { //d.h. bei Klick auf einen Garten
       var theGarden = getGarden(intersects[0]);
-      if (theGarden.on == false) {
-        setGardenOn(theGarden);
-      } else {
-        setGardenOff(theGarden);
-      }
+      clickOnGarden(theGarden);
     } else {
       var buildingID = intersects[0].object.geometry.faces[intersects[0].faceIndex]
         .building;
@@ -771,7 +897,29 @@ function onDocumentMouseDown(event) {
           b[association["name"]],
           intersects[0]
         );
+        if (ausgehendeVerbindungen === true) {
+
+          var theGarden = b._rightGarden;
+          if (theGarden.color > 0) clickOnGarden(theGarden);
+        };
+        if (eingehendeVerbindungen === true) {
+          var theGarden = b._leftGarden;
+          if (theGarden.color > 0) clickOnGarden(theGarden);
+        };
+
       }
     }
+  }
+}
+
+/**
+ * je nachdem, ob der Garten gerade an oder aus ist, wird er aus- bzw. angeschaltet
+ * @param: theGarden: der Garten, der an- bzw. ausgeschaltet werden soll
+ */
+function clickOnGarden(theGarden) {
+  if (theGarden.on == false) {
+    setGardenOn(theGarden);
+  } else {
+    setGardenOff(theGarden);
   }
 }

@@ -13,7 +13,7 @@
  * Controller of the datacityApp
  */
 angular.module('datacityApp')
-    .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, $filter, AGGR, REST, SETTINGS) {
+    .controller('ViewsCtrl', function($scope, $route, $routeParams, $log, $http, $rootScope, sharedLogin, $filter, AGGR, REST, SETTINGS, $timeout) {
         //Standardeinstellungen
         REST.setUsername(sharedLogin.getUsername());
         REST.setPassword(sharedLogin.getPassword());
@@ -31,6 +31,10 @@ angular.module('datacityApp')
             $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
             $scope.predicate = predicate;
         };
+
+        $scope.msg = "";
+        $scope.percentage = 100;
+
 
 
         /**
@@ -222,13 +226,28 @@ angular.module('datacityApp')
             cmd: '$min',
         }];
 
+        $scope.setLoaderSettings = function(msg, percentage) {
+            $scope.$evalAsync(function() {
+                //$log.info(msg + percentage);
+                $scope.percentage = percentage;
+                $scope.msg = msg;
+                /*
+                setTimeout(function() {
+                    resolve();
+                }, 150);
+                */
+            });
+        };
+
         /**
          * Prüft die Eingaben, stellt die Daten zusammen und veranlasst das Zeichnen der Stadt mit WebGL
          */
         $scope.drawCity = function() {
+            $scope.cityLoaded = false;
+            $scope.setLoaderSettings("Prüfe Einstellungen", 15);
             var view = $scope.chosenView;
 
-            if (view.useConnections && !view.typeOfConnections) {
+            if (view.useConnections && view.experimentalMode && !view.typeOfConnections) {
                 window.alert("Schritt 2: \nEs wurden Verbindungen, aber keine Option ausgewählt!");
                 return false;
             }
@@ -266,14 +285,16 @@ angular.module('datacityApp')
 
             // Spinner anzeigen
             $scope.loader = true;
-
+            //$scope.setLoaderSettings("Setze Aggregationseinstellungen...", 20, $scope);
             $scope.createAggregationForDisplay(function(response) {
+                $scope.setLoaderSettings("Führe Aggregation aus...", 30);
                 REST.callCollectionAggr(dbWithCollections, $scope.chosenView.collID, "data_" + view._id, function(response) {
-
                     var relUrl = "/" + dbWithCollections + "/" + view.collID + REST.META_DATA_PART + "data_" + view._id;
+                    $scope.setLoaderSettings("Rufe Aggregationsergebnis ab...", 40);
                     REST.getURL(relUrl, null, function(collection) {
+                        $scope.setLoaderSettings("Daten erhalten...", 50);
                         view.numberOfEntries = $scope.collection.data._returned;
-                        if (collection.data._returned === 0) {
+                        if (view.numberOfEntries === 0) {
                             window.alert("Die Filterung bzw. Aggregation wurde so eingestellt, dass keine Datensätze übrig bleiben!");
                             $scope.loader = false;
                             return false;
@@ -287,25 +308,47 @@ angular.module('datacityApp')
                         view.dimensions.color = view.dimensionSettings.color.name;
                         view.buildingcolor = SETTINGS.farbefuerGebauede;
 
+                        if (!$scope.chosenView.experimentalMode) {
+                            view.typeOfConnections = 0; //Bögen
+                        }
+
+                        if (view.logScaling === undefined) {
+                            view.logScaling = {};
+                            view.logScaling.color = false;
+                            view.logScaling.width = false;
+                            view.logScaling.height = false;
+                        }
+
                         $('#collapseAll').collapse();
 
                         if (view.metaData.connectionsAvailable) {
+                            $scope.setLoaderSettings("Rufe Verbindungsdaten ab...", 60);
                             REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_incoming", function(incoming) {
                                 REST.getDocuments(dbWithCollections, view.collID + "_dc_connections_outgoing", function(outgoing) {
                                     var incomingConnections = incoming.data._embedded['rh:doc'][0];
                                     var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
-                                    drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections);
-                                    $scope.loader = false;
+                                    $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65);
+                                    drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, incomingConnections, outgoingConnections, $scope.setLoaderSettings);
+                                    /*
+                                        .then(function success() {
+                                            $scope.setLoaderSettings("Fertig.", 100);
+                                            $scope.cityLoaded = true;
+                                        }, function error(e) {
+                                            $scope.setLoaderSettings("Fehler aufgetreten", 100);
+                                        });
+                                        */
                                 });
                             });
                         } else {
-                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined);
-                            $scope.loader = false;
+                            $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65, $scope);
+                            drawCity(collection.data._embedded['rh:doc'], view, WEBGL_DIV, undefined, undefined, undefined, $scope.setLoaderSettings);
                         }
+                        $scope.loader = false;
                     });
                 });
             });
         };
+
 
         /**
          * Holt die Ansichten und speichert sie im Controller-Scope
@@ -529,6 +572,15 @@ angular.module('datacityApp')
             }
             $scope.actualEntries = actualEntries;
         });
+
+        $scope.changeViewMode = function() {
+            if (!$scope.chosenView.experimentalMode) {
+                window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nBenutzung auf eigene Gefahr!");
+            }
+            $scope.chosenView.typeOfConnections = 0; //Bögen
+            $scope.chosenView.experimentalMode = !$scope.chosenView.experimentalMode;
+            $scope.dimform.$setDirty();
+        };
 
         /**
          * Hilfsfunktion fuer die Filterung der Verbindungen, erstmal auskommentiert 

@@ -13,8 +13,8 @@ angular.module('datacityApp')
                 '<div class="panel-heading"><span class="glyphicon glyphicon-hourglass"></span> {{msg}}</div>' +
                 '<div class="panel-body">' +
                 '<div class="progress" ng-hide="percentage >= 100">' +
-                '<div class="progress-bar" role="progressbar" aria-valuenow="{{percentage}}" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{percentage}}%;">' +
-                '{{percentage}}%' +
+                '<div class="progress-bar" role="progressbar" aria-valuenow="{{percentage}}" aria-valuemin="0" aria-valuemax="100" ng-attr-style="width:{{percentage}}%;">' +
+                '<span>{{percentage}}%</span>' +
                 '</div>' +
                 '</div>' +
                 '<div class="alert alert-success" role="alert" ng-show="percentage >= 100"><strong>Fertig!</strong> {{finishMsg}}</div>' +
@@ -26,16 +26,11 @@ angular.module('datacityApp')
                 '</div>',
             restrict: 'E',
             link: function postLink(scope, element, attrs) {
-                scope.spinnerOptions = {
-                    position: 'relative'
-                };
-
                 scope.msg = attrs.msg;
                 scope.finishMsg = attrs.finishmsg;
                 scope.buttonUrl = attrs.buttonurl;
                 scope.buttonMsg = attrs.buttonmsg;
                 scope.percentage = attrs.percentage;
-                $log.info(attrs);
             }
         };
     });
