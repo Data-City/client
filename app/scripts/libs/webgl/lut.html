@@ -1,34 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>three.js webgl - lookup table</title>
+  <title>Legende</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  <style>
-  body {
-    color: #000;
-    font-family:Monospace;
-    font-size:13px;
-    text-align:center;
-    font-weight: bold;
-
-    background-color: #fff;
-    margin: 0px;
-    overflow: hidden;
-  }
-
-  #info {
-    color:#000;
-    position: absolute;
-    top: 0px; width: 100%;
-    padding: 5px;
-
-  }
-
-  a {
-    color: red;
-  }
-  </style>
 </head>
 
 <body>
@@ -44,14 +19,15 @@
   <script src="js/Lut.js"></script>
   <script src="colorlegend.js"></script>
   <script src="js/Detector.js"></script>
+  		<script src="js/TrackballControls.js"></script>
   <!--<script src="js/libs/stats.min.js"></script>-->
 
   <script>
 
   if ( ! Detector.webgl ) { Detector.addGetWebGLMessage(); }
 
-  var container, stats;
-
+  var container;
+var trackballControls;
   var camera, scene, renderer, lut, legendLayout;
 
   var position;
@@ -76,13 +52,6 @@
     camera.name = 'camera';
     scene.add( camera );
 
-    /*
-    stats = new Stats();
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.bottom = '0px';
-    stats.domElement.style.zIndex = 100;
-    container.appendChild( stats.domElement );
-    */
     // LIGHT
     var ambientLight = new THREE.AmbientLight( 0x444444 );
     ambientLight.name = 'ambientLight';
@@ -93,92 +62,37 @@
 
     legendLayout = 'vertical';
 
-    loadModel( colorMap, numberOfColors, legendLayout );
-
+    //loadModel( colorMap, numberOfColors, legendLayout );
+	var cL = new ColorLegend(1, 100);
+    cL.draw(scene);
+	
     camera.position.x = 17;
     camera.position.y = 9;
     camera.position.z = 32;
 
-    var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
-    directionalLight.position.x = 17;
-    directionalLight.position.y = 9;
-    directionalLight.position.z = 30;
-    directionalLight.name = 'directionalLight';
-    scene.add( directionalLight );
 
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
-    renderer.setClearColor( 0xffffff );
+    renderer = new THREE.WebGLRenderer(  );
+    renderer.setClearColor( 0xbdbdbd );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize(  window.innerWidth,  window.innerHeight );
     container.appendChild( renderer.domElement );
 
-    window.addEventListener( 'resize', onWindowResize, false );
-
-    window.addEventListener( "keydown", onKeyDown, true);
-
-  }
-
-  var rotWorldMatrix;
-
-  function rotateAroundWorldAxis( object, axis, radians ) {
-
-    if ( ! axis ) return;
-
-    rotWorldMatrix = new THREE.Matrix4();
-    rotWorldMatrix.makeRotationAxis( axis.normalize(), radians );
-    rotWorldMatrix.multiply( object.matrix );
-
-    object.matrix = rotWorldMatrix;
-    object.rotation.setFromRotationMatrix( object.matrix );
+ //trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
+	
+    //window.addEventListener( "keydown", onKeyDown, true);
 
   }
 
-  function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    render();
-
-  }
 
   function animate() {
 
     requestAnimationFrame( animate );
-
-    render();
-    //stats.update();
+	renderer.render( scene, camera );
 
   }
 
-  function render() {
 
-    rotateAroundWorldAxis(mesh, position, Math.PI / 180);
-
-    renderer.render( scene, camera );
-
-  }
-
-  function loadModel ( colorMap, numberOfColors, legendLayout ) {
-    var cL = new ColorLegend(1, 100);
-    cL.draw(scene);
-    /*
-    scene.add ( legend );
-
-    var labels = lut.setLegendLabels( { 'title': 'Pressure', 'um': 'Pa', 'ticks': 5 } );
-
-    scene.add ( labels['title'] );
-
-    for ( var i = 0; i < Object.keys( labels[ 'ticks' ] ).length; i++ ) {
-
-    scene.add ( labels[ 'ticks' ][ i ] );
-    scene.add ( labels[ 'lines' ][ i ] );
-
-  }*/
-
-}
-
+/*
 function cleanScene () {
 
   var elementsInTheScene = scene.children.length;
@@ -244,30 +158,10 @@ function onKeyDown ( e ) {
 
     }
 
-  } else if ( e.keyCode == 70 ) {
-
-    cleanScene();
-
-    if ( ! legendLayout ) return false;
-
-    lut.setLegendOff();
-
-    if ( legendLayout == 'horizontal') {
-
-      legendLayout = 'vertical';
-
-    } else {
-
-      legendLayout = 'horizontal';
-
-    }
-
-    loadModel ( colorMap ,  numberOfColors, legendLayout );
-
-  }
+  } 
 
 }
-
+*/
 </script>
 
 </body>
