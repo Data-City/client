@@ -886,9 +886,9 @@ function onDocumentMouseDown(event) {
                         if (theGarden.color > 0) setGardenOff(theGarden);
                     }
                 };
-                if (eingehendeVerbindungen === true && theGarden.color > 0) {
+                if (eingehendeVerbindungen === true) {
                     var theGarden = b._leftGarden;
-                    if (theGarden.on == false) {
+                    if (theGarden.on == false && theGarden.color > 0) {
                         setGardenOn(theGarden);
                     } else {
                         if (theGarden.color > 0) setGardenOff(theGarden);
