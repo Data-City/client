@@ -577,7 +577,8 @@ angular.module('datacityApp')
 
         $scope.changeViewMode = function() {
             if (!$scope.chosenView.experimentalMode) {
-                window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nBenutzung auf eigene Gefahr!");
+                window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nEs können jetzt benutzt werden:" + 
+                                "\n - Straßen als Art der Verbindungsdarstellung \n - Die Skalierung im WebGL");
             }
             $scope.chosenView.typeOfConnections = 0; //Bögen
             $scope.chosenView.experimentalMode = !$scope.chosenView.experimentalMode;
