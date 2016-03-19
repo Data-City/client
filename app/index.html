@@ -24,7 +24,7 @@
     <!-- Navigations-Leiste am oberen Bildschirmrand -->
     <div class="header">
       <div class="navbar navbar-inverse" role="navigation">
-        
+
           <!-- Anweisungen, falls der Bildschirm extrem klein wird (Smartphone) -->
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
@@ -42,13 +42,13 @@
               <li class="active"><a ng-href="#/data">Datensätze</a></li>
             </ul>
 
-            <!-- Login/Logout oben rechts --> 
+            <!-- Login/Logout oben rechts -->
             <!-- auskommentiert
             <ul class="nav navbar-nav navbar-right" ng-controller="LoginCtrl">
                 <li ng-show="loggedIn"><a href="#/admin">Eingeloggt als <i>{{username}}</i></a></li>
-                <li>                  
-                  <a ng-href="#/login" ng-show="loggedIn" ng-click="logout();"><span class="glyphicon glyphicon-log-in"></span> Logout</a>                  
-                  <a ng-href="#/login" ng-hide="loggedIn"><span class="glyphicon glyphicon-log-in"></span> Login</a>                  
+                <li>
+                  <a ng-href="#/login" ng-show="loggedIn" ng-click="logout();"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
+                  <a ng-href="#/login" ng-hide="loggedIn"><span class="glyphicon glyphicon-log-in"></span> Login</a>
                 </li>
             </ul>
             -->
@@ -103,21 +103,22 @@
         <script src="scripts/controllers/views.js"></script>
         <script src="scripts/controllers/login.js"></script>
 		<script src="scripts/libs/lib_view.js"></script>
-		
+
 		<!-- WebGL -->
         <script src="scripts/libs/webgl/ClientWebGL.js"></script>
         <script src="scripts/libs/webgl/gui.js"></script>
         <script src="scripts/libs/webgl/Stadtteil.js"></script>
         <script src="scripts/libs/webgl/dropDownMenue.js"></script>
 		<script src="scripts/libs/webgl/dijkstra.js"></script>
-        
+
         <script src="scripts/libs/webgl/js/Projector.js"></script>
         <!--<script src="scripts/libs/webgl/js/dat.gui.min.js"></script>-->
         <script src="scripts/libs/webgl/js/Detector.js"></script>
         <script src="scripts/libs/webgl/js/three.min.js"></script>
         <script src="scripts/libs/webgl/js/TrackballControls.js"></script>
         <script src="scripts/libs/webgl/js/OrbitControls.js"></script>
-		
+        <script src="scripts/libs/webgl/js/Lut.js"></script>
+
 		<!-- Weitere Skripte (nicht WebGL) -->
         <script src="scripts/controllers/import.js"></script>
         <script src="scripts/controllers/preview.js"></script>
