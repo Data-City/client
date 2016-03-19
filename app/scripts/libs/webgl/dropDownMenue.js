@@ -356,6 +356,19 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
       "ausgehende Verb. per Klick").onChange(function(value) {
       ausgehendeVerbindungen = value;
     })
+    var legendImage = {
+      image: "",
+    };
+    //buildingInformation.colorLegend = {};
+    var cL = h.add(legendImage, "image").name(
+      "Verbindungen");
+    var html =
+      '<div><span class="property-name">Verbindungen</span><div class="c"><image src="/images/verbindungen.png" style="width:218px;"></image></div></div>';
+    var css = "height: 82px;"
+      //<span class="property-name">Verbindungen</span>
+    var div = $('li.cr.string:contains("Verbindungen")').css("height", "82px").html(
+      html);
+    //console.log(div);
   }
 }
 
