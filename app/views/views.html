@@ -201,11 +201,12 @@
                                     <label>
                                         <input type="checkbox" ng-model="chosenView.useConnections"> Verbindungen nutzen</input>
                                         <!--Hinweis-->
-                                        <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ist 'Verbindungen nutzen' ausgewählt, erscheinen diese als zwei Vorgärten vor dem Gebäude."></span>
+                                        <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Diese lassen sich dann auf Wunsch per Klick auf die Gebäude darstellen"></span>
                                         <br></br>
                                     </label>
                                     <div ng-show="chosenView.useConnections">
                                         <input type="checkbox" ng-model="chosenView.drawGardens"> Vorgärten zeichnen</input>
+                                        <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Man kann sich die Verbindungen zusätzlich als zwei Vorgärten vor dem Gebäude darstellen lassen."></span>
                                         <div ng-show="chosenView.experimentalMode">
                                             <p><i>Hinweis: Die Bögen sind in der Erstellung performanter, weshalb diese bei großen Datensätzen zu bevorzugen sind.</i></p>
                                             <fieldset class="formgroup" ng-show="chosenView.useConnections">
@@ -215,13 +216,14 @@
                                                     </label>
                                                     <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Gebogene Linien, die zwei Gebäude durch die Luft verbinden"></span>
                                                 </div>
-                                                <div class="radio" ng-show="chosenView.experimentalMode">
+                                                <div class="radio">
                                                     <label>
                                                         <input type="radio" ng-model="chosenView.typeOfConnections" value=1> Straßen
                                                     </label>
                                                 </div>
                                             </fieldset>
                                             </br>
+                                        </div>
                                             <div ng-if="chosenView.useConnections">
                                                 <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#demo">Erläuterung</button>
                                                 <div id="demo" class="collapse">
@@ -240,7 +242,6 @@
                                         </div>
                                      </div>
                                 </div>
-                            </div>
                             <div class="alert alert-warning" ng-show="showStep2 && !chosenView.metaData.connectionsAvailable">Da es keine Verbindungen gibt, kann man keine auswählen</div>
                         </div>
                         <!-- SCHRITT 3 - Daten aggregieren -->
