@@ -861,11 +861,7 @@ function onDocumentMouseDown(event) {
     if (intersects.length > 0 && intersects[0].material == undefined) { //prueft, dass es keine Linie ist, sondern Garten oder Gebaeude
         if (intersects[0].face.isLeftGarden != undefined) { //d.h. bei Klick auf einen Garten
             var theGarden = getGarden(intersects[0]);
-            if (theGarden.on == false) {
-                setGardenOn(theGarden);
-            } else {
-                setGardenOff(theGarden);
-            }
+            clickOnGarden(theGarden);
         } else {
             var buildingID = intersects[0].object.geometry.faces[intersects[0].faceIndex].building;
             if (buildingID != undefined) {
@@ -880,22 +876,26 @@ function onDocumentMouseDown(event) {
                 if (ausgehendeVerbindungen === true) {
 
                     var theGarden = b._rightGarden;
-                    if (theGarden.on == false && theGarden.color > 0) {
-                        setGardenOn(theGarden);
-                    } else {
-                        if (theGarden.color > 0) setGardenOff(theGarden);
-                    }
+                    if (theGarden.color > 0) clickOnGarden(theGarden);
                 };
                 if (eingehendeVerbindungen === true) {
                     var theGarden = b._leftGarden;
-                    if (theGarden.on == false && theGarden.color > 0) {
-                        setGardenOn(theGarden);
-                    } else {
-                        if (theGarden.color > 0) setGardenOff(theGarden);
-                    }
+					if (theGarden.color > 0) clickOnGarden(theGarden);
                 };
 
             }
         }
+    }
+}
+
+/**
+* je nachdem, ob der Garten gerade an oder aus ist, wird er aus- bzw. angeschaltet
+* @param: theGarden: der Garten, der an- bzw. ausgeschaltet werden soll
+*/
+function clickOnGarden(theGarden){
+	if (theGarden.on == false) {
+        setGardenOn(theGarden);
+    } else {
+         setGardenOff(theGarden);
     }
 }
