@@ -247,7 +247,7 @@ angular.module('datacityApp')
             $scope.setLoaderSettings("Prüfe Einstellungen", 15);
             var view = $scope.chosenView;
 
-            if (view.useConnections && view.experimentalMode && !view.typeOfConnections) {
+            if (view.useConnections && view.experimentalMode && view.typeOfConnections === undefined) {
                 window.alert("Schritt 2: \nEs wurden Verbindungen, aber keine Option ausgewählt!");
                 return false;
             }
@@ -293,9 +293,11 @@ angular.module('datacityApp')
                     $scope.setLoaderSettings("Rufe Aggregationsergebnis ab...", 40);
                     REST.getURL(relUrl, null, function(collection) {
                         $scope.setLoaderSettings("Daten erhalten...", 50);
-                        view.numberOfEntries = $scope.collection.data._returned;
+      
+                        view.numberOfEntries = collection.data._returned;
                         if (view.numberOfEntries === 0) {
                             window.alert("Die Filterung bzw. Aggregation wurde so eingestellt, dass keine Datensätze übrig bleiben!");
+                            $scope.setLoaderSettings("Der Ladevorgang wurde abgebrochen", 100);
                             $scope.loader = false;
                             return false;
                         }
@@ -575,7 +577,8 @@ angular.module('datacityApp')
 
         $scope.changeViewMode = function() {
             if (!$scope.chosenView.experimentalMode) {
-                window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nBenutzung auf eigene Gefahr!");
+                window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nEs können jetzt benutzt werden:" + 
+                                "\n - Straßen als Art der Verbindungsdarstellung \n - Die Skalierung im WebGL");
             }
             $scope.chosenView.typeOfConnections = 0; //Bögen
             $scope.chosenView.experimentalMode = !$scope.chosenView.experimentalMode;
