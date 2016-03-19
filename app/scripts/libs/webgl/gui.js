@@ -527,7 +527,7 @@ function pushVerticesForStreet(aGarden, destGarden, geometry) {
 function pushVerticesForBow(aGarden, destGarden, geometry) {
     var curve = new THREE.CubicBezierCurve3(
         new THREE.Vector3(aGarden.nextLinePos[0], aGarden._centerPosition[1], aGarden.nextLinePos[1]),
-        new THREE.Vector3(aGarden.nextLinePos[0], 2 * maximalHeight, aGarden.nextLinePos[1]),
+        new THREE.Vector3(aGarden.nextLinePos[0], 3 * maximalHeight, aGarden.nextLinePos[1]),
         new THREE.Vector3(destGarden.nextLinePos[0], 3 * maximalHeight, destGarden.nextLinePos[1]),
         new THREE.Vector3(destGarden.nextLinePos[0], destGarden._centerPosition[1], destGarden.nextLinePos[1])
     );
