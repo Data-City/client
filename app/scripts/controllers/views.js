@@ -247,7 +247,7 @@ angular.module('datacityApp')
             $scope.setLoaderSettings("Prüfe Einstellungen", 15);
             var view = $scope.chosenView;
 
-            if (view.useConnections && view.experimentalMode && !view.typeOfConnections) {
+            if (view.useConnections && view.experimentalMode && view.typeOfConnections === undefined) {
                 window.alert("Schritt 2: \nEs wurden Verbindungen, aber keine Option ausgewählt!");
                 return false;
             }
