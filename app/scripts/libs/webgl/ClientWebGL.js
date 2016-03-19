@@ -738,8 +738,10 @@ function getIncomingConnections(connectionData) {
             for (var j = 0; j < ithConn.incomingConnections.length; j++) {
 
                 if (nameOfAllBuildings.indexOf(ithConn.incomingConnections[j].Start) > -1) {
-                    newJson[ithConn.Ziel].connections[ithConn.incomingConnections[j].Start] = ithConn.incomingConnections[j].Gewichtung;
-                    updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung, "Connections");
+					if (ithConn.incomingConnections[j].Gewichtung > 0) {
+						newJson[ithConn.Ziel].connections[ithConn.incomingConnections[j].Start] = ithConn.incomingConnections[j].Gewichtung;
+						updateConnectionExtrema(ithConn.incomingConnections[j].Gewichtung, "Connections");
+					}
                 } else {
                     toSubstract = toSubstract + ithConn.incomingConnections[j].Gewichtung;
                 }
@@ -774,7 +776,9 @@ function getOutgoingConnections(connectionData) {
             newJSON[ithConn.Start].connections = {};
             for (var j = 0; j < ithConn.outgoingConnections.length; j++) {
                 if (nameOfAllBuildings.indexOf(ithConn.outgoingConnections[j].Ziel) > -1) {
-                    newJSON[ithConn.Start].connections[ithConn.outgoingConnections[j].Ziel] = ithConn.outgoingConnections[j].Gewichtung;
+					if (ithConn.outgoingConnections[j].Gewichtung > 0) {
+						newJSON[ithConn.Start].connections[ithConn.outgoingConnections[j].Ziel] = ithConn.outgoingConnections[j].Gewichtung;
+					}
                 } else {
                     toSubstract = toSubstract + ithConn.outgoingConnections[j].Gewichtung;
                 }
