@@ -858,8 +858,8 @@ function onDocumentMouseDown(event) {
     // create an array containing all objects in the scene with which the ray intersects
     var intersects = ray.intersectObjects(targetList);
     // if there is one (or more) intersections
-    if (intersects.length > 0 && intersects[0].material == undefined) {
-        if (intersects[0].face.isLeftGarden != undefined) {
+    if (intersects.length > 0 && intersects[0].material == undefined) { //prueft, dass es keine Linie ist, sondern Garten oder Gebaeude
+        if (intersects[0].face.isLeftGarden != undefined) { //d.h. bei Klick auf einen Garten
             var theGarden = getGarden(intersects[0]);
             if (theGarden.on == false) {
                 setGardenOn(theGarden);
@@ -880,18 +880,18 @@ function onDocumentMouseDown(event) {
                 if (ausgehendeVerbindungen === true) {
 
                     var theGarden = b._rightGarden;
-                    if (theGarden.on == false) {
+                    if (theGarden.on == false && theGarden.color > 0) {
                         setGardenOn(theGarden);
                     } else {
-                        setGardenOff(theGarden);
+                        if (theGarden.color > 0) setGardenOff(theGarden);
                     }
                 };
-                if (eingehendeVerbindungen === true) {
+                if (eingehendeVerbindungen === true && theGarden.color > 0) {
                     var theGarden = b._leftGarden;
                     if (theGarden.on == false) {
                         setGardenOn(theGarden);
                     } else {
-                        setGardenOff(theGarden);
+                        if (theGarden.color > 0) setGardenOff(theGarden);
                     }
                 };
 
