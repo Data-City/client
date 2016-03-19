@@ -293,9 +293,11 @@ angular.module('datacityApp')
                     $scope.setLoaderSettings("Rufe Aggregationsergebnis ab...", 40);
                     REST.getURL(relUrl, null, function(collection) {
                         $scope.setLoaderSettings("Daten erhalten...", 50);
-                        view.numberOfEntries = $scope.collection.data._returned;
+      
+                        view.numberOfEntries = collection.data._returned;
                         if (view.numberOfEntries === 0) {
                             window.alert("Die Filterung bzw. Aggregation wurde so eingestellt, dass keine Datensätze übrig bleiben!");
+                            $scope.setLoaderSettings("Der Ladevorgang wurde abgebrochen", 100);
                             $scope.loader = false;
                             return false;
                         }
