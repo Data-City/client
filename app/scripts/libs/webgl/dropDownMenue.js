@@ -8,7 +8,7 @@ var removedBuildings = [];
 var arrayOfRemovedBuildings = [];
 
 var eingehendeVerbindungen, ausgehendeVerbindungen, highlightBuildingsConnections;
-
+var useConnections;
 var experimentalMode = false;
 
 // Dimensionen, die wir abbilden
@@ -330,17 +330,19 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls, na
 
     //********************************************************************
 
-    h = gui.addFolder("Verbindungen");
-    h.add(buildingInformation, "Verbindungen").name("Geb. mit Verb. hervorheben").onChange(function(value) {
-        buildingInformation["Verbindungen"] = value;
-        highlightBuildingsWithConnections(value);
-    })
-    h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name("eingehende Verb. per Klick").onChange(function(value) {
-        eingehendeVerbindungen = value;
-    })
-    h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verb. per Klick").onChange(function(value) {
-        ausgehendeVerbindungen = value;
-    })
+    if (useConnections) {
+        h = gui.addFolder("Verbindungen");
+        h.add(buildingInformation, "Verbindungen").name("Geb. mit Verb. hervorheben").onChange(function(value) {
+            buildingInformation["Verbindungen"] = value;
+            highlightBuildingsWithConnections(value);
+        })
+        h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name("eingehende Verb. per Klick").onChange(function(value) {
+            eingehendeVerbindungen = value;
+        })
+        h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name("ausgehende Verb. per Klick").onChange(function(value) {
+            ausgehendeVerbindungen = value;
+        })    
+    }
 }
 
 /**

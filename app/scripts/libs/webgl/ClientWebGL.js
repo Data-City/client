@@ -204,6 +204,7 @@ function initAssociation(association) {
         experimentalMode = true;
     }
 
+    useConnections = association.useConnections;
     drawGardens = association.drawGardens;
     logScaling = association.logScaling;
 
