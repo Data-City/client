@@ -356,6 +356,9 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
       "ausgehende Verb. per Klick").onChange(function(value) {
       ausgehendeVerbindungen = value;
     })
+	
+	h = h.addFolder("Farblegende");
+	
     var legendImage = {
       image: "",
     };
