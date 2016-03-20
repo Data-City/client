@@ -265,7 +265,7 @@ angular.module('datacityApp')
                 }
             }
             
-            for (key in view.dimensions) {
+            for (key in view.dimensionSettings) {
                 if (view.dimensionSettings[key].name === "buildings") {
                     window.alert("Eine oder mehrere der ausgewählten Dimensionen heißt 'buildings'. Dies könnte zu Komplikationen bei der Stadtdarstellung führen. ");
                     break; //Damit die Nachricht nur einmal gezeigt wird
