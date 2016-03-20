@@ -413,6 +413,7 @@ angular.module('datacityApp')
                 $scope.chosenView = null;
             }
             document.getElementById("Stadt").innerHTML = "";
+            $scope.dimform.$setPristine();
         };
 
 
