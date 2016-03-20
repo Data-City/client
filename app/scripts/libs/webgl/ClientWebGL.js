@@ -3,18 +3,7 @@ var camera, scene, renderer, trackballControls, orbitControls, raycaster; //WebG
 var mainDistrict; //Json, das das District darstellt
 var mouse = new THREE.Vector2(),
   INTERSECTED, SELECTED;
-var extrema = { //enthaelt die Extremwerte aus den Daten
-  maxWidth: 0,
-  maxHeight: 0,
-  maxColor: 0,
-  maxConnections: 0,
-  maxSumOfConn: 0,
-  minWidth: Number.MAX_VALUE,
-  minHeigth: Number.MAX_VALUE,
-  minColor: Number.MAX_VALUE,
-  minConnections: Number.MAX_VALUE,
-  minSumOfConn: Number.MAX_VALUE
-};
+var extrema;//enthaelt die Extremwerte aus den Daten
 var camToSave = {}; //speichert Anfangseinstellung
 var useStreets;
 var usingConnections;
@@ -22,6 +11,8 @@ var SpeedForShiftByKeys = 5;
 var nameOfAllBuildings = [];
 
 var animationId = null;
+
+var numOfCanvas = 0;
 
 /**
  * Getter fuer scene
@@ -214,17 +205,8 @@ function initAssociation(association) {
   gap = 20 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) /
     metaData["avg_" + association.dimensions.area];
 
-  //console.log("gap: ");
-  //console.log(gap);
-
-  //console.log("Wurzel von: " + association.dimensionSettings.area.numberValueFilter[1] + " ist " + Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]));
-  //console.log("Wurzel von Avg: " + metaData["avg_" + association.dimensions.area] +  " ist " + Math.sqrt(metaData["avg_" + association.dimensions.area]));
-
   districtHeight = 1.5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[
     1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);
-
-  //console.log("districtHeight:");
-  //console.log(districtHeight);
 
   setBuildingColor(association.buildingcolor);
 }
@@ -243,6 +225,7 @@ function initMainDistrict(data, association) {
   } else {
     mainDistrict = data[0];
   }
+  nameOfAllBuildings = [];
   setNameOfAllBuildings(mainDistrict);
 }
 
@@ -536,6 +519,19 @@ function updateExtrema(width, height, color) {
  * @param: outgoingCalls: undefined oder ausgehende Verbindungen, Form siehe getOutgoingConnections(...)
  */
 function init(nameOfDivElement, incomingCalls, outgoingCalls) {
+initGlobalVariables();
+	extrema = {
+	  maxWidth: 0,
+	  maxHeight: 0,
+	  maxColor: 0,
+	  maxConnections: 0,
+	  maxSumOfConn: 0,
+	  minWidth: Number.MAX_VALUE,
+	  minHeigth: Number.MAX_VALUE,
+	  minColor: Number.MAX_VALUE,
+	  minConnections: Number.MAX_VALUE,
+	  minSumOfConn: Number.MAX_VALUE
+	};
 
   // Erstelle einen neuen Renderer
   renderer = new THREE.WebGLRenderer({
@@ -549,10 +545,9 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
 
   //Hinzufügen von dem renderer-Element zu unserem HTML-Dokument
 
-  renderer.domElement.id = "WebGLCanvas";
+  renderer.domElement.id = "WebGLCanvas"+numOfCanvas;
   document.getElementById(nameOfDivElement).innerHTML = "";
   document.getElementById(nameOfDivElement).appendChild(renderer.domElement);
-
   scene = new THREE.Scene();
 
   //erstelle Kamera
@@ -578,7 +573,7 @@ function init(nameOfDivElement, incomingCalls, outgoingCalls) {
  */
 function removeWebGLCanvasFromDomElement(nameOfDivElement) {
   var myNode = document.getElementById(nameOfDivElement);
-  if (myNode && document.getElementById("WebGLCanvas")) {
+  if (myNode && document.getElementById("WebGLCanvas"+numOfCanvas)) {
 
     var obj;
     //Alle Objekte von der Szene löschen
@@ -587,7 +582,8 @@ function removeWebGLCanvasFromDomElement(nameOfDivElement) {
       scene.remove(obj);
     }
     //Das WebGL Canvas von dem DOM-Element löschen
-    myNode.removeChild(document.getElementById("WebGLCanvas"));
+    myNode.removeChild(document.getElementById("WebGLCanvas"+numOfCanvas));
+	numOfCanvas++;
   };
 }
 
@@ -834,7 +830,7 @@ function onDocumentMouseMove(event) {
   changeLinkForCurrentView(getJsonForCurrentLink());
 
   event.preventDefault();
-  var rect = getScrollDistance(document.getElementById("WebGLCanvas"));
+  var rect = getScrollDistance(document.getElementById("WebGLCanvas"+numOfCanvas));
 
   if (rect) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1 - (rect.left / window
@@ -882,33 +878,41 @@ function onDocumentMouseDown(event) {
   var intersects = ray.intersectObjects(targetList);
   // if there is one (or more) intersections
   if (intersects.length > 0 && intersects[0].material == undefined) { //prueft, dass es keine Linie ist, sondern Garten oder Gebaeude
-    if (intersects[0].face.isLeftGarden != undefined) { //d.h. bei Klick auf einen Garten
-      var theGarden = getGarden(intersects[0]);
-      clickOnGarden(theGarden);
-    } else {
-      var buildingID = intersects[0].object.geometry.faces[intersects[0].faceIndex]
-        .building;
-      if (buildingID != undefined) {
-        var b = getBuildingsHashMap()[buildingID];
-        changeBuildingInformation(
-          b[association["height"]],
-          b[association["width"]],
-          b[association["color"]],
-          b[association["name"]],
-          intersects[0]
-        );
-        if (ausgehendeVerbindungen === true) {
-
-          var theGarden = b._rightGarden;
-          if (theGarden.color > 0) clickOnGarden(theGarden);
-        };
-        if (eingehendeVerbindungen === true) {
-          var theGarden = b._leftGarden;
-          if (theGarden.color > 0) clickOnGarden(theGarden);
-        };
-
-      }
-    }
+	var i=0;
+	var bool = true;
+	while (i<intersects.length && bool) {
+		if(intersects[i].face.numOfCanvas == numOfCanvas) {
+			if (intersects[i].face.isLeftGarden != undefined) { //d.h. bei Klick auf einen Garten
+			  var theGarden = getGarden(intersects[i]);
+			  clickOnGarden(theGarden);
+			} else {
+			  var buildingID = intersects[i].object.geometry.faces[intersects[i].faceIndex].building;
+			  if (buildingID != undefined) {
+				var b = getBuildingsHashMap()[buildingID];
+				changeBuildingInformation(
+				  b[association["height"]],
+				  b[association["width"]],
+				  b[association["color"]],
+				  b[association["name"]],
+				  intersects[i]
+				);
+				if (ausgehendeVerbindungen === true) {
+				  var theGarden = b._rightGarden;
+				  if (theGarden.color > 0) clickOnGarden(theGarden);
+				};
+				if (eingehendeVerbindungen === true) {
+				  var theGarden = b._leftGarden;
+				  if (theGarden.color > 0) clickOnGarden(theGarden);
+				};
+			  }
+			}
+			bool = false;
+	
+		}
+		else {
+			i++;
+		}
+	}
   }
 }
 

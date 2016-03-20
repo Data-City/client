@@ -176,6 +176,12 @@ function getGui() {
  * Initiiert die Legende auf den Anfangszustand
  */
 function initDropDownMenue() {
+
+ storedDistrict = [];
+ storedBuilding = [];
+ removedBuildings = [];
+ arrayOfRemovedBuildings = [];
+
   highlightBuildingsConnections = false;
   eingehendeVerbindungen = false;
   ausgehendeVerbindungen = false;
@@ -254,7 +260,7 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
   });
 
   gui.domElement.style.position = 'absolute';
-  var divelRect = document.getElementById("WebGLCanvas").getBoundingClientRect();
+  var divelRect = document.getElementById("WebGLCanvas"+numOfCanvas).getBoundingClientRect();
   gui.domElement.style.left = divelRect.left + "px";
   gui.domElement.style.top = "0px";
   gui.domElement.id = "dropdownmenu";
@@ -362,16 +368,13 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
     var legendImage = {
       image: "",
     };
-    //buildingInformation.colorLegend = {};
     var cL = h.add(legendImage, "image").name(
       "Verbindungen");
     var html =
       '<div><span class="property-name">Verbindungen</span><div class="c"><image src="/images/verbindungen.png" style="width:218px;"></image></div></div>';
     var css = "height: 82px;"
-      //<span class="property-name">Verbindungen</span>
     var div = $('li.cr.string:contains("Verbindungen")').css("height", "82px").html(
       html);
-    //console.log(div);
   }
 }
 

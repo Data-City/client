@@ -24,6 +24,30 @@ var districtHeight; //Hoehe von einem Boden
 
 var metaData; //Objekt, das max, min-Werte enthaelt, die uebergeben worden sind
 
+
+/**
+ * initialisiert die globalen Variablen
+ */
+function initGlobalVariables(){
+ association = {}; //Hier wird die Legende gespeichert
+ incomingCalls = {}; //speichert Infos ueber Eingehende Verbindungen
+ outgoingCalls = {}; //speichert Infos ueber ausgehende Verbindungen
+
+ gardenRadius = 6; //Groesse der Gaerten
+
+ buildingsHashMap = {}; //Hashmap fuer Gebaeude: mapt Gebaeude-ID mit dem Objekt
+
+ GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
+ GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
+
+ jsonOfNodes = {}; //man greift erst auf die x-Position zu, dann auf die z-Position, dann bekommt man den Knoten
+
+ graph = {};
+ nodeHashMap = {};
+ nodeID = 0;
+
+ logScaling = {};
+}
 /**
  * Setter fuer districtHeight
  * @param: newHeight: die neue Hoehe von dem Boden
@@ -658,12 +682,6 @@ function getDrawnDimValue(aBuilding, dimString) {
     var scalingString = 0.25 * metaData["avg_" + association.width];
 
     if (buildingDimension != undefined && buildingDimension != "" && buildingDimension != 0) {
-        /* Wird hoffentlich nicht mehr benötigt, da nur Zahlen übergeben werden
-        if (isNaN(parseFloat(aBuilding[association[dimString]]))) {
-            console.log("Erwartet wurde eine Zahl. Bekommen habe ich: " + buildingDimension);
-            return;
-        }
-        */
         if (scalingString > 2) {
             toReturn = parseFloat(buildingDimension) / parseFloat(scalingString);
         } else {

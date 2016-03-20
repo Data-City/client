@@ -34,11 +34,31 @@ var projector;
 var oldColor;
 var totalGeom;
 var totalMaterial;
-var qwert = 0;
 
 var drawnObject = null;
 
 var drawGardens;
+
+
+/**
+ * initialisiert die globalen Variablen
+ */
+function initGlobalVariables(){
+
+ clickedLeftGardens = [];
+ clickedRightGardens = [];
+
+ association = {};
+
+ GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
+ GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
+
+ targetList = [];
+
+ drawnObject = null;
+
+}
+
 
 /**
  * Setter fuer die Farbe der Gebaeude aus settings.js
@@ -72,21 +92,18 @@ function getTotalMaterial() {
 function highlightBuilding(buildingID) {
     var hashMap = getBuildingsHashMap();
     var building = hashMap[buildingID];
-    if (highlightedBuildingID != undefined) {
+    if (highlightedBuildingID != undefined) { //wenn schon eins markiert ist, so stelle die alte Farbe wieder her
         colorObject(hashMap[highlightedBuildingID], colorOfHighlightedBuilding);
     }
-    if (building != undefined) {
+    if (building != undefined) { //wenn man das Gebaeude gefunden hat, faerbe es ein
         highlightedBuildingID = buildingID;
         colorOfHighlightedBuilding = building._faces[0].color.clone();
         colorObject(building, 0xffff00);
-    } else if (hashMap[buildingID + "."] != undefined) {
+    } else if (hashMap[buildingID + "."] != undefined) { //vllt ist es eine Ebene, schaue ob der Name mit Punkt hinten dabei ist
         highlightedBuildingID = buildingID + ".";
         building = hashMap[buildingID + "."]
         colorOfHighlightedBuilding = building._faces[0].color.clone();
         colorObject(hashMap[highlightedBuildingID], 0xffff00);
-    } else {
-        colorObject(hashMap[highlightedBuildingID], colorOfHighlightedBuilding);
-        highlightedBuildingID = undefined;
     }
 }
 
@@ -379,6 +396,7 @@ function addBoxes(aColor, aBuilding, boxGeom, myGeometry, matrix, quaternion) {
         face = myGeometry.faces[i];
         face.building = nameOfDimension;
         aBuilding._faces.push(face);
+		face.numOfCanvas = numOfCanvas;
     }
 }
 
@@ -449,6 +467,7 @@ function addGarden(aBuilding, scene, gardenGeom, myGeometry, matrix, quaternion)
                 if (i == 0) face.isLeftGarden = true;
                 else face.isLeftGarden = false;
                 aBuilding[gardens[i]]._faces.push(face);
+				face.numOfCanvas = numOfCanvas;
             }
         }
     }
