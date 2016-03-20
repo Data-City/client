@@ -262,8 +262,12 @@ angular.module('datacityApp')
                 if (view.districts[key].field === null) {
                     window.alert("Schritt 4: \nEs wurden eine oder mehrere Blöcke hinzugefügt, aber keine Einstellungen vorgenommen!");
                     return false;
+                };
+                if (view.districts[key].field === "buildings") {
+                    window.alert("Eine der ausgewählten Dimensionen heißt 'buildings'. Dies könnte zu Komplikationen bei der Stadtdarstellung führen. ");
                 }
             }
+            
             if (view.districts[0] === undefined && view.districtType === "2") {
                 window.alert("Schritt 4: \nBei der Blockbildung wurde Option 3 festgelegt, aber keine Blöcke ausgewählt. \nFalls Sie keine Blockbildung möchten, bitte wählen Sie Option 1");
                 return false;
