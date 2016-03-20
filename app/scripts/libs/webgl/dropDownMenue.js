@@ -8,7 +8,7 @@ var removedBuildings = [];
 var arrayOfRemovedBuildings = [];
 
 var incomingConnections, outgoingConnections,
-  highlightBuildingsConnections;
+    highlightBuildingsConnections;
 var useConnections;
 var experimentalMode = false;
 
@@ -29,9 +29,9 @@ var changedLegend = undefined;
 
 //fuer den Ordner "Skalierung"
 var scaling = {
-  "logarithmicHeight": false,
-  "logarithmicWidth": false,
-  "logarithmicColor": false
+    "logarithmicHeight": false,
+    "logarithmicWidth": false,
+    "logarithmicColor": false
 };
 
 
@@ -48,7 +48,7 @@ var searchBuilding;
  * Hilfsvariable als Methode zum Reagieren auf das DropDown-Menue
  */
 var update = function() {
-  requestAnimationFrame(update);
+    requestAnimationFrame(update);
 };
 
 
@@ -58,7 +58,7 @@ var update = function() {
  * @param: newAssociation: die neue Zuordnung
  */
 function setAssociation(newAssociation) {
-  association = newAssociation;
+    association = newAssociation;
 }
 
 /**
@@ -66,7 +66,7 @@ function setAssociation(newAssociation) {
  * @return: scaling: Object { logarithmicHeight: boolean, logarithmicWidth: boolean, logarithmicColor: boolean }
  */
 function getScalingBooleans() {
-  return scaling;
+    return scaling;
 }
 
 /**
@@ -75,7 +75,7 @@ function getScalingBooleans() {
  * { logarithmicHeight: boolean, logarithmicWidth: boolean, logarithmicColor: boolean }
  */
 function setScalingBooleans(scalingObject) {
-  scaling = scalingObject;
+    scaling = scalingObject;
 }
 
 /**
@@ -83,7 +83,7 @@ function setScalingBooleans(scalingObject) {
  * @param: Variable removedBuildings: Array, das die IDs aller geloeschten Gebaeude enthaelt
  */
 function getRemovedBuildings() {
-  return removedBuildings;
+    return removedBuildings;
 }
 
 /**
@@ -91,7 +91,7 @@ function getRemovedBuildings() {
  * @param: newRemovedBuildings: das neue Array, das die IDs aller geloeschten Gebaeude enthaelt
  */
 function setRemovedBuildings(newRemovedBuildings) {
-  removedBuildings = newRemovedBuildings;
+    removedBuildings = newRemovedBuildings;
 }
 
 
@@ -105,21 +105,21 @@ function setRemovedBuildings(newRemovedBuildings) {
  * @param: aFace: Objekt von der Seitenflaeche, auf das geklickt worden ist
  */
 function changeBuildingInformation(newHeight, newWidth, newColor, newName,
-  aFace) {
-  if (newHeight != undefined) {
-    buildingInformation["height"] = newHeight;
-    buildingInformation["width"] = newWidth;
-    buildingInformation["color"] = newColor;
-  } else {
-    buildingInformation["height"] = "Keine Daten";
-    buildingInformation["width"] = "Keine Daten";
-    buildingInformation["color"] = "Keine Daten";
-  }
-  if (newName != "undefined.") {
-    buildingInformation["name"] = newName;
-  } else {
-    buildingInformation["name"] = "Keine Daten";
-  }
+    aFace) {
+    if (newHeight != undefined) {
+        buildingInformation["height"] = newHeight;
+        buildingInformation["width"] = newWidth;
+        buildingInformation["color"] = newColor;
+    } else {
+        buildingInformation["height"] = "Keine Daten";
+        buildingInformation["width"] = "Keine Daten";
+        buildingInformation["color"] = "Keine Daten";
+    }
+    if (newName != "undefined.") {
+        buildingInformation["name"] = newName;
+    } else {
+        buildingInformation["name"] = "Keine Daten";
+    }
 }
 
 /**
@@ -130,8 +130,8 @@ function changeBuildingInformation(newHeight, newWidth, newColor, newName,
  *     scaling: json_von_legende}
  */
 function changeLinkForCurrentView(aJson) {
-  currentView['Link'] = window.location.href.split("/#/")[0] +
-    '/#/storedView?webGLSettings=' + JSON.stringify(aJson);
+    currentView['Link'] = window.location.href.split("/#/")[0] +
+        '/#/storedView?webGLSettings=' + JSON.stringify(aJson);
 }
 
 /**
@@ -139,7 +139,7 @@ function changeLinkForCurrentView(aJson) {
  * @return: gui: das dropdownmenu
  */
 function getGui() {
-  return gui;
+    return gui;
 }
 
 /**
@@ -147,67 +147,67 @@ function getGui() {
  */
 function initDropDownMenue() {
 
- storedDistrict = [];
- storedBuilding = [];
- removedBuildings = [];
- arrayOfRemovedBuildings = [];
+    storedDistrict = [];
+    storedBuilding = [];
+    removedBuildings = [];
+    arrayOfRemovedBuildings = [];
 
-  highlightBuildingsConnections = false;
-  incomingConnections = false;
-  outgoingConnections = false;
+    highlightBuildingsConnections = false;
+    incomingConnections = false;
+    outgoingConnections = false;
 
-  //fuer den Ordner 'Legende'
-  legend = {
-    "ID": association.name,
-    "Breite": association.width,
-    "Höhe": association.height,
-    "Farbe": association.color
-  };
+    //fuer den Ordner 'Legende'
+    legend = {
+        "ID": association.name,
+        "Breite": association.width,
+        "Höhe": association.height,
+        "Farbe": association.color
+    };
 
-  //fuer den Ordner "Gebaeudeinformationen"
-  buildingInformation = {
-    "height": "Klicken Sie bitte auf ein Gebäude",
-    "width": "Klicken Sie bitte auf ein Gebäude",
-    "color": "Klicken Sie bitte auf ein Gebäude",
-    "name": "Klicken Sie bitte auf ein Gebäude",
-    "Verbindungen": false,
-    "eingehendeVerbindungenaktivieren": false,
-    "ausgehendeVerbindungenaktivieren": false
-  };
+    //fuer den Ordner "Gebaeudeinformationen"
+    buildingInformation = {
+        "height": "Klicken Sie bitte auf ein Gebäude",
+        "width": "Klicken Sie bitte auf ein Gebäude",
+        "color": "Klicken Sie bitte auf ein Gebäude",
+        "name": "Klicken Sie bitte auf ein Gebäude",
+        "Verbindungen": false,
+        "eingehendeVerbindungenaktivieren": false,
+        "ausgehendeVerbindungenaktivieren": false
+    };
 
-  //entsteht, wenn Nutzer die Legende aendert
-  changedLegend = undefined;
+    //entsteht, wenn Nutzer die Legende aendert
+    changedLegend = undefined;
 
-  //fuer den Ordner "Skalierung"
-  scaling["logarithmicHeight"] = logScaling.height;
-  scaling["logarithmicWidth"] = logScaling.width;
-  scaling["logarithmicColor"] = logScaling.color;
+    //fuer den Ordner "Skalierung"
+    scaling["logarithmicHeight"] = logScaling.height;
+    scaling["logarithmicWidth"] = logScaling.width;
+    scaling["logarithmicColor"] = logScaling.color;
 
-  //fuer den Ordner "Steuerung"
-  controlling = {
-    "zoomSpeed": 1,
-    "rotateSpeed": 1,
-    "opacity": 1
-  };
+    //fuer den Ordner "Steuerung"
+    controlling = {
+        "zoomSpeed": 1,
+        "rotateSpeed": 1,
+        "opacity": 1
+    };
 
-  //fuer den Ordner "aktuelle Ansicht"
-  currentView = {
-    "initialView": function() {
-      goToInitialView();
-    },
-    "goToArielView": function() {
-      goToArielView();
-    },
-    "Link": ''
-  }
-
-  //fuer den Ordner "Gebaeudesuche"
-  searchBuilding = {
-    "search": "Bitte Gebäudenamen eingeben",
-    "deactivate": function() {
-      deactivateHighlighting();
+    //fuer den Ordner "aktuelle Ansicht"
+    currentView = {
+        "initialView": function() {
+            goToInitialView();
+        },
+        "goToArielView": function() {
+            goToArielView();
+        },
+        "Link": ''
     }
-  }
+
+    //fuer den Ordner "Gebaeudesuche"
+    searchBuilding = {
+        "search": "Bitte Gebäudenamen eingeben",
+        "deactivate": function() {
+            deactivateHighlighting();
+        }
+    }
 }
 
 /**
@@ -220,132 +220,132 @@ function initDropDownMenue() {
  * @param: nameOfDivElement: DivElement, dem wir die WebGLCanvas und Dropdownmenue hinzufuegen
  */
 function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
-  nameOfDivElement) {
+    nameOfDivElement) {
 
-  initDropDownMenue();
+    initDropDownMenue();
 
-  gui = new dat.GUI({
-    width: 375,
-    autoPlace: false
-  });
-
-  gui.domElement.style.position = 'absolute';
-  var divelRect = document.getElementById("WebGLCanvas"+numOfCanvas).getBoundingClientRect();
-  gui.domElement.style.left = divelRect.left + "px";
-  gui.domElement.style.top = "0px";
-  gui.domElement.id = "dropdownmenu";
-  document.getElementById(nameOfDivElement).appendChild(gui.domElement);
-
-  var h = gui.addFolder("Legende");
-  legend = {
-    "ID": association.name,
-    "Breite": association.width,
-    "Höhe": association.height,
-    "Farbe": association.color
-  };
-
-  for (var i = 0; i < myDimensions.length; i++) {
-    setFolderLegende(h, i, gui);
-  }
-  //*****************************************************************
-
-  h = gui.addFolder("Gebäudeinformationen");
-  for (var i = 0; i < myDimensions.length; i++) {
-    if (buildingInformation[dimensionsFromDatabase[i]] == undefined) {
-      buildingInformation[dimensionsFromDatabase[i]] =
-        "Klicken Sie bitte auf ein Gebäude";
-    }
-    h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[
-      dimensionsFromDatabase[i]]).listen();
-  }
-
-  //*****************************************************************
-
-  if (experimentalMode) {
-    h = gui.addFolder("Skalierung");
-    h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(
-      function(value) {
-        scaling["logarithmicHeight"] = value;
-        scale(value, "height", scene, aDistrict, camera);
-      });
-    h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(
-      function(value) {
-        scaling["logarithmicWidth"] = value;
-        scale(value, "width", scene, aDistrict, camera);
-      });
-    h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(
-      function(value) {
-        scaling["logarithmicColor"] = value;
-        scale(value, "color", scene, aDistrict, camera);
-      });
-  }
-
-
-
-  //********************************************************************
-
-  h = gui.addFolder("Steuerung");
-  h.add(controlling, "zoomSpeed", 0.1, 2).name("Zoomgeschwindigkeit").onChange(
-    function(value) {
-      trackballControls.zoomSpeed = value;
+    gui = new dat.GUI({
+        width: 375,
+        autoPlace: false
     });
-  h.add(controlling, "rotateSpeed", 0.1, 2).name("Rotationsgeschwindigkeit").onChange(
-    function(value) {
-      orbitControls.rotateSpeed = value;
-    });
-  h.add(controlling, "opacity", 0, 1).name("Transparenz").onChange(function(
-    value) {
-    getTotalMaterial().opacity = value;
-  });
 
-  //********************************************************************
+    gui.domElement.style.position = 'absolute';
+    var divelRect = document.getElementById("WebGLCanvas" + numOfCanvas).getBoundingClientRect();
+    gui.domElement.style.left = divelRect.left + "px";
+    gui.domElement.style.top = "0px";
+    gui.domElement.id = "dropdownmenu";
+    document.getElementById(nameOfDivElement).appendChild(gui.domElement);
 
-  h = gui.addFolder("Gebäudesuche");
-  h.add(searchBuilding, "search").name("Suche").onFinishChange(function(value) {
-    highlightBuilding(value);
-    showBuilding();
-  });
-  h.add(searchBuilding, "deactivate").name("Auswahl deaktivieren");
-
-  //********************************************************************
-
-  h = gui.addFolder("Ansicht");
-  h.add(currentView, "initialView").name("Anfangsansicht");
-  h.add(currentView, "goToArielView").name("Vogelperspektive");
-  h.add(currentView, "Link").name("aktuelle Ansicht").listen();
-  h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
-
-  //********************************************************************
-
-  if (useConnections) {
-    h = gui.addFolder("Verbindungen");
-    h.add(buildingInformation, "Verbindungen").name(
-      "Geb. mit Verb. hervorheben").onChange(function(value) {
-      buildingInformation["Verbindungen"] = value;
-      highlightBuildingsWithConnections(value);
-    })
-    h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name(
-      "eingehende Verb. per Klick").onChange(function(value) {
-      incomingConnections = value;
-    })
-    h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name(
-      "ausgehende Verb. per Klick").onChange(function(value) {
-      outgoingConnections = value;
-    })
-	
-	h = h.addFolder("Farblegende");
-	
-    var legendImage = {
-      image: "",
+    var h = gui.addFolder("Legende");
+    legend = {
+        "ID": association.name,
+        "Breite": association.width,
+        "Höhe": association.height,
+        "Farbe": association.color
     };
-    var cL = h.add(legendImage, "image").name(
-      "Verbindungen");
-    var html =
-      '<div><span class="property-name">Verbindungen</span><div class="c"><image src="/images/verbindungen.png" style="width:218px;"></image></div></div>';
-    var css = "height: 82px;"
-    var div = $('li.cr.string:contains("Verbindungen")').css("height", "82px").html(
-      html);
-  }
+
+    for (var i = 0; i < myDimensions.length; i++) {
+        setFolderLegende(h, i, gui);
+    }
+    //*****************************************************************
+
+    h = gui.addFolder("Gebäudeinformationen");
+    for (var i = 0; i < myDimensions.length; i++) {
+        if (buildingInformation[dimensionsFromDatabase[i]] == undefined) {
+            buildingInformation[dimensionsFromDatabase[i]] =
+                "Klicken Sie bitte auf ein Gebäude";
+        }
+        h.add(buildingInformation, dimensionsFromDatabase[i]).name(association[
+            dimensionsFromDatabase[i]]).listen();
+    }
+
+    //*****************************************************************
+
+    if (experimentalMode) {
+        h = gui.addFolder("Skalierung");
+        h.add(scaling, "logarithmicHeight").name("Höhe logarithmieren").onChange(
+            function(value) {
+                scaling["logarithmicHeight"] = value;
+                scale(value, "height", scene, aDistrict, camera);
+            });
+        h.add(scaling, "logarithmicWidth").name("Breite logarithmieren").onChange(
+            function(value) {
+                scaling["logarithmicWidth"] = value;
+                scale(value, "width", scene, aDistrict, camera);
+            });
+        h.add(scaling, "logarithmicColor").name("Farbe logarithmieren").onChange(
+            function(value) {
+                scaling["logarithmicColor"] = value;
+                scale(value, "color", scene, aDistrict, camera);
+            });
+    }
+
+
+
+    //********************************************************************
+
+    h = gui.addFolder("Steuerung");
+    h.add(controlling, "zoomSpeed", 0.1, 2).name("Zoomgeschwindigkeit").onChange(
+        function(value) {
+            trackballControls.zoomSpeed = value;
+        });
+    h.add(controlling, "rotateSpeed", 0.1, 2).name("Rotationsgeschwindigkeit").onChange(
+        function(value) {
+            orbitControls.rotateSpeed = value;
+        });
+    h.add(controlling, "opacity", 0, 1).name("Transparenz").onChange(function(
+        value) {
+        getTotalMaterial().opacity = value;
+    });
+
+    //********************************************************************
+
+    h = gui.addFolder("Gebäudesuche");
+    h.add(searchBuilding, "search").name("Suche").onFinishChange(function(value) {
+        highlightBuilding(value);
+        showBuilding();
+    });
+    h.add(searchBuilding, "deactivate").name("Auswahl deaktivieren");
+
+    //********************************************************************
+
+    h = gui.addFolder("Ansicht");
+    h.add(currentView, "initialView").name("Anfangsansicht");
+    h.add(currentView, "goToArielView").name("Vogelperspektive");
+    h.add(currentView, "Link").name("aktuelle Ansicht").listen();
+    h.addFolder("Für neuen Link darf obiges Feld nicht angeklickt sein.");
+
+    //********************************************************************
+
+    if (useConnections) {
+        h = gui.addFolder("Verbindungen");
+        h.add(buildingInformation, "Verbindungen").name(
+            "Geb. mit Verb. hervorheben").onChange(function(value) {
+            buildingInformation["Verbindungen"] = value;
+            highlightBuildingsWithConnections(value);
+        })
+        h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name(
+            "eingehende Verb. per Klick").onChange(function(value) {
+            incomingConnections = value;
+        })
+        h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name(
+            "ausgehende Verb. per Klick").onChange(function(value) {
+            outgoingConnections = value;
+        })
+
+        h = h.addFolder("Farblegende");
+
+        var legendImage = {
+            image: "",
+        };
+        var cL = h.add(legendImage, "image").name(
+            "Verbindungen");
+        var html =
+            '<div><span class="property-name">Verbindungen</span><div class="c"><image src="/images/verbindungen.png" style="width:218px;"></image></div></div>';
+        var css = "height: 82px;"
+        var div = $('li.cr.string:contains("Verbindungen")').css("height", "82px").html(
+            html);
+    }
 }
 
 /**
@@ -355,13 +355,13 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
  * @param: gui: das Dropdownmenue
  */
 function setFolderLegende(h, i, gui) {
-  h.add(legend, myDimensions[i]).onChange(
-    function(value) {
-      gui.__folders["Gebäudeinformationen"].__listening[i].name(value);
-      if (changedLegend == undefined) changedLegend = legend;
-      changedLegend[myDimensions[i]] = value;
-    }
-  )
+    h.add(legend, myDimensions[i]).onChange(
+        function(value) {
+            gui.__folders["Gebäudeinformationen"].__listening[i].name(value);
+            if (changedLegend == undefined) changedLegend = legend;
+            changedLegend[myDimensions[i]] = value;
+        }
+    )
 }
 
 /**
@@ -369,7 +369,7 @@ function setFolderLegende(h, i, gui) {
  * @param: newchangedLegend: die neue Legende
  */
 function setChangedLegend(newChangedLegend) {
-  changedLegend = newChangedLegend;
+    changedLegend = newChangedLegend;
 }
 
 
@@ -378,11 +378,11 @@ function setChangedLegend(newChangedLegend) {
  * @return: changedLegend: die vom Nutzer veraenderte Legende
  */
 function getChangedLegend() {
-  if (changedLegend == undefined) {
-    return legend;
-  } else {
-    return changedLegend;
-  }
+    if (changedLegend == undefined) {
+        return legend;
+    } else {
+        return changedLegend;
+    }
 }
 
 
@@ -391,30 +391,30 @@ function getChangedLegend() {
  * @param: value: der Wert aus der Legende, also ein Boolean (true = Gebaeude werden markiert, false = Gebaeude werden nicht mehr markiert)
  */
 function highlightBuildingsWithConnections(value) {
-  highlightBuildingsConnections = value;
-  var arr = getCalls();
-  var income = arr[0];
-  var outgoing = arr[1];
-  var hashmap = getBuildingsHashMap();
-  for (var y in hashmap) {
-    if (hashmap[y]._numOfActivatedConnections <= 0) {
-      if (value) {
-        if (income[y] || outgoing[y]) {
-          var factor = (getColorFactor(getExtrema(), hashmap[y]._leftGarden.color,
-            "SumOfConn") + getColorFactor(getExtrema(), hashmap[y]._rightGarden
-            .color, "SumOfConn")) / 2;
-          colorObject(hashmap[y], (new THREE.Color(colorYellowBright)).lerp(new THREE
-            .Color(colorYellowDark), factor));
+    highlightBuildingsConnections = value;
+    var arr = getCalls();
+    var income = arr[0];
+    var outgoing = arr[1];
+    var hashmap = getBuildingsHashMap();
+    for (var y in hashmap) {
+        if (hashmap[y]._numOfActivatedConnections <= 0) {
+            if (value) {
+                if (income[y] || outgoing[y]) {
+                    var factor = (getColorFactor(getExtrema(), hashmap[y]._leftGarden.color,
+                        "SumOfConn") + getColorFactor(getExtrema(), hashmap[y]._rightGarden
+                        .color, "SumOfConn")) / 2;
+                    colorObject(hashmap[y], (new THREE.Color(colorYellowBright)).lerp(new THREE
+                        .Color(colorYellowDark), factor));
+                }
+            } else {
+                if (income[y] || outgoing[y]) {
+                    var factor = getColorFactor(getExtrema(), hashmap[y]._color, "Color");
+                    colorObject(hashmap[y], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(
+                        buildingColor), factor));
+                }
+            }
         }
-      } else {
-        if (income[y] || outgoing[y]) {
-          var factor = getColorFactor(getExtrema(), hashmap[y]._color, "Color");
-          colorObject(hashmap[y], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(
-            buildingColor), factor));
-        }
-      }
     }
-  }
 }
 
 /**
@@ -426,25 +426,25 @@ function highlightBuildingsWithConnections(value) {
  * @param: camera: die Kamera, die nach dem Zeichnen neu positioniert werden soll
  */
 function scale(value, aString, scene, aDistrict, camera) {
-  if (value) {
-    var scalingMethod = scaleLogarithmically;
-    var scalingExtrema = takeLogarithmOfExtrema;
-  } else {
-    var scalingMethod = scaleLinearly;
-    var scalingExtrema = linearizeExtrema;
-  }
-  removeAllObjects(scene, aString, scalingMethod);
-  scaleAll(aString, scalingMethod);
-  storedDistrict = [];
-  storedBuilding = [];
-  setLight(scene);
-  setAndDrawCity(aDistrict, true, aString, scalingExtrema);
-  drawStoredLines(getJsonForCurrentLink());
-  if (buildingInformation["Verbindungen"] === true) {
-    highlightBuildingsWithConnections(true);
-  };
-  updateControls(Math.max(aDistrict._width, getExtrema().maxHeight));
-  saveCamera();
+    if (value) {
+        var scalingMethod = scaleLogarithmically;
+        var scalingExtrema = takeLogarithmOfExtrema;
+    } else {
+        var scalingMethod = scaleLinearly;
+        var scalingExtrema = linearizeExtrema;
+    }
+    removeAllObjects(scene, aString, scalingMethod);
+    scaleAll(aString, scalingMethod);
+    storedDistrict = [];
+    storedBuilding = [];
+    setLight(scene);
+    setAndDrawCity(aDistrict, true, aString, scalingExtrema);
+    drawStoredLines(getJsonForCurrentLink());
+    if (buildingInformation["Verbindungen"] === true) {
+        highlightBuildingsWithConnections(true);
+    };
+    updateControls(Math.max(aDistrict._width, getExtrema().maxHeight));
+    saveCamera();
 }
 
 
@@ -454,17 +454,17 @@ function scale(value, aString, scene, aDistrict, camera) {
  * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
  */
 function takeLogarithmOfExtrema(aString) {
-  var extrema = getExtrema();
-  if (aString == "width") {
-    extrema.maxWidth = Math.log(extrema.maxWidth) / Math.log(2);
-    extrema.minWidth = Math.log(extrema.minWidth) / Math.log(2);
-  } else if (aString == "height") {
-    extrema.maxHeight = Math.log(extrema.maxHeight) / Math.log(2);
-    extrema.minHeigth = Math.log(extrema.minHeigth) / Math.log(2);
-  } else {
-    extrema.maxColor = Math.log(extrema.maxColor) / Math.log(2);
-    extrema.minColor = Math.log(extrema.minColor) / Math.log(2);
-  }
+    var extrema = getExtrema();
+    if (aString == "width") {
+        extrema.maxWidth = Math.log(extrema.maxWidth) / Math.log(2);
+        extrema.minWidth = Math.log(extrema.minWidth) / Math.log(2);
+    } else if (aString == "height") {
+        extrema.maxHeight = Math.log(extrema.maxHeight) / Math.log(2);
+        extrema.minHeigth = Math.log(extrema.minHeigth) / Math.log(2);
+    } else {
+        extrema.maxColor = Math.log(extrema.maxColor) / Math.log(2);
+        extrema.minColor = Math.log(extrema.minColor) / Math.log(2);
+    }
 }
 
 
@@ -473,17 +473,17 @@ function takeLogarithmOfExtrema(aString) {
  * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
  */
 function linearizeExtrema(aString) {
-  var extrema = getExtrema();
-  if (aString == "width") {
-    extrema.maxWidth = Math.pow(2, extrema.maxWidth);
-    extrema.minWidth = Math.pow(2, extrema.minWidth);
-  } else if (aString == "height") {
-    extrema.maxHeight = Math.pow(2, extrema.maxHeight);
-    extrema.minHeigth = Math.pow(2, extrema.minHeigth);
-  } else {
-    extrema.maxColor = Math.pow(2, extrema.maxColor);
-    extrema.minColor = Math.pow(2, extrema.minColor);
-  }
+    var extrema = getExtrema();
+    if (aString == "width") {
+        extrema.maxWidth = Math.pow(2, extrema.maxWidth);
+        extrema.minWidth = Math.pow(2, extrema.minWidth);
+    } else if (aString == "height") {
+        extrema.maxHeight = Math.pow(2, extrema.maxHeight);
+        extrema.minHeigth = Math.pow(2, extrema.minHeigth);
+    } else {
+        extrema.maxColor = Math.pow(2, extrema.maxColor);
+        extrema.minColor = Math.pow(2, extrema.minColor);
+    }
 }
 
 
@@ -493,7 +493,7 @@ function linearizeExtrema(aString) {
  * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
  */
 function scaleLogarithmically(aDistrict, aString) {
-  return (Math.log(aDistrict["_" + aString] + 1.3) / Math.log(2));
+    return (Math.log(aDistrict["_" + aString] + 1.3) / Math.log(2));
 }
 
 
@@ -503,7 +503,7 @@ function scaleLogarithmically(aDistrict, aString) {
  * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
  */
 function scaleLinearly(aDistrict, aString) {
-  return getDrawnDimValue(aDistrict, aString);
+    return getDrawnDimValue(aDistrict, aString);
 }
 
 
@@ -514,16 +514,16 @@ function scaleLinearly(aDistrict, aString) {
  * @param: scalingMethod: scaleLogarithmically oder scaleLinearly
  */
 function removeAllObjects(scene, aString, scalingMethod) {
-  var object;
-  for (var i = scene.children.length - 1; i >= 0; i--) {
-    object = scene.children[i];
-    if (object.faces != undefined) {
-      for (var j = 0; j < object.faces.length; j++) {
-        delete object.geometry.faces[j];
-      }
+    var object;
+    for (var i = scene.children.length - 1; i >= 0; i--) {
+        object = scene.children[i];
+        if (object.faces != undefined) {
+            for (var j = 0; j < object.faces.length; j++) {
+                delete object.geometry.faces[j];
+            }
+        }
+        scene.remove(object);
     }
-    scene.remove(object);
-  }
 }
 
 /**
@@ -532,11 +532,11 @@ function removeAllObjects(scene, aString, scalingMethod) {
  * @param: scalingMethod: scaleLogarithmically oder scaleLinearly
  */
 function scaleAll(aString, scalingMethod) {
-  var hashMap = getBuildingsHashMap();
-  for (var x in hashMap) {
-    hashMap[x]._centerPosition = [0, hashMap[x]._height / 2 - 1.5, 0];
-    if (hashMap[x].buildings == undefined) {
-      hashMap[x]["_" + aString] = scalingMethod(hashMap[x], aString);
+    var hashMap = getBuildingsHashMap();
+    for (var x in hashMap) {
+        hashMap[x]._centerPosition = [0, hashMap[x]._height / 2 - 1.5, 0];
+        if (hashMap[x].buildings == undefined) {
+            hashMap[x]["_" + aString] = scalingMethod(hashMap[x], aString);
+        }
     }
-  }
 }

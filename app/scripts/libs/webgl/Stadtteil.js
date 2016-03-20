@@ -28,25 +28,25 @@ var metaData; //Objekt, das max, min-Werte enthaelt, die uebergeben worden sind
 /**
  * initialisiert die globalen Variablen
  */
-function initGlobalVariables(){
- association = {}; //Hier wird die Legende gespeichert
- incomingCalls = {}; //speichert Infos ueber Eingehende Verbindungen
- outgoingCalls = {}; //speichert Infos ueber ausgehende Verbindungen
+function initGlobalVariables() {
+    association = {}; //Hier wird die Legende gespeichert
+    incomingCalls = {}; //speichert Infos ueber Eingehende Verbindungen
+    outgoingCalls = {}; //speichert Infos ueber ausgehende Verbindungen
 
- gardenRadius = 6; //Groesse der Gaerten
+    gardenRadius = 6; //Groesse der Gaerten
 
- buildingsHashMap = {}; //Hashmap fuer Gebaeude: mapt Gebaeude-ID mit dem Objekt
+    buildingsHashMap = {}; //Hashmap fuer Gebaeude: mapt Gebaeude-ID mit dem Objekt
 
- GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
- GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
+    GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
+    GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
 
- jsonOfNodes = {}; //man greift erst auf die x-Position zu, dann auf die z-Position, dann bekommt man den Knoten
+    jsonOfNodes = {}; //man greift erst auf die x-Position zu, dann auf die z-Position, dann bekommt man den Knoten
 
- graph = {};
- nodeHashMap = {};
- nodeID = 0;
+    graph = {};
+    nodeHashMap = {};
+    nodeID = 0;
 
- logScaling = {};
+    logScaling = {};
 }
 /**
  * Setter fuer districtHeight
@@ -639,18 +639,17 @@ function getDrawnDimValue(aBuilding, dimString) {
 
     var buildingDimension = aBuilding[association[dimString]];
     var scalingString = 0.25 * metaData["avg_" + association.width];
-	
-	if (buildingDimension != undefined) {
-		if (buildingDimension != "" && buildingDimension != 0) {
-				toReturn = parseFloat(buildingDimension) / parseFloat(scalingString);
-		} else {
-			// Wenn die Dimension undefined ist oder die Größe 0 hat, dann den minimalsten Wert aller Gebäude ansetzen
-			toReturn = parseFloat(metaData["min_" + association[dimString]]) / parseFloat(scalingString);
-		}
-	}
-	else {
-		toReturn = 1;
-	}
+
+    if (buildingDimension != undefined) {
+        if (buildingDimension != "" && buildingDimension != 0) {
+            toReturn = parseFloat(buildingDimension) / parseFloat(scalingString);
+        } else {
+            // Wenn die Dimension undefined ist oder die Größe 0 hat, dann den minimalsten Wert aller Gebäude ansetzen
+            toReturn = parseFloat(metaData["min_" + association[dimString]]) / parseFloat(scalingString);
+        }
+    } else {
+        toReturn = 1;
+    }
     return toReturn;
 }
 
@@ -669,9 +668,9 @@ function initBuilding(aBuilding, namePrefix) {
                 aBuilding["_" + dim] = scaleLogarithmically(aBuilding, dim);
             }
         }
-		if (aBuilding.buildings != undefined && aBuilding.buildings[0] == undefined) {
-			aBuilding.buildings = undefined;
-		}
+        if (aBuilding.buildings != undefined && aBuilding.buildings[0] == undefined) {
+            aBuilding.buildings = undefined;
+        }
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
         var theLeftGarden = garden(true, aBuilding, outgoingCalls[aBuilding[association.name]]);
         var theRightGarden = garden(false, aBuilding, incomingCalls[aBuilding[association.name]]);

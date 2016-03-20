@@ -43,19 +43,19 @@ var drawGardens;
 /**
  * initialisiert die globalen Variablen
  */
-function initGlobalVariables(){
+function initGlobalVariables() {
 
- clickedLeftGardens = [];
- clickedRightGardens = [];
+    clickedLeftGardens = [];
+    clickedRightGardens = [];
 
- association = {};
+    association = {};
 
- GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
- GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
+    GARDEN_WIDTH = (6 + 6 * Math.sin(Math.PI / 6)) / Math.cos(Math.PI / 6);
+    GARDEN_DEPTH = 6 + 6 * Math.sin(Math.PI / 6);
 
- targetList = [];
+    targetList = [];
 
- drawnObject = null;
+    drawnObject = null;
 
 }
 
@@ -65,8 +65,11 @@ function initGlobalVariables(){
  *@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
  */
 function setBuildingColor(hexColor) {
-    if (!isNaN(parseInt(hexColor))) { buildingColor = parseInt(hexColor); }
-	else {console.log("Die Gebäudefarbe wurde nicht im richtigen Format in settings.js bereitgestellt.");}
+    if (!isNaN(parseInt(hexColor))) {
+        buildingColor = parseInt(hexColor);
+    } else {
+        console.log("Die Gebäudefarbe wurde nicht im richtigen Format in settings.js bereitgestellt.");
+    }
 }
 
 
@@ -294,7 +297,7 @@ function goToInitialView() {
  */
 function addCityToScene(mainDistrict, scene, camera) {
 
-	//**************** Ein Haufen Variablen zum initialisieren *******************
+    //**************** Ein Haufen Variablen zum initialisieren *******************
     var myGeometry = new THREE.Geometry();
     var matrix = new THREE.Matrix4();
     var quaternion = new THREE.Quaternion();
@@ -307,9 +310,9 @@ function addCityToScene(mainDistrict, scene, camera) {
     var gardenGeom = [
         new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
         new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
-    ];	
-	//********************* Ende der Initialisierung der Variablen ******************
-	
+    ];
+    //********************* Ende der Initialisierung der Variablen ******************
+
     for (var i = length; i--;) {
         addEachDistrict(buildings[i], scene, extrema, 0, boxGeom, gardenGeom, myGeometry, matrix, quaternion, color);
     }
@@ -401,7 +404,7 @@ function addBoxes(aColor, aBuilding, boxGeom, myGeometry, matrix, quaternion) {
         face = myGeometry.faces[i];
         face.building = nameOfDimension;
         aBuilding._faces.push(face);
-		face.numOfCanvas = numOfCanvas;
+        face.numOfCanvas = numOfCanvas;
     }
 }
 
@@ -472,7 +475,7 @@ function addGarden(aBuilding, scene, gardenGeom, myGeometry, matrix, quaternion)
                 if (i == 0) face.isLeftGarden = true;
                 else face.isLeftGarden = false;
                 aBuilding[gardens[i]]._faces.push(face);
-				face.numOfCanvas = numOfCanvas;
+                face.numOfCanvas = numOfCanvas;
             }
         }
     }

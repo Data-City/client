@@ -264,14 +264,14 @@ angular.module('datacityApp')
                     return false;
                 }
             }
-            
+
             for (key in view.dimensionSettings) {
                 if (view.dimensionSettings[key].name === "buildings") {
                     window.alert("Eine oder mehrere der ausgewählten Dimensionen heißt 'buildings'. Dies könnte zu Komplikationen bei der Stadtdarstellung führen. ");
                     break; //Damit die Nachricht nur einmal gezeigt wird
                 }
             }
-            
+
             if (view.districts[0] === undefined && view.districtType === "2") {
                 window.alert("Schritt 4: \nBei der Blockbildung wurde Option 3 festgelegt, aber keine Blöcke ausgewählt. \nFalls Sie keine Blockbildung möchten, bitte wählen Sie Option 1");
                 return false;
@@ -301,7 +301,7 @@ angular.module('datacityApp')
                     $scope.setLoaderSettings("Rufe Aggregationsergebnis ab...", 40);
                     REST.getURL(relUrl, null, function(collection) {
                         $scope.setLoaderSettings("Daten erhalten...", 50);
-      
+
                         view.numberOfEntries = collection.data._returned;
                         if (view.numberOfEntries === 0) {
                             window.alert("Die Filterung bzw. Aggregation wurde so eingestellt, dass keine Datensätze übrig bleiben!");
@@ -586,8 +586,8 @@ angular.module('datacityApp')
 
         $scope.changeViewMode = function() {
             if (!$scope.chosenView.experimentalMode) {
-                window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nEs können jetzt benutzt werden:" + 
-                                "\n - Straßen als Art der Verbindungsdarstellung \n - Die Skalierung im WebGL");
+                window.alert("Die Funktionen in der experimentellen Version könnten Fehler enthalten! \nEs können jetzt benutzt werden:" +
+                    "\n - Straßen als Art der Verbindungsdarstellung \n - Die Skalierung im WebGL");
             }
             $scope.chosenView.typeOfConnections = 0; //Bögen
             $scope.chosenView.experimentalMode = !$scope.chosenView.experimentalMode;

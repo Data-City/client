@@ -60,7 +60,7 @@ angular.module('datacityApp')
 
                             $scope.chosenCollection = collection;
                             $scope.chosenView = viewResponse.data;
-                            
+
                             if ($scope.chosenView.experimentalMode === false) {
                                 $scope.chosenView.typeOfConnections = 0;
                             }
