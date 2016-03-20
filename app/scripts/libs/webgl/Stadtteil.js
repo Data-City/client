@@ -72,7 +72,7 @@ function setMetaData(newMetaData) {
     metaData = newMetaData;
 }
 
-/*
+/**
  * Setter fuer association
  * @param: newAssociation: die neue Zuordnung
  */
@@ -80,7 +80,7 @@ function setAssociation(newAssociation) {
     association = newAssociation;
 }
 
-/*
+/**
  * Getter fuer die Hashmap der Gebaeuden
  * @return: Hashmap fuer die Gebaeuden
  */
@@ -89,7 +89,7 @@ function getBuildingsHashMap() {
 }
 
 
-/*
+/**
  * Setter fuer incomingCalls, outgoingCalls jeweils der Form
  * {GebaeudeID : {connections : {GebaeudeID_1: Gewichtung1, GebaeudeID_2: Gewichtung2}, sumOfConnections: SummeDerGewichtungen}}
  * @param: income: neues Objekt fuer incomingCalls
@@ -117,7 +117,9 @@ function getCalls() {
 
 
 /**
- * sortiert zu jedem key in nodesOfStreetsSortByXCoord und nodesOfStreetsSortByZCoord das zugehoerige Array absteigend 
+ * sortiert zu jedem key in nodesOfStreetsSortByXCoord und nodesOfStreetsSortByZCoord das zugehoerige Array absteigend
+ * @param: nodesOfStreetsSortByXCoord: JSON mit allen Koordinaten der Strassenkreuzungen, mit x-Koordinate als key
+ * @param: nodesOfStreetsSortByZCoord: JSON mit allen Koordinaten der Strassenkreuzungen, mit z-Koordinate als key
  */
 function sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
     for (var x in nodesOfStreetsSortByXCoord) {
@@ -135,6 +137,8 @@ function sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoo
 
 /**
  * iteriert durch nodesOFStreetsSortByXCoord bzw. -ZCoord und bestimmt die Nachbarn von den Knoten
+ * @param: nodesOfStreetsSortByXCoord: JSON mit allen Koordinaten der Strassenkreuzungen, mit x-Koordinate als key
+ * @param: nodesOfStreetsSortByZCoord: JSON mit allen Koordinaten der Strassenkreuzungen, mit z-Koordinate als key
  */
 function createEdges(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
     sortNodesOfStreets(nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord);
@@ -195,6 +199,8 @@ function setGraph() {
  * Diese Methode fuegt den JSON-Objekten nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord, 
  * welche die Positionen der Strassenkreuzungen bzw. Knoten speichern, die mit dem Gebaeude erstellt werden muessen
  * @param: district: ein Gebaeude oder Stadtteil, bei dem die Knoten gesetzt werden sollen
+ * @param: nodesOfStreetsSortByXCoord: JSON mit allen Koordinaten der Strassenkreuzungen, mit x-Koordinate als key
+ * @param: nodesOfStreetsSortByZCoord: JSON mit allen Koordinaten der Strassenkreuzungen, mit z-Koordinate als key
  */
 function setTheFiveStreetNodes(district, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord) {
     var toAdd = Math.round((getLandWidth(district) / 2 + gap / 2) * 10000) / 10000;
@@ -451,7 +457,7 @@ function lastStepInCreatingPath(targetDistricts, vertices, currentDistrict, targ
 
 
 
-/*
+/**
  * Konstruktor für einen Vorgarten
  * @param: isItLeftGarden: true, wenn es sich um einen linken Garten handelt, sonst false
  * @param: aBuilding: das Gebaeude, dessen Garten wir initialisieren moechten
@@ -481,56 +487,8 @@ function garden(isItLeftGarden, aBuilding, connections) {
 }
 
 
-/*
- * Mathode zum Setzen der nächsten Position, von der aus man eine Linea zeichnen kann im Garten
- * @param: aGarden: ein Garten
- */
-function setNextLinePos(aGarden) {
-    var nextLineObj = computeDistancesForNextLinePos(aGarden);
-    if (aGarden.nextLinePos[0] + 1 > aGarden._centerPosition[0] + nextLineObj.currentTriangleWidth) {
-        if (nextLineObj.aFactor * (aGarden.nextLinePos[1] + nextLineObj.aFactor) > nextLineObj.aFactor * (aGarden._centerPosition[2] + nextLineObj.aFactor * aGarden.radius)) {
-            aGarden.nextLinePos[0] = aGarden._centerPosition[0] - aGarden._width / 2 + 1;
-            aGarden.nextLinePos[1] = aGarden._centerPosition[2] - nextLineObj.aFactor * (aGarden.depth - aGarden.radius) + nextLineObj.aFactor;
-        } else {
-            aGarden.nextLinePos[0] = aGarden._centerPosition[0] - nextLineObj.currentTriangleWidth + 1;
-            aGarden.nextLinePos[1] = aGarden.nextLinePos[1] + nextLineObj.aFactor * 0.1;
-        }
-    } else {
-        aGarden.nextLinePos[0] = aGarden.nextLinePos[0] + 0.1;
-    }
-}
 
 /**
- * Hilfsmethode zum initialisieren der Variablen fuer setNextLinePos-Methoden
- * @param: aGarden: ein Garten
- * @return: ein Objekt mit den keys distancePosToPeak, currentTriangleWidth, aFactor
- */
-function computeDistancesForNextLinePos(aGarden) {
-    var nextLineObj = {};
-    if (aGarden.isLeftGarden) {
-        nextLineObj.distancePosToPeak = aGarden.depth - (aGarden.nextLinePos[1] - (aGarden._centerPosition[2] + aGarden.radius - aGarden.depth));
-        nextLineObj.currentTriangleWidth = nextLineObj.distancePosToPeak * Math.tan(Math.PI / 6);
-        nextLineObj.aFactor = 1;
-    } else {
-        nextLineObj.distancePosToPeak = aGarden.nextLinePos[1] - (aGarden._centerPosition[2] - aGarden.radius);
-        nextLineObj.currentTriangleWidth = nextLineObj.distancePosToPeak * Math.tan(Math.PI / 6);
-        nextLineObj.aFactor = -1;
-    }
-    return nextLineObj;
-}
-
-/**
- * verschiebt die NextLinePos solange, bis 5 Linien nebeneinander passen
- * @param: aGarden: ein Garten
- */
-function setNextLinePosForNextPackage(aGarden) {
-    var nextLineObj = computeDistancesForNextLinePos(aGarden);
-    while (aGarden.nextLinePos[0] + 1.5 > aGarden._centerPosition[0] + nextLineObj.currentTriangleWidth) {
-        setNextLinePos(aGarden);
-    }
-}
-
-/*
  * Methode zum Setzen der GartenPosition in Abhängigkeit vom Gebaeude
  * @param: aBuilding: ein Gebaeude oder District
  */
@@ -573,7 +531,7 @@ function setGardenPos(aBuilding) {
 
 
 
-/*
+/**
  * Methode, um fuer jedes Stadtteil die einzelnen Gebaeude zu positionieren und die Stadtteile auch zu positionieren
  * @param: mainDistrict: ein JSON-Objekt vom Typ district, das die Grundflaeche auch enthaelt
  * @param: namePrefix: Praefix vom Namen der Form "maindistrict.package1.package2."
@@ -596,9 +554,12 @@ function setMainDistrict(mainDistrict, namePrefix) {
 
 
 
-/*
+/**
  * verschiebt die Gebauede und Distrikte, sodass sie wieder aufeinander liegen
  * @param: mainDistrict: ein JSON-Objekt vom Typ district
+ * @param: nodesOfStreetsSortByXCoord: JSON mit allen Koordinaten der Strassenkreuzungen, mit x-Koordinate als key
+ * @param: nodesOfStreetsSortByZCoord: JSON mit allen Koordinaten der Strassenkreuzungen, mit z-Koordinate als key
+ * @param: floorHeight: die Hoehe des aktuellen Bodens (y-Koordinate)
  */
 function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortByZCoord, floorHeight) {
     if (mainDistrict.buildings != undefined) {
@@ -614,7 +575,6 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
                 b,
                 b._centerPosition[0] - width / 2,
                 floorHeight + b._height / 2,
-                //b._centerPosition[1] + districtHeight/2,
                 b._centerPosition[2] - width / 2
             );
             shiftBack(b, nodesSortByX, nodesSortByZ, floorHeight + districtHeight / 2);
@@ -650,7 +610,7 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
 
 
 
-/*
+/**
  * Hilfsmethode zum Sortieren der Gebaeude nach Breite absteigend
  * @param: aDistrict: das Stadtteil, dessen Gebaeude sortiert werden sollen
  * @param: namePrefix: Praefix vom Namen der Form "maindistrict.package1.package2."
@@ -678,14 +638,12 @@ function getDrawnDimValue(aBuilding, dimString) {
     var toReturn;
 
     var buildingDimension = aBuilding[association[dimString]];
-    //var scalingString = 0.5 * metaData["avg_" + association[dimString]];
     var scalingString = 0.25 * metaData["avg_" + association.width];
 
     if (buildingDimension != undefined && buildingDimension != "" && buildingDimension != 0) {
         if (scalingString > 2) {
             toReturn = parseFloat(buildingDimension) / parseFloat(scalingString);
         } else {
-            //toReturn = parseFloat(aBuilding[association[dimString]]) + 1.5;
             toReturn = parseFloat(buildingDimension);
         }
     } else {
@@ -695,7 +653,7 @@ function getDrawnDimValue(aBuilding, dimString) {
     return toReturn;
 }
 
-/*
+/**
  * Methode zur Initialisierung des Districts bzw. des Gebaeudes
  * @param: aBuilding: Das Gebaeude bzw. District, das initialisiert werden soll
  * @param: namePrefix: Praefix vom Namen der Form "maindistrict.package1.package2."
@@ -716,7 +674,6 @@ function initBuilding(aBuilding, namePrefix) {
         aBuilding["_leftGarden"] = theLeftGarden;
         aBuilding["_rightGarden"] = theRightGarden;
         if (aBuilding[association["height"]] != undefined) {
-            //updateExtrema(aBuilding[association["width"]], aBuilding[association["height"]], aBuilding[association["color"]]);
             updateExtrema(aBuilding._width, aBuilding._height, aBuilding._color);
         } else {
             aBuilding[association.name] = namePrefix;
@@ -729,7 +686,7 @@ function initBuilding(aBuilding, namePrefix) {
 }
 
 
-/*
+/**
  * Methode wird vom setMainDistrict aufgerufen
  *  Sie berechnet fuer die Gebaeude von einem Stadtteil die Position und speichert sie in buildings._centerPosition
  *  anschließend wird noch das Stadtteil vergroessert, damit alle Gebaeude auf das Stadtteil draufpassen
@@ -773,7 +730,7 @@ function setOneDistrict(aDistrict, namePrefix) {
     aDistrict._width = width;
 }
 
-/*
+/**
  * Hilfsmethode: wenn man centerPosition von einem District aendert, aendern sich auch die
  * centerPosition von allen Districts bzw. Gebaeuden, die auf diesem District sich befinden mit
  * @param: aDistrict: das District, das gesetzt wird
@@ -803,7 +760,7 @@ function setCenterPosition(aDistrict, newX, newY, newZ) {
     aDistrict._centerPosition = [newX, newY, newZ];
 }
 
-/*
+/**
  * Hilfsmethode, um Code zu sparen, gibt Breite eines Grundstücks (d.h. Gebaeude und Gaerten zusammen) zurueck
  * @param: aBuilding: das Gebaeude, zu dem das Grundstueck gehoert
  * @return: Breite des Grundstuecks, das zum i-ten Gebaeude gehoert
@@ -823,9 +780,10 @@ function getLandWidth(aBuilding) {
 }
 
 
-/*
+/**
  * Hilfsmethode, um xPosition von den Gebaeuden zu bestimmen
  * @param: i: i-te Eintrag in arrayOfBuildings
+ * @return: x-Koordinaten-Abstand von der Centerposition des Gebaeudes zum linken Rand des "Grundstuecks" (d.h. Gebaeude + Garten)
  */
 function getXPosOfBuildingsFromLeft(i) {
     var b = arrayOfBuildings[i];
@@ -833,6 +791,11 @@ function getXPosOfBuildingsFromLeft(i) {
     return (left) ? Math.max(b._width / 2, left._width + 1) : b._width / 2;
 }
 
+/**
+ * Hilfsmethode, um xPosition von den Gebaeuden zu bestimmen
+ * @param: i: i-te Eintrag in arrayOfBuildings
+ * @return: x-Koordinaten-Abstand von der Centerposition des Gebaeudes zum rechten Rand des "Grundstuecks" (d.h. Gebaeude + Garten)
+ */
 function getXPosOfBuildingsFromRight(i) {
     var b = arrayOfBuildings[i];
     var right = b._rightGarden;
@@ -840,7 +803,7 @@ function getXPosOfBuildingsFromRight(i) {
 }
 
 
-/*
+/**
  * Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des ersten Gebaeudes
  * @param: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
  * @param: namePrefix: Praefix vom Namen der Form "maindistrict.package1.package2."
@@ -876,11 +839,11 @@ function setFirstBuilding(aDistrict, namePrefix) {
 
 
 
-/*
+/**
  * Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
  * wenn wir gerade in Z-Richtung bauen und bereits ueber den Rand (Tiefe des letzten Blocks) sind
  * und die Breite in x-Richtung groesser als in z-Richtung ist
- * @param: aDistrict: Das Stadtteil, dessen Gebaeude gesetzt werden sollen
+ * @param: i: die Position des zu setzenden Gebaeudes in arrayOfBuildings
  */
 function continueBuildingInXDirection(i) {
     var b = arrayOfBuildings[i];
@@ -897,7 +860,7 @@ function continueBuildingInXDirection(i) {
 
 }
 
-/*
+/**
  * Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
  * wenn wir gerade in Z-Richtung bauen und bereits ueber den Rand (Tiefe des letzten Blocks) sind
  * und die Breite in z-Richtung groesser ist als in x-Richtung und bereits am Rand angekommen sind
@@ -915,7 +878,7 @@ function buildANewBuildingRowOnTheRightInZDirection(i) {
 }
 
 
-/*
+/**
  * Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
  * wenn wir gerade in Z-Richtung bauen und noch nicht am Rand angekommen sind
  * @param: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
@@ -930,7 +893,7 @@ function continueBuildingNormallyInZDirection(i) {
 }
 
 
-/*
+/**
  * Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
  * wenn wir gerade in X-Richtung bauen (nach links) und noch nicht am Rand angekommen sind
  * @param: i: der Index fuer das Gebaeude von dem arrayOfBuildings, das gesetzt werden soll
@@ -946,7 +909,7 @@ function continueBuildingNormallyInXDirection(i) {
 }
 
 
-/*
+/**
  * Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
  * wenn wir gerade in X-Richtung bauen (nach links) und die Tiefe gerade groesser als die Breite ist
  *  dann bauen wir wieder in Z-Richtung und fangen rechts unten an
@@ -966,7 +929,7 @@ function buildAgainDownOnTheRightInZDirection(i) {
 }
 
 
-/*
+/**
  * Hilfsmethode fuer setOneDistrict(aDistrict) fuer das setzen des i-ten Gebaeudes
  * wenn wir gerade in X-Richtung bauen (nach links) und die Breite gerade groesser als die Tiefe ist
  * dann bauen wir eine Reihe obendrueber weiter nach links

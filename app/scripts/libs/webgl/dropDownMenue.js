@@ -7,7 +7,7 @@ var storedBuilding = [];
 var removedBuildings = [];
 var arrayOfRemovedBuildings = [];
 
-var eingehendeVerbindungen, ausgehendeVerbindungen,
+var incomingConnections, outgoingConnections,
   highlightBuildingsConnections;
 var useConnections;
 var experimentalMode = false;
@@ -19,23 +19,10 @@ var myDimensions = ["ID", "Breite", "Höhe", "Farbe"];
 var dimensionsFromDatabase = ["name", "width", "height", "color"];
 
 //fuer den Ordner 'Legende'
-var legend = {
-  "ID": association.name,
-  "Breite": association.width,
-  "Höhe": association.height,
-  "Farbe": association.color
-};
+var legend;
 
 //fuer den Ordner "Gebaeudeinformationen"
-var buildingInformation = {
-  "height": "Klicken Sie bitte auf ein Gebäude",
-  "width": "Klicken Sie bitte auf ein Gebäude",
-  "color": "Klicken Sie bitte auf ein Gebäude",
-  "name": "Klicken Sie bitte auf ein Gebäude",
-  "Verbindungen": false,
-  "eingehendeVerbindungenaktivieren": false,
-  "ausgehendeVerbindungenaktivieren": false
-};
+var buildingInformation;
 
 //entsteht, wenn Nutzer die Legende aendert
 var changedLegend = undefined;
@@ -49,30 +36,13 @@ var scaling = {
 
 
 //fuer den Ordner "Steuerung"
-var controlling = {
-  "zoomSpeed": 1,
-  "rotateSpeed": 1,
-  "opacity": 1
-};
+var controlling;
 
 //fuer den Ordner "aktuelle Ansicht"
-var currentView = {
-  "initialView": function() {
-    goToInitialView();
-  },
-  "goToArielView": function() {
-    goToArielView();
-  },
-  "Link": ''
-}
+var currentView;
 
 //fuer den Ordner "Gebaeudesuche"
-var searchBuilding = {
-  "search": "Bitte Gebäudenamen eingeben",
-  "deactivate": function() {
-    deactivateHighlighting();
-  }
-}
+var searchBuilding;
 
 /**
  * Hilfsvariable als Methode zum Reagieren auf das DropDown-Menue
@@ -183,8 +153,8 @@ function initDropDownMenue() {
  arrayOfRemovedBuildings = [];
 
   highlightBuildingsConnections = false;
-  eingehendeVerbindungen = false;
-  ausgehendeVerbindungen = false;
+  incomingConnections = false;
+  outgoingConnections = false;
 
   //fuer den Ordner 'Legende'
   legend = {
@@ -356,11 +326,11 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
     })
     h.add(buildingInformation, "eingehendeVerbindungenaktivieren").name(
       "eingehende Verb. per Klick").onChange(function(value) {
-      eingehendeVerbindungen = value;
+      incomingConnections = value;
     })
     h.add(buildingInformation, "ausgehendeVerbindungenaktivieren").name(
       "ausgehende Verb. per Klick").onChange(function(value) {
-      ausgehendeVerbindungen = value;
+      outgoingConnections = value;
     })
 	
 	h = h.addFolder("Farblegende");
@@ -418,7 +388,7 @@ function getChangedLegend() {
 
 
 /**Methode um die Gebaeude zu highlighten, die Verbindungen haben
- * @param: value: der Wert aus der Legende, also ein Boolean (true = Gebaeude sind markiert, false = Gebaeude sind nicht markiert)
+ * @param: value: der Wert aus der Legende, also ein Boolean (true = Gebaeude werden markiert, false = Gebaeude werden nicht mehr markiert)
  */
 function highlightBuildingsWithConnections(value) {
   highlightBuildingsConnections = value;
@@ -523,7 +493,7 @@ function linearizeExtrema(aString) {
  * @param: aString: "width" oder "height" oder "color", sagt, ob die Hoehe oder die Breite oder Farbe der Gebaeude skaliert werden soll
  */
 function scaleLogarithmically(aDistrict, aString) {
-  return (Math.log(aDistrict["_" + aString] + 1) / Math.log(2));
+  return (Math.log(aDistrict["_" + aString] + 1.3) / Math.log(2));
 }
 
 

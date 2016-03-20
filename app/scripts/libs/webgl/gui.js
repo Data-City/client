@@ -65,7 +65,8 @@ function initGlobalVariables(){
  *@param: hexaColor: der Farbstring fuer die Gebaeude der Form 0x...... in Hexadezimal
  */
 function setBuildingColor(hexColor) {
-    if (!isNaN(parseInt(hexColor))) buildingColor = parseInt(hexColor);
+    if (!isNaN(parseInt(hexColor))) { buildingColor = parseInt(hexColor); }
+	else {console.log("Die Gebäudefarbe wurde nicht im richtigen Format in settings.js bereitgestellt.");}
 }
 
 
@@ -292,6 +293,8 @@ function goToInitialView() {
  *@param: camera: die Kamera, die wir nach dem Malen anders positionieren moechten
  */
 function addCityToScene(mainDistrict, scene, camera) {
+
+	//**************** Ein Haufen Variablen zum initialisieren *******************
     var myGeometry = new THREE.Geometry();
     var matrix = new THREE.Matrix4();
     var quaternion = new THREE.Quaternion();
@@ -304,7 +307,9 @@ function addCityToScene(mainDistrict, scene, camera) {
     var gardenGeom = [
         new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, 0),
         new THREE.CylinderGeometry(GARDEN_WIDTH / 2, GARDEN_WIDTH / 2, 0.01, 3, 1, false, Math.PI)
-    ];
+    ];	
+	//********************* Ende der Initialisierung der Variablen ******************
+	
     for (var i = length; i--;) {
         addEachDistrict(buildings[i], scene, extrema, 0, boxGeom, gardenGeom, myGeometry, matrix, quaternion, color);
     }
@@ -408,8 +413,8 @@ function addBoxes(aColor, aBuilding, boxGeom, myGeometry, matrix, quaternion) {
  *@param: cP: centerPosition von der BoxGeometry
  *@param: width: Breite der BoxGeometry
  *@param: height: Hoehe der BoxGeometry
- *@param: matrix: eine Instanz von THREE.Matrix4()
  *@param: quaternion: eine Instanz von THREE.Quaternion()
+ *@param: matrix: eine Instanz von THREE.Matrix4()
  */
 function setMatrix(cP, width, height, quaternion, matrix) {
     var position = new THREE.Vector3();
@@ -600,12 +605,10 @@ function pushToArray(firstArray, secondArray, isReversed) {
     if (isReversed) {
         for (var i = length - 1; i >= 0; i--) {
             firstArray.push(new THREE.Vector3(secondArray[i].x, secondArray[i].y, secondArray[i].z));
-            //secondArray[i].x = secondArray[i].x + 0.1;
         }
     } else {
         for (var i = 0; i < length; i++) {
             firstArray.push(new THREE.Vector3(secondArray[i].x, secondArray[i].y, secondArray[i].z));
-            //secondArray[i].x = secondArray[i].x + 0.1;
         }
     }
 }
@@ -624,7 +627,6 @@ function workUpGarden(aGarden, destGarden, curveObject) {
     } else {
         aGarden.meshLines[destGarden.building[association.name]].push(curveObject);
     }
-    //setNextLinePos(aGarden);
 }
 
 /**
@@ -993,10 +995,9 @@ function getJsonForCurrentLink() {
     aJson.rightGarden = clickedRightGardens;
     aJson.scaling = getScalingBooleans();
     aJson.connections = {};
-    aJson.connections.eingehendeVerbindungen = eingehendeVerbindungen;
-    aJson.connections.ausgehendeVerbindungen = ausgehendeVerbindungen;
+    aJson.connections.incomingConnections = incomingConnections;
+    aJson.connections.outgoingConnections = outgoingConnections;
     aJson.connections.highlightBuildingsConnections = highlightBuildingsConnections;
-    //aJson.removedBuildings = getRemovedBuildings();
     aJson.changedLegend = getChangedLegend();
     aJson.collID = getOriginalAssociations().collID;
     aJson._id = getOriginalAssociations()._id;

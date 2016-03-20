@@ -1,18 +1,18 @@
-var associations; //die Legende
+var associations; //Einstellungen, die der Nutzer eingestellt hat
 var camera, scene, renderer, trackballControls, orbitControls, raycaster; //WebGL-Variablen
 var mainDistrict; //Json, das das District darstellt
-var mouse = new THREE.Vector2(),
-  INTERSECTED, SELECTED;
+var mouse = new THREE.Vector2(), INTERSECTED, SELECTED; //Maus-Hilfsvariablen
 var extrema;//enthaelt die Extremwerte aus den Daten
 var camToSave = {}; //speichert Anfangseinstellung
-var useStreets;
-var usingConnections;
-var SpeedForShiftByKeys = 5;
-var nameOfAllBuildings = [];
+var useStreets; //true, wenn Straßen benutzt werden
+var usingConnections; //true, wenn Verbindungen genutzt werden
+var SpeedForShiftByKeys = 5; //Geschwindigkeit der Kamera bei Naviagtion ueber Pfeiltasten
+var nameOfAllBuildings = []; //Array bestehend aus allen Namen der Gebaeude
 
 var animationId = null;
 
-var numOfCanvas = 0;
+var numOfCanvas = 0; //Nummer der WebGLCanvas, d.h. wie oft wurde schon auf "Stadt aktualisieren" geklickt
+var ctrlIsPressed; //Hilfsvariable fuer Screenshot
 
 /**
  * Getter fuer scene
@@ -271,7 +271,7 @@ function getCamToSave() {
   return camToSave;
 }
 
-var ctrlIsPressed;
+
 
 
 /**
@@ -304,6 +304,9 @@ window.addEventListener("keydown", function(e) {
   }
 });
 
+/**
+ * HilfsEventListener fuer Screenshot
+ */
 window.addEventListener("keyup", function(e) {
   if (e.which == 16) {
     ctrlIsPressed = false;
@@ -318,7 +321,6 @@ window.addEventListener("keydown", function(e) {
   if (e.which === 37) {
     e.preventDefault();
     try {
-      //console.log("Links");
       shiftCam(37);
     } catch (e) {
       console.log("Die Navigation über die Pfeiltasten lief schief!");
@@ -330,7 +332,6 @@ window.addEventListener("keydown", function(e) {
   if (e.which === 38) {
     e.preventDefault();
     try {
-      //console.log("hoch");
       shiftCam(38);
     } catch (e) {
       console.log("Die Navigation über die Pfeiltasten lief schief!");
@@ -342,7 +343,6 @@ window.addEventListener("keydown", function(e) {
   if (e.which === 39) {
     e.preventDefault();
     try {
-      //console.log("rechts");
       shiftCam(39);
     } catch (e) {
       console.log("Die Navigation über die Pfeiltasten lief schief!");
@@ -354,7 +354,6 @@ window.addEventListener("keydown", function(e) {
   if (e.which === 40) {
     e.preventDefault();
     try {
-      //console.log("runter");
       shiftCam(40);
     } catch (e) {
       console.log("Die Navigation über die Pfeiltasten lief schief!");
@@ -599,7 +598,7 @@ function animate() {
 
   // schaut, ob was passiert ist
   animationId = requestAnimationFrame(animate);
-  //requestAnimationFrame(update);
+  
 
 }
 
@@ -685,15 +684,15 @@ function setSpecificView(aJson) {
       myDimensions[i]]);
   }
 
-  eingehendeVerbindungen = aJson.connections.eingehendeVerbindungen;
-  ausgehendeVerbindungen = aJson.connections.ausgehendeVerbindungen;
+  incomingConnections = aJson.connections.incomingConnections;
+  outgoingConnections = aJson.connections.outgoingConnections;
   highlightBuildingsConnections = aJson.connections.highlightBuildingsConnections;
   gui.__folders["Verbindungen"].__controllers[0].setValue(
     highlightBuildingsConnections);
   gui.__folders["Verbindungen"].__controllers[1].setValue(
-    eingehendeVerbindungen);
+    incomingConnections);
   gui.__folders["Verbindungen"].__controllers[2].setValue(
-    ausgehendeVerbindungen);
+    outgoingConnections);
 
   setCameraPosForLink(camera, aJson);
 }
@@ -896,11 +895,11 @@ function onDocumentMouseDown(event) {
 				  b[association["name"]],
 				  intersects[i]
 				);
-				if (ausgehendeVerbindungen === true) {
+				if (outgoingConnections === true) {
 				  var theGarden = b._rightGarden;
 				  if (theGarden.color > 0) clickOnGarden(theGarden);
 				};
-				if (eingehendeVerbindungen === true) {
+				if (incomingConnections === true) {
 				  var theGarden = b._leftGarden;
 				  if (theGarden.color > 0) clickOnGarden(theGarden);
 				};
