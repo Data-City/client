@@ -102,7 +102,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td ng-repeat="entry in actualEntries">{{entry}}</td>
+                                <td ng-repeat="entry in actualEntries track by $index">{{entry}}</td>
                             </tr>
                         </tbody>
                     </table>
