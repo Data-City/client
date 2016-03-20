@@ -537,13 +537,13 @@ function setGardenPos(aBuilding) {
  * @param: namePrefix: Praefix vom Namen der Form "maindistrict.package1.package2."
  */
 function setMainDistrict(mainDistrict, namePrefix) {
-    if (mainDistrict["buildings"] != undefined) {
+    if (mainDistrict["buildings"] != undefined && mainDistrict.buildings[0] != undefined) {
         var buildings = mainDistrict["buildings"];
         var length = buildings.length;
         for (var i = 0; i < length; i++) {
             var b = buildings[i];
             setMainDistrict(b, namePrefix + b.name + ".");
-            if (b["buildings"] != undefined) {
+            if (b["buildings"] != undefined && b.buildings[0] != undefined) {
                 setOneDistrict(b);
                 b._district = namePrefix;
             }
@@ -668,6 +668,9 @@ function initBuilding(aBuilding, namePrefix) {
                 aBuilding["_" + dim] = scaleLogarithmically(aBuilding, dim);
             }
         }
+		if (aBuilding.buildings != undefined && aBuilding.buildings[0] == undefined) {
+			aBuilding.buildings = undefined;
+		}
         aBuilding._centerPosition = [0, aBuilding._height / 2, 0];
         var theLeftGarden = garden(true, aBuilding, outgoingCalls[aBuilding[association.name]]);
         var theRightGarden = garden(false, aBuilding, incomingCalls[aBuilding[association.name]]);
