@@ -173,8 +173,8 @@ function initAssociation(association) {
     drawGardens = association.drawGardens;
     logScaling = association.logScaling;
 
-    gap = 20 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) /
-        metaData["avg_" + association.dimensions.area];
+    gap = Math.max(2, 20 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) /
+        metaData["avg_" + association.dimensions.area]);
 
     districtHeight = 1.5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[
         1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);

@@ -543,10 +543,6 @@ function setMainDistrict(mainDistrict, namePrefix) {
         for (var i = 0; i < length; i++) {
             var b = buildings[i];
             setMainDistrict(b, namePrefix + b.name + ".");
-            if (b["buildings"] != undefined && b.buildings[0] != undefined) {
-                setOneDistrict(b);
-                b._district = namePrefix;
-            }
         }
         setOneDistrict(mainDistrict, namePrefix);
     }
@@ -578,6 +574,7 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
                 b._centerPosition[2] - width / 2
             );
             shiftBack(b, nodesSortByX, nodesSortByZ, floorHeight + districtHeight);
+			b._district = mainDistrict[association.name];
         }
         if (doWeUseConnections() && doWeUseStreets()) {
             var exitNodeZCoord = Math.max.apply(Math, Object.keys(nodesSortByZ));
@@ -684,7 +681,6 @@ function initBuilding(aBuilding, namePrefix) {
         }
         buildingsHashMap[aBuilding[association.name]] = aBuilding;
         aBuilding._isRemoved = false;
-        aBuilding._district = namePrefix;
         aBuilding._numOfActivatedConnections = 0;
     }
 }
