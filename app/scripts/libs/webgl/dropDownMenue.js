@@ -4,8 +4,6 @@ var gui; //das Dropdownmenue
 var storedMesh, storedLeftGarden, storedRightGarden;
 var storedDistrict = [];
 var storedBuilding = [];
-var removedBuildings = [];
-var arrayOfRemovedBuildings = [];
 
 var incomingConnections, outgoingConnections,
     highlightBuildingsConnections;
@@ -78,23 +76,6 @@ function setScalingBooleans(scalingObject) {
     scaling = scalingObject;
 }
 
-/**
- * Getter fuer removedBuildings
- * @param: Variable removedBuildings: Array, das die IDs aller geloeschten Gebaeude enthaelt
- */
-function getRemovedBuildings() {
-    return removedBuildings;
-}
-
-/**
- * Setter fuer removedBuildings
- * @param: newRemovedBuildings: das neue Array, das die IDs aller geloeschten Gebaeude enthaelt
- */
-function setRemovedBuildings(newRemovedBuildings) {
-    removedBuildings = newRemovedBuildings;
-}
-
-
 
 /**
  * aendert bei den Gebaeudeinformationen in der Legende die Werte, die angezeigt werden sollen
@@ -149,8 +130,6 @@ function initDropDownMenue() {
 
     storedDistrict = [];
     storedBuilding = [];
-    removedBuildings = [];
-    arrayOfRemovedBuildings = [];
 
     highlightBuildingsConnections = false;
     incomingConnections = false;
@@ -387,35 +366,6 @@ function getChangedLegend() {
 
 
 
-/**Methode um die Gebaeude zu highlighten, die Verbindungen haben
- * @param: value: der Wert aus der Legende, also ein Boolean (true = Gebaeude werden markiert, false = Gebaeude werden nicht mehr markiert)
- */
-function highlightBuildingsWithConnections(value) {
-    highlightBuildingsConnections = value;
-    var arr = getCalls();
-    var income = arr[0];
-    var outgoing = arr[1];
-    var hashmap = getBuildingsHashMap();
-    for (var y in hashmap) {
-        if (hashmap[y]._numOfActivatedConnections <= 0) {
-            if (value) {
-                if (income[y] || outgoing[y]) {
-                    var factor = (getColorFactor(getExtrema(), hashmap[y]._leftGarden.color,
-                        "SumOfConn") + getColorFactor(getExtrema(), hashmap[y]._rightGarden
-                        .color, "SumOfConn")) / 2;
-                    colorObject(hashmap[y], (new THREE.Color(colorYellowBright)).lerp(new THREE
-                        .Color(colorYellowDark), factor));
-                }
-            } else {
-                if (income[y] || outgoing[y]) {
-                    var factor = getColorFactor(getExtrema(), hashmap[y]._color, "Color");
-                    colorObject(hashmap[y], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(
-                        buildingColor), factor));
-                }
-            }
-        }
-    }
-}
 
 /**
  * skaliert die Gebaeude und zeichnet sie neu

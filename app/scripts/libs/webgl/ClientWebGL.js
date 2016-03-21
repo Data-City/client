@@ -622,7 +622,6 @@ function updateControls(maxDistance) {
  * "leftGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
  * "rightGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
  * "scaling": { "logarithmicHeight": boolean,"logarithmicWidth": boolean,"logarithmicColor": boolean},
- * "removedBuildings": ArrayAusIDsDerGeloeschtenGebaeuden,
  * "changedLegend": {"Name": "Package","Breite": "Klassen","Höhe": "Methoden","Farbe": "Zeilen" },
  * "collID": CollectionID,
  * "_id": AnsichtsID};

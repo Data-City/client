@@ -209,7 +209,6 @@ function pushToClickedRightGardens(buildingID) {
  "leftGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
  "rightGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
  "scaling": { "logarithmicHeight": boolean,"logarithmicWidth": boolean,"logarithmicColor": boolean},
- "removedBuildings": ArrayAusIDsDerGeloeschtenGebaeuden,
  "changedLegend": {"Name": "Package","Breite": "Klassen","Höhe": "Methoden","Farbe": "Zeilen" },
  "collID": CollectionID,
  "_id": AnsichtsID};
@@ -974,6 +973,35 @@ function setGardenOff(theGarden) {
 }
 
 
+/**Methode um die Gebaeude zu highlighten, die Verbindungen haben
+ * @param: value: der Wert aus der Legende, also ein Boolean (true = Gebaeude werden markiert, false = Gebaeude werden nicht mehr markiert)
+ */
+function highlightBuildingsWithConnections(value) {
+    highlightBuildingsConnections = value;
+    var arr = getCalls();
+    var income = arr[0];
+    var outgoing = arr[1];
+    var hashmap = getBuildingsHashMap();
+    for (var y in hashmap) {
+        if (hashmap[y]._numOfActivatedConnections <= 0) {
+            if (value) {
+                if (income[y] || outgoing[y]) {
+                    var factor = (getColorFactor(getExtrema(), hashmap[y]._leftGarden.color,
+                        "SumOfConn") + getColorFactor(getExtrema(), hashmap[y]._rightGarden
+                        .color, "SumOfConn")) / 2;
+                    colorObject(hashmap[y], (new THREE.Color(colorYellowBright)).lerp(new THREE
+                        .Color(colorYellowDark), factor));
+                }
+            } else {
+                if (income[y] || outgoing[y]) {
+                    var factor = getColorFactor(getExtrema(), hashmap[y]._color, "Color");
+                    colorObject(hashmap[y], (new THREE.Color(0xBDBDBD)).lerp(new THREE.Color(
+                        buildingColor), factor));
+                }
+            }
+        }
+    }
+}
 
 /**
  *Methode zum erstellen des JSON zum Speichern der aktuellen Ansicht mit Kameraposition etc.
@@ -983,7 +1011,6 @@ function setGardenOff(theGarden) {
  "leftGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
  "rightGarden": ArrayAusIDsDerGebaeudenMitAngeklicktenGaerten,
  "scaling": { "logarithmicHeight": boolean,"logarithmicWidth": boolean,"logarithmicColor": boolean},
- "removedBuildings": ArrayAusIDsDerGeloeschtenGebaeuden,
  "changedLegend": {"Name": "Package","Breite": "Klassen","Höhe": "Methoden","Farbe": "Zeilen" },
  "collID": CollectionID,
  "_id": AnsichtsID};
