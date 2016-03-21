@@ -2,4 +2,8 @@
 <h4>Datensatz: {{collID}}</h4>
 <h4>Ansicht: {{chosenView.name}}</h4>
 
+<div class="container">
+        <loadingpanel ng-show="percentage < 100" msg="msg" percentage="{{percentage}}"></loadingpanel>
+</div>
+
 <div id="Stadt" style="position:absolute;"></div>
