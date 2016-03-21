@@ -265,13 +265,6 @@ angular.module('datacityApp')
                 }
             }
 
-            for (key in view.dimensionSettings) {
-                if (view.dimensionSettings[key].name === "buildings") {
-                    window.alert("Eine oder mehrere der ausgewählten Dimensionen heißt 'buildings'. Dies könnte zu Komplikationen bei der Stadtdarstellung führen. ");
-                    break; //Damit die Nachricht nur einmal gezeigt wird
-                }
-            }
-
             if (view.districts[0] === undefined && view.districtType === "2") {
                 window.alert("Schritt 4: \nBei der Blockbildung wurde Option 3 festgelegt, aber keine Blöcke ausgewählt. \nFalls Sie keine Blockbildung möchten, bitte wählen Sie Option 1");
                 return false;
@@ -289,6 +282,13 @@ angular.module('datacityApp')
             if (!view.scalingOption) {
                 window.alert("Schritt 5: \nEs wurde keine Skalierungsart ausgewählt!");
                 return false;
+            }
+            
+            for (key in view.dimensionSettings) {
+                if (view.dimensionSettings[key].name === "buildings") {
+                    window.alert("Eine oder mehrere der ausgewählten Dimensionen heißt 'buildings'. Dies könnte zu Komplikationen bei der Stadtdarstellung führen. ");
+                    break; //Damit die Nachricht nur einmal gezeigt wird
+                }
             }
 
             // Spinner anzeigen
