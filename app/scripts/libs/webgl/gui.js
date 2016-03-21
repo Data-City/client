@@ -681,9 +681,16 @@ function setCameraPos(camera, mainDistrict, extrema) {
     var maxWidth = mainDistrict._width;
     var maxHeight = extrema.maxHeight;
     var position = camera.position;
-    position.x = Math.max(maxWidth, maxHeight);
-    position.y = Math.max(maxWidth, maxHeight) / 2;
-    position.z = Math.max(maxWidth, maxHeight) * 1.5;
+	if (maxWidth / maxHeight > 0.001) {
+		position.x = Math.max(maxWidth, maxHeight);
+		position.y = Math.max(maxWidth, maxHeight) / 2;
+		position.z = Math.max(maxWidth, maxHeight) * 1.5;
+	}
+	else {
+		position.x = maxWidth;
+		position.y = maxWidth / 2;
+		position.z = maxWidth * 1.5;
+	}
 }
 
 /**
