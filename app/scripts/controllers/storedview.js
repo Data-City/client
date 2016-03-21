@@ -46,32 +46,37 @@ angular.module('datacityApp')
         };
 
         $scope.collID = storedJSON.collID;
+        var settings = storedJSON;
         /**
          * Liest die Parameter aus dem JSON aus (Winkel der Kamera etc), holt alle benötigten Datenbanken (Collection, Verbindungen, die Ansicht)
          * und übergibt sie an das WebGL, damit die Stadt gezeichnet werden kann
          */
+        $scope.setLoaderSettings("Hole Daten...", 50);
         REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_data_" + storedJSON._id, function(collection) {
-            REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_incoming", function(incoming) {
-                REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_outgoing", function(outgoing) {
-                    REST.getData(function(viewResponse) {
-                        if (viewResponse.data) {
-                            var incomingConnections = incoming.data._embedded['rh:doc'][0];
-                            var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
+            REST.getData(function(viewResponse) {
+                $scope.chosenView = viewResponse.data;
 
-                            $scope.chosenCollection = collection;
-                            $scope.chosenView = viewResponse.data;
+                if ($scope.chosenView.experimentalMode === false) {
+                    $scope.chosenView.typeOfConnections = 0;
+                }
+                if (viewResponse.data.metaData.connectionsAvailable) {
+                    $scope.setLoaderSettings("Rufe Verbindungsdaten ab...", 60);
+                    REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_incoming", function(incoming) {
+                        REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_outgoing", function(outgoing) {
+                            if (viewResponse.data) {
+                                var incomingConnections = incoming.data._embedded['rh:doc'][0];
+                                var outgoingConnections = outgoing.data._embedded['rh:doc'][0];
 
-                            if ($scope.chosenView.experimentalMode === false) {
-                                $scope.chosenView.typeOfConnections = 0;
+                                $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65);
+                                drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings, incomingConnections, outgoingConnections, $scope.setLoaderSettings);
                             }
-
-                            var settings = storedJSON;
-                            $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65);
-                            drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings, incomingConnections, outgoingConnections, $scope.setLoaderSettings);
-                        }
-                    }, databaseForViews, ansichten, storedJSON._id);
-                });
-            });
+                        });
+                    });
+                } else {
+                    $scope.setLoaderSettings("Beginne Aufbau der Stadt...", 65, $scope);
+                    drawCity(collection.data._embedded['rh:doc'], $scope.chosenView, WEBGL_DIV, settings, undefined, undefined, $scope.setLoaderSettings);
+                }
+            }, databaseForViews, ansichten, storedJSON._id);
         });
 
 

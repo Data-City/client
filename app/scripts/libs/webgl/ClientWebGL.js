@@ -657,13 +657,16 @@ function setSpecificView(aJson) {
     incomingConnections = aJson.connections.incomingConnections;
     outgoingConnections = aJson.connections.outgoingConnections;
     highlightBuildingsConnections = aJson.connections.highlightBuildingsConnections;
-    gui.__folders["Verbindungen"].__controllers[0].setValue(
-        highlightBuildingsConnections);
-    gui.__folders["Verbindungen"].__controllers[1].setValue(
-        incomingConnections);
-    gui.__folders["Verbindungen"].__controllers[2].setValue(
-        outgoingConnections);
-
+    
+    if (gui.__folders["Verbindungen"]) {
+        gui.__folders["Verbindungen"].__controllers[0].setValue(
+            highlightBuildingsConnections);
+        gui.__folders["Verbindungen"].__controllers[1].setValue(
+            incomingConnections);
+        gui.__folders["Verbindungen"].__controllers[2].setValue(
+            outgoingConnections); 
+    }
+    
     setCameraPosForLink(camera, aJson);
 }
 
