@@ -106,13 +106,13 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls,
 function setAndDrawCity(mainDistrict, scaling, scalingString, scalingExtrema) {
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
+	districtHeight = Math.max(1,0.002 * Math.max(mainDistrict._width, extrema.maxHeight));
     shiftBack(mainDistrict, {}, {}, (-1) * getDistrictHeight() / 2);
     if (usingConnections) setGraph();
 
     if (scaling) {
         scalingExtrema(scalingString);
     }
-
     //zeichnen nun auch die Stadt
     addCityToScene(mainDistrict, scene, camera, extrema);
 }
@@ -176,8 +176,8 @@ function initAssociation(association) {
     gap = Math.max(2, 20 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[1]) /
         metaData["avg_" + association.dimensions.area]);
 
-    districtHeight = 1.5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[
-        1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);
+    //districtHeight = 1.5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[
+    //    1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);
 
     setBuildingColor(association.buildingcolor);
 }
