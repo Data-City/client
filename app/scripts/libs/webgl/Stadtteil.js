@@ -642,10 +642,10 @@ function getDrawnDimValue(aBuilding, dimString) {
 
     if (buildingDimension != undefined) {
         if (buildingDimension != "" && buildingDimension != 0) {
-            toReturn = parseFloat(buildingDimension) / parseFloat(scalingString);
+            toReturn = parseFloat(buildingDimension) / parseFloat(scalingString) + 0.5;
         } else {
             // Wenn die Dimension undefined ist oder die Größe 0 hat, dann den minimalsten Wert aller Gebäude ansetzen
-            toReturn = parseFloat(metaData["min_" + association[dimString]]) / parseFloat(scalingString);
+            toReturn = parseFloat(metaData["min_" + association[dimString]]) / parseFloat(scalingString) + 0.5;
         }
     } else {
         toReturn = 1;
