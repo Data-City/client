@@ -577,7 +577,7 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
                 floorHeight + b._height / 2,
                 b._centerPosition[2] - width / 2
             );
-            shiftBack(b, nodesSortByX, nodesSortByZ, floorHeight + districtHeight / 2);
+            shiftBack(b, nodesSortByX, nodesSortByZ, floorHeight + districtHeight);
         }
         if (doWeUseConnections() && doWeUseStreets()) {
             var exitNodeZCoord = Math.max.apply(Math, Object.keys(nodesSortByZ));

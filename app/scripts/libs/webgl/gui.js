@@ -711,7 +711,12 @@ function setCameraPosForLink(camera, aJson) {
  *@return: die berechnet den HSV-Wert, den man fuer den Farbton braucht HSV-Farbe(faktor, faktor, 1)
  */
 function getColorFactor(extrema, colorValue, string) {
-    return (colorValue - extrema["min" + string]) / (extrema["max" + string] - extrema["min" + string]);
+    if ((extrema["max" + string] - extrema["min" + string])==0) {
+	    return 1;
+	}
+	else {
+        return (colorValue - extrema["min" + string]) / (extrema["max" + string] - extrema["min" + string]);
+	}
 }
 
 
