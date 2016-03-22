@@ -111,7 +111,7 @@ function setAndDrawCity(mainDistrict, scaling, scalingString, scalingExtrema) {
     setGap(logScaling.width || (scaling && (scalingString == "width")));
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
-	districtHeight = Math.max(1,0.002 * Math.max(mainDistrict._width, extrema.maxHeight));
+	districtHeight = Math.max(1,0.01 * Math.max(mainDistrict._width, extrema.maxHeight));
     shiftBack(mainDistrict, {}, {}, (-1) * getDistrictHeight() / 2);
     if (usingConnections) setGraph();
 
