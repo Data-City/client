@@ -637,7 +637,6 @@ function getDrawnDimValue(aBuilding, dimString) {
     var buildingDimension = aBuilding[association[dimString]];
     
 	if (metaData["avg_" + association[dimString]] != 0) {
-		//var scalingString = 0.25 * metaData["avg_" + association.width];
 		var scalingString = 0.25 * metaData["avg_" + association[dimString]];
 	}
 	else {
@@ -651,7 +650,9 @@ function getDrawnDimValue(aBuilding, dimString) {
             // Wenn die Dimension undefined ist oder die Größe 0 hat, dann den minimalsten Wert aller Gebäude ansetzen
             toReturn = parseFloat(metaData["min_" + association[dimString]]) / parseFloat(scalingString);
         }
-		if (metaData["min_" + association[dimString]] == 0) toReturn = toReturn + 0.5;
+		if (
+			(metaData["min_" + association[dimString]] == 0) || 
+			(metaData["min_" + association[dimString]]) / parseFloat(scalingString) < 0.0001) toReturn = toReturn + 0.5;
     } else {
         toReturn = 1;
     }
