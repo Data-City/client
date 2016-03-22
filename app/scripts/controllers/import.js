@@ -46,7 +46,9 @@ angular.module('datacityApp')
             var collectionsName = $scope.useFilenameAsColName ? getFilename(fileInput) : $scope.colName;
 
             $scope.msg = "Lade Datensätze hoch...";
-            $scope.buttonUrl = '/#/views/' + collectionsName;
+            $scope.buttonUrl = '#/views/' + collectionsName;
+            console.log("buttonUrl: ");
+            console.log($scope.buttonUrl);
             $scope.finishMsg = "Datensatz " + collectionsName + " importiert!";
             $scope.percentage = 0;
             $scope.loader = true;

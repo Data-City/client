@@ -321,7 +321,7 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
         };
         h.add(legendImage, "image").name("Anzahl Verbindungen");
         var html =
-            '<div><span class="property-name">Anzahl Verbindungen</span><div class="c"><image src="/images/verbindungen.png" style="width:218px;"></image></div></div>';
+            '<div><span class="property-name">Anzahl Verbindungen</span><div class="c"><image src="images/verbindungen.png" style="width:218px;"></image></div></div>';
         var css = "height: 82px;"
         var div = $('li.cr.string:contains("Anzahl Verbindungen")').css("height", "82px").html(
             html);
