@@ -281,8 +281,10 @@ function setMenue(scene, aDistrict, camera, orbitControls, trackballControls,
 
     h = gui.addFolder("Gebäudesuche");
     h.add(searchBuilding, "search").name("Suche").onFinishChange(function(value) {
-        highlightBuilding(value);
-        showBuilding();
+        if(value != "") {
+			highlightBuilding(value);
+			showBuilding();
+		}
     });
     h.add(searchBuilding, "deactivate").name("Auswahl deaktivieren");
 
