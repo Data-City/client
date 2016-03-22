@@ -15,6 +15,9 @@ var animationId = null;
 var numOfCanvas = 0; //Nummer der WebGLCanvas, d.h. wie oft wurde schon auf "Stadt aktualisieren" geklickt
 var ctrlIsPressed; //Hilfsvariable fuer Screenshot
 
+var largestWidth;
+var averageWidth;
+
 /**
  * Getter fuer scene
  * @return: scene: die Scene fuer die WebGL-Canvas, auf die gezeichnet wird
@@ -105,6 +108,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls,
  * @param: scalingExtrema: die Skalierungsmethode (angeben, wenn scaling true);
  */
 function setAndDrawCity(mainDistrict, scaling, scalingString, scalingExtrema) {
+    setGap(logScaling.width || (scaling && (scalingString == "width")));
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
 	districtHeight = Math.max(1,0.002 * Math.max(mainDistrict._width, extrema.maxHeight));
@@ -142,7 +146,16 @@ function initData(data, association, incomingCalls, outgoingCalls) {
 
     initAssociation(association);
     initMainDistrict(data, association);
-
+	
+    if (usingConnections) {
+        setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(
+            outgoingCalls));
+        if (association.typeOfConnections === "1") {
+            useStreets = true;
+        } else {
+            useStreets = false;
+        }
+    }
 }
 
 /**
@@ -164,21 +177,10 @@ function initAssociation(association) {
     useConnections = association.useConnections;
     drawGardens = association.drawGardens;
     logScaling = association.logScaling;
-	
-	
-    if (usingConnections) {
-        setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(
-            outgoingCalls));
-        if (association.typeOfConnections === "1") {
-            useStreets = true;
-        } else {
-            useStreets = false;
-        }
-    }
-	
-	var largestWidth = association.dimensionSettings.area.numberValueFilter[1];
-	var averageWidth = metaData["avg_" + association.dimensions.area];
-	setGap(largestWidth, averageWidth, logScaling.width);
+
+	largestWidth = association.dimensionSettings.area.numberValueFilter[1];
+	averageWidth = metaData["avg_" + association.dimensions.area];
+	//setGap(logScaling.width);
 
     //districtHeight = 1.5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[
     //    1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);
@@ -189,16 +191,14 @@ function initAssociation(association) {
 
 /**
  * berechnet eine passende Luecke zwischen den Gebaeuden
- * @param: largestWidth: der groesste Wert fuer die Breite eines Gebaeudes
- * @param: averageWidth: der Durchschnittswert fuer die Breite eines Gebaeudes
  * @param: scale: true, wenn auch skaliert werden soll
  */
-function setGap(largestWidth, averageWidth, scale) {
+function setGap(scale) {
     var lWidth = largestWidth;
-	var aWidth = averageWidth;console.log(lWidth); console.log(aWidth);
+	var aWidth = averageWidth;
 	if (scale){
 		lWidth = Math.log(largestWidth + 1) / Math.log(2);
-		aWidth = Math.log(averageWidth + 1) / Math.log(2);console.log(lWidth); console.log(aWidth);
+		aWidth = Math.log(averageWidth + 1) / Math.log(2);
 	}
     if (useConnections && useStreets && drawGardens) {
 		gap = Math.max(5, 20 * Math.sqrt(lWidth) / aWidth);
