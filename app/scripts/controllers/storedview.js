@@ -55,9 +55,9 @@ angular.module('datacityApp')
         REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_data_" + storedJSON._id, function(collection) {
             REST.getData(function(viewResponse) {
                 var view = viewResponse.data;
-                
+
                 console.log(view);
-                
+
                 view.numberOfEntries = collection.data._returned;
                 if (view.numberOfEntries === 0) {
                     window.alert("Die Filterung bzw. Aggregation wurde so eingestellt, dass keine Datensätze übrig bleiben!");
@@ -79,7 +79,7 @@ angular.module('datacityApp')
                     view.logScaling.width = false;
                     view.logScaling.height = false;
                 }
-                
+
                 if (viewResponse.data.metaData.connectionsAvailable) {
                     $scope.setLoaderSettings("Rufe Verbindungsdaten ab...", 60);
                     REST.getDocuments(databaseForCollections, storedJSON.collID + "_dc_connections_incoming", function(incoming) {

@@ -681,16 +681,15 @@ function setCameraPos(camera, mainDistrict, extrema) {
     var maxWidth = mainDistrict._width;
     var maxHeight = extrema.maxHeight;
     var position = camera.position;
-	if (maxWidth / maxHeight > 0.001) {
-		position.x = Math.max(maxWidth, maxHeight);
-		position.y = Math.max(maxWidth, maxHeight) / 2;
-		position.z = Math.max(maxWidth, maxHeight) * 1.5;
-	}
-	else {
-		position.x = maxWidth;
-		position.y = maxWidth / 2;
-		position.z = maxWidth * 1.5;
-	}
+    if (maxWidth / maxHeight > 0.001) {
+        position.x = Math.max(maxWidth, maxHeight);
+        position.y = Math.max(maxWidth, maxHeight) / 2;
+        position.z = Math.max(maxWidth, maxHeight) * 1.5;
+    } else {
+        position.x = maxWidth;
+        position.y = maxWidth / 2;
+        position.z = maxWidth * 1.5;
+    }
 }
 
 /**
@@ -718,12 +717,11 @@ function setCameraPosForLink(camera, aJson) {
  *@return: die berechnet den HSV-Wert, den man fuer den Farbton braucht HSV-Farbe(faktor, faktor, 1)
  */
 function getColorFactor(extrema, colorValue, string) {
-    if ((extrema["max" + string] - extrema["min" + string])==0) {
-	    return 1;
-	}
-	else {
+    if ((extrema["max" + string] - extrema["min" + string]) == 0) {
+        return 1;
+    } else {
         return (colorValue - extrema["min" + string]) / (extrema["max" + string] - extrema["min" + string]);
-	}
+    }
 }
 
 

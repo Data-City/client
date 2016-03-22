@@ -574,7 +574,7 @@ function shiftBack(mainDistrict, nodesOfStreetsSortByXCoord, nodesOfStreetsSortB
                 b._centerPosition[2] - width / 2
             );
             shiftBack(b, nodesSortByX, nodesSortByZ, floorHeight + districtHeight);
-			b._district = mainDistrict[association.name];
+            b._district = mainDistrict[association.name];
         }
         if (doWeUseConnections() && doWeUseStreets()) {
             var exitNodeZCoord = Math.max.apply(Math, Object.keys(nodesSortByZ));
@@ -635,13 +635,12 @@ function getDrawnDimValue(aBuilding, dimString) {
     var toReturn;
 
     var buildingDimension = aBuilding[association[dimString]];
-    
-	if (metaData["avg_" + association[dimString]] != 0) {
-		var scalingString = 0.25 * metaData["avg_" + association[dimString]];
-	}
-	else {
-		var scalingString = 1; //Fall tritt auf, wenn alles 0 ist
-	}
+
+    if (metaData["avg_" + association[dimString]] != 0) {
+        var scalingString = 0.25 * metaData["avg_" + association[dimString]];
+    } else {
+        var scalingString = 1; //Fall tritt auf, wenn alles 0 ist
+    }
 
     if (buildingDimension != undefined) {
         if (buildingDimension != "" && buildingDimension != 0) {
@@ -650,9 +649,9 @@ function getDrawnDimValue(aBuilding, dimString) {
             // Wenn die Dimension undefined ist oder die Größe 0 hat, dann den minimalsten Wert aller Gebäude ansetzen
             toReturn = parseFloat(metaData["min_" + association[dimString]]) / parseFloat(scalingString);
         }
-		if (
-			(metaData["min_" + association[dimString]] == 0) || 
-			(metaData["min_" + association[dimString]]) / parseFloat(scalingString) < 0.0001) toReturn = toReturn + 0.5;
+        if (
+            (metaData["min_" + association[dimString]] == 0) ||
+            (metaData["min_" + association[dimString]]) / parseFloat(scalingString) < 0.0001) toReturn = toReturn + 0.5;
     } else {
         toReturn = 1;
     }

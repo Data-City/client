@@ -96,7 +96,7 @@ function drawCity(data, association, nameOfDivElement, settings, incomingCalls,
     if (settings != undefined) {
         setSpecificView(settings);
     }
-	//console.log(mainDistrict);
+    //console.log(mainDistrict);
 }
 
 
@@ -111,7 +111,7 @@ function setAndDrawCity(mainDistrict, scaling, scalingString, scalingExtrema) {
     setGap(logScaling.width || (scaling && (scalingString == "width")));
     // diese Methode setze die Gebaueden und Stadtteile einigermaßen vernuenftig
     setMainDistrict(mainDistrict, "");
-	districtHeight = Math.max(1,0.01 * Math.max(mainDistrict._width, extrema.maxHeight));
+    districtHeight = Math.max(1, 0.01 * Math.max(mainDistrict._width, extrema.maxHeight));
     shiftBack(mainDistrict, {}, {}, (-1) * getDistrictHeight() / 2);
     if (usingConnections) setGraph();
 
@@ -146,7 +146,7 @@ function initData(data, association, incomingCalls, outgoingCalls) {
 
     initAssociation(association);
     initMainDistrict(data, association);
-	
+
     if (usingConnections) {
         setCalls(getIncomingConnections(incomingCalls), getOutgoingConnections(
             outgoingCalls));
@@ -178,9 +178,9 @@ function initAssociation(association) {
     drawGardens = association.drawGardens;
     logScaling = association.logScaling;
 
-	largestWidth = association.dimensionSettings.area.numberValueFilter[1];
-	averageWidth = metaData["avg_" + association.dimensions.area];
-	//setGap(logScaling.width);
+    largestWidth = association.dimensionSettings.area.numberValueFilter[1];
+    averageWidth = metaData["avg_" + association.dimensions.area];
+    //setGap(logScaling.width);
 
     //districtHeight = 1.5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[
     //    1]) / Math.sqrt(metaData["avg_" + association.dimensions.area]);
@@ -195,19 +195,18 @@ function initAssociation(association) {
  */
 function setGap(scale) {
     var lWidth = largestWidth;
-	var aWidth = averageWidth;
-	if (scale){
-		lWidth = Math.log(largestWidth + 1) / Math.log(2);
-		aWidth = Math.log(averageWidth + 1) / Math.log(2);
-	}
+    var aWidth = averageWidth;
+    if (scale) {
+        lWidth = Math.log(largestWidth + 1) / Math.log(2);
+        aWidth = Math.log(averageWidth + 1) / Math.log(2);
+    }
     if (useConnections && useStreets && drawGardens) {
-		gap = Math.max(5, 20 * Math.sqrt(lWidth) / aWidth);
-		if (lWidth < 2) gap = 5;
-	}
-	else {
-	    gap = Math.max(2, 20 * Math.sqrt(lWidth) / aWidth);
-		if (lWidth < 2) gap = 2;
-	}
+        gap = Math.max(5, 20 * Math.sqrt(lWidth) / aWidth);
+        if (lWidth < 2) gap = 5;
+    } else {
+        gap = Math.max(2, 20 * Math.sqrt(lWidth) / aWidth);
+        if (lWidth < 2) gap = 2;
+    }
 }
 
 
@@ -686,16 +685,16 @@ function setSpecificView(aJson) {
     incomingConnections = aJson.connections.incomingConnections;
     outgoingConnections = aJson.connections.outgoingConnections;
     highlightBuildingsConnections = aJson.connections.highlightBuildingsConnections;
-    
+
     if (gui.__folders["Verbindungen"]) {
         gui.__folders["Verbindungen"].__controllers[0].setValue(
             highlightBuildingsConnections);
         gui.__folders["Verbindungen"].__controllers[1].setValue(
             incomingConnections);
         gui.__folders["Verbindungen"].__controllers[2].setValue(
-            outgoingConnections); 
+            outgoingConnections);
     }
-    
+
     setCameraPosForLink(camera, aJson);
 }
 

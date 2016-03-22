@@ -283,7 +283,7 @@ angular.module('datacityApp')
                 window.alert("Schritt 5: \nEs wurde keine Skalierungsart ausgewählt!");
                 return false;
             }
-            
+
             for (key in view.dimensionSettings) {
                 if (view.dimensionSettings[key].name === "buildings") {
                     window.alert("Eine oder mehrere der ausgewählten Dimensionen heißt 'buildings'. Dies könnte zu Komplikationen bei der Stadtdarstellung führen. ");
