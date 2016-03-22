@@ -174,12 +174,16 @@ function initAssociation(association) {
     logScaling = association.logScaling;
 
 	var largestWidth = association.dimensionSettings.area.numberValueFilter[1];
-	if (logScaling.width) largestWidth = Math.log(largestWidth + 1) / Math.log(2);
+	var averageWidth = metaData["avg_" + association.dimensions.area];
+	if (logScaling.width){
+		largestWidth = Math.log(largestWidth + 1) / Math.log(2);
+		averageWidth = Math.log(averageWidth + 1) / Math.log(2);
+	}
     if (useConnections) {
-		gap = Math.max(5, 20 * Math.sqrt(largestWidth) / metaData["avg_" + association.dimensions.area]);
+		gap = Math.max(5, 20 * Math.sqrt(largestWidth) / averageWidth);
 	}
 	else {
-	    gap = Math.max(2, 20 * Math.sqrt(largestWidth) / metaData["avg_" + association.dimensions.area]);
+	    gap = Math.max(2, 20 * Math.sqrt(largestWidth) / averageWidth);
 	}
 
     //districtHeight = 1.5 * Math.sqrt(association.dimensionSettings.area.numberValueFilter[
